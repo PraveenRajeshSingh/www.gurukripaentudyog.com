@@ -148,4 +148,36 @@
     .contact-form {
         width: 100%;
     }
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 180%;
+    }
+    .fab-container {
+        bottom: 20px;
+        left: 20px;
+    }
+    .fab-main {
+        width: 50px;
+        height: 50px;
+        font-size: 200%;
+    }
+    .fab-call,
+    .fab-whatsapp {
+        width: 45px;
+        height: 45px;
+        font-size: 180%;
+    }
+    .stat-box h3 {
+        font-size: 250%;
+    }
+    .lightbox-content {
+        max-width: 95%;
+    }
+    .lightbox-close {
+        top: -30px;
+        font-size: 300%;
+    }
 }
