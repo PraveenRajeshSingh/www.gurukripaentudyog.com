@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="assets/vendors/css/ionicons.min.css">
     <link rel="stylesheet" href="assets/resources/css/modern-style.css">
     <link rel="stylesheet" href="assets/resources/css/animations.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q6YZRXHSBG"></script>
@@ -119,45 +118,6 @@
                 </div>
                 <p class="section-subtitle">Premium Quality Bricks for Every Construction Need</p>
                 <p class="section-description">Discover our wide range of high-quality bricks designed to meet all your construction requirements with superior strength and durability.</p>
-            </div>
-            
-            <!-- Product Filters -->
-            <div class="product-filters-wrapper">
-                <div class="product-filters">
-                    <div class="filter-group">
-                        <label class="filter-label" data-translate="filterBy">
-                            <i class="ion-ios-funnel"></i> Filter By Category
-                        </label>
-                        <div class="category-filters">
-                            <button class="category-btn active" data-category="all" onclick="setCategory('all')" data-translate="allProducts">
-                                <i class="ion-ios-grid"></i> All Products
-                            </button>
-                            <button class="category-btn" data-category="shiv" onclick="setCategory('shiv')">
-                                <i class="ion-ios-cube"></i> Shiv Eant
-                            </button>
-                        </div>
-                    </div>
-                    <div class="filter-group">
-                        <label class="filter-label" data-translate="priceRange">
-                            <i class="ion-ios-pricetag"></i> Price Range
-                        </label>
-                        <div class="price-range">
-                            <div class="price-input-wrapper">
-                                <input type="number" id="minPrice" placeholder="Min" min="0" value="0" onchange="setPriceRange()">
-                                <span class="price-separator">-</span>
-                                <input type="number" id="maxPrice" placeholder="Max" min="0" value="20" onchange="setPriceRange()">
-                            </div>
-                            <div class="price-buttons">
-                                <button class="btn btn-small btn-filter" onclick="setPriceRange()" data-translate="applyFilter">
-                                    <i class="ion-ios-checkmark"></i> Apply
-                                </button>
-                                <button class="btn btn-small btn-filter-secondary" onclick="document.getElementById('minPrice').value=0; document.getElementById('maxPrice').value=20; setPriceRange();" data-translate="resetFilter">
-                                    <i class="ion-ios-refresh"></i> Reset
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             
             <div class="products-grid" id="productsContainer">
