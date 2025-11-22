@@ -109,35 +109,78 @@
 
     <!-- Products Section -->
     <section class="section section-products" id="products">
+        <div class="products-background"></div>
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-translate="productsTitle">Our Products</h2>
+            <div class="section-header products-header">
+                <div class="section-title-wrapper">
+                    <span class="section-tag">Premium Quality</span>
+                    <h2 class="section-title" data-translate="productsTitle">Our Products</h2>
+                    <div class="title-underline"></div>
+                </div>
                 <p class="section-subtitle">Premium Quality Bricks for Every Construction Need</p>
+                <p class="section-description">Discover our wide range of high-quality bricks designed to meet all your construction requirements with superior strength and durability.</p>
             </div>
             
             <!-- Product Filters -->
-            <div class="product-filters">
+            <div class="product-filters-wrapper">
+                <div class="product-filters">
                     <div class="filter-group">
-                        <label data-translate="filterBy">Filter By:</label>
+                        <label class="filter-label" data-translate="filterBy">
+                            <i class="ion-ios-funnel"></i> Filter By Category
+                        </label>
                         <div class="category-filters">
-                            <button class="category-btn active" data-category="all" onclick="setCategory('all')" data-translate="allProducts">All Products</button>
-                            <button class="category-btn" data-category="shiv" onclick="setCategory('shiv')">Shiv Eant</button>
+                            <button class="category-btn active" data-category="all" onclick="setCategory('all')" data-translate="allProducts">
+                                <i class="ion-ios-grid"></i> All Products
+                            </button>
+                            <button class="category-btn" data-category="shiv" onclick="setCategory('shiv')">
+                                <i class="ion-ios-cube"></i> Shiv Eant
+                            </button>
                         </div>
                     </div>
-                <div class="filter-group">
-                    <label data-translate="priceRange">Price Range:</label>
-                    <div class="price-range">
-                        <input type="number" id="minPrice" placeholder="Min" min="0" value="0" onchange="setPriceRange()">
-                        <span>-</span>
-                        <input type="number" id="maxPrice" placeholder="Max" min="0" value="20" onchange="setPriceRange()">
-                        <button class="btn btn-small" onclick="setPriceRange()" data-translate="applyFilter">Apply</button>
-                        <button class="btn btn-small btn-secondary" onclick="document.getElementById('minPrice').value=0; document.getElementById('maxPrice').value=20; setPriceRange();" data-translate="resetFilter">Reset</button>
+                    <div class="filter-group">
+                        <label class="filter-label" data-translate="priceRange">
+                            <i class="ion-ios-pricetag"></i> Price Range
+                        </label>
+                        <div class="price-range">
+                            <div class="price-input-wrapper">
+                                <input type="number" id="minPrice" placeholder="Min" min="0" value="0" onchange="setPriceRange()">
+                                <span class="price-separator">-</span>
+                                <input type="number" id="maxPrice" placeholder="Max" min="0" value="20" onchange="setPriceRange()">
+                            </div>
+                            <div class="price-buttons">
+                                <button class="btn btn-small btn-filter" onclick="setPriceRange()" data-translate="applyFilter">
+                                    <i class="ion-ios-checkmark"></i> Apply
+                                </button>
+                                <button class="btn btn-small btn-filter-secondary" onclick="document.getElementById('minPrice').value=0; document.getElementById('maxPrice').value=20; setPriceRange();" data-translate="resetFilter">
+                                    <i class="ion-ios-refresh"></i> Reset
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <div class="products-grid" id="productsContainer">
                 <!-- Products will be rendered here -->
+            </div>
+            
+            <!-- Products Stats -->
+            <div class="products-stats">
+                <div class="stat-item">
+                    <i class="ion-ios-star"></i>
+                    <span class="stat-number">4.9</span>
+                    <span class="stat-label">Average Rating</span>
+                </div>
+                <div class="stat-item">
+                    <i class="ion-ios-checkmark-circle"></i>
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Quality Assured</span>
+                </div>
+                <div class="stat-item">
+                    <i class="ion-ios-thunderstorm"></i>
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Support Available</span>
+                </div>
             </div>
         </div>
     </section>
