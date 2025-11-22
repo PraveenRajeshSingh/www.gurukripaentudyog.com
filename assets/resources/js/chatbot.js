@@ -314,13 +314,34 @@ Provide brief and helpful answers.`;
     
     // Initialize chatbot
     function initChatbot() {
+        // Ensure only one chatbot toggle button exists
+        const allToggles = document.querySelectorAll('.chatbot-toggle, #chatbotToggle');
+        if (allToggles.length > 1) {
+            // Keep only the first one, remove others
+            for (let i = 1; i < allToggles.length; i++) {
+                allToggles[i].remove();
+            }
+        }
+        
         const toggle = document.getElementById('chatbotToggle');
         const close = document.getElementById('chatbotClose');
         const send = document.getElementById('chatbotSend');
         const input = document.getElementById('chatbotInput');
         
         if (toggle) {
-            toggle.addEventListener('click', function() {
+            // Ensure toggle is unique and visible
+            toggle.style.display = 'flex';
+            toggle.style.visibility = 'visible';
+            toggle.style.opacity = '1';
+            
+            // Remove any existing event listeners to prevent duplicates
+            const newToggle = toggle.cloneNode(true);
+            toggle.parentNode.replaceChild(newToggle, toggle);
+            
+            // Re-get the toggle after cloning
+            const freshToggle = document.getElementById('chatbotToggle');
+            
+            freshToggle.addEventListener('click', function() {
                 const chatbot = document.getElementById('chatbot');
                 if (chatbot) {
                     chatbot.classList.toggle('active');

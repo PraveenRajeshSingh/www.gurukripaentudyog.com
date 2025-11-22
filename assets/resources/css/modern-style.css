@@ -2227,11 +2227,16 @@ textarea:valid:not(:placeholder-shown) {
     }
     
     .chatbot-toggle {
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
+        bottom: 20px !important;
+        right: 20px !important;
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.2rem !important;
+    }
+    
+    /* Ensure only one chatbot button on mobile */
+    .chatbot-toggle:not(:first-of-type) {
+        display: none !important;
     }
     
     .section {
@@ -2267,42 +2272,130 @@ textarea:valid:not(:placeholder-shown) {
    AI CHATBOT STYLES
    ============================================ */
 
+/* Ensure only one chatbot toggle button */
+.chatbot-toggle:not(:first-of-type) {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 .chatbot-toggle {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    border: none;
-    border-radius: 50%;
-    color: var(--white);
-    font-size: 1.5rem;
-    cursor: pointer;
-    box-shadow: 0 5px 20px rgba(230, 126, 34, 0.4);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    animation: pulse 2s infinite;
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    width: 60px !important;
+    height: 60px !important;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    color: var(--white) !important;
+    font-size: 1.5rem !important;
+    cursor: pointer !important;
+    box-shadow: 0 5px 20px rgba(230, 126, 34, 0.4) !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    animation: chatbotFloat 3s ease-in-out infinite !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .chatbot-toggle:hover {
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(5deg);
     box-shadow: 0 8px 30px rgba(230, 126, 34, 0.6);
+    animation: chatbotPulse 0.6s ease-in-out infinite;
+}
+
+.chatbot-icon {
+    position: relative;
+    z-index: 2;
+    display: block;
+    transition: transform 0.3s ease;
+    width: 28px;
+    height: 28px;
+    color: var(--white);
+}
+
+.chatbot-icon-alt {
+    font-size: 1.8rem;
+    position: relative;
+    z-index: 2;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.chatbot-toggle:hover .chatbot-icon,
+.chatbot-toggle:hover .chatbot-icon-alt {
+    transform: scale(1.1) rotate(-5deg);
 }
 
 .chatbot-notification {
     position: absolute;
     top: -5px;
     right: -5px;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     background: #e74c3c;
     border-radius: 50%;
     border: 2px solid var(--white);
-    animation: pulse 1s infinite;
+    z-index: 3;
+    animation: notificationPulse 1.5s ease-in-out infinite;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.5);
+}
+
+.chatbot-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: ripple 2s ease-out infinite;
+    opacity: 0;
+}
+
+@keyframes chatbotFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes chatbotPulse {
+    0%, 100% {
+        transform: scale(1.15);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+@keyframes notificationPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
 }
 
 .chatbot-container {

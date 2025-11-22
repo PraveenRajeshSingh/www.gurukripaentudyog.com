@@ -418,9 +418,13 @@
     </div>
 
     <!-- Chatbot Toggle Button -->
-    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Open chatbot">
-        <i class="ion-ios-chatbubbles"></i>
+    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Open chatbot" title="Chat with AI Assistant">
+        <svg class="chatbot-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11C11 9.75 14.5 10 14.5 8C14.5 6.9 13.6 6 12.5 6C11.4 6 10.5 6.9 10.5 8H8.5C8.5 5.79 10.29 4 12.5 4C14.71 4 16.5 5.79 16.5 8C16.5 10.5 13 10.75 13 13Z" fill="currentColor"/>
+        </svg>
+        <i class="ion-ios-chatbubbles chatbot-icon-alt" style="display: none;"></i>
         <span class="chatbot-notification"></span>
+        <span class="chatbot-pulse"></span>
     </button>
 
     <!-- Cart Modal -->
@@ -791,6 +795,48 @@
                 }
             }
         });
+        
+        // Ensure only one chatbot icon is visible
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        if (chatbotToggle) {
+            // Remove any duplicate chatbot buttons
+            const allChatbotButtons = document.querySelectorAll('.chatbot-toggle');
+            if (allChatbotButtons.length > 1) {
+                allChatbotButtons.forEach((btn, index) => {
+                    if (index > 0) {
+                        btn.remove(); // Remove duplicates, keep only the first one
+                    }
+                });
+            }
+            
+            const svgIcon = chatbotToggle.querySelector('.chatbot-icon');
+            const ionIcon = chatbotToggle.querySelector('.chatbot-icon-alt');
+            
+            // Check if SVG loaded, if not show ionicons
+            if (svgIcon && svgIcon.tagName === 'svg') {
+                svgIcon.onerror = function() {
+                    if (ionIcon) {
+                        svgIcon.style.display = 'none';
+                        ionIcon.style.display = 'block';
+                    }
+                };
+            } else if (ionIcon) {
+                ionIcon.style.display = 'block';
+            }
+            
+            // Ensure button is visible and unique
+            chatbotToggle.style.display = 'flex';
+            chatbotToggle.style.visibility = 'visible';
+            chatbotToggle.style.opacity = '1';
+            chatbotToggle.id = 'chatbotToggle'; // Ensure unique ID
+            
+            // Hide any other chatbot-related buttons
+            document.querySelectorAll('button[class*="chatbot"], a[class*="chatbot"]').forEach(btn => {
+                if (btn.id !== 'chatbotToggle') {
+                    btn.style.display = 'none';
+                }
+            });
+        }
     </script>
 </body>
 </html>
