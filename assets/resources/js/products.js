@@ -11,6 +11,30 @@ const products = [
         descriptionHi: 'उत्कृष्ट शक्ति और स्थायित्व के साथ प्रीमियम गुणवत्ता वाली शिव ईंटें। सभी निर्माण आवश्यकताओं के लिए परफेक्ट। ये ईंटें मशीन से बनी हैं जिनमें समान आकार और आकृति है, जो सुसंगत गुणवत्ता और तेज निर्माण सुनिश्चित करती हैं।',
         inStock: true,
         rating: 4.9
+    },
+    {
+        id: 2,
+        name: 'Premium Red Brick',
+        nameHi: 'प्रीमियम लाल ईंट',
+        category: 'premium',
+        price: 12,
+        image: 'assets/resources/img/redbricks.jpg',
+        description: 'High-quality premium red bricks with excellent strength and uniform size. Ideal for residential and commercial construction. These bricks are well-burnt with low water absorption and perfect for load-bearing walls.',
+        descriptionHi: 'उत्कृष्ट शक्ति और समान आकार के साथ उच्च गुणवत्ता वाली प्रीमियम लाल ईंटें। आवासीय और वाणिज्यिक निर्माण के लिए आदर्श। ये ईंटें अच्छी तरह से जली हुई हैं जिनमें कम पानी अवशोषण है और भार वहन करने वाली दीवारों के लिए परफेक्ट हैं।',
+        inStock: true,
+        rating: 4.8
+    },
+    {
+        id: 3,
+        name: 'Machine Made Brick',
+        nameHi: 'मशीन से बनी ईंट',
+        category: 'machine',
+        price: 11,
+        image: 'assets/resources/img/gurukripaEnt2.png',
+        description: 'Uniform size and shape machine-made bricks. Consistent quality and perfect for modern construction. These bricks offer superior precision, reduced mortar consumption, and faster construction time.',
+        descriptionHi: 'समान आकार और आकृति वाली मशीन से बनी ईंटें। सुसंगत गुणवत्ता और आधुनिक निर्माण के लिए परफेक्ट। ये ईंटें उत्कृष्ट सटीकता, कम मोर्टार खपत और तेज निर्माण समय प्रदान करती हैं।',
+        inStock: true,
+        rating: 4.7
     }
 ];
 
@@ -46,7 +70,7 @@ function renderProducts() {
         productCard.className = 'product-card';
         productCard.innerHTML = `
             <div class="product-image-wrapper">
-                <img src="${product.image}" alt="${isHindi ? product.nameHi : product.name}" class="product-image" />
+                <img src="${product.image}" alt="${isHindi ? product.nameHi : product.name}" class="product-image" loading="lazy" />
                 <div class="product-overlay">
                     <button class="btn btn-primary view-details-btn" onclick="viewProductDetails(${product.id})">
                         <i class="ion-ios-eye"></i> ${isHindi ? 'विवरण देखें' : 'View Details'}
