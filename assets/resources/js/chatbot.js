@@ -10,19 +10,36 @@
     const OPENAI_API_KEY = 'YOUR_OPENAI_API_KEY_HERE'; // Add your OpenAI API key here
     const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
     
-    // Product information for quick responses
-    const productInfo = {
-        shiv: {
+    // Get product information dynamically from products array
+    function getProductInfo() {
+        // Try to get products from global products array
+        if (typeof products !== 'undefined' && products.length > 0) {
+            const shivProduct = products.find(p => p.category === 'shiv' || p.name.toLowerCase().includes('shiv'));
+            if (shivProduct) {
+                return {
+                    name: shivProduct.name,
+                    nameHi: shivProduct.nameHi || shivProduct.name,
+                    price: shivProduct.price,
+                    description: shivProduct.description,
+                    descriptionHi: shivProduct.descriptionHi || shivProduct.description,
+                    rating: shivProduct.rating || 4.9,
+                    category: shivProduct.category || 'shiv',
+                    inStock: shivProduct.inStock !== false
+                };
+            }
+        }
+        // Fallback product information
+        return {
             name: 'Shiv Eant',
             nameHi: 'शिव ईंट',
             price: 10,
-            description: 'Premium quality Shiv Eant bricks with superior strength and durability. Perfect for all construction needs.',
-            descriptionHi: 'उत्कृष्ट शक्ति और स्थायित्व के साथ प्रीमियम गुणवत्ता वाली शिव ईंटें। सभी निर्माण आवश्यकताओं के लिए परफेक्ट।',
+            description: 'Premium quality Shiv Eant bricks with superior strength and durability. Perfect for all construction needs. These bricks are machine-made with uniform size and shape, ensuring consistent quality and faster construction.',
+            descriptionHi: 'उत्कृष्ट शक्ति और स्थायित्व के साथ प्रीमियम गुणवत्ता वाली शिव ईंटें। सभी निर्माण आवश्यकताओं के लिए परफेक्ट। ये ईंटें मशीन से बनी हैं जिनमें समान आकार और आकृति है, जो सुसंगत गुणवत्ता और तेज निर्माण सुनिश्चित करती हैं।',
             rating: 4.9,
             category: 'shiv',
             inStock: true
-        }
-    };
+        };
+    }
     
     // Company information
     const companyInfo = {
@@ -95,7 +112,7 @@
     // Get quick response based on intent
     function getQuickResponse(intent, message) {
         const isHindi = getCurrentLanguage() === 'hi';
-        const product = productInfo.shiv;
+        const product = getProductInfo();
         
         switch(intent) {
             case 'price':
@@ -161,20 +178,21 @@
         
         try {
             const isHindi = getCurrentLanguage() === 'hi';
+            const product = getProductInfo();
             const systemPrompt = isHindi ? 
                 `आप गुरुकृपा ईंट उद्योग का AI सहायक हैं। आप ईंट निर्माण, निर्माण सामग्री, और कंपनी के बारे में जानकारी प्रदान करते हैं। कंपनी की जानकारी:
 - नाम: ${companyInfo.nameHi}
 - फोन: ${companyInfo.phone}
 - अनुभव: ${companyInfo.experience}
 - ग्राहक: ${companyInfo.customers}
-- उत्पाद: ${productInfo.shiv.nameHi} - ₹${productInfo.shiv.price}/पीस
+- उत्पाद: ${product.nameHi} - ₹${product.price}/पीस
 संक्षिप्त और मददगार उत्तर दें।` :
                 `You are an AI assistant for ${companyInfo.name}. You provide information about brick manufacturing, construction materials, and the company. Company info:
 - Name: ${companyInfo.name}
 - Phone: ${companyInfo.phone}
 - Experience: ${companyInfo.experience}
 - Customers: ${companyInfo.customers}
-- Product: ${productInfo.shiv.name} - ₹${productInfo.shiv.price}/piece
+- Product: ${product.name} - ₹${product.price}/piece
 Provide brief and helpful answers.`;
             
             const messages = [
@@ -213,17 +231,18 @@ Provide brief and helpful answers.`;
     // Get fallback response when ChatGPT is not available
     function getFallbackResponse(message) {
         const isHindi = getCurrentLanguage() === 'hi';
+        const product = getProductInfo();
         const fallbackResponses = isHindi ? [
             'धन्यवाद! हमारी ईंटों के बारे में अधिक जानकारी के लिए कृपया हमें ' + companyInfo.phone + ' पर कॉल करें।',
             'हमारी ईंटें उच्च गुणवत्ता वाली हैं और ' + companyInfo.experience + ' का अनुभव है।',
             'हम ' + companyInfo.cities.join(', ') + ' में सेवा प्रदान करते हैं।',
-            'शिव ईंट की कीमत ₹' + productInfo.shiv.price + ' प्रति पीस है। अधिक जानकारी के लिए हमसे संपर्क करें।',
+            product.nameHi + ' की कीमत ₹' + product.price + ' प्रति पीस है। अधिक जानकारी के लिए हमसे संपर्क करें।',
             'कृपया हमारी वेबसाइट देखें या सीधे हमसे ' + companyInfo.phone + ' पर संपर्क करें।'
         ] : [
             'Thank you! For more information about our bricks, please call us at ' + companyInfo.phone + '.',
             'Our bricks are high quality with ' + companyInfo.experience + ' of experience.',
             'We serve in ' + companyInfo.cities.join(', ') + '.',
-            'The price of Shiv Eant is ₹' + productInfo.shiv.price + ' per piece. Contact us for more information.',
+            'The price of ' + product.name + ' is ₹' + product.price + ' per piece. Contact us for more information.',
             'Please visit our website or contact us directly at ' + companyInfo.phone + '.'
         ];
         

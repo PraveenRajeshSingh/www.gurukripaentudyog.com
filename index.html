@@ -395,33 +395,6 @@
         </div>
     </section>
 
-    <!-- Customer Reviews Section -->
-    <section class="section section-reviews" id="reviews">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Customer Reviews</h2>
-                <p class="section-subtitle">What Our Customers Say About Us</p>
-                <div class="reviews-summary">
-                    <div class="average-rating">
-                        <span class="rating-number-large" id="averageRating">5.0</span>
-                        <div class="rating-stars-large">
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                        </div>
-                        <p class="total-reviews">Based on <span id="totalReviews">6</span> verified reviews</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="reviews-grid" id="reviewsContainer">
-                <!-- Reviews will be rendered here -->
-            </div>
-        </div>
-    </section>
-
     <!-- Blog Section -->
     <section class="section section-blog" id="blog">
         <div class="container">
@@ -557,8 +530,13 @@
     </div>
 
     <!-- Chatbot Toggle Button -->
-    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Open chatbot" title="Chat with AI Assistant" style="display: flex !important; visibility: visible !important; opacity: 1 !important; z-index: 99999 !important;">
-        <i class="ion-ios-chatbubbles chatbot-icon-main"></i>
+    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Open chatbot" title="Chat with AI Assistant">
+        <svg class="chatbot-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z" fill="currentColor"/>
+            <path d="M7 9H17V11H7V9ZM7 12H15V14H7V12ZM7 6H17V8H7V6Z" fill="currentColor"/>
+        </svg>
+        <i class="ion-ios-chatbubbles chatbot-icon-main" style="display: none;"></i>
+        <span class="chatbot-icon-fallback" style="display: none; font-size: 1.5rem;">💬</span>
         <span class="chatbot-notification"></span>
         <span class="chatbot-pulse"></span>
     </button>
@@ -721,7 +699,6 @@
     <script src="assets/resources/js/cart.js"></script>
     <script src="assets/resources/js/products.js"></script>
     <script src="assets/resources/js/blog.js"></script>
-    <script src="assets/resources/js/reviews.js"></script>
     <script src="assets/resources/js/customer-portal.js"></script>
     <script src="assets/resources/js/analytics.js"></script>
     <script src="assets/resources/js/chatbot.js"></script>
@@ -967,28 +944,26 @@
                 chatbotToggle.style.opacity = '1';
                 chatbotToggle.style.zIndex = '99999';
                 
-                // Ensure icon is visible
+                // Ensure icon is visible - prioritize SVG
+                const svgIcon = chatbotToggle.querySelector('.chatbot-icon-svg');
                 const iconMain = chatbotToggle.querySelector('.chatbot-icon-main');
-                if (iconMain) {
+                const fallback = chatbotToggle.querySelector('.chatbot-icon-fallback');
+                
+                if (svgIcon) {
+                    svgIcon.style.display = 'block';
+                    svgIcon.style.visibility = 'visible';
+                    svgIcon.style.opacity = '1';
+                    if (iconMain) iconMain.style.display = 'none';
+                    if (fallback) fallback.style.display = 'none';
+                } else if (iconMain) {
                     iconMain.style.display = 'block';
                     iconMain.style.visibility = 'visible';
                     iconMain.style.opacity = '1';
-                    iconMain.style.fontSize = '1.8rem';
-                    iconMain.style.color = 'var(--white)';
+                    if (fallback) fallback.style.display = 'none';
+                } else if (fallback) {
+                    fallback.style.display = 'block';
+                    fallback.style.fontSize = '1.5rem';
                 }
-                
-                // Force button visibility
-                chatbotToggle.style.cssText = `
-                    position: fixed !important;
-                    bottom: 30px !important;
-                    right: 30px !important;
-                    width: 60px !important;
-                    height: 60px !important;
-                    display: flex !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    z-index: 99999 !important;
-                `;
                 
                 // Hide any other chatbot-related buttons
                 document.querySelectorAll('button[class*="chatbot"], a[class*="chatbot"]').forEach(btn => {
@@ -1045,21 +1020,8 @@
             console.log('✅ Functionality check complete');
         }
         
-                // Run tests after page loads
+        // Run tests after page loads
         setTimeout(testFunctionality, 1500);
-        
-        // Update reviews summary
-        setTimeout(function() {
-            if (typeof getAverageRating === 'function' && typeof getTotalReviews === 'function') {
-                const avgRating = document.getElementById('averageRating');
-                const totalReviews = document.getElementById('totalReviews');
-                if (avgRating) avgRating.textContent = getAverageRating();
-                if (totalReviews) totalReviews.textContent = getTotalReviews();
-            }
-            if (typeof renderReviews === 'function') {
-                renderReviews();
-            }
-        }, 1000);
     </script>
 </body>
 </html>
