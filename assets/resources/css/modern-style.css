@@ -41,8 +41,16 @@ body {
 }
 
 .section {
-    padding: 80px 0;
+    padding: 100px 0;
     position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section.animated {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .section-header {
@@ -90,7 +98,8 @@ body {
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 20px rgba(0,0,0,0.1);
     z-index: 1000;
-    transition: var(--transition);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
 }
 
 .modern-nav.scrolled {
@@ -263,9 +272,22 @@ body {
     position: relative;
     background: linear-gradient(135deg, rgba(230, 126, 34, 0.9), rgba(207, 109, 23, 0.9)),
                 url('assets/resources/img/brick.jpeg') center/cover;
+    background-attachment: fixed;
     color: var(--white);
     text-align: center;
     padding-top: 70px;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(230, 126, 34, 0.3) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
 }
 
 .hero-overlay {
@@ -347,6 +369,35 @@ body {
     padding: 15px 35px;
     border-radius: 50px;
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn span,
+.btn i {
+    position: relative;
+    z-index: 1;
+}
     font-weight: 600;
     font-size: 1rem;
     transition: var(--transition);
@@ -419,10 +470,16 @@ body {
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    animation: fadeInUp 0.6s ease-out both;
     position: relative;
     display: flex;
     flex-direction: column;
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+}
+
+.product-card.animated {
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
 
 .product-card:nth-child(1) { animation-delay: 0.1s; }
@@ -555,8 +612,31 @@ body {
     border-radius: 15px;
     text-align: center;
     box-shadow: var(--shadow);
-    transition: var(--transition);
-    animation: fadeInUp 0.6s ease-out both;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(30px);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(230, 126, 34, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.feature-card:hover::before {
+    left: 100%;
+}
+
+.feature-card.animated {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .feature-card:nth-child(1) { animation-delay: 0.1s; }
@@ -1897,6 +1977,201 @@ html {
 }
 
 /* ============================================
+   ENHANCED UX IMPROVEMENTS
+   ============================================ */
+
+/* Better focus states for accessibility */
+*:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+button:focus,
+a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+/* Improved loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 3px solid var(--primary-color);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Smooth transitions for all interactive elements */
+a, button, input, select, textarea {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better hover feedback */
+.interactive-element {
+    cursor: pointer;
+    user-select: none;
+}
+
+.interactive-element:hover {
+    transform: translateY(-2px);
+}
+
+.interactive-element:active {
+    transform: translateY(0);
+}
+
+/* Improved spacing and typography */
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+/* Better visual hierarchy */
+.section-header {
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    margin-bottom: 1rem;
+}
+
+.section-subtitle {
+    max-width: 600px;
+    margin: 1.5rem auto 0;
+}
+
+/* Enhanced card designs */
+.card-enhanced {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(230, 126, 34, 0.1);
+}
+
+.card-enhanced:hover {
+    box-shadow: 0 8px 30px rgba(230, 126, 34, 0.2);
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+}
+
+/* Improved form inputs */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
+    outline: none;
+}
+
+input:invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown) {
+    border-color: #e74c3c;
+}
+
+input:valid:not(:placeholder-shown),
+textarea:valid:not(:placeholder-shown) {
+    border-color: #27ae60;
+}
+
+/* Better scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* Improved page loader */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.loader-brick {
+    width: 20px;
+    height: 40px;
+    background: var(--primary-color);
+    margin: 0 5px;
+    border-radius: 4px;
+    animation: loaderBounce 1.4s ease-in-out infinite;
+}
+
+.loader-brick:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader-brick:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes loaderBounce {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* ============================================
    RESPONSIVE UPDATES
    ============================================ */
 
@@ -1954,6 +2229,37 @@ html {
     .chatbot-toggle {
         bottom: 20px;
         right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .section {
+        padding: 60px 0;
+    }
+    
+    .section-header {
+        margin-bottom: 3rem;
+    }
+    
+    .hero-section {
+        min-height: 90vh;
+        padding-top: 80px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    /* Reduce animation intensity on mobile */
+    .feature-card:hover,
+    .product-card:hover,
+    .city-card:hover {
+        transform: translateY(-5px);
     }
 }
 
