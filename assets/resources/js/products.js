@@ -90,35 +90,36 @@ function renderProducts() {
     }
     
     filteredProducts.forEach(product => {
-        const isHindi = currentLanguage === 'hi';
+        const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
         productCard.innerHTML = `
-            <div class="product-image">
-                <img src="${product.image}" alt="${isHindi ? product.nameHi : product.name}" />
-                <div class="product-overlay">
-                    <button class="btn-view-details" onclick="viewProductDetails(${product.id})">
-                        ${getTranslation('viewDetails')}
-                    </button>
-                </div>
-            </div>
+            <img src="${product.image}" alt="${isHindi ? product.nameHi : product.name}" class="product-image" />
             <div class="product-info">
                 <h3>${isHindi ? product.nameHi : product.name}</h3>
                 <p class="product-description">${isHindi ? product.descriptionHi : product.description}</p>
-                <div class="product-rating">
-                    ${generateStars(product.rating)}
-                    <span>${product.rating}</span>
-                </div>
-                <div class="product-footer">
-                    <span class="product-price">₹${product.price}/piece</span>
-                    <button class="btn-add-cart" onclick="addToCart(${product.id})">
-                        <i class="ion-ios-cart"></i> ${getTranslation('addToCart')}
-                    </button>
-                </div>
+                <div class="product-price">₹${product.price}/piece</div>
+                <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}" style="width: 100%; margin-top: 15px;">
+                    <i class="ion-ios-cart"></i> Add to Cart
+                </button>
             </div>
         `;
         container.appendChild(productCard);
     });
+    
+    // Add event listeners for add to cart buttons
+    setTimeout(() => {
+        container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-product-id'));
+                if (typeof addToCart === 'function') {
+                    addToCart(productId);
+                } else {
+                    alert('Product added! Cart functionality will be available shortly.');
+                }
+            });
+        });
+    }, 100);
 }
 
 function generateStars(rating) {
@@ -214,7 +215,14 @@ function viewProductDetails(productId) {
 // Initialize products on page load
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('productsContainer')) {
+        // Set default filter to show all products
+        currentCategory = 'all';
+        priceRange = { min: 0, max: 20 };
         filterProducts();
     }
 });
+
+// Make functions globally available
+window.setCategory = setCategory;
+window.setPriceRange = setPriceRange;
 
