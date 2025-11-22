@@ -30,10 +30,15 @@
 
 <body>
     <!-- Page Loader -->
-    <div class="page-loader">
-        <div class="loader-brick"></div>
-        <div class="loader-brick"></div>
-        <div class="loader-brick"></div>
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-bricks">
+                <div class="loader-brick"></div>
+                <div class="loader-brick"></div>
+                <div class="loader-brick"></div>
+            </div>
+            <div class="loader-text">Loading...</div>
+        </div>
     </div>
 
     <!-- Modern Navigation -->
@@ -422,10 +427,8 @@
 
     <!-- Chatbot Toggle Button -->
     <button class="chatbot-toggle" id="chatbotToggle" aria-label="Open chatbot" title="Chat with AI Assistant">
-        <svg class="chatbot-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11C11 9.75 14.5 10 14.5 8C14.5 6.9 13.6 6 12.5 6C11.4 6 10.5 6.9 10.5 8H8.5C8.5 5.79 10.29 4 12.5 4C14.71 4 16.5 5.79 16.5 8C16.5 10.5 13 10.75 13 13Z" fill="currentColor"/>
-        </svg>
-        <i class="ion-ios-chatbubbles chatbot-icon-alt" style="display: none;"></i>
+        <i class="ion-ios-chatbubbles chatbot-icon-main"></i>
+        <span class="chatbot-icon-fallback" style="display: none;">💬</span>
         <span class="chatbot-notification"></span>
         <span class="chatbot-pulse"></span>
     </button>
@@ -799,47 +802,122 @@
             }
         });
         
-        // Ensure only one chatbot icon is visible
-        const chatbotToggle = document.getElementById('chatbotToggle');
-        if (chatbotToggle) {
-            // Remove any duplicate chatbot buttons
-            const allChatbotButtons = document.querySelectorAll('.chatbot-toggle');
-            if (allChatbotButtons.length > 1) {
-                allChatbotButtons.forEach((btn, index) => {
-                    if (index > 0) {
-                        btn.remove(); // Remove duplicates, keep only the first one
+        // Page Loader
+        window.addEventListener('load', function() {
+            const pageLoader = document.getElementById('pageLoader');
+            if (pageLoader) {
+                setTimeout(function() {
+                    pageLoader.classList.add('hidden');
+                    setTimeout(function() {
+                        pageLoader.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }, 500);
+                }, 800);
+            }
+        });
+        
+        // Ensure chatbot icon is visible and working
+        function initChatbotIcon() {
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            if (chatbotToggle) {
+                // Remove any duplicate chatbot buttons
+                const allChatbotButtons = document.querySelectorAll('.chatbot-toggle');
+                if (allChatbotButtons.length > 1) {
+                    allChatbotButtons.forEach((btn, index) => {
+                        if (index > 0) {
+                            btn.remove();
+                        }
+                    });
+                }
+                
+                // Ensure button is visible
+                chatbotToggle.style.display = 'flex';
+                chatbotToggle.style.visibility = 'visible';
+                chatbotToggle.style.opacity = '1';
+                chatbotToggle.style.zIndex = '99999';
+                
+                // Ensure icon is visible
+                const icon = chatbotToggle.querySelector('.chatbot-icon-main');
+                const fallback = chatbotToggle.querySelector('.chatbot-icon-fallback');
+                
+                if (icon) {
+                    // Check if icon font loaded
+                    const iconStyle = window.getComputedStyle(icon, ':before');
+                    if (iconStyle.content === 'none' || iconStyle.content === '') {
+                        // Icon font not loaded, show fallback
+                        icon.style.display = 'none';
+                        if (fallback) {
+                            fallback.style.display = 'block';
+                            fallback.style.fontSize = '1.8rem';
+                        }
+                    } else {
+                        icon.style.display = 'block';
+                        icon.style.visibility = 'visible';
+                        icon.style.opacity = '1';
+                        if (fallback) fallback.style.display = 'none';
+                    }
+                } else if (fallback) {
+                    fallback.style.display = 'block';
+                    fallback.style.fontSize = '1.8rem';
+                }
+                
+                // Hide any other chatbot-related buttons
+                document.querySelectorAll('button[class*="chatbot"], a[class*="chatbot"]').forEach(btn => {
+                    if (btn.id !== 'chatbotToggle') {
+                        btn.style.display = 'none';
                     }
                 });
+            } else {
+                console.warn('Chatbot toggle button not found');
             }
-            
-            const svgIcon = chatbotToggle.querySelector('.chatbot-icon');
-            const ionIcon = chatbotToggle.querySelector('.chatbot-icon-alt');
-            
-            // Check if SVG loaded, if not show ionicons
-            if (svgIcon && svgIcon.tagName === 'svg') {
-                svgIcon.onerror = function() {
-                    if (ionIcon) {
-                        svgIcon.style.display = 'none';
-                        ionIcon.style.display = 'block';
-                    }
-                };
-            } else if (ionIcon) {
-                ionIcon.style.display = 'block';
-            }
-            
-            // Ensure button is visible and unique
-            chatbotToggle.style.display = 'flex';
-            chatbotToggle.style.visibility = 'visible';
-            chatbotToggle.style.opacity = '1';
-            chatbotToggle.id = 'chatbotToggle'; // Ensure unique ID
-            
-            // Hide any other chatbot-related buttons
-            document.querySelectorAll('button[class*="chatbot"], a[class*="chatbot"]').forEach(btn => {
-                if (btn.id !== 'chatbotToggle') {
-                    btn.style.display = 'none';
-                }
-            });
         }
+        
+        // Initialize chatbot icon
+        initChatbotIcon();
+        
+        // Re-check after a short delay to ensure it's visible
+        setTimeout(initChatbotIcon, 500);
+        setTimeout(initChatbotIcon, 1000);
+        
+        // Test all functionality
+        function testFunctionality() {
+            console.log('🔍 Testing website functionality...');
+            
+            // Test Cart
+            if (typeof addToCart === 'function' && typeof openCart === 'function') {
+                console.log('✅ Cart: OK');
+            } else {
+                console.warn('⚠️ Cart: Functions may not be loaded');
+            }
+            
+            // Test Language
+            if (typeof window.setLanguage === 'function') {
+                console.log('✅ Language: OK');
+            } else {
+                console.warn('⚠️ Language: Function may not be loaded');
+            }
+            
+            // Test Products
+            if (typeof products !== 'undefined' && typeof renderProducts === 'function') {
+                console.log('✅ Products: OK');
+            } else {
+                console.warn('⚠️ Products: May not be loaded');
+            }
+            
+            // Test Chatbot
+            const chatbot = document.getElementById('chatbot');
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            if (chatbot && chatbotToggle) {
+                console.log('✅ Chatbot: OK');
+            } else {
+                console.warn('⚠️ Chatbot: Elements may be missing');
+            }
+            
+            console.log('✅ Functionality check complete');
+        }
+        
+        // Run tests after page loads
+        setTimeout(testFunctionality, 1500);
     </script>
 </body>
 </html>

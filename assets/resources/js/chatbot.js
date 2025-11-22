@@ -333,15 +333,18 @@ Provide brief and helpful answers.`;
             toggle.style.display = 'flex';
             toggle.style.visibility = 'visible';
             toggle.style.opacity = '1';
+            toggle.style.zIndex = '99999';
             
-            // Remove any existing event listeners to prevent duplicates
-            const newToggle = toggle.cloneNode(true);
-            toggle.parentNode.replaceChild(newToggle, toggle);
+            // Ensure icon is visible
+            const icon = toggle.querySelector('.chatbot-icon-main');
+            if (icon) {
+                icon.style.display = 'block';
+                icon.style.visibility = 'visible';
+                icon.style.opacity = '1';
+            }
             
-            // Re-get the toggle after cloning
-            const freshToggle = document.getElementById('chatbotToggle');
-            
-            freshToggle.addEventListener('click', function() {
+            // Add click event listener
+            toggle.addEventListener('click', function() {
                 const chatbot = document.getElementById('chatbot');
                 if (chatbot) {
                     chatbot.classList.toggle('active');
