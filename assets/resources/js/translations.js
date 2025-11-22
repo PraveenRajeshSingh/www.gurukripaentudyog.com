@@ -94,7 +94,11 @@ const translations = {
         delete: "Delete",
         search: "Search",
         submit: "Submit",
-        close: "Close"
+        close: "Close",
+        
+        // Chatbot
+        chatbotTitle: "Gurukripa Bricks",
+        chatbotPlaceholder: "Type your message..."
     },
     hi: {
         // Navigation
@@ -190,7 +194,11 @@ const translations = {
         delete: "हटाएं",
         search: "खोजें",
         submit: "जमा करें",
-        close: "बंद करें"
+        close: "बंद करें",
+        
+        // Chatbot
+        chatbotTitle: "गुरुकृपा ईंट उद्योग",
+        chatbotPlaceholder: "अपना संदेश टाइप करें..."
     }
 };
 

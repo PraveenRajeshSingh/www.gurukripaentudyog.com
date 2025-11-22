@@ -766,32 +766,47 @@
                 <span class="modal-close" onclick="closeRegisterModal()">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="registerForm" onsubmit="handleRegister(event)">
+                <form id="registerForm" onsubmit="handleRegister(event)" class="enhanced-form">
                     <div class="form-group">
                         <label data-translate="name">Name</label>
-                        <input type="text" id="registerName" required />
+                        <input type="text" id="registerName" required placeholder="Enter your full name" />
+                        <span class="form-icon"><i class="ion-ios-person"></i></span>
                     </div>
                     <div class="form-group">
                         <label data-translate="email">Email</label>
-                        <input type="email" id="registerEmail" required />
+                        <input type="email" id="registerEmail" required placeholder="Enter your email address" />
+                        <span class="form-icon"><i class="ion-ios-email"></i></span>
                     </div>
                     <div class="form-group">
                         <label data-translate="mobile">Mobile Number</label>
-                        <input type="tel" id="registerMobile" required />
+                        <input type="tel" id="registerMobile" required placeholder="Enter your mobile number" pattern="[0-9]{10}" />
+                        <span class="form-icon"><i class="ion-ios-telephone"></i></span>
                     </div>
                     <div class="form-group">
                         <label data-translate="password">Password</label>
-                        <input type="password" id="registerPassword" required />
+                        <input type="password" id="registerPassword" required placeholder="Create a strong password" minlength="6" />
+                        <span class="form-icon"><i class="ion-ios-locked"></i></span>
+                        <small class="form-help">Minimum 6 characters</small>
                     </div>
                     <div class="form-group">
                         <label data-translate="confirmPassword">Confirm Password</label>
-                        <input type="password" id="registerConfirmPassword" required />
+                        <input type="password" id="registerConfirmPassword" required placeholder="Confirm your password" />
+                        <span class="form-icon"><i class="ion-ios-locked"></i></span>
                     </div>
                     <div class="form-group">
                         <label data-translate="address">Address</label>
-                        <textarea id="registerAddress"></textarea>
+                        <textarea id="registerAddress" placeholder="Enter your complete address" rows="3"></textarea>
+                        <span class="form-icon"><i class="ion-ios-location"></i></span>
                     </div>
-                    <button type="submit" class="btn btn-full" data-translate="register">Register</button>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="registerTerms" required />
+                            <span>I agree to the <a href="#" target="_blank">Terms & Conditions</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-full" data-translate="register">
+                        <i class="ion-ios-checkmark-circle"></i> Register
+                    </button>
                     <p style="text-align: center; margin-top: 15px;">
                         <span>Already have an account?</span>
                         <a href="#" onclick="openLoginModal(); return false;" data-translate="login">Login</a>

@@ -2762,3 +2762,748 @@ img {
         width: 100%;
     }
 }
+
+/* ----------------------------------------------- */
+
+/* COMPREHENSIVE IMPROVEMENTS */
+
+/* ----------------------------------------------- */
+
+/* Enhanced Logo Design */
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.logo-link:hover {
+    transform: scale(1.05);
+}
+
+.logo {
+    height: 100px;
+    width: auto;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.logo-black {
+    display: none;
+    height: 70px;
+    width: auto;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+}
+
+/* Enhanced Header Section */
+header {
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.1) 0%, rgba(207, 109, 23, 0.1) 100%);
+    z-index: 1;
+}
+
+.hero-text-box {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+/* Enhanced Navigation */
+nav {
+    position: relative;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.sticky nav {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.main-nav li a {
+    position: relative;
+    padding: 8px 15px;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+}
+
+.main-nav li a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #e67e22;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.main-nav li a:hover::before {
+    width: 80%;
+}
+
+/* Enhanced Mobile Navigation */
+.mobile-nav-icon {
+    transition: transform 0.3s ease;
+}
+
+.mobile-nav-icon.active {
+    transform: rotate(90deg);
+}
+
+.main-nav {
+    transition: max-height 0.3s ease;
+}
+
+/* Enhanced Buttons */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 90%;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::after {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn-full {
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+}
+
+.btn-full:hover {
+    box-shadow: 0 6px 20px rgba(230, 126, 34, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-ghost:hover {
+    background: #e67e22;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+}
+
+/* Enhanced Links */
+a:link,
+a:visited {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+a:hover,
+a:active {
+    color: #cf6d17;
+}
+
+/* Enhanced Paragraphs */
+p {
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 100%;
+    transition: color 0.3s ease;
+}
+
+.long-copy {
+    font-size: 110%;
+    line-height: 1.9;
+}
+
+/* Enhanced Headings */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+h2 {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #e67e22, transparent);
+    border-radius: 2px;
+}
+
+.section-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    font-size: 110%;
+    color: #888;
+    margin-bottom: 40px;
+    font-style: italic;
+}
+
+/* Enhanced Color-Changing Text */
+.color-changing-text {
+    background: linear-gradient(90deg, #e67e22, #f39c12, #e67e22, #d35400, #e67e22);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease infinite;
+    font-weight: 700;
+    display: inline-block;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Enhanced Chatbot */
+.chatbot-header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.chatbot-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 200%;
+}
+
+.chatbot-status {
+    font-size: 80%;
+    opacity: 0.9;
+    display: block;
+    margin-top: 5px;
+}
+
+.chatbot-message {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.message-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #e67e22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.message-content {
+    flex: 1;
+}
+
+.message-time {
+    font-size: 75%;
+    opacity: 0.7;
+    display: block;
+    margin-top: 5px;
+}
+
+.chatbot-pulse {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 12px;
+    height: 12px;
+    background: #27ae60;
+    border-radius: 50%;
+    animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+/* Enhanced How It Works Section */
+.brick-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.brick-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(230, 126, 34, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #fff;
+}
+
+.brick-image-container:hover .brick-overlay {
+    opacity: 1;
+}
+
+.brick-overlay i {
+    font-size: 400%;
+    margin-bottom: 10px;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e67e22, #cf6d17);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 200%;
+    font-weight: 700;
+    margin-right: 20px;
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+    transition: all 0.3s ease;
+}
+
+.works-step:hover .step-number {
+    transform: scale(1.1) rotate(360deg);
+    box-shadow: 0 6px 20px rgba(230, 126, 34, 0.5);
+}
+
+.step-content h4 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 120%;
+}
+
+.step-content p {
+    color: #666;
+    line-height: 1.7;
+}
+
+/* Enhanced Testimonials */
+.testimonial-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.testimonial-card:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.testimonial-rating {
+    color: #f39c12;
+    font-size: 120%;
+    margin-bottom: 15px;
+}
+
+.testimonial-card blockquote {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-style: normal;
+}
+
+.testimonial-card blockquote::before {
+    display: none;
+}
+
+.testimonial-card cite {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.testimonial-card cite img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    object-fit: cover;
+}
+
+.cite-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.cite-info strong {
+    color: #fff;
+    font-size: 110%;
+    margin-bottom: 5px;
+}
+
+.cite-info span {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 90%;
+}
+
+.cite-avatar-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 250%;
+    color: #fff;
+}
+
+/* Enhanced Cities Section */
+.city-card {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.city-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(230, 126, 34, 0.2);
+}
+
+.city-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.city-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.city-card:hover .city-image-wrapper img {
+    transform: scale(1.1);
+}
+
+.city-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(230, 126, 34, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #fff;
+    font-size: 400%;
+}
+
+.city-card:hover .city-overlay {
+    opacity: 1;
+}
+
+.city-content {
+    padding: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.city-content h3 {
+    color: #e67e22;
+    margin-bottom: 15px;
+    font-size: 130%;
+}
+
+.city-badge {
+    margin-top: auto;
+    padding-top: 15px;
+    color: #e67e22;
+    font-weight: 600;
+    font-size: 90%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Enhanced Google Maps */
+.map-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.map-responsive {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.map-info {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 100px;
+}
+
+.map-info h3 {
+    color: #e67e22;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 130%;
+}
+
+.map-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.map-contact-info {
+    padding-top: 25px;
+    border-top: 2px solid #e0e0e0;
+}
+
+.map-contact-info p {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+}
+
+.map-contact-info a {
+    color: #e67e22;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.map-contact-info a:hover {
+    color: #cf6d17;
+}
+
+/* Enhanced Form */
+.contact-form,
+.enhanced-form {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e67e22;
+    font-size: 120%;
+    pointer-events: none;
+}
+
+.form-group textarea + .form-icon {
+    top: 20px;
+    transform: none;
+}
+
+.form-help {
+    display: block;
+    margin-top: 5px;
+    font-size: 85%;
+    color: #888;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.contact-form input,
+.contact-form textarea,
+.contact-form select {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 100%;
+    transition: all 0.3s ease;
+    font-family: "Lato", sans-serif;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus,
+.contact-form select:focus {
+    border-color: #e67e22;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
+    transform: translateY(-2px);
+}
+
+.contact-form input[type="submit"] {
+    background: linear-gradient(135deg, #e67e22, #cf6d17);
+    color: #fff;
+    border: none;
+    padding: 15px 40px;
+    font-size: 110%;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-form input[type="submit"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(230, 126, 34, 0.4);
+}
+
+/* Enhanced Animations - Mobile Optimized */
+@media (prefers-reduced-motion: no-preference) {
+    @media (max-width: 767px) {
+        .js--wp-1,
+        .js--wp-2,
+        .js--wp-3,
+        .js--wp-4 {
+            animation-duration: 0.6s;
+        }
+    }
+}
+
+/* Performance Optimizations */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Enhanced Responsive Design */
+@media only screen and (max-width: 767px) {
+    .map-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .map-info {
+        position: static;
+    }
+    
+    .city-card {
+        margin-bottom: 20px;
+    }
+    
+    .testimonial-card {
+        margin-bottom: 20px;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+}
