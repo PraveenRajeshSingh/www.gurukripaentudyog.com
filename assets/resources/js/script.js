@@ -252,49 +252,8 @@ $(document).ready(function() {
         window.open('https://wa.me/919198923230?text=नमस्ते, मुझे गुरुकृपा ईंट के बारे में जानकारी चाहिए', '_blank');
     });
 
-    /* Chatbot Functionality */
-    $('#chatbotToggle').click(function() {
-        $('#chatbot').toggleClass('active');
-    });
-
-    $('#chatbotClose').click(function() {
-        $('#chatbot').removeClass('active');
-    });
-
-    $('#chatbotSend').click(function() {
-        sendChatbotMessage();
-    });
-
-    $('#chatbotInput').keypress(function(e) {
-        if (e.which === 13) {
-            sendChatbotMessage();
-        }
-    });
-
-    function sendChatbotMessage() {
-        var message = $('#chatbotInput').val().trim();
-        if (message === '') return;
-
-        // Add user message
-        var userMsg = $('<div class="chatbot-message user-message"><p>' + message + '</p></div>');
-        $('#chatbotMessages').append(userMsg);
-        $('#chatbotInput').val('');
-        $('#chatbotMessages').scrollTop($('#chatbotMessages')[0].scrollHeight);
-
-        // Simulate bot response
-        setTimeout(function() {
-            var responses = [
-                'धन्यवाद! हमारी ईंटों के बारे में अधिक जानकारी के लिए कृपया हमें +91 9198923230 पर कॉल करें।',
-                'हमारी ईंटें उच्च गुणवत्ता वाली हैं और 25+ वर्षों का अनुभव है।',
-                'हम जौनपुर, वाराणसी, त्रिलोचन और जलालपुर में सेवा प्रदान करते हैं।',
-                'कृपया हमारी वेबसाइट देखें या सीधे हमसे संपर्क करें।'
-            ];
-            var randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            var botMsg = $('<div class="chatbot-message bot-message"><p>' + randomResponse + '</p></div>');
-            $('#chatbotMessages').append(botMsg);
-            $('#chatbotMessages').scrollTop($('#chatbotMessages')[0].scrollHeight);
-        }, 500);
-    }
+    /* Chatbot Functionality - Now handled by chatbot.js */
+    // Old chatbot code removed - see assets/resources/js/chatbot.js for enhanced AI chatbot
 });
 
 

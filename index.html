@@ -396,6 +396,33 @@
         <i class="ion-social-whatsapp"></i>
     </a>
 
+    <!-- AI Chatbot -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <h3 data-translate="chatbotTitle">Gurukripa Bricks</h3>
+            <button class="chatbot-close" id="chatbotClose" aria-label="Close chatbot">
+                <i class="ion-ios-close"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chatbot-message bot-message">
+                <p>नमस्ते! मैं आपकी कैसे मदद कर सकता हूं? आप हमारे उत्पादों, कीमतों, या किसी भी अन्य जानकारी के बारे में पूछ सकते हैं।</p>
+            </div>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatbotInput" class="chatbot-input" data-placeholder="chatbotPlaceholder" placeholder="Type your message...">
+            <button class="chatbot-send" id="chatbotSend" aria-label="Send message">
+                <i class="ion-ios-paperplane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chatbot Toggle Button -->
+    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Open chatbot">
+        <i class="ion-ios-chatbubbles"></i>
+        <span class="chatbot-notification"></span>
+    </button>
+
     <!-- Cart Modal -->
     <div class="modal" id="cartModal">
         <div class="modal-content modal-large">
@@ -556,6 +583,7 @@
     <script src="assets/resources/js/blog.js"></script>
     <script src="assets/resources/js/customer-portal.js"></script>
     <script src="assets/resources/js/analytics.js"></script>
+    <script src="assets/resources/js/chatbot.js"></script>
     <script src="assets/resources/js/animations.js"></script>
     <script src="assets/resources/js/script.js"></script>
     <script>
