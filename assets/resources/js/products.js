@@ -11,6 +11,66 @@ const products = [
         descriptionHi: 'उत्कृष्ट शक्ति और स्थायित्व के साथ प्रीमियम गुणवत्ता वाली शिव ईंटें। सभी निर्माण आवश्यकताओं के लिए परफेक्ट।',
         inStock: true,
         rating: 4.9
+    },
+    {
+        id: 2,
+        name: 'Premium Red Brick',
+        nameHi: 'प्रीमियम लाल ईंट',
+        category: 'premium',
+        price: 12,
+        image: 'assets/resources/img/redbricks.jpg',
+        description: 'High-quality premium red bricks with excellent strength and uniform size. Ideal for residential and commercial construction.',
+        descriptionHi: 'उत्कृष्ट शक्ति और समान आकार के साथ उच्च गुणवत्ता वाली प्रीमियम लाल ईंटें। आवासीय और वाणिज्यिक निर्माण के लिए आदर्श।',
+        inStock: true,
+        rating: 4.8
+    },
+    {
+        id: 3,
+        name: 'Standard Red Brick',
+        nameHi: 'मानक लाल ईंट',
+        category: 'standard',
+        price: 8,
+        image: 'assets/resources/img/redbrick1.jpg',
+        description: 'Standard quality red bricks perfect for general construction work. Cost-effective and reliable.',
+        descriptionHi: 'सामान्य निर्माण कार्य के लिए परफेक्ट मानक गुणवत्ता वाली लाल ईंटें। लागत प्रभावी और विश्वसनीय।',
+        inStock: true,
+        rating: 4.5
+    },
+    {
+        id: 4,
+        name: 'Machine Made Brick',
+        nameHi: 'मशीन से बनी ईंट',
+        category: 'machine',
+        price: 11,
+        image: 'assets/resources/img/gurukripaEnt2.png',
+        description: 'Uniform size and shape machine-made bricks. Consistent quality and perfect for modern construction.',
+        descriptionHi: 'समान आकार और आकृति वाली मशीन से बनी ईंटें। सुसंगत गुणवत्ता और आधुनिक निर्माण के लिए परफेक्ट।',
+        inStock: true,
+        rating: 4.7
+    },
+    {
+        id: 5,
+        name: 'Fire Resistant Brick',
+        nameHi: 'अग्निरोधी ईंट',
+        category: 'fire',
+        price: 15,
+        image: 'assets/resources/img/newbricks_2.jpg',
+        description: 'Fire-resistant bricks for high-temperature applications. Perfect for furnaces and industrial use.',
+        descriptionHi: 'उच्च तापमान अनुप्रयोगों के लिए अग्निरोधी ईंटें। भट्टियों और औद्योगिक उपयोग के लिए परफेक्ट।',
+        inStock: true,
+        rating: 4.9
+    },
+    {
+        id: 6,
+        name: 'Hollow Brick',
+        nameHi: 'खोखली ईंट',
+        category: 'hollow',
+        price: 9,
+        image: 'assets/resources/img/newparasbrick2.jpg',
+        description: 'Lightweight hollow bricks for modern construction. Reduces overall building weight and improves insulation.',
+        descriptionHi: 'आधुनिक निर्माण के लिए हल्की खोखली ईंटें। समग्र भवन वजन कम करती है और इन्सुलेशन में सुधार करती है।',
+        inStock: true,
+        rating: 4.6
     }
 ];
 
@@ -109,7 +169,7 @@ function setCategory(category) {
 }
 
 function updateCategoryButtons() {
-    const buttons = document.querySelectorAll('.category-btn');
+    const buttons = document.querySelectorAll('.category-btn, .category-filter-btn');
     buttons.forEach(btn => {
         if (btn.dataset.category === currentCategory) {
             btn.classList.add('active');

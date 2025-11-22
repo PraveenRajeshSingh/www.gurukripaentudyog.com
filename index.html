@@ -32,12 +32,21 @@
     <!-- Page Loader -->
     <div class="page-loader" id="pageLoader">
         <div class="loader-content">
+            <div class="loader-logo">
+                <img src="assets/resources/img/logo-new.svg" alt="Gurukripa" onerror="this.style.display='none';">
+            </div>
             <div class="loader-bricks">
                 <div class="loader-brick"></div>
                 <div class="loader-brick"></div>
                 <div class="loader-brick"></div>
             </div>
-            <div class="loader-text">Loading...</div>
+            <div class="loader-text">
+                <span class="loader-text-main">Loading</span>
+                <span class="loader-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </span>
+            </div>
+            <div class="loader-subtext">गुरुकृपा ईंट उद्योग</div>
         </div>
     </div>
 
@@ -118,11 +127,33 @@
             <div class="section-header products-header">
                 <div class="section-title-wrapper">
                     <span class="section-tag">Premium Quality</span>
-                    <h2 class="section-title" data-translate="productsTitle">Our Products</h2>
+                    <h2 class="section-title" data-translate="productsTitle">
+                        <span class="title-main">Our Products</span>
+                        <span class="title-hindi">हमारे उत्पाद</span>
+                    </h2>
                     <div class="title-underline"></div>
                 </div>
                 <p class="section-subtitle">Premium Quality Bricks for Every Construction Need</p>
                 <p class="section-description">Discover our wide range of high-quality bricks designed to meet all your construction requirements with superior strength and durability.</p>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="product-category-filters">
+                <button class="category-filter-btn active" data-category="all" onclick="setCategory('all')">
+                    <i class="ion-ios-grid"></i> <span>All Products</span>
+                </button>
+                <button class="category-filter-btn" data-category="shiv" onclick="setCategory('shiv')">
+                    <i class="ion-ios-cube"></i> <span>Shiv Eant</span>
+                </button>
+                <button class="category-filter-btn" data-category="premium" onclick="setCategory('premium')">
+                    <i class="ion-ios-star"></i> <span>Premium</span>
+                </button>
+                <button class="category-filter-btn" data-category="standard" onclick="setCategory('standard')">
+                    <i class="ion-ios-square"></i> <span>Standard</span>
+                </button>
+                <button class="category-filter-btn" data-category="machine" onclick="setCategory('machine')">
+                    <i class="ion-ios-gear"></i> <span>Machine Made</span>
+                </button>
             </div>
             
             <div class="products-grid" id="productsContainer">
@@ -427,8 +458,12 @@
 
     <!-- Chatbot Toggle Button -->
     <button class="chatbot-toggle" id="chatbotToggle" aria-label="Open chatbot" title="Chat with AI Assistant">
-        <i class="ion-ios-chatbubbles chatbot-icon-main"></i>
-        <span class="chatbot-icon-fallback" style="display: none;">💬</span>
+        <svg class="chatbot-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z" fill="currentColor"/>
+            <path d="M7 9H17V11H7V9ZM7 12H15V14H7V12ZM7 6H17V8H7V6Z" fill="currentColor"/>
+        </svg>
+        <i class="ion-ios-chatbubbles chatbot-icon-main" style="display: none;"></i>
+        <span class="chatbot-icon-fallback" style="display: none; font-size: 1.5rem;">💬</span>
         <span class="chatbot-notification"></span>
         <span class="chatbot-pulse"></span>
     </button>
@@ -836,29 +871,25 @@
                 chatbotToggle.style.opacity = '1';
                 chatbotToggle.style.zIndex = '99999';
                 
-                // Ensure icon is visible
-                const icon = chatbotToggle.querySelector('.chatbot-icon-main');
+                // Ensure icon is visible - prioritize SVG
+                const svgIcon = chatbotToggle.querySelector('.chatbot-icon-svg');
+                const iconMain = chatbotToggle.querySelector('.chatbot-icon-main');
                 const fallback = chatbotToggle.querySelector('.chatbot-icon-fallback');
                 
-                if (icon) {
-                    // Check if icon font loaded
-                    const iconStyle = window.getComputedStyle(icon, ':before');
-                    if (iconStyle.content === 'none' || iconStyle.content === '') {
-                        // Icon font not loaded, show fallback
-                        icon.style.display = 'none';
-                        if (fallback) {
-                            fallback.style.display = 'block';
-                            fallback.style.fontSize = '1.8rem';
-                        }
-                    } else {
-                        icon.style.display = 'block';
-                        icon.style.visibility = 'visible';
-                        icon.style.opacity = '1';
-                        if (fallback) fallback.style.display = 'none';
-                    }
+                if (svgIcon) {
+                    svgIcon.style.display = 'block';
+                    svgIcon.style.visibility = 'visible';
+                    svgIcon.style.opacity = '1';
+                    if (iconMain) iconMain.style.display = 'none';
+                    if (fallback) fallback.style.display = 'none';
+                } else if (iconMain) {
+                    iconMain.style.display = 'block';
+                    iconMain.style.visibility = 'visible';
+                    iconMain.style.opacity = '1';
+                    if (fallback) fallback.style.display = 'none';
                 } else if (fallback) {
                     fallback.style.display = 'block';
-                    fallback.style.fontSize = '1.8rem';
+                    fallback.style.fontSize = '1.5rem';
                 }
                 
                 // Hide any other chatbot-related buttons
