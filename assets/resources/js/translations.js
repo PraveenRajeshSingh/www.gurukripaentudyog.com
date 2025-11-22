@@ -242,7 +242,7 @@ function translatePage() {
 }
 
 function updateLanguageToggle() {
-    const toggle = document.getElementById('languageToggle');
+    const toggle = document.getElementById('langToggle');
     if (toggle) {
         toggle.textContent = currentLanguage === 'hi' ? 'EN' : 'हिंदी';
     }
@@ -260,12 +260,22 @@ document.addEventListener('DOMContentLoaded', function() {
     updateLanguageToggle();
 });
 
-// Override setLanguage to track analytics
-const originalSetLanguage = setLanguage;
-setLanguage = function(lang) {
-    originalSetLanguage(lang);
+// Make setLanguage globally available
+window.setLanguage = function(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('language', lang);
+    document.documentElement.lang = lang;
+    translatePage();
+    updateLanguageToggle();
+    
+    // Track analytics
     if (typeof trackLanguageChange === 'function') {
         trackLanguageChange(lang);
     }
 };
+
+// Make other functions globally available
+window.getTranslation = getTranslation;
+window.translatePage = translatePage;
+window.updateLanguageToggle = updateLanguageToggle;
 

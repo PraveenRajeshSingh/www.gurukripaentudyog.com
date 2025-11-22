@@ -54,16 +54,29 @@
             </button>
             
             <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#products" class="nav-link">Products</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#cities" class="nav-link">Cities</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#home" class="nav-link active" data-translate="home">Home</a></li>
+                <li><a href="#products" class="nav-link" data-translate="products">Products</a></li>
+                <li><a href="#blog" class="nav-link" data-translate="blog">Blog</a></li>
+                <li><a href="#about" class="nav-link" data-translate="aboutUs">About</a></li>
+                <li><a href="#cities" class="nav-link" data-translate="cities">Cities</a></li>
+                <li><a href="#contact" class="nav-link" data-translate="contact">Contact</a></li>
                 <li class="nav-actions">
                     <button class="btn-icon" id="cartBtn" aria-label="Shopping cart">
                         <i class="ion-ios-cart"></i>
                         <span class="cart-badge" id="cartCount">0</span>
                     </button>
+                    <button class="btn-icon" id="loginBtn" style="display: none;" data-translate="login">Login</button>
+                    <div id="userMenu" style="display: none;" class="user-menu">
+                        <button class="btn-icon" id="userMenuBtn">
+                            <i class="ion-ios-person"></i>
+                            <span id="userName"></span>
+                        </button>
+                        <div class="user-dropdown">
+                            <a href="#dashboard" data-translate="dashboard">Dashboard</a>
+                            <a href="#dashboard" data-translate="myOrders">My Orders</a>
+                            <a href="#" onclick="logoutUser(); return false;" data-translate="logout">Logout</a>
+                        </div>
+                    </div>
                     <button class="btn-icon" id="langToggle" aria-label="Toggle language">EN</button>
                 </li>
             </ul>
@@ -74,17 +87,17 @@
     <header class="hero-section" id="home">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1 class="hero-title">
+            <h1 class="hero-title" data-translate="heroTitle">
                 <span class="gradient-text">गुरुकृपा</span> Bricks
             </h1>
-            <p class="hero-subtitle">Best Quality Bricks for Your Dream Home</p>
+            <p class="hero-subtitle" data-translate="heroSubtitle">Best Quality Bricks for Your Dream Home</p>
             <p class="hero-description">25+ Years of Excellence in Brick Manufacturing</p>
             <div class="hero-cta">
                 <a href="tel:+919198923230" class="btn btn-primary">
-                    <i class="ion-ios-telephone"></i> Call Now
+                    <i class="ion-ios-telephone"></i> <span data-translate="callUs">Call Now</span>
                 </a>
                 <a href="#products" class="btn btn-secondary">
-                    <i class="ion-ios-grid"></i> View Products
+                    <i class="ion-ios-grid"></i> <span data-translate="products">View Products</span>
                 </a>
             </div>
         </div>
@@ -98,9 +111,31 @@
     <section class="section section-products" id="products">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Our Products</h2>
+                <h2 class="section-title" data-translate="productsTitle">Our Products</h2>
                 <p class="section-subtitle">Premium Quality Bricks for Every Construction Need</p>
             </div>
+            
+            <!-- Product Filters -->
+            <div class="product-filters">
+                    <div class="filter-group">
+                        <label data-translate="filterBy">Filter By:</label>
+                        <div class="category-filters">
+                            <button class="category-btn active" data-category="all" onclick="setCategory('all')" data-translate="allProducts">All Products</button>
+                            <button class="category-btn" data-category="shiv" onclick="setCategory('shiv')">Shiv Eant</button>
+                        </div>
+                    </div>
+                <div class="filter-group">
+                    <label data-translate="priceRange">Price Range:</label>
+                    <div class="price-range">
+                        <input type="number" id="minPrice" placeholder="Min" min="0" value="0" onchange="setPriceRange()">
+                        <span>-</span>
+                        <input type="number" id="maxPrice" placeholder="Max" min="0" value="20" onchange="setPriceRange()">
+                        <button class="btn btn-small" onclick="setPriceRange()" data-translate="applyFilter">Apply</button>
+                        <button class="btn btn-small btn-secondary" onclick="document.getElementById('minPrice').value=0; document.getElementById('maxPrice').value=20; setPriceRange();" data-translate="resetFilter">Reset</button>
+                    </div>
+                </div>
+            </div>
+            
             <div class="products-grid" id="productsContainer">
                 <!-- Products will be rendered here -->
             </div>
@@ -111,7 +146,7 @@
     <section class="section section-about" id="about">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Why Choose Gurukripa Bricks?</h2>
+                <h2 class="section-title" data-translate="whyChoose">Why Choose Gurukripa Bricks?</h2>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
@@ -176,7 +211,7 @@
     <section class="section section-cities" id="cities">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">We Serve</h2>
+                <h2 class="section-title" data-translate="cities">We Serve</h2>
                 <p class="section-subtitle">Delivering quality bricks across multiple cities</p>
             </div>
             <div class="cities-grid">
@@ -248,11 +283,42 @@
         </div>
     </section>
 
+    <!-- Blog Section -->
+    <section class="section section-blog" id="blog">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-translate="blogTitle">Our Blog</h2>
+                <p class="section-subtitle">Latest news and tips about bricks and construction</p>
+            </div>
+            
+            <!-- Blog Category Filters -->
+            <div class="blog-filters">
+                <button class="blog-category-btn active" data-category="all" onclick="setBlogCategory('all')" data-translate="allCategories">All Categories</button>
+                <button class="blog-category-btn" data-category="construction" onclick="setBlogCategory('construction')">Construction</button>
+                <button class="blog-category-btn" data-category="quality" onclick="setBlogCategory('quality')">Quality</button>
+                <button class="blog-category-btn" data-category="tips" onclick="setBlogCategory('tips')">Tips</button>
+            </div>
+            
+            <div class="blog-grid" id="blogPosts">
+                <!-- Blog posts will be rendered here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Dashboard Section -->
+    <section class="section section-dashboard" id="dashboard" style="display: none;">
+        <div class="container">
+            <div id="dashboardContent">
+                <!-- Dashboard content will be rendered here -->
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section class="section section-contact" id="contact">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Contact Us</h2>
+                <h2 class="section-title" data-translate="contact">Contact Us</h2>
                 <p class="section-subtitle">Get in touch for the best bricks</p>
             </div>
             <div class="contact-grid">
@@ -298,10 +364,11 @@
                 <div class="footer-links">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#products">Products</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#home" data-translate="home">Home</a></li>
+                        <li><a href="#products" data-translate="products">Products</a></li>
+                        <li><a href="#blog" data-translate="blog">Blog</a></li>
+                        <li><a href="#about" data-translate="aboutUs">About</a></li>
+                        <li><a href="#contact" data-translate="contact">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-social">
@@ -329,11 +396,166 @@
         <i class="ion-social-whatsapp"></i>
     </a>
 
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 data-translate="cart">Cart</h2>
+                <span class="modal-close" onclick="closeCart()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="cartItems">
+                    <!-- Cart items will be rendered here -->
+                </div>
+                <div class="cart-footer">
+                    <div class="cart-total">
+                        <strong data-translate="total">Total:</strong>
+                        <span id="cartTotal">₹0.00</span>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="proceedToCheckout()" data-translate="checkout">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 data-translate="checkout">Checkout</h2>
+                <span class="modal-close" onclick="closeCheckout()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="checkoutForm" onsubmit="submitOrder(event); return false;">
+                    <div class="checkout-section">
+                        <h3 data-translate="shippingInfo">Shipping Information</h3>
+                        <div class="form-group">
+                            <label data-translate="name">Name *</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-translate="mobile">Mobile Number *</label>
+                            <input type="tel" name="mobile" required pattern="[0-9]{10}">
+                        </div>
+                        <div class="form-group">
+                            <label data-translate="email">Email</label>
+                            <input type="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label data-translate="address">Address *</label>
+                            <textarea name="address" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>City *</label>
+                            <input type="text" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Pincode *</label>
+                            <input type="text" name="pincode" required pattern="[0-9]{6}">
+                        </div>
+                    </div>
+                    <div class="checkout-section">
+                        <h3 data-translate="orderSummary">Order Summary</h3>
+                        <div id="checkoutItems">
+                            <!-- Order items will be rendered here -->
+                        </div>
+                        <div class="order-total">
+                            <strong data-translate="total">Total:</strong>
+                            <span id="checkoutTotal">₹0.00</span>
+                        </div>
+                    </div>
+                    <div class="checkout-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeCheckout(); openCart();" data-translate="cancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary" data-translate="placeOrder">Place Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate="login">Login</h2>
+                <span class="modal-close" onclick="closeLoginModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" onsubmit="handleLogin(event); return false;">
+                    <div class="form-group">
+                        <label data-translate="email">Email *</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="password">Password *</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="remember">
+                            <span data-translate="rememberMe">Remember Me</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" data-translate="login">Login</button>
+                    <p style="text-align: center; margin-top: 15px;">
+                        <a href="#" onclick="openRegisterModal(); return false;" data-translate="register">Don't have an account? Register</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate="register">Register</h2>
+                <span class="modal-close" onclick="closeRegisterModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm" onsubmit="handleRegister(event); return false;">
+                    <div class="form-group">
+                        <label data-translate="name">Name *</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="email">Email *</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="mobile">Mobile Number *</label>
+                        <input type="tel" name="mobile" required pattern="[0-9]{10}">
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="password">Password *</label>
+                        <input type="password" name="password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="confirmPassword">Confirm Password *</label>
+                        <input type="password" name="confirmPassword" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="address">Address</label>
+                        <textarea name="address" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" data-translate="register">Register</button>
+                    <p style="text-align: center; margin-top: 15px;">
+                        <a href="#" onclick="openLoginModal(); return false;" data-translate="login">Already have an account? Login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="assets/vendors/js/jquery.waypoints.min.js"></script>
+    <script src="assets/resources/js/translations.js"></script>
     <script src="assets/resources/js/cart.js"></script>
     <script src="assets/resources/js/products.js"></script>
+    <script src="assets/resources/js/blog.js"></script>
+    <script src="assets/resources/js/customer-portal.js"></script>
+    <script src="assets/resources/js/analytics.js"></script>
     <script src="assets/resources/js/animations.js"></script>
     <script src="assets/resources/js/script.js"></script>
     <script>
@@ -435,6 +657,109 @@
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
+        });
+
+        // Language toggle
+        const langToggle = document.getElementById('langToggle');
+        if (langToggle) {
+            langToggle.addEventListener('click', function() {
+                const currentLang = localStorage.getItem('language') || 'hi';
+                const newLang = currentLang === 'hi' ? 'en' : 'hi';
+                if (typeof window.setLanguage === 'function') {
+                    window.setLanguage(newLang);
+                } else {
+                    // Fallback if setLanguage not loaded yet
+                    localStorage.setItem('language', newLang);
+                    location.reload();
+                }
+            });
+            
+            // Update button text on load
+            const savedLang = localStorage.getItem('language') || 'hi';
+            langToggle.textContent = savedLang === 'hi' ? 'EN' : 'हिंदी';
+        }
+
+        // Cart button
+        const cartBtn = document.getElementById('cartBtn');
+        if (cartBtn) {
+            cartBtn.addEventListener('click', function() {
+                if (typeof window.openCart === 'function') {
+                    window.openCart();
+                } else {
+                    // Fallback
+                    const cartModal = document.getElementById('cartModal');
+                    if (cartModal) {
+                        cartModal.style.display = 'flex';
+                    }
+                }
+            });
+        }
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // Login button
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function() {
+                if (typeof openLoginModal === 'function') {
+                    openLoginModal();
+                }
+            });
+        }
+
+        // User menu toggle
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        if (userMenuBtn) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = document.querySelector('.user-dropdown');
+                if (dropdown) {
+                    dropdown.classList.toggle('show');
+                }
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const userMenu = document.getElementById('userMenu');
+            const dropdown = document.querySelector('.user-dropdown');
+            if (userMenu && dropdown && !userMenu.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Initialize language on page load
+        setTimeout(() => {
+            if (typeof translatePage === 'function') {
+                translatePage();
+            }
+            if (typeof updateLanguageToggle === 'function') {
+                updateLanguageToggle();
+            }
+            if (typeof updateUserUI === 'function') {
+                updateUserUI();
+            }
+            if (typeof updateCartUI === 'function') {
+                updateCartUI();
+            }
+        }, 100);
+        
+        // Handle hash changes for dashboard
+        window.addEventListener('hashchange', function() {
+            if (window.location.hash === '#dashboard') {
+                if (typeof renderDashboard === 'function') {
+                    const dashboard = document.getElementById('dashboard');
+                    if (dashboard) {
+                        dashboard.style.display = 'block';
+                        renderDashboard();
+                    }
+                }
+            }
         });
     </script>
 </body>

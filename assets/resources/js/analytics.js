@@ -140,6 +140,72 @@
         }
     }
     
+    // E-commerce tracking functions
+    function trackProductView(productId, productName, productPrice) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'view_item', {
+                'currency': 'INR',
+                'value': productPrice,
+                'items': [{
+                    'item_id': productId.toString(),
+                    'item_name': productName,
+                    'price': productPrice,
+                    'quantity': 1
+                }]
+            });
+        }
+    }
+    
+    function trackAddToCart(productId, productName, productPrice, quantity) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'add_to_cart', {
+                'currency': 'INR',
+                'value': productPrice * quantity,
+                'items': [{
+                    'item_id': productId.toString(),
+                    'item_name': productName,
+                    'price': productPrice,
+                    'quantity': quantity
+                }]
+            });
+        }
+    }
+    
+    function trackRemoveFromCart(productId, productName, productPrice) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'remove_from_cart', {
+                'currency': 'INR',
+                'value': productPrice,
+                'items': [{
+                    'item_id': productId.toString(),
+                    'item_name': productName,
+                    'price': productPrice
+                }]
+            });
+        }
+    }
+    
+    function trackBeginCheckout(cartValue, items) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'begin_checkout', {
+                'currency': 'INR',
+                'value': cartValue,
+                'items': items
+            });
+        }
+    }
+    
+    function trackPurchase(transactionId, value, items) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'purchase', {
+                'transaction_id': transactionId.toString(),
+                'value': value,
+                'currency': 'INR',
+                'items': items
+            });
+        }
+    }
+    
     // Initialize analytics tracking
     function initAnalytics() {
         // Track initial page view
@@ -273,6 +339,12 @@
     window.trackLanguageChange = trackLanguageChange;
     window.trackEvent = trackEvent;
     window.trackEngagement = trackEngagement;
+    window.trackProductView = trackProductView;
+    window.trackAddToCart = trackAddToCart;
+    window.trackRemoveFromCart = trackRemoveFromCart;
+    window.trackBeginCheckout = trackBeginCheckout;
+    window.trackPurchase = trackPurchase;
     
 })();
+
 

@@ -2,8 +2,17 @@
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function addToCart(productId) {
+    // Ensure products array is available
+    if (typeof products === 'undefined' || !products.length) {
+        console.error('Products array not found');
+        return;
+    }
+    
     const product = products.find(p => p.id === productId);
-    if (!product) return;
+    if (!product) {
+        console.error('Product not found:', productId);
+        return;
+    }
     
     const existingItem = cart.find(item => item.id === productId);
     
@@ -27,13 +36,20 @@ function addToCart(productId) {
     // Track analytics event
     if (typeof gtag !== 'undefined') {
         gtag('event', 'add_to_cart', {
+            'currency': 'INR',
+            'value': product.price,
             'items': [{
-                'id': product.id,
-                'name': product.name,
+                'item_id': product.id.toString(),
+                'item_name': product.name,
                 'price': product.price,
                 'quantity': 1
             }]
         });
+    }
+    
+    // Also track using analytics.js function if available
+    if (typeof trackAddToCart === 'function') {
+        trackAddToCart(product.id, product.name, product.price, 1);
     }
 }
 
@@ -157,22 +173,188 @@ function proceedToCheckout() {
         return;
     }
     
-    // Check if user is logged in
+    closeCart();
+    openCheckout();
+}
+
+function openCheckout() {
+    const checkoutModal = document.getElementById('checkoutModal');
+    if (checkoutModal) {
+        checkoutModal.style.display = 'flex';
+        renderCheckout();
+        
+        // Track begin_checkout event
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'begin_checkout', {
+                'currency': 'INR',
+                'value': getCartTotal(),
+                'items': cart.map(item => ({
+                    'id': item.id,
+                    'name': item.name,
+                    'price': item.price,
+                    'quantity': item.quantity
+                }))
+            });
+        }
+    }
+}
+
+function closeCheckout() {
+    const checkoutModal = document.getElementById('checkoutModal');
+    if (checkoutModal) {
+        checkoutModal.style.display = 'none';
+    }
+}
+
+function renderCheckout() {
+    const checkoutItems = document.getElementById('checkoutItems');
+    const checkoutTotal = document.getElementById('checkoutTotal');
+    
+    if (checkoutItems) {
+        const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
+        checkoutItems.innerHTML = cart.map(item => `
+            <div class="checkout-item">
+                <div class="checkout-item-info">
+                    <h4>${isHindi ? item.nameHi : item.name}</h4>
+                    <p>₹${item.price} × ${item.quantity}</p>
+                </div>
+                <div class="checkout-item-total">
+                    ₹${(item.price * item.quantity).toFixed(2)}
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    if (checkoutTotal) {
+        checkoutTotal.textContent = `₹${getCartTotal().toFixed(2)}`;
+    }
+    
+    // Pre-fill form if user is logged in
     const user = JSON.parse(localStorage.getItem('currentUser'));
-    if (!user) {
-        alert('Please login to continue');
-        openLoginModal();
+    if (user && document.getElementById('checkoutForm')) {
+        const form = document.getElementById('checkoutForm');
+        if (form.name) form.name.value = user.name || '';
+        if (form.email) form.email.value = user.email || '';
+        if (form.mobile) form.mobile.value = user.mobile || '';
+        if (form.address) form.address.value = user.address || '';
+    }
+}
+
+function submitOrder(event) {
+    event.preventDefault();
+    
+    if (cart.length === 0) {
+        alert(getTranslation('emptyCart'));
         return;
     }
     
-    // Redirect to checkout
-    window.location.href = '#checkout';
-    closeCart();
-    renderCheckout();
+    const form = event.target;
+    const formData = new FormData(form);
+    const orderData = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        items: [...cart],
+        total: getCartTotal(),
+        shipping: {
+            name: formData.get('name'),
+            mobile: formData.get('mobile'),
+            email: formData.get('email'),
+            address: formData.get('address'),
+            city: formData.get('city'),
+            pincode: formData.get('pincode')
+        },
+        status: 'pending'
+    };
+    
+    // Save order to user account if logged in
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (user) {
+        if (!user.orders) user.orders = [];
+        user.orders.push(orderData);
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const userIndex = users.findIndex(u => u.email === user.email);
+        if (userIndex !== -1) {
+            users[userIndex] = user;
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        }
+    }
+    
+    // Send order via WhatsApp
+    const orderMessage = formatOrderMessage(orderData);
+    const whatsappUrl = `https://wa.me/919198923230?text=${encodeURIComponent(orderMessage)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    // Track purchase event
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'purchase', {
+            'transaction_id': orderData.id.toString(),
+            'value': orderData.total,
+            'currency': 'INR',
+            'items': orderData.items.map(item => ({
+                'id': item.id,
+                'name': item.name,
+                'price': item.price,
+                'quantity': item.quantity
+            }))
+        });
+    }
+    
+    // Clear cart
+    cart = [];
+    saveCart();
+    updateCartUI();
+    
+    // Show success message
+    alert('Order placed successfully! You will be redirected to WhatsApp to confirm your order.');
+    
+    // Close checkout modal
+    closeCheckout();
+    
+    // Redirect to home
+    window.location.href = '#home';
+}
+
+function formatOrderMessage(orderData) {
+    const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
+    let message = isHindi ? 
+        'नमस्ते, मैं ऑर्डर देना चाहता/चाहती हूं:\n\n' :
+        'Hello, I would like to place an order:\n\n';
+    
+    message += isHindi ? 'उत्पाद:\n' : 'Products:\n';
+    orderData.items.forEach(item => {
+        message += `- ${isHindi ? item.nameHi : item.name}: ${item.quantity} × ₹${item.price} = ₹${(item.quantity * item.price).toFixed(2)}\n`;
+    });
+    
+    message += `\n${isHindi ? 'कुल राशि' : 'Total'}: ₹${orderData.total.toFixed(2)}\n\n`;
+    message += isHindi ? 'शिपिंग जानकारी:\n' : 'Shipping Information:\n';
+    message += `${isHindi ? 'नाम' : 'Name'}: ${orderData.shipping.name}\n`;
+    message += `${isHindi ? 'मोबाइल' : 'Mobile'}: ${orderData.shipping.mobile}\n`;
+    if (orderData.shipping.email) {
+        message += `${isHindi ? 'ईमेल' : 'Email'}: ${orderData.shipping.email}\n`;
+    }
+    message += `${isHindi ? 'पता' : 'Address'}: ${orderData.shipping.address}\n`;
+    message += `${isHindi ? 'शहर' : 'City'}: ${orderData.shipping.city}\n`;
+    message += `${isHindi ? 'पिनकोड' : 'Pincode'}: ${orderData.shipping.pincode}\n`;
+    
+    return message;
 }
 
 // Initialize cart on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateCartUI();
 });
+
+// Make functions globally available
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
+window.openCart = openCart;
+window.closeCart = closeCart;
+window.proceedToCheckout = proceedToCheckout;
+window.closeCheckout = closeCheckout;
+window.submitOrder = submitOrder;
+window.getCartTotal = getCartTotal;
+window.getCartCount = getCartCount;
+
 

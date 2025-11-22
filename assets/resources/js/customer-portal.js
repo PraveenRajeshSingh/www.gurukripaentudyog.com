@@ -173,8 +173,86 @@ function editProfile() {
     alert('Profile editing feature coming soon');
 }
 
+function handleLogin(event) {
+    event.preventDefault();
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    
+    const result = loginUser(email, password);
+    
+    if (result.success) {
+        closeLoginModal();
+        updateUserUI();
+        alert(getTranslation('success') + ': ' + result.message);
+        
+        // Track login event
+        if (typeof trackFormSubmission === 'function') {
+            trackFormSubmission('login');
+        }
+    } else {
+        alert(getTranslation('error') + ': ' + result.message);
+    }
+}
+
+function handleRegister(event) {
+    event.preventDefault();
+    const form = event.target;
+    
+    if (form.password.value !== form.confirmPassword.value) {
+        alert('Passwords do not match');
+        return;
+    }
+    
+    const userData = {
+        name: form.name.value,
+        email: form.email.value,
+        mobile: form.mobile.value,
+        password: form.password.value,
+        address: form.address.value
+    };
+    
+    const result = registerUser(userData);
+    
+    if (result.success) {
+        closeRegisterModal();
+        updateUserUI();
+        alert(getTranslation('success') + ': ' + result.message);
+        
+        // Track registration event
+        if (typeof trackFormSubmission === 'function') {
+            trackFormSubmission('register');
+        }
+    } else {
+        alert(getTranslation('error') + ': ' + result.message);
+    }
+}
+
 // Initialize user UI on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateUserUI();
+    
+    // Check if dashboard should be shown
+    if (window.location.hash === '#dashboard') {
+        renderDashboard();
+        const dashboard = document.getElementById('dashboard');
+        if (dashboard) {
+            dashboard.style.display = 'block';
+        }
+    }
 });
+
+// Make functions globally available
+window.loginUser = loginUser;
+window.logoutUser = logoutUser;
+window.registerUser = registerUser;
+window.openLoginModal = openLoginModal;
+window.closeLoginModal = closeLoginModal;
+window.openRegisterModal = openRegisterModal;
+window.closeRegisterModal = closeRegisterModal;
+window.openDashboard = openDashboard;
+window.renderDashboard = renderDashboard;
+window.handleLogin = handleLogin;
+window.handleRegister = handleRegister;
+
 
