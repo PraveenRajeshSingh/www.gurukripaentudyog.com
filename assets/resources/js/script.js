@@ -163,22 +163,27 @@ $(document).ready(function() {
         return false;
     });
 
-    /* Image Lightbox/Gallery */
-    $('.gallery-img').click(function() {
+    /* Image Lightbox/Gallery - Fixed: Use event delegation to prevent handler accumulation */
+    $(document).on('click', '.gallery-img', function() {
         var imgSrc = $(this).attr('src');
         var imgAlt = $(this).attr('alt');
+        
+        // Remove existing lightbox if any
+        $('.lightbox-overlay').remove();
         
         var lightbox = $('<div class="lightbox-overlay"><div class="lightbox-content"><span class="lightbox-close">&times;</span><img src="' + imgSrc + '" alt="' + imgAlt + '"></div></div>');
         $('body').append(lightbox);
         lightbox.fadeIn(300);
-        
-        $('.lightbox-close, .lightbox-overlay').click(function(e) {
-            if (e.target === this) {
-                lightbox.fadeOut(300, function() {
-                    $(this).remove();
-                });
-            }
-        });
+    });
+
+    // Fixed: Use event delegation for lightbox close - handles both overlay and close button
+    $(document).on('click', '.lightbox-overlay', function(e) {
+        // Close if clicking overlay background or close button
+        if ($(e.target).hasClass('lightbox-overlay') || $(e.target).hasClass('lightbox-close') || $(e.target).closest('.lightbox-close').length) {
+            $(this).fadeOut(300, function() {
+                $(this).remove();
+            });
+        }
     });
 
     /* Form Validation with Animation */
@@ -246,6 +251,50 @@ $(document).ready(function() {
     $('.fab-whatsapp').click(function() {
         window.open('https://wa.me/919198923230?text=नमस्ते, मुझे गुरुकृपा ईंट के बारे में जानकारी चाहिए', '_blank');
     });
+
+    /* Chatbot Functionality */
+    $('#chatbotToggle').click(function() {
+        $('#chatbot').toggleClass('active');
+    });
+
+    $('#chatbotClose').click(function() {
+        $('#chatbot').removeClass('active');
+    });
+
+    $('#chatbotSend').click(function() {
+        sendChatbotMessage();
+    });
+
+    $('#chatbotInput').keypress(function(e) {
+        if (e.which === 13) {
+            sendChatbotMessage();
+        }
+    });
+
+    function sendChatbotMessage() {
+        var message = $('#chatbotInput').val().trim();
+        if (message === '') return;
+
+        // Add user message
+        var userMsg = $('<div class="chatbot-message user-message"><p>' + message + '</p></div>');
+        $('#chatbotMessages').append(userMsg);
+        $('#chatbotInput').val('');
+        $('#chatbotMessages').scrollTop($('#chatbotMessages')[0].scrollHeight);
+
+        // Simulate bot response
+        setTimeout(function() {
+            var responses = [
+                'धन्यवाद! हमारी ईंटों के बारे में अधिक जानकारी के लिए कृपया हमें +91 9198923230 पर कॉल करें।',
+                'हमारी ईंटें उच्च गुणवत्ता वाली हैं और 25+ वर्षों का अनुभव है।',
+                'हम जौनपुर, वाराणसी, त्रिलोचन और जलालपुर में सेवा प्रदान करते हैं।',
+                'कृपया हमारी वेबसाइट देखें या सीधे हमसे संपर्क करें।'
+            ];
+            var randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            var botMsg = $('<div class="chatbot-message bot-message"><p>' + randomResponse + '</p></div>');
+            $('#chatbotMessages').append(botMsg);
+            $('#chatbotMessages').scrollTop($('#chatbotMessages')[0].scrollHeight);
+        }, 500);
+    }
 });
 
 
@@ -255,4 +304,5 @@ let getData = function() {
     $.each($("#contact-form").serializeArray(), function(i, field) {
         values[field.name] = field.value;
     });
+    return values; // Fixed: Return the values object
 };

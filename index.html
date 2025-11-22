@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="assets/vendors/css/animate.css" />
     <link rel="stylesheet" type="text/css" href="assets/resources/css/style.css" />
     <link rel="stylesheet" type="text/css" href="assets/resources/css/queries.css" />
-    <link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,300italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet" type="text/css" />
     <link rel="shortcut icon" href="assets/resources/img/favicon.ico" type="image/x-icon" />
     <meta name="facebook-domain-verification" content="8821qbj3zkdobp7ux7p3gihssscwso" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -37,13 +37,6 @@
 
         gtag('config', 'UA-213951382-1');
     </script>
-    <!-- Page Loader -->
-    <div class="page-loader">
-        <div class="loader-brick"></div>
-        <div class="loader-brick"></div>
-        <div class="loader-brick"></div>
-    </div>
-
     <title>Guru Kripa Bricks(गुरुकृपा ईंट उद्योग): Best Brick in Jaunpur|Varanasi</title>
     <meta name="description"
         content="गुरुकृपा ईंट उद्योग जौनपुर जिले में सबसे लोकप्रिय ईंट उद्योग है। Best brick manufacturer in Jaunpur|Varanasi at most affordable price.Most popular brick industry Since 1992." />
@@ -59,18 +52,35 @@
         <div class="loader-brick"></div>
         <div class="loader-brick"></div>
     </div>
+    
+    <!-- Chatbot -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <h3>गुरुकृपा ईंट उद्योग</h3>
+            <button class="chatbot-close" id="chatbotClose">&times;</button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chatbot-message bot-message">
+                <p>नमस्ते! मैं आपकी कैसे मदद कर सकता हूं? (Hello! How can I help you?)</p>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Type your message..." />
+            <button id="chatbotSend"><i class="ion-paper-airplane"></i></button>
+        </div>
+    </div>
+    <button class="chatbot-toggle" id="chatbotToggle" title="Chat with us">
+        <i class="ion-chatbubbles"></i>
+    </button>
+    
     <header id="home">
         <nav>
             <div class="row">
-                <img src="assets/resources/img/gurukripaLogo.jpg" alt="Gurukripa logo"
-                    class="logo" />
-                <img src="assets/resources/img/gurukripaLogoNoBg.jpg" alt="Gurukripa bricks logo"
-                    class="logo-black" />
-                <!--<span class="navbar-new">-->
-                <!--   &#128222;<a class="navbar-brand" href="tel:+918417991111"-->
-                <!--    > 8417991111</a-->
-                <!--    >-->
-                <!--   </span>-->
+                <div class="logo-container">
+                    <img src="assets/resources/img/logo-new.svg" alt="Gurukripa logo" class="logo" onerror="this.onerror=null; this.src='assets/resources/img/gurukripaLogo.jpg';" />
+                    <img src="assets/resources/img/logo-new.svg" alt="Gurukripa bricks logo" class="logo-black" onerror="this.onerror=null; this.src='assets/resources/img/gurukripaLogoNoBg.jpg';" />
+                    <span class="logo-text">गुरुकृपा ईंट</span>
+                </div>
                 <ul class="main-nav js--main-nav">
                     <li>
                         <a href="#home">Home</a>
@@ -83,15 +93,20 @@
             </div>
         </nav>
         <div class="hero-text-box">
-            <h1 class="js--wp-1">
-                गुरुकृपा Bricks.<br />
-                <h3 style="color: bisque" class="js--wp-1">
-                    उत्तम घर बनाने के लिए सर्वोत्तम ईंटें प्राप्त करें। <br /> हम जौनपुर में सबसे अच्छे ईंट निर्माताओं
-                    में से एक हैं।
-                </h3>
+            <h1 class="js--wp-1 animated-text">
+                <span class="color-changing-text">गुरुकृपा</span> Bricks.<br />
             </h1>
-            <a class="btn btn-full js--scroll-to-plans js--wp-1" href="tel:+919198923230">Call Us</a>
-            <a class="btn btn-ghost js--scroll-to-start js--wp-1" href="#googleMap">Directions</a>
+            <h3 class="js--wp-1 hero-subtitle">
+                उत्तम घर बनाने के लिए सर्वोत्तम ईंटें प्राप्त करें। <br /> हम जौनपुर में सबसे अच्छे ईंट निर्माताओं में से एक हैं।
+            </h3>
+            <div class="hero-buttons js--wp-1">
+                <a class="btn btn-full js--scroll-to-plans" href="tel:+919198923230">
+                    <i class="ion-ios-telephone"></i> Call Us
+                </a>
+                <a class="btn btn-ghost js--scroll-to-start" href="#googleMap">
+                    <i class="ion-ios-navigate"></i> Directions
+                </a>
+            </div>
         </div>
     </header>
     <!-- features of Paras Bricks -->
@@ -360,33 +375,37 @@
             </p>
         </div>
     </section>
-    <!-- map -->
-    <section>
-        <div class="map-responsive" id="googleMap">
-
-            <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2843.75099685615!2d82.79136717416928!3d25.604107915101448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39902fb80ba0141f%3A0x8383316b344c0741!2zR3VydUtyaXBhIEVhbnQgVWR5b2cgTmV3YWRhLyDgpJfgpYHgpLDgpYHgpJXgpYPgpKrgpL4g4KSI4KSC4KSfIOCkieCkpuCljeCkr-Cli-CklyDgpKjgpLXgpL7gpKbgpL4!5e1!3m2!1sen!2sin!4v1725638270630!5m2!1sen!2sin"
-            width="600" height="450" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            frameborder="0" style="border: 0"></iframe>
-    </div>
-<!-- </section>
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3598.0243255115747!2d82.79136717416928!3d25.604107915101448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39902fb80ba0141f%3A0x8383316b344c0741!2zR3VydUtyaXBhIEVhbnQgVWR5b2cgTmV3YWRhLyDgpJfgpYHgpLDgpYHgpJXgpYPgpKrgpL4g4KSI4KSC4KSfIOCkieCkpuCljeCkr-Cli-CklyDgpKjgpLXgpL7gpKbgpL4!5e0!3m2!1sen!2sin!4v1725637936563!5m2!1sen!2sin"
-                width="600" height="450" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                frameborder="0" style="border: 0"></iframe>
-            
-        </div> -->
-        <br>
-        <div class="map-responsive" id="googleMap">
-
-           
+    <!-- Google Maps Section -->
+    <section class="section-map" id="googleMap">
+        <div class="row">
+            <h2>हमारा स्थान (Our Location)</h2>
+        </div>
+        <div class="row">
+            <div class="map-container">
+                <div class="map-responsive">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2843.75099685615!2d82.79136717416928!3d25.604107915101448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39902fb80ba0141f%3A0x8383316b344c0741!2zR3VydUtyaXBhIEVhbnQgVWR5b2cgTmV3YWRhLyDgpJfgpYHgpLDgpYHgpJXgpYPgpKrgpL4g4KSI4KSC4KSfIOCkieCkpuCljeCkr-Cli-CklyDgpKjgpLXgpL7gpKbgpL4!5e1!3m2!1sen!2sin!4v1725638270630!5m2!1sen!2sin"
+                        width="100%" 
+                        height="450" 
+                        style="border:0; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+                <div class="map-info">
+                    <h3><i class="ion-ios-location"></i> Visit Us</h3>
+                    <p>गुरुकृपा ईंट उद्योग - नेवादा, जलालपुर-चावरी रोड</p>
+                    <a href="https://goo.gl/maps/your-map-link" target="_blank" class="btn btn-full">Open in Google Maps</a>
+                </div>
+            </div>
+        </div>
+    </section>
     <!-- Feedback Form -->
     <section class="section-form">
         <div class="row">
-            <h2>We're happy to hear from you</h2>
-        </div>
-        <div class="row">
-
+            <h2 class="form-heading">We're happy to hear from you</h2>
+            <p class="form-subheading">हमें आपसे सुनकर खुशी होगी</p>
         </div>
         <div class="row">
             <form method="post" action="save-contact-us" id="reviewData"
@@ -478,17 +497,11 @@
             </div>
             <div class="col span-3-of-3" style="text-align: center">
                 <p>
-                    <span  &copy;2024 All rights reserved. 
-                     class="detail"><a href="#contactPage"> गुरुकृपा ईंट उद्योग </a></span> 
-                     
+                    <span class="detail">&copy; 2024 <a href="#contactPage">गुरुकृपा ईंट उद्योग</a>. All rights reserved.</span>
                 </p>
             </div>
         </div>
     </footer>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="//cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
-    <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="//cdn.jsdelivr.net/selectivizr/1.0.3b/selectivizr.min.js"></script>
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/919198923230?text=नमस्ते! मुझे गुरुकृपा ईंटों के बारे में जानकारी चाहिए" 
        class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
@@ -496,31 +509,13 @@
         <span class="whatsapp-tooltip">WhatsApp पर संपर्क करें</span>
     </a>
 
-    <!-- Scroll to Top Button -->
-    <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
-        <i class="ion-ios-arrow-up"></i>
-    </button>
-
-    <!-- Loading Animation -->
-    <div class="loader-wrapper" id="loader">
-        <div class="loader">
-            <div class="brick-loader">
-                <div class="brick brick-1"></div>
-                <div class="brick brick-2"></div>
-                <div class="brick brick-3"></div>
-            </div>
-            <p class="loader-text">गुरुकृपा ईंट उद्योग</p>
-        </div>
-    </div>
-
+    <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="//cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
-    <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="//cdn.jsdelivr.net/selectivizr/1.0.3b/selectivizr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/selectivizr/1.0.3b/selectivizr.min.js"></script>
     <script src="assets/vendors/js/jquery.waypoints.min.js"></script>
     <script src="assets/resources/js/script.js"></script>
-    <script>
-    </script>
 </body>
 
 </html>
