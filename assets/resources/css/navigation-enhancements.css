@@ -1,0 +1,331 @@
+/* ============================================
+   NAVIGATION ENHANCEMENTS
+   ============================================ */
+
+/* ============================================
+   STICKY NAVIGATION
+   ============================================ */
+
+.modern-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-nav.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    padding: 10px 0;
+}
+
+[data-theme="dark"] .modern-nav.scrolled {
+    background: rgba(45, 45, 45, 0.98);
+}
+
+/* ============================================
+   SMOOTH SCROLL NAVIGATION
+   ============================================ */
+
+html {
+    scroll-behavior: smooth;
+}
+
+.nav-link {
+    position: relative;
+    transition: var(--transition-base);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.nav-link.active::after,
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* ============================================
+   MOBILE SLIDE DRAWER
+   ============================================ */
+
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 320px;
+    height: 100vh;
+    background: var(--white);
+    z-index: 10000;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+
+.mobile-drawer.active {
+    left: 0;
+}
+
+.mobile-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-drawer-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.drawer-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.drawer-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+.drawer-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.drawer-menu li {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.drawer-menu a {
+    display: block;
+    padding: 15px 20px;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: var(--transition-base);
+}
+
+.drawer-menu a:hover,
+.drawer-menu a.active {
+    background: var(--bg-light);
+    color: var(--primary-color);
+    padding-left: 25px;
+}
+
+/* ============================================
+   MEGA MENU
+   ============================================ */
+
+.mega-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    box-shadow: var(--shadow-xl);
+    padding: 40px;
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    z-index: 1000;
+    border-top: 3px solid var(--primary-color);
+}
+
+.nav-item.has-mega-menu:hover .mega-menu {
+    display: grid;
+    animation: megaMenuSlideDown 0.3s ease;
+}
+
+@keyframes megaMenuSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mega-menu-section h4 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.mega-menu-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mega-menu-links li {
+    margin-bottom: 10px;
+}
+
+.mega-menu-links a {
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mega-menu-links a:hover {
+    color: var(--primary-color);
+    padding-left: 5px;
+}
+
+/* ============================================
+   FLOATING QUICK MENU
+   ============================================ */
+
+.floating-quick-menu {
+    position: fixed;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.quick-menu-item {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition-base);
+    text-decoration: none;
+}
+
+.quick-menu-item:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-xl);
+}
+
+.quick-menu-item.whatsapp {
+    background: #25d366;
+}
+
+.quick-menu-item.call {
+    background: var(--success);
+}
+
+.quick-menu-item.chat {
+    background: var(--primary-color);
+}
+
+/* ============================================
+   EXPANDABLE ACCORDIONS (MOBILE)
+   ============================================ */
+
+.drawer-accordion {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.drawer-accordion-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.drawer-accordion-header::after {
+    content: '+';
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.drawer-accordion.active .drawer-accordion-header::after {
+    transform: rotate(45deg);
+}
+
+.drawer-accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.drawer-accordion.active .drawer-accordion-content {
+    max-height: 500px;
+}
+
+.drawer-accordion-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.drawer-accordion-links a {
+    padding: 10px 20px;
+    display: block;
+    color: var(--text-light);
+    text-decoration: none;
+}
+
+.drawer-accordion-links a:hover {
+    color: var(--primary-color);
+    background: var(--bg-light);
+}
+
+/* ============================================
+   RESPONSIVE NAVIGATION
+   ============================================ */
+
+@media (max-width: 768px) {
+    .mega-menu {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+    
+    .floating-quick-menu {
+        left: 15px;
+        transform: translateY(-50%) scale(0.9);
+    }
+    
+    .quick-menu-item {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+}
+

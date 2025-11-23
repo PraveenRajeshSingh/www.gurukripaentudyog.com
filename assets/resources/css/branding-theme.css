@@ -1,0 +1,323 @@
+/* ============================================
+   BRANDING & THEME FEATURES
+   ============================================ */
+
+/* ============================================
+   LOGO ANIMATIONS
+   ============================================ */
+
+.logo-animated {
+    animation: logoIntro 2s ease-out;
+}
+
+@keyframes logoIntro {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-180deg);
+    }
+    50% {
+        transform: scale(1.1) rotate(0deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.nav-logo,
+.logo-link img {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-link:hover .nav-logo,
+.logo-link:hover img {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 0 20px rgba(230, 126, 34, 0.6));
+    animation: logoGlow 2s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(230, 126, 34, 0.4));
+    }
+    50% {
+        filter: drop-shadow(0 0 25px rgba(230, 126, 34, 0.8));
+    }
+}
+
+/* Logo fade animation */
+.logo-fade {
+    animation: logoFade 3s ease-in-out infinite;
+}
+
+@keyframes logoFade {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Dynamic logo color based on theme */
+[data-theme="dark"] .nav-logo,
+[data-theme="dark"] .logo-link img {
+    filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+[data-theme="light"] .nav-logo,
+[data-theme="light"] .logo-link img {
+    filter: drop-shadow(0 0 10px rgba(230, 126, 34, 0.3));
+}
+
+/* ============================================
+   THEME SYSTEM
+   ============================================ */
+
+:root {
+    --theme-primary: #e67e22;
+    --theme-secondary: #2c3e50;
+    --theme-background: #ffffff;
+    --theme-text: #1a1a1a;
+}
+
+[data-theme="dark"] {
+    --theme-background: #1a1a1a;
+    --theme-text: #f5f5f5;
+}
+
+[data-theme="auto"] {
+    /* Auto theme uses system preference */
+}
+
+/* High contrast mode */
+[data-contrast="high"] {
+    --theme-primary: #000000;
+    --theme-secondary: #ffffff;
+    --theme-background: #ffffff;
+    --theme-text: #000000;
+    --border-color: #000000;
+}
+
+[data-contrast="high"][data-theme="dark"] {
+    --theme-background: #000000;
+    --theme-text: #ffffff;
+}
+
+/* Color blind friendly mode */
+[data-colorblind="true"] {
+    --primary-color: #0066cc;
+    --success: #00cc00;
+    --error: #cc0000;
+    --warning: #ff9900;
+}
+
+/* ============================================
+   THEME PICKER UI
+   ============================================ */
+
+.theme-picker {
+    position: fixed;
+    top: 140px;
+    right: 30px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    display: none;
+    min-width: 200px;
+}
+
+.theme-picker.active {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-base);
+    margin-bottom: 5px;
+}
+
+.theme-option:hover {
+    background: var(--bg-light);
+}
+
+.theme-option input[type="radio"] {
+    margin: 0;
+}
+
+.color-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.color-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: var(--transition-base);
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+    border-color: var(--text-dark);
+}
+
+.color-option.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.3);
+}
+
+/* ============================================
+   FONT SIZE CONTROLS
+   ============================================ */
+
+.font-size-controls {
+    position: fixed;
+    top: 200px;
+    right: 30px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 15px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.font-size-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--border-color);
+    background: var(--white);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: var(--transition-base);
+}
+
+.font-size-btn:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+[data-font-size="small"] {
+    font-size: 14px;
+}
+
+[data-font-size="medium"] {
+    font-size: 16px;
+}
+
+[data-font-size="large"] {
+    font-size: 18px;
+}
+
+[data-font-size="xlarge"] {
+    font-size: 20px;
+}
+
+/* ============================================
+   ACCESSIBILITY MODES
+   ============================================ */
+
+.accessibility-panel {
+    position: fixed;
+    top: 260px;
+    right: 30px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    display: none;
+    min-width: 220px;
+}
+
+.accessibility-panel.active {
+    display: block;
+}
+
+.accessibility-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.accessibility-option:last-child {
+    border-bottom: none;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: var(--border-color);
+    border-radius: 13px;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.toggle-switch.active {
+    background: var(--primary-color);
+}
+
+.toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--white);
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: var(--transition-base);
+}
+
+.toggle-switch.active::after {
+    left: 27px;
+}
+
+/* ============================================
+   RESPONSIVE THEME CONTROLS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .theme-picker,
+    .font-size-controls,
+    .accessibility-panel {
+        right: 15px;
+        top: auto;
+        bottom: 100px;
+    }
+}
+
