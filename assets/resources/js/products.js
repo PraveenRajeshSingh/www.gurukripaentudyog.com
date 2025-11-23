@@ -18,11 +18,20 @@ const products = [
         nameHi: 'प्रीमियम लाल ईंट',
         category: 'premium',
         price: 7,
+        originalPrice: 9,
         image: 'assets/resources/img/brick.jpeg',
         description: 'High-quality premium red bricks with excellent strength and uniform size. Ideal for residential and commercial construction. These bricks are well-burnt with low water absorption and perfect for load-bearing walls.',
         descriptionHi: 'उत्कृष्ट शक्ति और समान आकार के साथ उच्च गुणवत्ता वाली प्रीमियम लाल ईंटें। आवासीय और वाणिज्यिक निर्माण के लिए आदर्श। ये ईंटें अच्छी तरह से जली हुई हैं जिनमें कम पानी अवशोषण है और भार वहन करने वाली दीवारों के लिए परफेक्ट हैं।',
         inStock: true,
-        rating: 4.8
+        rating: 4.8,
+        reviews: 38,
+        features: ['Excellent Strength', 'Uniform Size', 'Well-Burnt', 'Low Absorption'],
+        specs: {
+            size: '190×90×90 mm',
+            weight: '2.5-3 kg',
+            strength: '8-12 N/mm²',
+            absorption: '<18%'
+        }
     },
     {
         id: 3,
@@ -34,7 +43,15 @@ const products = [
         description: 'Uniform size and shape machine-made bricks. Consistent quality and perfect for modern construction. These bricks offer superior precision, reduced mortar consumption, and faster construction time.',
         descriptionHi: 'समान आकार और आकृति वाली मशीन से बनी ईंटें। सुसंगत गुणवत्ता और आधुनिक निर्माण के लिए परफेक्ट। ये ईंटें उत्कृष्ट सटीकता, कम मोर्टार खपत और तेज निर्माण समय प्रदान करती हैं।',
         inStock: true,
-        rating: 4.7
+        rating: 4.7,
+        reviews: 32,
+        features: ['Uniform Size', 'Precise Shape', 'Consistent Quality', 'Fast Construction'],
+        specs: {
+            size: '190×90×90 mm',
+            weight: '2.5-3 kg',
+            strength: '7-10 N/mm²',
+            absorption: '<22%'
+        }
     }
 ];
 
@@ -68,33 +85,145 @@ function renderProducts() {
         const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
+        productCard.setAttribute('data-product-id', product.id);
+        productCard.setAttribute('data-category', product.category);
+        
+        // Stock badge
+        const stockBadge = product.inStock 
+            ? '<div class="stock-badge in-stock">' + (isHindi ? 'उपलब्ध' : 'In Stock') + '</div>'
+            : '<div class="stock-badge out-of-stock">' + (isHindi ? 'अनुपलब्ध' : 'Out of Stock') + '</div>';
+        
+        // Compare checkbox
+        const compareCheckbox = `
+            <input type="checkbox" class="compare-checkbox" id="compare-${product.id}" data-product-id="${product.id}">
+            <label class="compare-label" for="compare-${product.id}"></label>
+        `;
+        
+        // Product features
+        const features = product.features || [
+            isHindi ? 'उच्च शक्ति' : 'High Strength',
+            isHindi ? 'कम पानी अवशोषण' : 'Low Water Absorption',
+            isHindi ? 'समान आकार' : 'Uniform Size',
+            isHindi ? 'टिकाऊ' : 'Durable'
+        ];
+        
+        // Product specs
+        const specs = product.specs || {
+            size: isHindi ? '190×90×90 मिमी' : '190×90×90 mm',
+            weight: isHindi ? '2.5-3 किग्रा' : '2.5-3 kg',
+            strength: isHindi ? '10-15 N/mm²' : '10-15 N/mm²',
+            absorption: isHindi ? '<20%' : '<20%'
+        };
+        
         productCard.innerHTML = `
             <div class="product-image-wrapper">
-                <img src="${product.image}" alt="${isHindi ? product.nameHi : product.name}" class="product-image" loading="lazy" />
-                <div class="product-overlay">
-                    <button class="btn btn-primary view-details-btn" onclick="viewProductDetails(${product.id})">
-                        <i class="ion-ios-eye"></i> ${isHindi ? 'विवरण देखें' : 'View Details'}
+                <img src="${product.image}" alt="${isHindi ? product.nameHi : product.name}" class="product-image image-lightbox" loading="lazy" />
+                ${stockBadge}
+                ${compareCheckbox}
+                <div class="product-card-actions">
+                    <button class="quick-view-btn" onclick="viewProductDetails(${product.id})">
+                        <i class="ion-ios-eye"></i> ${isHindi ? 'त्वरित दृश्य' : 'Quick View'}
                     </button>
                 </div>
             </div>
-            <div class="product-info">
-                <h3>${isHindi ? product.nameHi : product.name}</h3>
+            <div class="product-card-content">
+                <h3 class="product-title">${isHindi ? product.nameHi : product.name}</h3>
                 <p class="product-description">${isHindi ? product.descriptionHi : product.description}</p>
+                
                 <div class="product-rating">
-                    ${generateStars(product.rating)}
-                    <span>${product.rating}/5</span>
+                    <div class="rating-stars" data-rating="${product.rating}">
+                        ${generateStars(product.rating)}
+                    </div>
+                    <span class="rating-value">${product.rating}</span>
+                    <span class="rating-count">(${product.reviews || Math.floor(Math.random() * 50 + 20)})</span>
                 </div>
-                <div class="product-price">₹${product.price}/piece</div>
-                <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}" style="width: 100%; margin-top: 15px;">
-                    <i class="ion-ios-cart"></i> ${isHindi ? 'कार्ट में जोड़ें' : 'Add to Cart'}
-                </button>
+                
+                <div class="product-specs">
+                    <div class="product-spec-item">
+                        <span class="product-spec-label">${isHindi ? 'आकार' : 'Size'}</span>
+                        <span class="product-spec-value">${specs.size}</span>
+                    </div>
+                    <div class="product-spec-item">
+                        <span class="product-spec-label">${isHindi ? 'वजन' : 'Weight'}</span>
+                        <span class="product-spec-value">${specs.weight}</span>
+                    </div>
+                    <div class="product-spec-item">
+                        <span class="product-spec-label">${isHindi ? 'शक्ति' : 'Strength'}</span>
+                        <span class="product-spec-value">${specs.strength}</span>
+                    </div>
+                    <div class="product-spec-item">
+                        <span class="product-spec-label">${isHindi ? 'अवशोषण' : 'Absorption'}</span>
+                        <span class="product-spec-value">${specs.absorption}</span>
+                    </div>
+                </div>
+                
+                <ul class="product-features">
+                    ${features.map(feature => `<li>${feature}</li>`).join('')}
+                </ul>
+                
+                <div class="product-price-wrapper">
+                    <span class="product-price">₹${product.price}</span>
+                    <span class="product-price-unit">/${isHindi ? 'टुकड़ा' : 'piece'}</span>
+                    ${product.originalPrice && product.originalPrice > product.price ? 
+                        `<span class="product-price-old">₹${product.originalPrice}</span>` : ''}
+                </div>
+                
+                <div class="product-actions">
+                    <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}">
+                        <i class="ion-ios-cart"></i> ${isHindi ? 'कार्ट में जोड़ें' : 'Add to Cart'}
+                    </button>
+                    <button class="btn btn-secondary wishlist-btn" data-product-id="${product.id}" aria-label="${isHindi ? 'विशलिस्ट' : 'Wishlist'}">
+                        <i class="ion-ios-heart"></i>
+                    </button>
+                </div>
             </div>
         `;
         container.appendChild(productCard);
     });
     
-    // Add event listeners for add to cart buttons
+    // Add event listeners after rendering
     setTimeout(() => {
+        // Add wishlist functionality
+        container.querySelectorAll('.wishlist-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-product-id'));
+                this.classList.toggle('active');
+                
+                // Get wishlist from localStorage
+                let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                
+                if (this.classList.contains('active')) {
+                    if (!wishlist.includes(productId)) {
+                        wishlist.push(productId);
+                    }
+                } else {
+                    wishlist = wishlist.filter(id => id !== productId);
+                }
+                
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                
+                // Show toast notification
+                if (typeof showToast === 'function') {
+                    const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
+                    showToast(
+                        this.classList.contains('active') ? (isHindi ? 'विशलिस्ट में जोड़ा गया' : 'Added to Wishlist') : (isHindi ? 'विशलिस्ट से हटाया गया' : 'Removed from Wishlist'),
+                        '',
+                        'success'
+                    );
+                }
+            });
+        });
+        
+        // Load wishlist state
+        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        container.querySelectorAll('.wishlist-btn').forEach(btn => {
+            const productId = parseInt(btn.getAttribute('data-product-id'));
+            if (wishlist.includes(productId)) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // Add event listeners for add to cart buttons
         container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const productId = parseInt(this.getAttribute('data-product-id'));

@@ -69,6 +69,7 @@
     <link rel="stylesheet" href="assets/resources/css/navigation-enhancements.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/ui-enhancements.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/footer-improvements.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/product-details-enhancements.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/product-section.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/blog-section.css" media="print" onload="this.media='all'">
     <noscript>
@@ -90,6 +91,7 @@
         <link rel="stylesheet" href="assets/resources/css/navigation-enhancements.css">
         <link rel="stylesheet" href="assets/resources/css/ui-enhancements.css">
         <link rel="stylesheet" href="assets/resources/css/footer-improvements.css">
+        <link rel="stylesheet" href="assets/resources/css/product-details-enhancements.css">
     </noscript>
     
     <!-- Performance: Defer non-critical CSS -->
@@ -249,7 +251,7 @@
             <!-- Products Container with Sidebar -->
             <div class="products-container">
                 <!-- Sticky Filter Sidebar -->
-                <aside class="product-filters-sidebar">
+                <aside class="product-filters-sidebar" id="filterSidebar">
                     <div class="filter-section">
                         <h4>Categories</h4>
                         <div class="filter-option">
@@ -297,6 +299,11 @@
                 
                 <!-- Products Grid -->
                 <div class="products-main">
+                    <!-- Filter Toggle Button (Mobile) -->
+                    <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">
+                        <i class="ion-ios-funnel"></i> <span>Filters</span>
+                    </button>
+                    
                     <!-- Category Filters (Mobile View) -->
                     <div class="product-category-filters">
                         <button class="category-filter-btn active" data-category="all" onclick="setCategory('all')">
@@ -993,6 +1000,7 @@
     <script defer src="assets/resources/js/navigation-features.js"></script>
     <script defer src="assets/resources/js/maps-features.js"></script>
     <script defer src="assets/resources/js/footer-features.js"></script>
+    <script defer src="assets/resources/js/filter-toggle.js"></script>
     <script defer src="assets/resources/js/script.js"></script>
     <script defer src="assets/resources/js/test-functionality.js"></script>
     

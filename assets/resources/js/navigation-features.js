@@ -154,16 +154,20 @@
     // ============================================
     
     function initFloatingQuickMenu() {
+        // Remove existing quick menu if any
+        const existing = document.querySelector('.floating-quick-menu');
+        if (existing) existing.remove();
+        
         const quickMenu = document.createElement('div');
         quickMenu.className = 'floating-quick-menu';
         quickMenu.innerHTML = `
-            <a href="https://wa.me/919198923230" class="quick-menu-item whatsapp" target="_blank" aria-label="WhatsApp">
+            <a href="https://wa.me/919198923230?text=Hello%20Gurukripa%20Bricks" class="quick-menu-item whatsapp" target="_blank" aria-label="WhatsApp">
                 <i class="ion-social-whatsapp"></i>
             </a>
-            <a href="tel:+919198923230" class="quick-menu-item call" aria-label="Call">
+            <a href="tel:+919198923230" class="quick-menu-item call" aria-label="Call Us">
                 <i class="ion-ios-telephone"></i>
             </a>
-            <button class="quick-menu-item chat" onclick="document.getElementById('chatbotToggle').click()" aria-label="Chat">
+            <button class="quick-menu-item chat" onclick="document.getElementById('chatbotToggle')?.click()" aria-label="Chat with us">
                 <i class="ion-ios-chatbubbles"></i>
             </button>
         `;
