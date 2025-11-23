@@ -276,15 +276,21 @@ Provide brief and helpful answers.`;
         return response;
     }
     
-    // Show typing indicator
+    // Show typing indicator with enhanced animation
     function showTypingIndicator() {
         const messagesContainer = document.getElementById('chatbotMessages');
         if (!messagesContainer) return;
         
         const typingIndicator = document.createElement('div');
         typingIndicator.className = 'chatbot-message bot-message typing-indicator';
-        typingIndicator.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
         typingIndicator.id = 'typingIndicator';
+        typingIndicator.innerHTML = `
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        `;
         messagesContainer.appendChild(typingIndicator);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
@@ -297,14 +303,26 @@ Provide brief and helpful answers.`;
         }
     }
     
-    // Add message to chat
+    // Get current time in readable format
+    function getCurrentTime() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+    
+    // Add message to chat with timestamp
     function addMessage(text, isUser = false) {
         const messagesContainer = document.getElementById('chatbotMessages');
         if (!messagesContainer) return;
         
         const messageDiv = document.createElement('div');
         messageDiv.className = `chatbot-message ${isUser ? 'user-message' : 'bot-message'}`;
-        messageDiv.innerHTML = `<p>${text}</p>`;
+        const timestamp = getCurrentTime();
+        messageDiv.innerHTML = `
+            <p>${text}</p>
+            <div class="message-time">${timestamp}</div>
+        `;
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
