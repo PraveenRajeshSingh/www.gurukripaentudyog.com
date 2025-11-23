@@ -128,15 +128,6 @@ function renderProducts() {
             </div>
             <div class="product-card-content">
                 <h3 class="product-title">${isHindi ? product.nameHi : product.name}</h3>
-                <p class="product-description">${isHindi ? product.descriptionHi : product.description}</p>
-                
-                <div class="product-rating">
-                    <div class="rating-stars" data-rating="${product.rating}">
-                        ${generateStars(product.rating)}
-                    </div>
-                    <span class="rating-value">${product.rating}</span>
-                    <span class="rating-count">(${product.reviews || Math.floor(Math.random() * 50 + 20)})</span>
-                </div>
                 
                 <div class="product-specs">
                     <div class="product-spec-item">
@@ -171,6 +162,9 @@ function renderProducts() {
                 <div class="product-actions">
                     <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}">
                         <i class="ion-ios-cart"></i> ${isHindi ? 'कार्ट में जोड़ें' : 'Add to Cart'}
+                    </button>
+                    <button class="btn btn-primary view-details-btn" onclick="viewProductDetails(${product.id})">
+                        <i class="ion-ios-eye"></i> ${isHindi ? 'विवरण देखें' : 'View Details'}
                     </button>
                     <button class="btn btn-secondary wishlist-btn" data-product-id="${product.id}" aria-label="${isHindi ? 'विशलिस्ट' : 'Wishlist'}">
                         <i class="ion-ios-heart"></i>

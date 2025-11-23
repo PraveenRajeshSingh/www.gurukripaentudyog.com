@@ -1,0 +1,342 @@
+/* ============================================
+   UI IMPROVEMENTS - SPACING, TYPOGRAPHY, CONTRAST
+   ============================================ */
+
+/* ============================================
+   HIDE ALL RATINGS & STARS (User Request)
+   ============================================ */
+
+.product-rating,
+.rating-stars,
+.rating-value,
+.rating-count,
+.product-rating i,
+.product-rating span,
+.rating-stars-large {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ============================================
+   CONSISTENT SPACING BETWEEN PRODUCT CARDS
+   ============================================ */
+
+.products-grid {
+    gap: 30px !important;
+}
+
+@media (max-width: 1024px) {
+    .products-grid {
+        gap: 25px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .products-grid {
+        gap: 20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        gap: 15px !important;
+    }
+}
+
+.blog-grid {
+    gap: 30px !important;
+}
+
+@media (max-width: 1024px) {
+    .blog-grid {
+        gap: 25px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .blog-grid {
+        gap: 20px !important;
+    }
+}
+
+/* ============================================
+   INCREASED FONT SIZE & BETTER CONTRAST
+   ============================================ */
+
+/* Product Title - Larger, Better Contrast */
+.product-title {
+    font-size: clamp(1.2rem, 3vw, 1.4rem) !important;
+    font-weight: 700 !important;
+    color: var(--text-dark, #2c3e50) !important;
+    line-height: 1.4 !important;
+    margin-bottom: 15px !important;
+    letter-spacing: -0.02em;
+}
+
+/* Product Price - Larger, High Contrast */
+.product-price {
+    font-size: clamp(1.5rem, 4vw, 1.8rem) !important;
+    font-weight: 700 !important;
+    color: var(--primary-color, #e67e22) !important;
+    margin: 15px 0 !important;
+}
+
+.product-price-unit {
+    font-size: clamp(1rem, 2.5vw, 1.1rem) !important;
+    color: var(--text-light, #7f8c8d) !important;
+    font-weight: 500 !important;
+}
+
+/* Product Specs - Better Readability */
+.product-spec-label {
+    font-size: clamp(0.75rem, 2vw, 0.85rem) !important;
+    color: var(--text-lighter, #95a5a6) !important;
+    font-weight: 600 !important;
+}
+
+.product-spec-value {
+    font-size: clamp(0.9rem, 2.5vw, 1rem) !important;
+    color: var(--text-dark, #2c3e50) !important;
+    font-weight: 600 !important;
+}
+
+/* Product Features - Better Spacing */
+.product-features {
+    margin: 15px 0 !important;
+    gap: 10px !important;
+}
+
+.product-features li {
+    font-size: clamp(0.85rem, 2vw, 0.95rem) !important;
+    color: var(--text-dark, #2c3e50) !important;
+    line-height: 1.6 !important;
+}
+
+/* Section Titles - Larger, Better Contrast */
+.section-title {
+    font-size: clamp(2rem, 5vw, 2.5rem) !important;
+    font-weight: 700 !important;
+    color: var(--text-dark, #2c3e50) !important;
+    line-height: 1.3 !important;
+    margin-bottom: 20px !important;
+}
+
+.section-subtitle {
+    font-size: clamp(1.1rem, 3vw, 1.3rem) !important;
+    color: var(--text-medium, #34495e) !important;
+    line-height: 1.6 !important;
+}
+
+/* ============================================
+   IMPROVED PRODUCT IMAGES
+   ============================================ */
+
+.product-image-wrapper {
+    height: 320px !important;
+    overflow: hidden;
+    background: var(--bg-light, #f8f9fa);
+    position: relative;
+}
+
+.product-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover .product-image-wrapper img {
+    transform: scale(1.08);
+}
+
+/* Consistent Aspect Ratio */
+@media (max-width: 768px) {
+    .product-image-wrapper {
+        height: 280px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-image-wrapper {
+        height: 240px !important;
+    }
+}
+
+/* ============================================
+   ENHANCED HOVER EFFECTS
+   ============================================ */
+
+/* Product Card Hover */
+.product-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border-color, #e0e0e0);
+}
+
+.product-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(230, 126, 34, 0.25);
+    border-color: var(--primary-color, #e67e22);
+}
+
+/* Button Hover Effects */
+.btn:hover,
+button:hover:not([disabled]) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(230, 126, 34, 0.3);
+}
+
+/* ============================================
+   STICKY NAVIGATION
+   ============================================ */
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--white, #ffffff);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   CONSISTENT COLORS & TYPOGRAPHY
+   ============================================ */
+
+:root {
+    /* Primary Colors */
+    --primary-color: #e67e22;
+    --primary-dark: #d35400;
+    --primary-light: #f39c12;
+    
+    /* Text Colors - High Contrast */
+    --text-dark: #2c3e50;
+    --text-medium: #34495e;
+    --text-light: #7f8c8d;
+    --text-lighter: #95a5a6;
+    
+    /* Background Colors */
+    --bg-white: #ffffff;
+    --bg-light: #f8f9fa;
+    --bg-lighter: #f1f3f5;
+    
+    /* Border Colors */
+    --border-color: #e0e0e0;
+    --border-light: #f0f0f0;
+    
+    /* Typography */
+    --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-size-base: clamp(1rem, 2vw, 1.1rem);
+    --line-height-base: 1.6;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--text-dark);
+}
+
+/* ============================================
+   QUICK FILTERS & SORTING
+   ============================================ */
+
+.product-category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--bg-light, #f8f9fa);
+    border-radius: var(--radius-md, 12px);
+}
+
+.category-filter-btn {
+    padding: 12px 24px;
+    border-radius: var(--radius-full, 25px);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.category-filter-btn.active {
+    background: var(--primary-color, #e67e22);
+    color: var(--white, #ffffff);
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+}
+
+/* ============================================
+   FULL MOBILE RESPONSIVENESS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .product-card-content {
+        padding: 18px !important;
+    }
+    
+    .product-title {
+        font-size: 1.2rem !important;
+        margin-bottom: 12px !important;
+    }
+    
+    .product-price {
+        font-size: 1.5rem !important;
+        margin: 12px 0 !important;
+    }
+    
+    .product-specs {
+        padding: 12px !important;
+        gap: 8px !important;
+    }
+    
+    .product-actions {
+        gap: 10px !important;
+        margin-top: 15px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-card-content {
+        padding: 15px !important;
+    }
+    
+    .product-title {
+        font-size: 1.1rem !important;
+    }
+    
+    .product-price {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .product-card {
+        border: 2px solid var(--text-dark);
+    }
+    
+    .btn {
+        border-width: 2px;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+

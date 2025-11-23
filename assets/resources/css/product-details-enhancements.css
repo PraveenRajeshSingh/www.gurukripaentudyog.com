@@ -30,33 +30,12 @@
     margin-left: 5px;
 }
 
-/* Product Rating Enhanced */
-.product-rating {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 12px 0;
-    padding: 10px 0;
-    border-top: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.rating-stars {
-    display: flex;
-    gap: 2px;
-    color: #f39c12;
-    font-size: 1.1rem;
-}
-
-.rating-value {
-    font-weight: 700;
-    color: var(--text-dark);
-    font-size: 1rem;
-}
-
+/* Product Rating - HIDDEN as per user request */
+.product-rating,
+.rating-stars,
+.rating-value,
 .rating-count {
-    color: var(--text-light);
-    font-size: 0.85rem;
+    display: none !important;
 }
 
 /* Wishlist Button */

@@ -227,6 +227,38 @@
     color: var(--white);
 }
 
+.product-actions .wishlist-btn {
+    flex: 0 0 48px;
+    min-width: 48px;
+    max-width: 48px;
+    padding: 12px;
+}
+
+/* Responsive button adjustments */
+@media (max-width: 768px) {
+    .product-actions {
+        flex-wrap: wrap;
+    }
+    
+    .product-actions .btn {
+        min-height: 44px;
+        font-size: 0.9rem;
+    }
+    
+    .product-actions .view-details-btn {
+        flex: 1 1 100%;
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-actions .btn {
+        min-height: 42px;
+        font-size: 0.85rem;
+        padding: 10px 16px;
+    }
+}
+
 /* ============================================
    CONSISTENT SPACING
    ============================================ */
@@ -243,11 +275,18 @@
 
 .product-card-content {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .product-title {
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
     padding: 0;
+    font-size: clamp(1.2rem, 3vw, 1.4rem);
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.4;
 }
 
 .product-price {
@@ -256,8 +295,7 @@
 }
 
 .product-description {
-    margin: 10px 0;
-    padding: 0;
+    display: none !important; /* Removed as per user request */
 }
 
 /* ============================================
@@ -685,24 +723,12 @@
    RATINGS & REVIEWS
    ============================================ */
 
-.product-rating {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 10px 0;
-}
-
-.rating-stars {
-    display: flex;
-    gap: 2px;
-    color: #f39c12;
-    font-size: 1rem;
-}
-
-.rating-value {
-    font-weight: 600;
-    color: var(--text-dark);
-    font-size: 0.9rem;
+/* Ratings removed as per user request */
+.product-rating,
+.rating-stars,
+.rating-value,
+.rating-count {
+    display: none !important;
 }
 
 .rating-count {
