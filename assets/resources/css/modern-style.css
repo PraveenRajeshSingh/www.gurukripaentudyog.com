@@ -3,27 +3,64 @@
    ============================================ */
 
 :root {
+    /* Enhanced Primary Colors - More Vibrant */
     --primary-color: #e67e22;
     --primary-dark: #d35400;
     --primary-light: #f39c12;
+    --primary-lighter: #f5b041;
+    --primary-gradient: linear-gradient(135deg, #e67e22 0%, #d35400 50%, #c0392b 100%);
+    
+    /* Enhanced Secondary Colors */
     --secondary-color: #2c3e50;
     --secondary-light: #34495e;
+    --secondary-lighter: #5d6d7e;
+    
+    /* Enhanced Accent Colors */
     --accent-color: #27ae60;
     --accent-light: #2ecc71;
-    --text-dark: #2c3e50;
-    --text-medium: #555;
-    --text-light: #7f8c8d;
+    --accent-dark: #229954;
+    
+    /* Enhanced Text Colors */
+    --text-dark: #1a1a1a;
+    --text-medium: #4a4a4a;
+    --text-light: #6c757d;
+    --text-lighter: #adb5bd;
+    
+    /* Enhanced Background Colors */
     --bg-light: #f8f9fa;
     --bg-lighter: #ffffff;
+    --bg-gradient: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    --bg-section: linear-gradient(180deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%);
+    
+    /* Enhanced UI Colors */
     --white: #ffffff;
+    --black: #000000;
     --border-color: #e0e0e0;
+    --border-light: #f0f0f0;
+    --success: #27ae60;
+    --warning: #f39c12;
+    --error: #e74c3c;
+    --info: #3498db;
+    
+    /* Enhanced Shadows - More Depth */
     --shadow: 0 2px 20px rgba(0,0,0,0.08);
-    --shadow-hover: 0 8px 35px rgba(230, 126, 34, 0.25);
-    --shadow-card: 0 4px 15px rgba(0,0,0,0.1);
+    --shadow-hover: 0 8px 35px rgba(230, 126, 34, 0.3);
+    --shadow-card: 0 4px 20px rgba(0,0,0,0.12);
+    --shadow-large: 0 15px 50px rgba(0,0,0,0.15);
+    --shadow-inset: inset 0 2px 4px rgba(0,0,0,0.06);
+    
+    /* Enhanced Transitions */
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-fast: all 0.2s ease;
-    --gradient-primary: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
-    --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Enhanced Gradients */
+    --gradient-primary: linear-gradient(135deg, #e67e22 0%, #d35400 50%, #c0392b 100%);
+    --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #1a252f 100%);
+    --gradient-accent: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(230, 126, 34, 0.9) 0%, rgba(211, 84, 0, 0.9) 100%);
+    --gradient-overlay: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
 }
 
 * {
@@ -614,16 +651,31 @@ body {
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 35px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
     padding: 50px 0;
     margin-top: 30px;
-    justify-items: center;
+    justify-items: stretch;
     align-items: start;
+    width: 100%;
 }
 
-/* Enhanced grid for better visual quality */
+/* Enhanced grid for better visual quality - Responsive Breakpoints */
+@media (min-width: 480px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+}
+
 @media (min-width: 640px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+}
+
+@media (min-width: 768px) {
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 35px;
@@ -634,6 +686,16 @@ body {
     .products-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 40px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 45px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -2013,9 +2075,17 @@ body {
 
 .blog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 35px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
     margin-top: 20px;
+    width: 100%;
+}
+
+@media (min-width: 480px) {
+    .blog-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
 }
 
 @media (min-width: 768px) {
@@ -2025,10 +2095,27 @@ body {
     }
 }
 
+@media (min-width: 1024px) {
+    .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+    }
+}
+
 @media (min-width: 1200px) {
     .blog-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 40px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .blog-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 45px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -2808,7 +2895,11 @@ textarea:valid:not(:placeholder-shown) {
         width: 55px !important;
         height: 55px !important;
         font-size: 1.5rem !important;
-        z-index: 99999 !important;
+        z-index: 999999 !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
     }
     
     .chatbot-icon-main {
@@ -2890,7 +2981,7 @@ textarea:valid:not(:placeholder-shown) {
     font-size: 1.8rem !important;
     cursor: pointer !important;
     box-shadow: 0 5px 20px rgba(230, 126, 34, 0.4) !important;
-    z-index: 99999 !important;
+    z-index: 999999 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -2902,6 +2993,10 @@ textarea:valid:not(:placeholder-shown) {
     visibility: visible !important;
     opacity: 1 !important;
     pointer-events: auto !important;
+    /* Ensure it never hides on any section */
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .chatbot-icon-main {
@@ -3359,10 +3454,10 @@ textarea:valid:not(:placeholder-shown) {
 
 @keyframes chatbotFloat {
     0%, 100% {
-        transform: translateY(0);
+        transform: translateY(0) translateZ(0);
     }
     50% {
-        transform: translateY(-10px);
+        transform: translateY(-10px) translateZ(0);
     }
 }
 
@@ -3406,11 +3501,15 @@ textarea:valid:not(:placeholder-shown) {
     background: var(--white);
     border-radius: 20px;
     box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
-    z-index: 10000;
+    z-index: 999998 !important;
     display: none;
     flex-direction: column;
     overflow: hidden;
     animation: slideUpChatbot 0.3s ease;
+    /* Ensure it's always on top */
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .chatbot-container.active {
@@ -3673,6 +3772,11 @@ textarea:valid:not(:placeholder-shown) {
         height: 50px !important;
         bottom: 15px !important;
         right: 15px !important;
+        z-index: 999999 !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
     }
     
     .chatbot-icon-svg {
@@ -3722,21 +3826,49 @@ textarea:valid:not(:placeholder-shown) {
     }
 }
 
-/* Performance optimizations */
+/* Performance optimizations - Enhanced */
 img {
     max-width: 100%;
     height: auto;
     display: block;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
-/* Lazy loading support */
+/* Lazy loading support - Enhanced */
 img[loading="lazy"] {
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease-in-out;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
 }
 
 img[loading="lazy"].loaded {
     opacity: 1;
+    background: none;
+    animation: none;
+}
+
+@keyframes loading-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Performance: GPU acceleration */
+.product-card, .blog-card, .review-card, .grade-card, .feature-card, .city-card {
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Performance: Reduce repaints */
+.modern-nav, .chatbot-toggle, .scroll-top, .whatsapp-float {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 

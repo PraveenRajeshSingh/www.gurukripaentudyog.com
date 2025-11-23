@@ -348,22 +348,59 @@ Provide brief and helpful answers.`;
         const input = document.getElementById('chatbotInput');
         
         if (toggle) {
-            // Ensure toggle is unique and visible
+            // Force visibility - never hide on any section
             toggle.style.display = 'flex';
             toggle.style.visibility = 'visible';
             toggle.style.opacity = '1';
-            toggle.style.zIndex = '99999';
+            toggle.style.zIndex = '999999';
+            toggle.style.position = 'fixed';
+            toggle.style.pointerEvents = 'auto';
             
-            // Ensure icon is visible
-            const icon = toggle.querySelector('.chatbot-icon-main');
-            if (icon) {
-                icon.style.display = 'block';
-                icon.style.visibility = 'visible';
-                icon.style.opacity = '1';
+            // Ensure icon is visible - prioritize SVG
+            const svgIcon = toggle.querySelector('.chatbot-icon-svg');
+            const iconMain = toggle.querySelector('.chatbot-icon-main');
+            const fallback = toggle.querySelector('.chatbot-icon-fallback');
+            
+            if (svgIcon) {
+                svgIcon.style.display = 'block';
+                svgIcon.style.visibility = 'visible';
+                svgIcon.style.opacity = '1';
+                svgIcon.style.width = '28px';
+                svgIcon.style.height = '28px';
+                if (iconMain) iconMain.style.display = 'none';
+                if (fallback) fallback.style.display = 'none';
+            } else if (iconMain) {
+                iconMain.style.display = 'block';
+                iconMain.style.visibility = 'visible';
+                iconMain.style.opacity = '1';
+                if (fallback) fallback.style.display = 'none';
+            } else if (fallback) {
+                fallback.style.display = 'block';
             }
             
+            // Prevent any hiding on scroll or hover
+            const ensureVisibility = () => {
+                if (toggle) {
+                    toggle.style.display = 'flex';
+                    toggle.style.visibility = 'visible';
+                    toggle.style.opacity = '1';
+                    toggle.style.zIndex = '999999';
+                }
+            };
+            
+            // Monitor and ensure visibility
+            setInterval(ensureVisibility, 1000);
+            
+            // Ensure visibility on scroll
+            window.addEventListener('scroll', ensureVisibility, { passive: true });
+            
+            // Ensure visibility on mouse move (when cursor is on page)
+            document.addEventListener('mousemove', ensureVisibility, { passive: true });
+            document.addEventListener('touchstart', ensureVisibility, { passive: true });
+            
             // Add click event listener
-            toggle.addEventListener('click', function() {
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 const chatbot = document.getElementById('chatbot');
                 if (chatbot) {
                     chatbot.classList.toggle('active');
