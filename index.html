@@ -64,6 +64,8 @@
     <link rel="stylesheet" href="assets/resources/css/grid-improvements.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/cursor-hover-improvements.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/modern-effects.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/product-section.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/blog-section.css" media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet" href="assets/vendors/css/normalize.css">
         <link rel="stylesheet" href="assets/vendors/css/grid.css">
@@ -76,6 +78,8 @@
         <link rel="stylesheet" href="assets/resources/css/grid-improvements.css">
         <link rel="stylesheet" href="assets/resources/css/cursor-hover-improvements.css">
         <link rel="stylesheet" href="assets/resources/css/modern-effects.css">
+        <link rel="stylesheet" href="assets/resources/css/product-section.css">
+        <link rel="stylesheet" href="assets/resources/css/blog-section.css">
     </noscript>
     
     <!-- Performance: Defer non-critical CSS -->
@@ -232,27 +236,86 @@
                 <p class="section-description">Discover our wide range of high-quality bricks designed to meet all your construction requirements with superior strength and durability.</p>
             </div>
             
-            <!-- Category Filters -->
-            <div class="product-category-filters">
-                <button class="category-filter-btn active" data-category="all" onclick="setCategory('all')">
-                    <i class="ion-ios-grid"></i> <span>All Products</span>
-                </button>
-                <button class="category-filter-btn" data-category="shiv" onclick="setCategory('shiv')">
-                    <i class="ion-ios-cube"></i> <span>Shiv Eant</span>
-                </button>
-                <button class="category-filter-btn" data-category="premium" onclick="setCategory('premium')">
-                    <i class="ion-ios-star"></i> <span>Premium</span>
-                </button>
-                <button class="category-filter-btn" data-category="standard" onclick="setCategory('standard')">
-                    <i class="ion-ios-square"></i> <span>Standard</span>
-                </button>
-                <button class="category-filter-btn" data-category="machine" onclick="setCategory('machine')">
-                    <i class="ion-ios-gear"></i> <span>Machine Made</span>
-                </button>
-            </div>
-            
-            <div class="products-grid" id="productsContainer">
-                <!-- Products will be rendered here -->
+            <!-- Products Container with Sidebar -->
+            <div class="products-container">
+                <!-- Sticky Filter Sidebar -->
+                <aside class="product-filters-sidebar">
+                    <div class="filter-section">
+                        <h4>Categories</h4>
+                        <div class="filter-option">
+                            <input type="checkbox" id="filter-all" checked onchange="setCategory('all')">
+                            <label for="filter-all">All Products</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="filter-shiv" onchange="setCategory('shiv')">
+                            <label for="filter-shiv">Shiv Eant</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="filter-premium" onchange="setCategory('premium')">
+                            <label for="filter-premium">Premium</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="filter-standard" onchange="setCategory('standard')">
+                            <label for="filter-standard">Standard</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="filter-machine" onchange="setCategory('machine')">
+                            <label for="filter-machine">Machine Made</label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4>Price Range</h4>
+                        <input type="range" min="0" max="100" value="50" class="price-range">
+                        <div class="price-display">
+                            <span>₹0</span> - <span>₹100</span>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4>Availability</h4>
+                        <div class="filter-option">
+                            <input type="checkbox" id="filter-instock">
+                            <label for="filter-instock">In Stock</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="filter-lowstock">
+                            <label for="filter-lowstock">Low Stock</label>
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- Products Grid -->
+                <div class="products-main">
+                    <!-- Category Filters (Mobile View) -->
+                    <div class="product-category-filters">
+                        <button class="category-filter-btn active" data-category="all" onclick="setCategory('all')">
+                            <i class="ion-ios-grid"></i> <span>All Products</span>
+                        </button>
+                        <button class="category-filter-btn" data-category="shiv" onclick="setCategory('shiv')">
+                            <i class="ion-ios-cube"></i> <span>Shiv Eant</span>
+                        </button>
+                        <button class="category-filter-btn" data-category="premium" onclick="setCategory('premium')">
+                            <i class="ion-ios-star"></i> <span>Premium</span>
+                        </button>
+                        <button class="category-filter-btn" data-category="standard" onclick="setCategory('standard')">
+                            <i class="ion-ios-square"></i> <span>Standard</span>
+                        </button>
+                        <button class="category-filter-btn" data-category="machine" onclick="setCategory('machine')">
+                            <i class="ion-ios-gear"></i> <span>Machine Made</span>
+                        </button>
+                    </div>
+                    
+                    <div class="products-grid" id="productsContainer">
+                        <!-- Products will be rendered here -->
+                    </div>
+                    
+                    <!-- Infinite Scroll Loader -->
+                    <div class="infinite-scroll-loader">
+                        <div class="spinner"></div>
+                        <p>Loading more products...</p>
+                    </div>
+                </div>
             </div>
             
             <!-- Products Stats -->
@@ -493,22 +556,114 @@
     <!-- Blog Section -->
     <section class="section section-blog" id="blog">
         <div class="container">
+            <!-- Breadcrumb Navigation -->
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="#home">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>Blog</span>
+            </nav>
+            
             <div class="section-header">
                 <h2 class="section-title" data-translate="blogTitle">Our Blog</h2>
                 <p class="section-subtitle">Latest news and tips about bricks and construction</p>
             </div>
             
-            <!-- Blog Category Filters -->
-            <div class="blog-filters">
-                <button class="blog-category-btn active" data-category="all" onclick="setBlogCategory('all')" data-translate="allCategories">All Categories</button>
-                <button class="blog-category-btn" data-category="construction" onclick="setBlogCategory('construction')">Construction</button>
-                <button class="blog-category-btn" data-category="quality" onclick="setBlogCategory('quality')">Quality</button>
-                <button class="blog-category-btn" data-category="tips" onclick="setBlogCategory('tips')">Tips</button>
+            <!-- Featured Blog Slider -->
+            <div class="featured-blog-slider">
+                <div class="featured-slide active">
+                    <div class="featured-slide-content">
+                        <h2>Featured Blog Post Title</h2>
+                        <p>Featured blog post description...</p>
+                        <a href="#" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+                <button class="slider-nav slider-prev" aria-label="Previous slide">‹</button>
+                <button class="slider-nav slider-next" aria-label="Next slide">›</button>
+                <div class="slider-dots">
+                    <button class="slider-dot active" aria-label="Slide 1"></button>
+                    <button class="slider-dot" aria-label="Slide 2"></button>
+                    <button class="slider-dot" aria-label="Slide 3"></button>
+                </div>
             </div>
             
-            <div class="blog-grid" id="blogPosts">
-                <!-- Blog posts will be rendered here -->
+            <!-- Blog Container with Sidebar -->
+            <div class="blog-container">
+                <!-- Main Blog Content -->
+                <div class="blog-main">
+                    <!-- Blog Category Filters -->
+                    <div class="blog-filters">
+                        <button class="blog-category-btn active" data-category="all" onclick="setBlogCategory('all')" data-translate="allCategories">All Categories</button>
+                        <button class="blog-category-btn" data-category="construction" onclick="setBlogCategory('construction')">Construction</button>
+                        <button class="blog-category-btn" data-category="quality" onclick="setBlogCategory('quality')">Quality</button>
+                        <button class="blog-category-btn" data-category="tips" onclick="setBlogCategory('tips')">Tips</button>
+                    </div>
+                    
+                    <div class="blog-grid" id="blogPosts">
+                        <!-- Blog posts will be rendered here -->
+                    </div>
+                    
+                    <!-- Infinite Scroll Loader -->
+                    <div class="infinite-scroll-loader">
+                        <div class="spinner"></div>
+                        <p>Loading more posts...</p>
+                    </div>
+                    
+                    <!-- Related Articles -->
+                    <div class="related-articles">
+                        <h3>Related Articles</h3>
+                        <div class="related-articles-grid">
+                            <!-- Related posts will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Blog Sidebar -->
+                <aside class="blog-sidebar">
+                    <!-- Search Bar -->
+                    <div class="sidebar-widget">
+                        <div class="blog-search">
+                            <input type="text" placeholder="Search blogs..." aria-label="Search blogs">
+                            <button type="button" aria-label="Search">
+                                <i class="ion-ios-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Posts -->
+                    <div class="sidebar-widget">
+                        <h4>Recent Posts</h4>
+                        <ul class="recent-posts-list">
+                            <!-- Recent posts will be rendered here -->
+                        </ul>
+                    </div>
+                    
+                    <!-- Categories -->
+                    <div class="sidebar-widget">
+                        <h4>Categories</h4>
+                        <ul class="recent-posts-list">
+                            <li><a href="#" onclick="setBlogCategory('construction'); return false;">Construction</a></li>
+                            <li><a href="#" onclick="setBlogCategory('quality'); return false;">Quality</a></li>
+                            <li><a href="#" onclick="setBlogCategory('tips'); return false;">Tips</a></li>
+                        </ul>
+                    </div>
+                </aside>
             </div>
+        </div>
+        
+        <!-- Social Share Buttons (Floating) -->
+        <div class="social-share-floating">
+            <button class="social-share-btn facebook" aria-label="Share on Facebook">
+                <i class="ion-social-facebook"></i>
+            </button>
+            <button class="social-share-btn twitter" aria-label="Share on Twitter">
+                <i class="ion-social-twitter"></i>
+            </button>
+            <button class="social-share-btn whatsapp" aria-label="Share on WhatsApp">
+                <i class="ion-social-whatsapp"></i>
+            </button>
+            <button class="social-share-btn linkedin" aria-label="Share on LinkedIn">
+                <i class="ion-social-linkedin"></i>
+            </button>
         </div>
     </section>
 
@@ -823,6 +978,7 @@
     <script defer src="assets/resources/js/smart-features.js"></script>
     <script defer src="assets/resources/js/security.js"></script>
     <script defer src="assets/resources/js/image-grid-features.js"></script>
+    <script defer src="assets/resources/js/product-blog-features.js"></script>
     <script defer src="assets/resources/js/script.js"></script>
     <script defer src="assets/resources/js/test-functionality.js"></script>
     

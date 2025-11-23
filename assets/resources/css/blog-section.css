@@ -1,0 +1,675 @@
+/* ============================================
+   BLOG SECTION - COMPREHENSIVE IMPROVEMENTS
+   ============================================ */
+
+/* ============================================
+   RESPONSIVE GRID CARDS (EQUAL HEIGHT)
+   ============================================ */
+
+.section-blog {
+    padding: 100px 0;
+    background: var(--bg-section);
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 35px;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+/* Responsive breakpoints */
+@media (min-width: 480px) {
+    .blog-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+}
+
+@media (min-width: 768px) {
+    .blog-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .blog-grid {
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+        gap: 35px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .blog-grid {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 40px;
+    }
+}
+
+/* ============================================
+   EQUAL HEIGHT BLOG CARDS
+   ============================================ */
+
+.blog-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.blog-card > * {
+    flex: 0 0 auto;
+}
+
+.blog-card-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    gap: 15px;
+}
+
+/* ============================================
+   FEATURED IMAGE
+   ============================================ */
+
+.blog-image {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg-light);
+}
+
+.blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blog-card:hover .blog-image img {
+    transform: scale(1.1);
+}
+
+/* ============================================
+   BLOG CARD CONTENT STRUCTURE
+   ============================================ */
+
+.blog-category {
+    display: inline-block;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.blog-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 12px 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.blog-intro {
+    color: var(--text-light);
+    line-height: 1.7;
+    margin: 0 0 15px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+}
+
+.blog-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.blog-date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.blog-author {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.read-time {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.read-more-btn {
+    margin-top: 15px;
+    padding: 12px 24px;
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+}
+
+.read-more-btn:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateX(5px);
+}
+
+/* ============================================
+   HOVER EFFECTS
+   ============================================ */
+
+.blog-card {
+    will-change: transform, box-shadow;
+}
+
+.blog-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 25px 60px rgba(230, 126, 34, 0.25);
+    z-index: 10;
+}
+
+/* ============================================
+   TAG FILTERING
+   ============================================ */
+
+.blog-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    justify-content: center;
+}
+
+.blog-category-btn {
+    padding: 10px 20px;
+    border: 2px solid var(--border-color);
+    background: var(--white);
+    color: var(--text-dark);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.blog-category-btn:hover,
+.blog-category-btn.active {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   BLOG SIDEBAR
+   ============================================ */
+
+.blog-container {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 40px;
+    align-items: start;
+    margin-top: 40px;
+}
+
+.blog-main {
+    width: 100%;
+}
+
+.blog-sidebar {
+    position: sticky;
+    top: 90px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.blog-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.blog-sidebar::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.sidebar-widget {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar-widget h4 {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.recent-posts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-posts-list li {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.recent-posts-list li:last-child {
+    border-bottom: none;
+}
+
+.recent-post-link {
+    display: flex;
+    gap: 15px;
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: var(--transition-base);
+}
+
+.recent-post-link:hover {
+    color: var(--primary-color);
+}
+
+.recent-post-image {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.recent-post-content h5 {
+    font-size: 0.95rem;
+    margin: 0 0 5px 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.recent-post-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+/* ============================================
+   BLOG SEARCH BAR
+   ============================================ */
+
+.blog-search {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.blog-search input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-full);
+    font-size: 0.95rem;
+    transition: var(--transition-base);
+}
+
+.blog-search input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
+}
+
+.blog-search button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-color);
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-base);
+}
+
+.blog-search button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* ============================================
+   ANIMATED READING TIME
+   ============================================ */
+
+.reading-time-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(230, 126, 34, 0.1);
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    animation: readingTimePulse 2s ease-in-out infinite;
+}
+
+@keyframes readingTimePulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* ============================================
+   TYPING EFFECT
+   ============================================ */
+
+.typing-effect {
+    overflow: hidden;
+    border-right: 2px solid var(--primary-color);
+    white-space: nowrap;
+    animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink-caret {
+    from, to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: var(--primary-color);
+    }
+}
+
+/* ============================================
+   FEATURED BLOG SLIDER
+   ============================================ */
+
+.featured-blog-slider {
+    position: relative;
+    margin-bottom: 60px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.featured-slide {
+    display: none;
+    position: relative;
+    height: 500px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+
+.featured-slide.active {
+    display: block;
+    animation: slideFadeIn 0.5s ease;
+}
+
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.featured-slide-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+    padding: 40px;
+    color: var(--white);
+}
+
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    transition: var(--transition-base);
+    z-index: 10;
+}
+
+.slider-nav:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-prev {
+    left: 20px;
+}
+
+.slider-next {
+    right: 20px;
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.slider-dot.active {
+    background: var(--white);
+    transform: scale(1.3);
+}
+
+/* ============================================
+   RELATED ARTICLES
+   ============================================ */
+
+.related-articles {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 2px solid var(--border-color);
+}
+
+.related-articles h3 {
+    margin-bottom: 30px;
+}
+
+.related-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* ============================================
+   SOCIAL SHARE BUTTONS (FLOATING)
+   ============================================ */
+
+.social-share-floating {
+    position: fixed;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.social-share-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--white);
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-md);
+}
+
+.social-share-btn:hover {
+    transform: scale(1.1) translateX(5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.social-share-btn.facebook { background: #1877f2; }
+.social-share-btn.twitter { background: #1da1f2; }
+.social-share-btn.whatsapp { background: #25d366; }
+.social-share-btn.linkedin { background: #0077b5; }
+
+/* ============================================
+   BREADCRUMB NAVIGATION
+   ============================================ */
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.breadcrumb a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition-base);
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-separator {
+    color: var(--text-lighter);
+}
+
+/* ============================================
+   RESPONSIVE IMPROVEMENTS
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .blog-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .blog-sidebar {
+        position: relative;
+        top: 0;
+        max-height: none;
+        margin-top: 40px;
+    }
+    
+    .social-share-floating {
+        left: 15px;
+        transform: translateY(-50%) scale(0.9);
+    }
+}
+
+@media (max-width: 768px) {
+    .blog-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .featured-slide {
+        height: 400px;
+    }
+    
+    .social-share-floating {
+        display: none;
+    }
+}
+
