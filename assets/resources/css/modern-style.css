@@ -149,12 +149,83 @@ body {
 }
 
 /* ============================================
+   UTILITY HEADER (TOP BAR)
+   ============================================ */
+
+.utility-header {
+    height: 32px;
+    background: #f5f5f5; /* Very light grey */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 12px;
+    color: #666; /* Subtle text color */
+    z-index: 1001;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.utility-header-left,
+.utility-header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.utility-header-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.utility-header-item i {
+    font-size: 14px; /* Small line-icons */
+    color: #666;
+}
+
+.utility-header-item a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.utility-header-item a:hover {
+    color: var(--primary-color);
+}
+
+.language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.language-option {
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.language-option.active {
+    background: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+.language-option:not(.active):hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
    MODERN NAVIGATION
    ============================================ */
 
 .modern-nav {
     position: fixed;
-    top: 0;
+    top: 32px; /* Adjusted to account for utility header */
     left: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.95);
@@ -347,7 +418,7 @@ body {
     background-attachment: fixed;
     color: var(--white);
     text-align: center;
-    padding-top: 70px;
+    padding-top: 102px; /* Adjusted to account for utility header + nav height */
     overflow: hidden;
 }
 
@@ -1446,10 +1517,10 @@ body {
 
     .nav-menu {
         position: fixed;
-        top: 70px;
+        top: 102px; /* Adjusted for utility header + nav height */
         left: -100%;
         width: 100%;
-        height: calc(100vh - 70px);
+        height: calc(100vh - 102px);
         background: var(--white);
         flex-direction: column;
         align-items: flex-start;
@@ -1533,6 +1604,25 @@ body {
     
     .product-image-wrapper {
         height: 200px;
+    }
+    
+    /* Utility Header Responsive */
+    .utility-header {
+        padding: 0 10px;
+        font-size: 11px;
+    }
+    
+    .utility-header-left,
+    .utility-header-right {
+        gap: 10px;
+    }
+    
+    .utility-header-item {
+        gap: 3px;
+    }
+    
+    .utility-header-item i {
+        font-size: 12px;
     }
 }
 
@@ -3800,6 +3890,28 @@ textarea:valid:not(:placeholder-shown) {
     
     .hero-title {
         font-size: 2rem;
+    }
+    
+    /* Utility Header on Small Screens */
+    .utility-header {
+        flex-direction: column;
+        height: auto;
+        padding: 5px 10px;
+        gap: 3px;
+    }
+    
+    .utility-header-left,
+    .utility-header-right {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .utility-header-item {
+        font-size: 10px;
+    }
+    
+    .utility-header-item i {
+        font-size: 10px;
     }
 }
 
