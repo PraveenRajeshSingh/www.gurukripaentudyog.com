@@ -1,16 +1,20 @@
 // Product catalog and filtering system
-const products = [
+window.products = [
     {
         id: 1,
         name: 'Shiv Eant',
         nameHi: 'शिव ईंट',
-        category: 'shiv',
+        category: 'shiv-eent',
         price: 10,
+        oldPrice: 12,
         image: 'assets/resources/img/redbrick1.jpg',
         description: 'Premium quality Shiv Eant bricks with superior strength and durability. Perfect for all construction needs. These bricks are machine-made with uniform size and shape, ensuring consistent quality and faster construction.',
         descriptionHi: 'उत्कृष्ट शक्ति और स्थायित्व के साथ प्रीमियम गुणवत्ता वाली शिव ईंटें। सभी निर्माण आवश्यकताओं के लिए परफेक्ट। ये ईंटें मशीन से बनी हैं जिनमें समान आकार और आकृति है, जो सुसंगत गुणवत्ता और तेज निर्माण सुनिश्चित करती हैं।',
         inStock: true,
-        rating: 4.9
+        rating: 4.9,
+        reviews: 120,
+        isNew: true,
+        discount: 17
     },
     {
         id: 2,
@@ -18,7 +22,7 @@ const products = [
         nameHi: 'प्रीमियम लाल ईंट',
         category: 'premium',
         price: 7,
-        originalPrice: 9,
+        oldPrice: 9,
         image: 'assets/resources/img/brick.jpeg',
         description: 'High-quality premium red bricks with excellent strength and uniform size. Ideal for residential and commercial construction. These bricks are well-burnt with low water absorption and perfect for load-bearing walls.',
         descriptionHi: 'उत्कृष्ट शक्ति और समान आकार के साथ उच्च गुणवत्ता वाली प्रीमियम लाल ईंटें। आवासीय और वाणिज्यिक निर्माण के लिए आदर्श। ये ईंटें अच्छी तरह से जली हुई हैं जिनमें कम पानी अवशोषण है और भार वहन करने वाली दीवारों के लिए परफेक्ट हैं।',
@@ -37,8 +41,9 @@ const products = [
         id: 3,
         name: 'Machine Made Brick',
         nameHi: 'मशीन से बनी ईंट',
-        category: 'machine',
+        category: 'machine-made',
         price: 7,
+        oldPrice: 8,
         image: 'assets/resources/img/redbrick1.jpg',
         description: 'Uniform size and shape machine-made bricks. Consistent quality and perfect for modern construction. These bricks offer superior precision, reduced mortar consumption, and faster construction time.',
         descriptionHi: 'समान आकार और आकृति वाली मशीन से बनी ईंटें। सुसंगत गुणवत्ता और आधुनिक निर्माण के लिए परफेक्ट। ये ईंटें उत्कृष्ट सटीकता, कम मोर्टार खपत और तेज निर्माण समय प्रदान करती हैं।',
@@ -51,6 +56,70 @@ const products = [
             weight: '2.5-3 kg',
             strength: '7-10 N/mm²',
             absorption: '<22%'
+        }
+    },
+    {
+        id: 4,
+        name: 'Standard Clay Brick',
+        nameHi: 'स्टैंडर्ड क्ले ईंट',
+        category: 'standard',
+        price: 6,
+        oldPrice: 7,
+        image: 'assets/resources/img/redbricks.jpg',
+        description: 'Reliable standard clay bricks suitable for general construction purposes. Well-burnt with good strength characteristics.',
+        descriptionHi: 'सामान्य निर्माण उद्देश्यों के लिए उपयुक्त विश्वसनीय मानक मिट्टी की ईंटें। अच्छी शक्ति विशेषताओं के साथ अच्छी तरह से जली हुई।',
+        inStock: true,
+        rating: 4.5,
+        reviews: 28,
+        features: ['Good Strength', 'Standard Size', 'Affordable', 'Durable'],
+        specs: {
+            size: '190×90×90 mm',
+            weight: '2.3-2.8 kg',
+            strength: '6-9 N/mm²',
+            absorption: '<25%'
+        }
+    },
+    {
+        id: 5,
+        name: 'Decorative Brick',
+        nameHi: 'सजावटी ईंट',
+        category: 'premium',
+        price: 12,
+        oldPrice: 15,
+        image: 'assets/resources/img/gurukripaEnt1.png',
+        description: 'High-quality decorative bricks with attractive finish for exterior walls and landscaping.',
+        descriptionHi: 'बाहरी दीवारों और लैंडस्केपिंग के लिए आकर्षक फिनिश वाली उच्च गुणवत्ता वाली सजावटी ईंटें।',
+        inStock: true,
+        rating: 4.9,
+        reviews: 42,
+        isNew: true,
+        features: ['Attractive Finish', 'Weather Resistant', 'Premium Quality', 'Versatile'],
+        specs: {
+            size: '190×90×90 mm',
+            weight: '2.5-3 kg',
+            strength: '8-12 N/mm²',
+            absorption: '<15%'
+        }
+    },
+    {
+        id: 6,
+        name: 'Hollow Brick',
+        nameHi: 'खोखली ईंट',
+        category: 'standard',
+        price: 5,
+        oldPrice: 6,
+        image: 'assets/resources/img/newbricks_2.jpg',
+        description: 'Lightweight hollow bricks ideal for partition walls and non-load bearing applications.',
+        descriptionHi: 'विभाजन दीवारों और गैर-भार वहन करने वाले अनुप्रयोगों के लिए आदर्श हल्की खोखली ईंटें।',
+        inStock: true,
+        rating: 4.3,
+        reviews: 24,
+        features: ['Lightweight', 'Thermal Insulation', 'Sound Proof', 'Cost Effective'],
+        specs: {
+            size: '190×90×90 mm',
+            weight: '1.8-2.2 kg',
+            strength: '4-7 N/mm²',
+            absorption: '<20%'
         }
     }
 ];

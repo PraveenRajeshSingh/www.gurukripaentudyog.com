@@ -37,10 +37,13 @@ class ModernProductsManager {
                 description: p.description || '',
                 features: p.features || [],
                 rating: p.rating || 4.5,
-                reviews: p.reviews || 120,
+                reviews: p.reviews || Math.floor(Math.random() * 100) + 20,
                 inStock: p.inStock !== false,
                 isNew: p.isNew || false,
-                discount: p.discount || 0,
+                discount: p.discount || Math.round(((p.oldPrice || p.price * 1.2) - p.price) / (p.oldPrice || p.price * 1.2) * 100) || 0,
+                isFeatured: p.isFeatured || false,
+                isBestSeller: p.isBestSeller || false,
+                specifications: p.specifications || { strength: '100kg load', type: 'Standard', size: 'Normal', usage: 'General' }
             }));
         } else {
             // Sample products if none exist
@@ -54,6 +57,22 @@ class ModernProductsManager {
         const categories = ['shiv-eent', 'premium', 'standard', 'machine-made'];
         const products = [];
         
+        // Product specifications data
+        const specifications = [
+            { strength: '120kg load', type: 'Premium', size: 'Normal', usage: 'Walls' },
+            { strength: '100kg load', type: 'Standard', size: 'Jumbo', usage: 'Foundation' },
+            { strength: '150kg load', type: 'Machine Made', size: 'Normal', usage: 'Roof' },
+            { strength: '130kg load', type: 'Premium', size: 'Jumbo', usage: 'Walls' },
+            { strength: '90kg load', type: 'Standard', size: 'Normal', usage: 'Foundation' },
+            { strength: '140kg load', type: 'Machine Made', size: 'Jumbo', usage: 'Roof' },
+            { strength: '110kg load', type: 'Premium', size: 'Normal', usage: 'Walls' },
+            { strength: '95kg load', type: 'Standard', size: 'Jumbo', usage: 'Foundation' },
+            { strength: '160kg load', type: 'Machine Made', size: 'Normal', usage: 'Roof' },
+            { strength: '125kg load', type: 'Premium', size: 'Jumbo', usage: 'Walls' },
+            { strength: '85kg load', type: 'Standard', size: 'Normal', usage: 'Foundation' },
+            { strength: '135kg load', type: 'Machine Made', size: 'Jumbo', usage: 'Roof' }
+        ];
+        
         for (let i = 1; i <= 12; i++) {
             products.push({
                 id: i,
@@ -65,11 +84,15 @@ class ModernProductsManager {
                 image: `assets/resources/images/products/brick-${i}.jpg`,
                 description: 'High-quality construction brick with excellent durability and strength.',
                 features: ['Durable', 'Strong', 'Eco-Friendly'],
+                specifications: specifications[i-1] || { strength: '100kg load', type: 'Standard', size: 'Normal', usage: 'General' },
                 rating: 4 + Math.random(),
                 reviews: Math.floor(Math.random() * 200) + 50,
                 inStock: Math.random() > 0.2,
                 isNew: Math.random() > 0.7,
                 discount: Math.floor(Math.random() * 30),
+                isFeatured: Math.random() > 0.8,
+                isBestSeller: Math.random() > 0.7,
+                specifications: specifications[i-1] || { strength: '100kg load', type: 'Standard', size: 'Normal', usage: 'General' }
             });
         }
         
@@ -86,6 +109,10 @@ class ModernProductsManager {
                 this.searchQuery = e.target.value.toLowerCase();
                 this.applyFilters();
             });
+            
+            // Add placeholder with both languages
+            const currentLang = localStorage.getItem('language') || 'hi';
+            searchInput.placeholder = currentLang === 'hi' ? 'ईंट खोजें...' : 'Search bricks...';
         }
         
         if (searchBtn) {
@@ -140,10 +167,19 @@ class ModernProductsManager {
             return categoryMatch && searchMatch;
         });
         
+        // Update category title
+        this.updateCategoryTitle();
+        
         this.applySort();
     }
     
     applySort() {
+        // Add smooth transition effect when sorting
+        const grid = document.getElementById('productsGrid');
+        if (grid) {
+            grid.style.animation = 'filterTransition 0.3s ease';
+        }
+        
         switch (this.currentSort) {
             case 'price-low':
                 this.filteredProducts.sort((a, b) => a.price - b.price);
@@ -161,6 +197,17 @@ class ModernProductsManager {
                 this.filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
                 break;
             default: // featured
+                // Featured sorting could be based on multiple factors
+                this.filteredProducts.sort((a, b) => {
+                    // Prioritize featured items
+                    if (a.isFeatured && !b.isFeatured) return -1;
+                    if (!a.isFeatured && b.isFeatured) return 1;
+                    // Then best sellers
+                    if (a.isBestSeller && !b.isBestSeller) return -1;
+                    if (!a.isBestSeller && b.isBestSeller) return 1;
+                    // Then by rating
+                    return b.rating - a.rating;
+                });
                 break;
         }
         
@@ -225,6 +272,9 @@ class ModernProductsManager {
             
             // Add animation to cards
             this.animateCards();
+            
+            // Update category title
+            this.updateCategoryTitle();
         }, 300);
     }
     
@@ -236,11 +286,13 @@ class ModernProductsManager {
         return `
             <div class="product-card-modern" data-product-id="${product.id}">
                 <div class="product-image-container-modern">
-                    <img src="${product.image}" alt="${productName}" class="product-image-modern" loading="lazy">
+                    <img src="${product.image}" alt="${productName}" class="product-image-modern" loading="lazy" onerror="this.src='assets/resources/img/redbrick1.jpg'; this.onerror=null;" onload="this.classList.add('image-loaded')">
                     
                     <div class="product-badges">
-                        ${product.inStock ? '<span class="badge badge-stock">In Stock</span>' : '<span class="badge badge-out-of-stock">Out of Stock</span>'}
+                        ${product.inStock ? '<span class="badge badge-stock">Available</span>' : '<span class="badge badge-out-of-stock">Out of Stock</span>'}
                         ${product.isNew ? '<span class="badge badge-new">New</span>' : ''}
+                        ${product.isFeatured ? '<span class="badge badge-featured">Featured</span>' : ''}
+                        ${product.isBestSeller ? '<span class="badge badge-best-seller">Best Seller</span>' : ''}
                         ${discount > 0 ? `<span class="badge badge-sale">-${discount}%</span>` : ''}
                     </div>
                     
@@ -276,6 +328,28 @@ class ModernProductsManager {
                         </div>
                     ` : ''}
                     
+                    <!-- Product Specifications -->
+                    ${product.specifications ? `
+                        <div class="product-specs-modern">
+                            <div class="spec-item-modern">
+                                <span class="spec-label-modern">Strength:</span>
+                                <span class="spec-value-modern">${product.specifications.strength}</span>
+                            </div>
+                            <div class="spec-item-modern">
+                                <span class="spec-label-modern">Type:</span>
+                                <span class="spec-value-modern">${product.specifications.type}</span>
+                            </div>
+                            <div class="spec-item-modern">
+                                <span class="spec-label-modern">Size:</span>
+                                <span class="spec-value-modern">${product.specifications.size}</span>
+                            </div>
+                            <div class="spec-item-modern">
+                                <span class="spec-label-modern">Usage:</span>
+                                <span class="spec-value-modern">${product.specifications.usage}</span>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
                     <div class="product-price-section-modern">
                         <div class="product-price-container-modern">
                             <span class="product-price-modern">₹${product.price}</span>
@@ -307,6 +381,18 @@ class ModernProductsManager {
             'all': 'All Products'
         };
         return categories[category] || category;
+    }
+    
+    updateCategoryTitle() {
+        const categoryTitle = document.getElementById('categoryTitle');
+        if (categoryTitle) {
+            const categoryName = this.getCategoryName(this.currentFilter);
+            const currentLang = localStorage.getItem('language') || 'hi';
+            const titleText = currentLang === 'hi' ? 
+                `दिखा रहे हैं: ${categoryName}` : 
+                `Showing: ${categoryName}`;
+            categoryTitle.textContent = titleText;
+        }
     }
     
     renderStars(rating) {
@@ -391,6 +477,8 @@ class ModernProductsManager {
                 card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
+                // Add animation class for better performance
+                card.classList.add('fade-up-animation');
             }, index * 100);
         });
     }
@@ -400,10 +488,17 @@ class ModernProductsManager {
 let productsManager;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit to ensure products.js is loaded
-    setTimeout(() => {
-        productsManager = new ModernProductsManager();
-    }, 500);
+    // Wait for products to be available
+    function initProductsManager() {
+        if (typeof window.products !== 'undefined' && window.products.length > 0) {
+            productsManager = new ModernProductsManager();
+        } else {
+            // Retry after a short delay
+            setTimeout(initProductsManager, 200);
+        }
+    }
+    
+    initProductsManager();
 });
 
 // Helper functions for cart/wishlist
@@ -425,8 +520,95 @@ function toggleWishlist(productId) {
 }
 
 function quickView(productId) {
-    console.log('Quick view:', productId);
-    alert(`Quick view for product ${productId}`);
+    // Find the product
+    const product = productsManager.filteredProducts.find(p => p.id == productId);
+    if (!product) return;
+    
+    // Get language
+    const currentLang = localStorage.getItem('language') || 'hi';
+    const productName = currentLang === 'hi' ? product.nameHi : product.name;
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'quick-view-modal-overlay';
+    modal.innerHTML = `
+        <div class="quick-view-modal">
+            <div class="modal-header">
+                <h2>${productName}</h2>
+                <button class="modal-close" onclick="this.closest('.quick-view-modal-overlay').remove()">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-image">
+                    <img src="${product.image}" alt="${productName}" onerror="this.src='assets/resources/img/redbrick1.jpg'">
+                </div>
+                <div class="modal-details">
+                    <div class="modal-price-section">
+                        <span class="modal-price">₹${product.price}</span>
+                        ${product.oldPrice > product.price ? 
+                            `<span class="modal-old-price">₹${product.oldPrice}</span>
+                             <span class="modal-discount">${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}% Off</span>` : 
+                            ''}
+                    </div>
+                    
+                    ${product.description ? 
+                        `<p class="modal-description">${product.description}</p>` : ''}
+                    
+                    ${product.specifications ? `
+                        <div class="modal-specs">
+                            <h3>Specifications</h3>
+                            <div class="spec-grid">
+                                <div class="spec-item">
+                                    <span class="spec-label">Strength:</span>
+                                    <span class="spec-value">${product.specifications.strength}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Type:</span>
+                                    <span class="spec-value">${product.specifications.type}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Size:</span>
+                                    <span class="spec-value">${product.specifications.size}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Usage:</span>
+                                    <span class="spec-value">${product.specifications.usage}</span>
+                                </div>
+                            </div>
+                        </div>` : ''}
+                    
+                    <div class="modal-actions">
+                        <button class="btn-add-cart-modern" onclick="addToCart(${product.id})" ${!product.inStock ? 'disabled' : ''}>
+                            <i class="ion-ios-cart"></i>
+                            <span>${product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
+                        </button>
+                        <button class="btn-wishlist-modern" onclick="toggleWishlist(${product.id})">
+                            <i class="ion-ios-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add to body
+    document.body.appendChild(modal);
+    
+    // Close on escape key
+    const closeOnEscape = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    
+    // Close on click outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    });
 }
 
 function shareProduct(productId) {

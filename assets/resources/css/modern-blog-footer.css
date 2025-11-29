@@ -4,6 +4,29 @@
  */
 
 /* ============================================
+   FOOTER FIX - ENSURE FULL VISIBILITY
+   ============================================ */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.footer {
+    background: #1a1a1a;
+    color: white;
+    padding: 80px 0 0;
+    width: 100%;
+    margin: 0;
+    margin-top: auto;
+    position: relative;
+    flex-shrink: 0;
+    z-index: 10;
+    clear: both;
+}
+
+/* ============================================
    BLOG SECTION - MODERN GRID REDESIGN
    ============================================ */
 
@@ -345,6 +368,8 @@
     margin: 0;
     margin-top: auto;
     position: relative;
+    flex-shrink: 0;
+    z-index: 10;
 }
 
 .footer-content {
@@ -548,6 +573,29 @@
 
 .footer-bottom-links a:hover {
     color: #f39027;
+}
+
+/* ============================================
+   FOOTER FIX - NO EXTRA SPACING AFTER
+   ============================================ */
+
+.footer::after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+/* Ensure nothing appears after footer */
+.footer + *:not(.floating-actions):not(.chatbot-container):not(.modal):not(script) {
+    display: none !important;
+}
+
+/* Remove any margin or padding that might push footer up */
+.footer + script,
+.footer + div:not(.floating-actions):not(.chatbot-container):not(.modal) {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
 }
 
 /* Footer Responsive */

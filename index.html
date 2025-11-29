@@ -144,6 +144,7 @@
     <link rel="stylesheet" href="assets/resources/css/product-section.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/blog-section.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/redesign-premium.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/product-quick-view.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/modern-blog-footer.css" media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet" href="assets/vendors/css/normalize.css">
@@ -159,6 +160,7 @@
         <link rel="stylesheet" href="assets/resources/css/modern-effects.css">
         <link rel="stylesheet" href="assets/resources/css/product-section.css">
         <link rel="stylesheet" href="assets/resources/css/blog-section.css">
+        <link rel="stylesheet" href="assets/resources/css/product-quick-view.css">
         <link rel="stylesheet" href="assets/resources/css/critical-hover-fix.css">
         <link rel="stylesheet" href="assets/resources/css/branding-theme.css">
         <link rel="stylesheet" href="assets/resources/css/navigation-enhancements.css">
@@ -423,7 +425,7 @@
                         <span class="title-main">Our Products</span>
                         <span class="title-hindi">हमारे उत्पाद</span>
                     </h2>
-                    <p class="section-subtitle">Premium Quality Bricks for Every Construction Need</p>
+                    <p class="section-subtitle" id="categoryTitle">Showing: All Products</p>
                 </div>
                 
                 <div class="products-search-bar">
@@ -1378,6 +1380,7 @@
     <script src="assets/resources/js/cart.js" defer></script>
     <script src="assets/resources/js/products.js" defer></script>
     <script src="assets/resources/js/products-modern.js" defer></script>
+    <script src="assets/resources/js/product-quick-view-handler.js" defer></script>
     
     <!-- Non-critical scripts - Deferred for better performance -->
     <script defer src="assets/resources/js/blog.js"></script>
@@ -1813,5 +1816,8 @@
             document.head.appendChild(link);
         });
     </script>
+    
+    <!-- Button Handlers - Comprehensive CTA & Interactive Elements -->
+    <script defer src="assets/resources/js/button-handlers.js"></script>
 </body>
 </html>

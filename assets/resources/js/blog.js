@@ -394,7 +394,7 @@ const blogCategories = [
 let currentBlogCategory = 'all';
 
 function renderBlogPosts() {
-    const container = document.getElementById('blogPosts');
+    const container = document.getElementById('blogGrid');
     if (!container) return;
     
     const filteredPosts = currentBlogCategory === 'all' 
@@ -495,9 +495,22 @@ function viewBlogPost(postId) {
 
 // Initialize blog on page load
 document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('blogPosts')) {
-        renderBlogPosts();
-    }
+    setTimeout(() => {
+        if (document.getElementById('blogGrid')) {
+            renderBlogPosts();
+            
+            // Setup blog filter tabs
+            const filterTabs = document.querySelectorAll('.blog-filter-tab');
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentBlogCategory = this.getAttribute('data-category');
+                    renderBlogPosts();
+                });
+            });
+        }
+    }, 100);
 });
 
 
