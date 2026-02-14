@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Gurukripa Bricks</title>
+    <meta name="description" content="The page you're looking for doesn't exist. Return to our homepage or contact us.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/resources/img/favicon.ico">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/resources/css/main.min.css">
+    
+    <style>
+        .error-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%);
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .error-container {
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            color: #333;
+        }
+        
+        .error-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: #8B0000;
+        }
+        
+        .error-code {
+            font-size: 6rem;
+            font-weight: 800;
+            margin: 0;
+            color: #8B0000;
+            line-height: 1;
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: #2C3E50;
+        }
+        
+        .error-message {
+            font-size: 1.2rem;
+            margin: 20px 0 30px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .error-btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-home {
+            background: linear-gradient(135deg, #8B0000, #6B0000);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+        }
+        
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+        }
+        
+        .btn-contact {
+            background: white;
+            color: #8B0000;
+            border: 2px solid #8B0000;
+        }
+        
+        .btn-contact:hover {
+            background: #8B0000;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .btn-products {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            color: white;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .btn-products:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+        }
+        
+        .error-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #999;
+        }
+        
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 30px 20px;
+            }
+            
+            .error-code {
+                font-size: 4rem;
+            }
+            
+            .error-title {
+                font-size: 2rem;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .error-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-page">
+        <div class="error-container">
+            <div class="error-icon">
+                <i class="ion-alert"></i>
+            </div>
+            
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Page Not Found</h2>
+            <p class="error-message">
+                Oops! The page you're looking for doesn't exist or has been moved. 
+                Don't worry, we can help you get back on track.
+            </p>
+            
+            <div class="error-actions">
+                <a href="index.html" class="error-btn btn-home">
+                    <i class="ion-home"></i>
+                    Back to Home
+                </a>
+                <a href="index.html#products" class="error-btn btn-products">
+                    <i class="ion-cube"></i>
+                    View Products
+                </a>
+                <a href="tel:+919198923230" class="error-btn btn-contact">
+                    <i class="ion-ios-telephone"></i>
+                    Call Us
+                </a>
+            </div>
+            
+            <div class="error-footer">
+                <p>Gurukripa Bricks - Premium Quality Construction Materials</p>
+                <p>© 2024 All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Track 404 errors for analytics
+        if ('gtag' in window) {
+            gtag('event', '404_error', {
+                'page_location': document.referrer,
+                'page_title': '404 Page Not Found'
+            });
+        }
+        
+        // Add smooth transition
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.5s ease';
+        
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>

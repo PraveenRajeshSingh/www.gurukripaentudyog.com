@@ -1,22 +1,18 @@
-# robots.txt for Gurukripa Bricks Website
-
 User-agent: *
-Allow: /
-
-# Disallow admin and private areas (if any)
-Disallow: /admin/
-Disallow: /private/
+Disallow: /dist/
+Disallow: /src/
+Disallow: /assets/vendors/
 Disallow: /*.json$
-Disallow: /api/
+Disallow: /*.md$
+Disallow: /404.html
+Disallow: /500.html
 
-# Allow important resources
-Allow: /assets/
-Allow: /fonts.googleapis.com/
-Allow: /fonts.gstatic.com/
+User-agent: Googlebot
+Disallow: /dist/
+Disallow: /src/
+Disallow: /assets/vendors/
+Disallow: /*.json$
+Disallow: /*.md$
 
-# Sitemap location
-Sitemap: https://praveenrajeshsingh.github.io/www.gurukripaentudyog.com/sitemap.xml
-
-# Crawl-delay (optional, adjust as needed)
-Crawl-delay: 1
-
+Sitemap: https://www.gurukripaentudyog.com/sitemap.xml
+Host: www.gurukripaentudyog.com
