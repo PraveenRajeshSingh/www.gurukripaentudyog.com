@@ -146,6 +146,7 @@
     <link rel="stylesheet" href="assets/resources/css/redesign-premium.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/product-quick-view.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/modern-blog-footer.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/modern-3d-design.css" media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet" href="assets/vendors/css/normalize.css">
         <link rel="stylesheet" href="assets/vendors/css/grid.css">
@@ -333,33 +334,7 @@
         </div>
     </header>
 
-    <!-- Important Stats Section - 4 Cards -->
-    <section class="section-important-stats">
-        <div class="container">
-            <div class="stats-grid-important">
-                <div class="stat-card-important">
-                    <i class="ion-ios-calendar"></i>
-                    <span class="stat-number"><span class="counter" data-target="25">0</span>+</span>
-                    <span class="stat-label">Years Experience</span>
-                </div>
-                <div class="stat-card-important">
-                    <i class="ion-ios-cube"></i>
-                    <span class="stat-number"><span class="counter" data-target="1000000">0</span>+</span>
-                    <span class="stat-label">Bricks Delivered</span>
-                </div>
-                <div class="stat-card-important">
-                    <i class="ion-ios-star"></i>
-                    <span class="stat-number">4.8★</span>
-                    <span class="stat-label">Customer Rating</span>
-                </div>
-                <div class="stat-card-important">
-                    <i class="ion-ios-checkmark-circle"></i>
-                    <span class="stat-number">100%</span>
-                    <span class="stat-label">Delivery Across Jaunpur</span>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Product Categories Section - Horizontal Grid -->
     <section class="product-categories-section">
@@ -552,24 +527,7 @@
                 <!-- Pagination will be dynamically generated -->
             </div>
             
-            <!-- Products Stats -->
-            <div class="products-stats">
-                <div class="stat-item">
-                    <i class="ion-ios-star"></i>
-                    <span class="stat-number">4.9</span>
-                    <span class="stat-label">Average Rating</span>
-                </div>
-                <div class="stat-item">
-                    <i class="ion-ios-checkmark-circle"></i>
-                    <span class="stat-number">100%</span>
-                    <span class="stat-label">Quality Assured</span>
-                </div>
-                <div class="stat-item">
-                    <i class="ion-ios-thunderstorm"></i>
-                    <span class="stat-number">24/7</span>
-                    <span class="stat-label">Support Available</span>
-                </div>
-            </div>
+
         </div>
     </section>
 
@@ -1819,5 +1777,18 @@
     
     <!-- Button Handlers - Comprehensive CTA & Interactive Elements -->
     <script defer src="assets/resources/js/button-handlers.js"></script>
+    
+    <!-- Floating Action Buttons -->
+    <div class="floating-actions">
+        <button class="floating-btn chatbot-btn" id="chatbotToggle" title="Chat with us">
+            <i class="ion-ios-chatboxes"></i>
+        </button>
+        <button class="floating-btn whatsapp-btn" onclick="window.open('https://wa.me/919198923230', '_blank')" title="Chat on WhatsApp">
+            <i class="ion-social-whatsapp"></i>
+        </button>
+        <button class="floating-btn call-btn" onclick="window.location.href='tel:+919198923230'" title="Call us">
+            <i class="ion-ios-telephone"></i>
+        </button>
+    </div>
 </body>
 </html>

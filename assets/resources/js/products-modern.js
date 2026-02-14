@@ -285,88 +285,52 @@ class ModernProductsManager {
         
         return `
             <div class="product-card-modern" data-product-id="${product.id}">
-                <div class="product-image-container-modern">
-                    <img src="${product.image}" alt="${productName}" class="product-image-modern" loading="lazy" onerror="this.src='assets/resources/img/redbrick1.jpg'; this.onerror=null;" onload="this.classList.add('image-loaded')">
+                <!-- Product Image with Premium Badges -->
+                <div class="product-image-container">
+                    <img src="${product.image}" alt="${productName}" class="product-image" loading="lazy" onerror="this.src='assets/resources/img/redbrick1.jpg'; this.onerror=null;">
                     
-                    <div class="product-badges">
-                        ${product.inStock ? '<span class="badge badge-stock">Available</span>' : '<span class="badge badge-out-of-stock">Out of Stock</span>'}
-                        ${product.isNew ? '<span class="badge badge-new">New</span>' : ''}
-                        ${product.isFeatured ? '<span class="badge badge-featured">Featured</span>' : ''}
-                        ${product.isBestSeller ? '<span class="badge badge-best-seller">Best Seller</span>' : ''}
-                        ${discount > 0 ? `<span class="badge badge-sale">-${discount}%</span>` : ''}
-                    </div>
+                    <!-- Premium Badges -->
+                    ${product.isPremium ? '<div class="premium-badge">Premium</div>' : ''}
+                    ${discount > 0 ? `<div class="discount-badge">-${discount}%</div>` : ''}
+                    ${product.isNew ? '<div class="new-badge">New</div>' : ''}
+                    ${product.inStock ? '<div class="available-badge">Available</div>' : '<div class="available-badge" style="background: #e74c3c;">Out of Stock</div>'}
                     
+                    <!-- Quick Actions -->
                     <div class="product-quick-actions">
                         <button class="quick-action-btn" onclick="quickView(${product.id})" title="Quick View">
                             <i class="ion-ios-eye"></i>
                         </button>
-                        <button class="quick-action-btn" onclick="addToWishlist(${product.id})" title="Add to Wishlist">
+                        <button class="quick-action-btn" onclick="toggleWishlist(${product.id})" title="Add to Wishlist">
                             <i class="ion-ios-heart"></i>
-                        </button>
-                        <button class="quick-action-btn" onclick="shareProduct(${product.id})" title="Share">
-                            <i class="ion-ios-share"></i>
                         </button>
                     </div>
                 </div>
                 
-                <div class="product-info-modern">
-                    <div class="product-category-modern">${this.getCategoryName(product.category)}</div>
-                    <h3 class="product-name-modern">${productName}</h3>
+                <!-- Product Content -->
+                <div class="product-content">
+                    <h3 class="product-title">${productName}</h3>
                     
+                    ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
+                    
+                    <!-- Price Display -->
+                    <div class="product-price">
+                        <span class="price-current">₹${product.price}</span>
+                        ${product.oldPrice > product.price ? `<span class="price-original">₹${product.oldPrice}</span>` : ''}
+                    </div>
+                    
+                    <!-- Rating -->
                     <div class="product-rating-modern">
                         <div class="stars-modern">
                             ${this.renderStars(product.rating)}
                         </div>
-                        <span class="rating-count-modern">(${product.reviews})</span>
+                        <span class="rating-count-modern">(${product.reviews} reviews)</span>
                     </div>
                     
-                    ${product.description ? `<p class="product-description-modern">${product.description}</p>` : ''}
-                    
-                    ${product.features && product.features.length > 0 ? `
-                        <div class="product-features-modern">
-                            ${product.features.slice(0, 3).map(f => `<span class="feature-tag-modern"><i class="ion-ios-checkmark"></i>${f}</span>`).join('')}
-                        </div>
-                    ` : ''}
-                    
-                    <!-- Product Specifications -->
-                    ${product.specifications ? `
-                        <div class="product-specs-modern">
-                            <div class="spec-item-modern">
-                                <span class="spec-label-modern">Strength:</span>
-                                <span class="spec-value-modern">${product.specifications.strength}</span>
-                            </div>
-                            <div class="spec-item-modern">
-                                <span class="spec-label-modern">Type:</span>
-                                <span class="spec-value-modern">${product.specifications.type}</span>
-                            </div>
-                            <div class="spec-item-modern">
-                                <span class="spec-label-modern">Size:</span>
-                                <span class="spec-value-modern">${product.specifications.size}</span>
-                            </div>
-                            <div class="spec-item-modern">
-                                <span class="spec-label-modern">Usage:</span>
-                                <span class="spec-value-modern">${product.specifications.usage}</span>
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    <div class="product-price-section-modern">
-                        <div class="product-price-container-modern">
-                            <span class="product-price-modern">₹${product.price}</span>
-                            ${product.oldPrice > product.price ? `<span class="product-price-old-modern">₹${product.oldPrice}</span>` : ''}
-                            ${discount > 0 ? `<span class="price-save-modern">Save ${discount}%</span>` : ''}
-                        </div>
-                        
-                        <div class="product-actions-modern">
-                            <button class="btn-add-cart-modern" onclick="addToCart(${product.id})" ${!product.inStock ? 'disabled' : ''}>
-                                <i class="ion-ios-cart"></i>
-                                <span>${product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
-                            </button>
-                            <button class="btn-wishlist-modern" onclick="toggleWishlist(${product.id})">
-                                <i class="ion-ios-heart"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <!-- Add to Cart Button -->
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})" ${!product.inStock ? 'disabled' : ''}>
+                        <i class="ion-ios-cart"></i>
+                        <span>${product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
+                    </button>
                 </div>
             </div>
         `;
