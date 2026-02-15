@@ -128,6 +128,24 @@ let filteredProducts = [...products];
 let currentCategory = 'all';
 let priceRange = { min: 0, max: 20 };
 
+// Ensure DOM is loaded before initializing
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing products system...');
+    
+    // Wait a bit more for all resources to load
+    setTimeout(() => {
+        const productsGrid = document.getElementById('productsGrid');
+        if (productsGrid) {
+            console.log('Products grid found, rendering products...');
+            currentCategory = 'all';
+            priceRange = { min: 0, max: 20 };
+            renderProducts();
+        } else {
+            console.error('Products grid container not found!');
+        }
+    }, 200);
+});
+
 function renderProducts() {
     const container = document.getElementById('productsGrid');
     if (!container) {
