@@ -52,14 +52,14 @@
   }
 }
 
-/* Header spacing fixes - Compact Size with Proper Overlap Prevention */
+/* Header spacing fixes - Clean Professional Structure */
 .modern-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  height: 60px;
+  height: 70px; /* Reduced from 90px */
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
@@ -68,8 +68,8 @@
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-left: 25px;
+  gap: 15px; /* Increased from 12px */
+  margin-left: 20px;
 }
 
 .btn-icon {
@@ -87,8 +87,27 @@
   position: relative;
   font-size: 1rem;
   box-shadow: 0 4px 15px rgba(139, 0, 0, 0.2);
-  /* Ensure buttons are always visible */
   display: flex !important;
+}
+
+/* Text buttons for Login/Register */
+.nav-actions .text-btn {
+  background: transparent;
+  color: #333;
+  border: 2px solid #8B0000;
+  width: auto;
+  height: 42px;
+  border-radius: 25px;
+  padding: 0 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.nav-actions .text-btn:hover {
+  background: #8B0000;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .btn-icon:hover {
@@ -207,31 +226,30 @@
   }
 }
 
-/* Prevent header overlap with content - COMPACT spacing */
+/* Prevent header overlap with content */
 body {
-  padding-top: 92px; /* 32px (utility header) + 60px (nav) */
+  padding-top: 102px; /* 32px (utility header) + 70px (nav) */
   margin: 0;
 }
 
 @media (max-width: 767px) {
   body {
-    padding-top: 87px; /* 32px (utility header) + 55px (mobile nav) */
+    padding-top: 92px; /* 32px (utility header) + 60px (mobile nav) */
   }
   
   .modern-nav {
-    height: 55px;
+    height: 60px;
   }
 }
 
-/* Hero section fixes - COMPACT with proper z-index */
+/* Hero section fixes - Proper spacing */
 .hero-section {
   position: relative;
   overflow: hidden;
-  margin-top: -92px; /* Compensate for fixed header (32px + 60px) */
-  padding: 90px 20px 60px;
-  min-height: auto;
-  /* Removed height: 100vh; */
+  margin-top: -102px; /* Compensate for fixed header (32px + 70px) */
+  padding: 100px 20px 70px; /* Reduced from 150px/100px */
   z-index: 1;
+  min-height: auto; /* Remove 100vh */
 }
 
 .hero-overlay {
@@ -277,10 +295,18 @@ body {
   margin-right: auto;
 }
 
+/* Hero button alignment */
+.hero-cta {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 767px) {
   .hero-section {
-    margin-top: -87px; /* Compensate for mobile header (32px + 55px) */
-    padding: 70px 15px 40px;
+    margin-top: -92px; /* Compensate for mobile header (32px + 60px) */
+    padding: 80px 15px 50px;
   }
   
   .hero-title {
@@ -293,6 +319,17 @@ body {
   
   .hero-description {
     font-size: 1.1rem;
+  }
+  
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .hero-cta .btn {
+    width: 100%;
+    max-width: 300px;
   }
 }
 
@@ -368,20 +405,29 @@ body {
 /* Prevent floating buttons from overlapping */
 .floating-container {
   position: fixed;
-  right: 30px;
-  bottom: 30px;
-  z-index: 9999;
+  bottom: 20px;
+  right: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  z-index: 999;
 }
 
-@media (max-width: 767px) {
-  .floating-container {
-    right: 20px;
-    bottom: 20px;
-    gap: 12px;
-  }
+.floating-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.floating-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Footer spacing fixes */
@@ -966,49 +1012,143 @@ img {
 
 /* Product Categories Section */
 .product-categories-section {
-  padding: 40px 20px;
+  padding: 50px 20px;
+  background: #fff8f0;
 }
 
 @media (max-width: 767px) {
   .product-categories-section {
-    padding: 30px 15px;
+    padding: 40px 15px;
   }
 }
 
-/* Quality Standards Section */
-.quality-standards {
-  padding: 25px;
+.section-products {
+  padding: 50px 20px;
+  background: white;
 }
 
 @media (max-width: 767px) {
-  .quality-standards {
-    padding: 20px;
+  .section-products {
+    padding: 40px 15px;
   }
 }
 
-/* Brick Calculator Section */
 .section-calculator {
-  padding: 40px 20px;
+  padding: 50px 20px;
+  background: #fff8f0;
 }
 
 @media (max-width: 767px) {
   .section-calculator {
-    padding: 30px 15px;
+    padding: 40px 15px;
   }
 }
 
-/* Contact Section */
 .section-contact {
-  padding: 40px 20px;
+  padding: 50px 20px;
+  background: #fff8f0;
 }
 
 @media (max-width: 767px) {
   .section-contact {
-    padding: 30px 15px;
+    padding: 40px 15px;
+  }
+}
+
+.quality-standards {
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 767px) {
+  .quality-standards {
+    padding: 25px;
   }
 }
 
 /* Keep line-height balanced */
 * {
   line-height: 1.5;
+}
+
+/* Top contact bar - Better spacing */
+.top-bar {
+  background: #8B0000;
+  color: white;
+  padding: 8px 20px; /* Increased from 5px */
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar-content {
+  display: flex;
+  gap: 20px; /* Increased spacing */
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .top-bar {
+    padding: 6px 15px;
+    font-size: 12px;
+  }
+  
+  .top-bar-content {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Visual hierarchy improvements */
+.section {
+  background: #fff8f0; /* Light beige background */
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Reduce red usage - softer colors */
+:root {
+  --primary-red: #a65c2d; /* Softer red */
+  --dark-red: #8B4513; /* Brownish red */
+  --light-beige: #fff8f0;
+  --accent-orange: #f39027;
+}
+
+/* Active nav link - cleaner highlight */
+.nav-link.active {
+  color: #8B0000;
+  border-bottom: 2px solid #8B0000;
+  background: rgba(139, 0, 0, 0.05);
+}
+
+.nav-link:hover {
+  color: #8B0000;
+  background: rgba(139, 0, 0, 0.03);
+}
+
+/* Section spacing - balanced */
+.section {
+  padding: 60px 20px; /* Balanced spacing */
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 45px 15px;
+  }
+}
+
+/* Product section - lighter background */
+.section-products {
+  background: white;
+}
+
+/* Footer - cleaner look */
+.footer {
+  background: #f8f9fa;
+  border-top: 1px solid #eee;
 }

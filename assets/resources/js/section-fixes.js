@@ -150,6 +150,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // ===== Navigation Active State Management =====
+    function updateActiveNav() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Special handling for home/hero section
+        if (window.scrollY < 100) {
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.querySelector('[href="#home"]').classList.add('active');
+        }
+    }
+
+    // Update active nav on scroll
+    window.addEventListener('scroll', updateActiveNav);
+
     // ===== Mobile Navigation =====
     const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
