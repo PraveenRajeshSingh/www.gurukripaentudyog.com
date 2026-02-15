@@ -47,14 +47,14 @@
   clear: both;
 }
 
-/* Header spacing fixes - Clean Professional Structure */
+/* Header spacing fixes - Reduced Size */
 .modern-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  height: 75px;
+  height: 60px;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
@@ -62,32 +62,32 @@
 
 /* Prevent header overlap with content */
 body {
-  padding-top: 107px; /* 32px (utility header) + 75px (nav) */
+  padding-top: 92px; /* 32px (utility header) + 60px (nav) */
 }
 
 @media (max-width: 767px) {
   body {
-    padding-top: 97px; /* 32px (utility header) + 65px (mobile nav) */
+    padding-top: 87px; /* 32px (utility header) + 55px (mobile nav) */
   }
   
   .modern-nav {
-    height: 65px;
+    height: 55px;
   }
 }
 
-/* Hero section fixes - Clean Professional Structure */
+/* Hero section fixes - Reduced Size */
 .hero-section {
   position: relative;
   overflow: hidden;
-  margin-top: -107px; /* Compensate for fixed header (32px + 75px) */
-  padding: 120px 20px 80px;
+  margin-top: -92px; /* Compensate for fixed header (32px + 60px) */
+  padding: 80px 20px 60px;
   z-index: 1;
 }
 
 @media (max-width: 767px) {
   .hero-section {
-    margin-top: -97px; /* Compensate for mobile header (32px + 65px) */
-    padding: 100px 15px 60px;
+    margin-top: -87px; /* Compensate for mobile header (32px + 55px) */
+    padding: 70px 15px 50px;
   }
 }
 
@@ -95,13 +95,13 @@ body {
 .product-categories-section {
   position: relative;
   z-index: 2;
-  padding: 80px 20px;
+  padding: 60px 20px;
   background: #f8f9fa;
 }
 
 @media (max-width: 767px) {
   .product-categories-section {
-    padding: 60px 15px;
+    padding: 50px 15px;
   }
 }
 
@@ -116,10 +116,10 @@ body {
   gap: 15px;
 }
 
-/* Products Section - Clean Professional Structure */
+/* Products Section - Reduced Size */
 .section-products {
   position: relative;
-  padding: 80px 20px;
+  padding: 60px 20px;
   z-index: 3;
   background: white;
 }
@@ -309,7 +309,7 @@ body {
   }
   
   .section-products {
-    padding: 60px 15px;
+    padding: 50px 15px;
   }
   
   .section-title {
