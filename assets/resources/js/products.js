@@ -130,7 +130,10 @@ let priceRange = { min: 0, max: 20 };
 
 function renderProducts() {
     const container = document.getElementById('productsGrid');
-    if (!container) return;
+    if (!container) {
+        console.error('Products container not found');
+        return;
+    }
     
     // Show loading skeleton
     const skeleton = document.getElementById('productSkeleton');
@@ -145,8 +148,11 @@ function renderProducts() {
         if (filteredProducts.length === 0) {
             const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
             container.innerHTML = `<div class="no-products" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;"><p style="font-size: 1.2rem; color: #666;">${isHindi ? 'कोई उत्पाद नहीं मिला' : 'No products found'}</p></div>`;
+            console.log('No products to display');
             return;
         }
+        
+        console.log(`Rendering ${filteredProducts.length} products`);
         
         filteredProducts.forEach(product => {
             const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
@@ -380,16 +386,47 @@ function viewProductDetails(productId) {
 
 // Initialize products on page load
 document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('productsGrid')) {
-        // Set default filter to show all products
-        currentCategory = 'all';
-        priceRange = { min: 0, max: 20 };
-        
-        // Render animated product cards
-        setTimeout(() => {
-            renderAnimatedProductCards();
-        }, 500);
-    }
+    // Ensure DOM is fully loaded
+    setTimeout(() => {
+        if (document.getElementById('productsGrid')) {
+            // Set default filter to show all products
+            currentCategory = 'all';
+            priceRange = { min: 0, max: 20 };
+            
+            // Render products
+            renderProducts();
+            
+            // Initialize search functionality
+            const searchInput = document.getElementById('productSearch');
+            const searchBtn = document.getElementById('searchBtn');
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    filteredProducts = products.filter(product => 
+                        product.name.toLowerCase().includes(searchTerm) ||
+                        product.nameHi.toLowerCase().includes(searchTerm) ||
+                        product.description.toLowerCase().includes(searchTerm) ||
+                        product.descriptionHi.toLowerCase().includes(searchTerm)
+                    );
+                    renderProducts();
+                });
+            }
+            
+            if (searchBtn) {
+                searchBtn.addEventListener('click', function() {
+                    const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+                    filteredProducts = products.filter(product => 
+                        product.name.toLowerCase().includes(searchTerm) ||
+                        product.nameHi.toLowerCase().includes(searchTerm) ||
+                        product.description.toLowerCase().includes(searchTerm) ||
+                        product.descriptionHi.toLowerCase().includes(searchTerm)
+                    );
+                    renderProducts();
+                });
+            }
+        }
+    }, 100);
 });
 
 // Make functions globally available
