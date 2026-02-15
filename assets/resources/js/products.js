@@ -129,176 +129,148 @@ let currentCategory = 'all';
 let priceRange = { min: 0, max: 20 };
 
 function renderProducts() {
-    const container = document.getElementById('productsContainer');
+    const container = document.getElementById('productsGrid');
     if (!container) return;
+    
+    // Show loading skeleton
+    const skeleton = document.getElementById('productSkeleton');
+    if (skeleton) skeleton.style.display = 'grid';
     
     container.innerHTML = '';
     
-    // Add single-product class if only one product
-    const grid = container.closest('.products-grid') || document.querySelector('.products-grid');
-    if (grid) {
-        if (filteredProducts.length === 1) {
-            grid.classList.add('single-product');
-        } else {
-            grid.classList.remove('single-product');
+    // Simulate loading delay
+    setTimeout(() => {
+        if (skeleton) skeleton.style.display = 'none';
+        
+        if (filteredProducts.length === 0) {
+            const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
+            container.innerHTML = `<div class="no-products" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;"><p style="font-size: 1.2rem; color: #666;">${isHindi ? 'कोई उत्पाद नहीं मिला' : 'No products found'}</p></div>`;
+            return;
         }
-    }
-    
-    if (filteredProducts.length === 0) {
-        const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
-        container.innerHTML = `<div class="no-products"><p>${isHindi ? 'कोई उत्पाद नहीं मिला' : 'No products found'}</p></div>`;
-        return;
-    }
-    
-    filteredProducts.forEach(product => {
-        const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
-        const productCard = document.createElement('div');
-        productCard.className = 'product-card';
-        productCard.setAttribute('data-product-id', product.id);
-        productCard.setAttribute('data-category', product.category);
         
-        // Stock badge
-        const stockBadge = product.inStock 
-            ? '<div class="stock-badge in-stock">' + (isHindi ? 'उपलब्ध' : 'In Stock') + '</div>'
-            : '<div class="stock-badge out-of-stock">' + (isHindi ? 'अनुपलब्ध' : 'Out of Stock') + '</div>';
-        
-        // Compare checkbox
-        const compareCheckbox = `
-            <input type="checkbox" class="compare-checkbox" id="compare-${product.id}" data-product-id="${product.id}">
-            <label class="compare-label" for="compare-${product.id}"></label>
-        `;
-        
-        // Product features
-        const features = product.features || [
-            isHindi ? 'उच्च शक्ति' : 'High Strength',
-            isHindi ? 'कम पानी अवशोषण' : 'Low Water Absorption',
-            isHindi ? 'समान आकार' : 'Uniform Size',
-            isHindi ? 'टिकाऊ' : 'Durable'
-        ];
-        
-        // Product specs
-        const specs = product.specs || {
-            size: isHindi ? '190×90×90 मिमी' : '190×90×90 mm',
-            weight: isHindi ? '2.5-3 किग्रा' : '2.5-3 kg',
-            strength: isHindi ? '10-15 N/mm²' : '10-15 N/mm²',
-            absorption: isHindi ? '<20%' : '<20%'
-        };
-        
-        productCard.innerHTML = `
-            <div class="product-image-wrapper">
-                <img src="${product.image}" alt="${isHindi ? product.nameHi : product.name}" class="product-image image-lightbox" loading="lazy" />
-                ${stockBadge}
-                ${compareCheckbox}
-                <div class="product-card-actions">
-                    <button class="quick-view-btn" onclick="viewProductDetails(${product.id})">
-                        <i class="ion-ios-eye"></i> ${isHindi ? 'त्वरित दृश्य' : 'Quick View'}
-                    </button>
+        filteredProducts.forEach(product => {
+            const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card-modern';
+            productCard.setAttribute('data-product-id', product.id);
+            productCard.setAttribute('data-category', product.category);
+            
+            // Premium badges
+            const badges = [];
+            if (product.isNew) badges.push('<div class="new-badge">New</div>');
+            if (product.discount) badges.push(`<div class="discount-badge">-${product.discount}%</div>`);
+            if (product.category === 'premium') badges.push('<div class="premium-badge">Premium</div>');
+            if (product.inStock) badges.push('<div class="available-badge">Available</div>');
+            
+            const badgesHtml = badges.join('');
+            
+            // Product specs
+            const specs = product.specs || {
+                size: isHindi ? '190×90×90 मिमी' : '190×90×90 mm',
+                weight: isHindi ? '2.5-3 किग्रा' : '2.5-3 kg',
+                strength: isHindi ? '10-15 N/mm²' : '10-15 N/mm²',
+                absorption: isHindi ? '<20%' : '<20%'
+            };
+            
+            // Price section
+            const priceSection = `
+                <div class="product-price-container">
+                    <div class="product-price">₹${product.price}<span style="font-size: 1rem; font-weight: 500;">/piece</span></div>
+                    ${product.oldPrice ? `
+                        <div class="product-price-old">₹${product.oldPrice}</div>
+                        <div class="save-percentage">Save ${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%</div>
+                    ` : ''}
                 </div>
-            </div>
-            <div class="product-card-content">
-                <h3 class="product-title">${isHindi ? product.nameHi : product.name}</h3>
-                
-                <div class="product-specs">
-                    <div class="product-spec-item">
-                        <span class="product-spec-label">${isHindi ? 'आकार' : 'Size'}</span>
-                        <span class="product-spec-value">${specs.size}</span>
-                    </div>
-                    <div class="product-spec-item">
-                        <span class="product-spec-label">${isHindi ? 'वजन' : 'Weight'}</span>
-                        <span class="product-spec-value">${specs.weight}</span>
-                    </div>
-                    <div class="product-spec-item">
-                        <span class="product-spec-label">${isHindi ? 'शक्ति' : 'Strength'}</span>
-                        <span class="product-spec-value">${specs.strength}</span>
-                    </div>
-                    <div class="product-spec-item">
-                        <span class="product-spec-label">${isHindi ? 'अवशोषण' : 'Absorption'}</span>
-                        <span class="product-spec-value">${specs.absorption}</span>
-                    </div>
+            `;
+            
+            productCard.innerHTML = `
+                <div class="product-image-container">
+                    <img src="${product.image}" alt="${isHindi ? product.nameHi : product.name}" class="product-image" loading="lazy" />
+                    ${badgesHtml}
                 </div>
-                
-                <ul class="product-features">
-                    ${features.map(feature => `<li>${feature}</li>`).join('')}
-                </ul>
-                
-                <div class="product-price-wrapper">
-                    <span class="product-price">₹${product.price}</span>
-                    <span class="product-price-unit">/${isHindi ? 'टुकड़ा' : 'piece'}</span>
-                    ${product.originalPrice && product.originalPrice > product.price ? 
-                        `<span class="product-price-old">₹${product.originalPrice}</span>` : ''}
-                </div>
-                
-                <div class="product-actions">
-                    <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}">
+                <div class="product-content">
+                    <h3 class="product-title">${isHindi ? product.nameHi : product.name}</h3>
+                    <p class="product-description">${(isHindi ? product.descriptionHi : product.description).substring(0, 120)}${(isHindi ? product.descriptionHi : product.description).length > 120 ? '...' : ''}</p>
+                    
+                    <div class="product-specs">
+                        <div class="product-spec-item">
+                            <span class="product-spec-label">Size</span>
+                            <span class="product-spec-value">${specs.size}</span>
+                        </div>
+                        <div class="product-spec-item">
+                            <span class="product-spec-label">Strength</span>
+                            <span class="product-spec-value">${specs.strength}</span>
+                        </div>
+                        <div class="product-spec-item">
+                            <span class="product-spec-label">Weight</span>
+                            <span class="product-spec-value">${specs.weight}</span>
+                        </div>
+                        <div class="product-spec-item">
+                            <span class="product-spec-label">Absorption</span>
+                            <span class="product-spec-value">${specs.absorption}</span>
+                        </div>
+                    </div>
+                    
+                    ${priceSection}
+                    
+                    <button class="add-to-cart-btn" data-product-id="${product.id}">
                         <i class="ion-ios-cart"></i> ${isHindi ? 'कार्ट में जोड़ें' : 'Add to Cart'}
                     </button>
-                    <button class="btn btn-primary view-details-btn" onclick="viewProductDetails(${product.id})">
-                        <i class="ion-ios-eye"></i> ${isHindi ? 'विवरण देखें' : 'View Details'}
-                    </button>
-                    <button class="btn btn-secondary wishlist-btn" data-product-id="${product.id}" aria-label="${isHindi ? 'विशलिस्ट' : 'Wishlist'}">
-                        <i class="ion-ios-heart"></i>
-                    </button>
                 </div>
-            </div>
-        `;
-        container.appendChild(productCard);
-    });
-    
-    // Add event listeners after rendering
-    setTimeout(() => {
-        // Add wishlist functionality
-        container.querySelectorAll('.wishlist-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-product-id'));
-                this.classList.toggle('active');
-                
-                // Get wishlist from localStorage
-                let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-                
-                if (this.classList.contains('active')) {
-                    if (!wishlist.includes(productId)) {
-                        wishlist.push(productId);
+            `;
+            
+            container.appendChild(productCard);
+        });
+        
+        // Add event listeners
+        setTimeout(() => {
+            // Update stock badge elements
+            container.querySelectorAll('[class$="stock"').forEach(btn => {
+                if (typeof currentLanguage !== 'undefined' && currentLanguage === 'hi') {
+                    const newText = btn.textContent.includes('उपलब्ध') || btn.textContent.includes('Available') 
+                        ? 'उपलब्ध' : 'अनुपलब्ध';
+                    btn.textContent = newText;
+                }
+            });
+            
+            // Add event listeners for add to cart buttons
+            container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    const product = filteredProducts.find(p => p.id === productId);
+                    
+                    if (product) {
+                        this.innerHTML = '<i class="ion-load-c"></i>';
+                        
+                        // Trigger ATC animation
+                        if (typeof triggerATCAnimation === 'function') {
+                            triggerATCAnimation(this);
+                        }
+                        
+                        // Add to cart functionality
+                        if (typeof addToCart === 'function') {
+                            setTimeout(() => {
+                                addToCart(productId);
+                                this.innerHTML = '<i class="ion-ios-cart"></i> Added!';
+                                setTimeout(() => {
+                                    this.innerHTML = '<i class="ion-ios-cart"></i> Add to Cart';
+                                }, 1500);
+                            }, 800);
+                        } else {
+                            const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
+                            setTimeout(() => {
+                                this.innerHTML = '<i class="ion-ios-cart"></i> ' + (isHindi ? 'जोड़ा गया!' : 'Added!');
+                                setTimeout(() => {
+                                    this.innerHTML = '<i class="ion-ios-cart"></i> ' + (isHindi ? 'कार्ट में जोड़ें' : 'Add to Cart');
+                                }, 1500);
+                            }, 800);
+                        }
                     }
-                } else {
-                    wishlist = wishlist.filter(id => id !== productId);
-                }
-                
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                
-                // Show toast notification
-                if (typeof showToast === 'function') {
-                    const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
-                    showToast(
-                        this.classList.contains('active') ? (isHindi ? 'विशलिस्ट में जोड़ा गया' : 'Added to Wishlist') : (isHindi ? 'विशलिस्ट से हटाया गया' : 'Removed from Wishlist'),
-                        '',
-                        'success'
-                    );
-                }
+                });
             });
-        });
-        
-        // Load wishlist state
-        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-        container.querySelectorAll('.wishlist-btn').forEach(btn => {
-            const productId = parseInt(btn.getAttribute('data-product-id'));
-            if (wishlist.includes(productId)) {
-                btn.classList.add('active');
-            }
-        });
-        
-        // Add event listeners for add to cart buttons
-        container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-product-id'));
-                if (typeof addToCart === 'function') {
-                    addToCart(productId);
-                } else {
-                    const isHindi = typeof currentLanguage !== 'undefined' && currentLanguage === 'hi';
-                    alert(isHindi ? 'उत्पाद जोड़ा गया!' : 'Product added!');
-                }
-            });
-        });
-    }, 100);
+        }, 100);
+    }, 800); // End of setTimeout
 }
 
 function generateStars(rating) {
