@@ -909,3 +909,214 @@ function openLoginModal() {
 function openRegisterModal() {
     openAuth('register');
 }
+
+// ============================================
+// 2026 PREMIUM ECOMMERCE CART SYSTEM
+// ============================================
+
+// Cart variables
+let cart = [];
+let total = 0;
+
+// Toggle Cart Drawer
+function toggleCart() {
+    const cartDrawer = document.getElementById("cartDrawer");
+    cartDrawer.classList.toggle("active");
+    
+    // Prevent background scrolling when cart is open
+    if (cartDrawer.classList.contains("active")) {
+        document.body.classList.add("modal-open");
+    } else {
+        document.body.classList.remove("modal-open");
+    }
+}
+
+// Add to Cart Function
+function addToCart(name, price) {
+    // Add item to cart
+    cart.push({
+        name: name,
+        price: price,
+        quantity: 1,
+        id: Date.now() + Math.random() // Unique ID for each item
+    });
+    
+    // Update total
+    total += price;
+    
+    // Update cart display
+    updateCart();
+    
+    // Show cart
+    toggleCart();
+    
+    // Show success animation
+    showAddToCartAnimation(name);
+}
+
+// Update Cart Display
+function updateCart() {
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="cart-empty">
+                <p>Your cart is empty</p>
+            </div>
+        `;
+        cartTotal.innerText = "0";
+        updateCartBadge();
+        return;
+    }
+    
+    // Build cart items HTML
+    let cartHTML = '';
+    cart.forEach((item, index) => {
+        cartHTML += `
+            <div class="cart-item">
+                <span class="item-name">${item.name}</span>
+                <span class="item-price">₹${item.price}</span>
+            </div>
+        `;
+    });
+    
+    cartItems.innerHTML = cartHTML;
+    cartTotal.innerText = total;
+    
+    // Update cart badge
+    updateCartBadge();
+}
+
+// Update Cart Badge
+function updateCartBadge() {
+    const cartBadge = document.getElementById("cartBadge");
+    const totalCount = cart.length;
+    
+    if (cartBadge) {
+        cartBadge.textContent = totalCount;
+        cartBadge.style.display = totalCount > 0 ? 'block' : 'none';
+    }
+}
+
+// Show Add to Cart Animation
+function showAddToCartAnimation(productName) {
+    // Create floating notification
+    const notification = document.createElement('div');
+    notification.className = 'atc-notification';
+    notification.innerHTML = `
+        <span>✓ Added ${productName} to cart</span>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #8B0000;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+        z-index: 3000;
+        animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s;
+        font-weight: 500;
+    `;
+    
+    // Add keyframe styles if not exists
+    if (!document.getElementById('atc-animations')) {
+        const style = document.createElement('style');
+        style.id = 'atc-animations';
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Remove after animation
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 3000);
+}
+
+// Checkout Function
+function checkout() {
+    if (cart.length === 0) {
+        showUserFriendlyError('Your cart is empty');
+        return;
+    }
+    
+    // Simulate checkout process
+    const checkoutBtn = document.querySelector('.checkout-btn');
+    const originalText = checkoutBtn.textContent;
+    checkoutBtn.textContent = 'Processing...';
+    checkoutBtn.disabled = true;
+    
+    setTimeout(() => {
+        showUserFriendlyError('Order placed successfully! Thank you for your purchase.', 3000);
+        // Clear cart
+        cart = [];
+        total = 0;
+        updateCart();
+        toggleCart();
+        checkoutBtn.textContent = originalText;
+        checkoutBtn.disabled = false;
+    }, 2000);
+}
+
+// Initialize cart from localStorage (if exists)
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for existing cart in localStorage
+    const savedCart = localStorage.getItem('ecommerceCart');
+    if (savedCart) {
+        try {
+            const parsedCart = JSON.parse(savedCart);
+            cart = parsedCart.items || [];
+            total = parsedCart.total || 0;
+            updateCart();
+        } catch (e) {
+            // Invalid cart data, reset
+            localStorage.removeItem('ecommerceCart');
+        }
+    }
+    
+    // Add event listener to checkout button
+    const checkoutBtn = document.querySelector('.checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', checkout);
+    }
+});
+
+// Save cart to localStorage whenever it changes
+function saveCartToStorage() {
+    const cartData = {
+        items: cart,
+        total: total
+    };
+    localStorage.setItem('ecommerceCart', JSON.stringify(cartData));
+}
+
+// Override addToCart to save to storage
+const originalAddToCart = addToCart;
+window.addToCart = function(name, price) {
+    originalAddToCart(name, price);
+    saveCartToStorage();
+};
+
+// Override updateCart to save to storage
+const originalUpdateCart = updateCart;
+window.updateCart = function() {
+    originalUpdateCart();
+    saveCartToStorage();
+};

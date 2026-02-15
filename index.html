@@ -354,7 +354,7 @@
                 <li><a href="#cities" class="nav-link" data-translate="cities">Cities</a></li>
                 <li><a href="#contact" class="nav-link" data-translate="contact">Contact</a></li>
                 <li class="nav-actions">
-                    <button class="icon-btn" onclick="openCart()">
+                    <button class="icon-btn" onclick="toggleCart()">
                         🛒
                         <span class="cart-count" id="cartBadge">0</span>
                     </button>
@@ -990,6 +990,57 @@
         </div>
     </section>
 
+    <!-- Products Section - Modern Design -->
+    <section class="products-section">
+        <h2 class="section-title">Our Premium Bricks</h2>
+        
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="assets/resources/img/redbrick1.jpg" alt="Premium Red Brick">
+                </div>
+                <h3>Premium Red Brick</h3>
+                <p class="price">₹8 / piece</p>
+                <button onclick="addToCart('Premium Red Brick', 8)" class="add-btn">
+                    Add to Cart
+                </button>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="assets/resources/img/newbricks_2.jpg" alt="Fly Ash Brick">
+                </div>
+                <h3>Fly Ash Brick</h3>
+                <p class="price">₹7 / piece</p>
+                <button onclick="addToCart('Fly Ash Brick', 7)" class="add-btn">
+                    Add to Cart
+                </button>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="assets/resources/img/redbricks.jpg" alt="Standard Brick">
+                </div>
+                <h3>Standard Brick</h3>
+                <p class="price">₹6 / piece</p>
+                <button onclick="addToCart('Standard Brick', 6)" class="add-btn">
+                    Add to Cart
+                </button>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="assets/resources/img/brick.jpeg" alt="Machine Made Brick">
+                </div>
+                <h3>Machine Made Brick</h3>
+                <p class="price">₹7 / piece</p>
+                <button onclick="addToCart('Machine Made Brick', 7)" class="add-btn">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- Blog Section -->
     <section class="section section-blog" id="blog">
         <div class="container">
@@ -1526,6 +1577,25 @@
                 <p>No products in cart.</p>
             </div>
             <button class="btn-main">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Premium 2026 Slide Cart -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <span onclick="toggleCart()">&times;</span>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        
+        <div class="cart-footer">
+            <h3>Total: ₹<span id="cartTotal">0</span></h3>
+            <button class="checkout-btn">Checkout</button>
         </div>
     </div>
 
