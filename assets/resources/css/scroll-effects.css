@@ -1,0 +1,399 @@
+/* Modern Scroll Effects */
+/* Fade-in Animations */
+.fade-in-element {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-in-element.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slide-up Sections */
+.slide-up-section {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered Animations */
+.staggered-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.staggered-item:nth-child(1) { transition-delay: 0.1s; }
+.staggered-item:nth-child(2) { transition-delay: 0.2s; }
+.staggered-item:nth-child(3) { transition-delay: 0.3s; }
+.staggered-item:nth-child(4) { transition-delay: 0.4s; }
+.staggered-item:nth-child(5) { transition-delay: 0.5s; }
+.staggered-item:nth-child(6) { transition-delay: 0.6s; }
+
+.staggered-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll Progress Indicator */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #a65c2d 0%, #f39027 100%);
+  z-index: 9999;
+  transition: width 0.1s ease;
+}
+
+/* Scroll-to-top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a65c2d 0%, #f39027 100%);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 15px rgba(166, 92, 45, 0.3);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 8px 25px rgba(166, 92, 45, 0.4);
+}
+
+/* Scroll-triggered Animations */
+.section-header {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-header.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Feature Cards Animation */
+.feature-card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Review Cards Animation */
+.review-card {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-card.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* City Cards Animation */
+.city-card {
+  opacity: 0;
+  transform: scale(0.8) rotateY(20deg);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.city-card.visible {
+  opacity: 1;
+  transform: scale(1) rotateY(0);
+}
+
+/* Statistics Animation */
+.stat-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: statCounter 2s ease-out;
+}
+
+@keyframes statCounter {
+  0% { transform: translateY(30px) scale(0.8); }
+  50% { transform: translateY(-10px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* Hero Section Entrance */
+.hero-section {
+  opacity: 0;
+  transform: translateY(-50px);
+  animation: heroEntrance 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+@keyframes heroEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button Hover Effects */
+.btn-animated {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-animated::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-animated:hover::before {
+  left: 100%;
+}
+
+/* Parallax Scrolling Effects */
+.parallax-element {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.parallax-slow {
+  transform: translateZ(-1px) scale(1.1);
+}
+
+.parallax-fast {
+  transform: translateZ(-2px) scale(1.2);
+}
+
+/* Intersection Observer Trigger Points */
+.intersection-trigger {
+  position: relative;
+}
+
+.intersection-trigger::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 0;
+  right: 0;
+  height: 60%;
+  pointer-events: none;
+}
+
+/* Animation Performance Optimizations */
+.will-animate {
+  will-change: transform, opacity;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-element,
+  .slide-up-section,
+  .staggered-item,
+  .feature-card,
+  .review-card,
+  .city-card,
+  .stat-item {
+    transition: none;
+    animation: none;
+  }
+  
+  .scroll-to-top {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .hero-section {
+    animation: none;
+  }
+  
+  .btn-animated::before {
+    display: none;
+  }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 767px) {
+  .fade-in-element,
+  .slide-up-section {
+    transition-duration: 0.5s;
+  }
+  
+  .scroll-to-top {
+    bottom: 80px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+  
+  .scroll-progress {
+    height: 2px;
+  }
+}
+
+/* Animation Delays for Different Sections */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
+.delay-6 { transition-delay: 0.6s; }
+
+/* Entrance Animations */
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 0.6s ease;
+}
+
+.fade-in-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 0.6s ease;
+}
+
+.fade-in-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.6s ease;
+}
+
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-down {
+  opacity: 0;
+  transform: translateY(-50px);
+  transition: all 0.6s ease;
+}
+
+.fade-in-down.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Scale Animations */
+.scale-in {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scale-in.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Rotate Animations */
+.rotate-in {
+  opacity: 0;
+  transform: rotateY(90deg);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rotate-in.visible {
+  opacity: 1;
+  transform: rotateY(0);
+}
+
+/* Bounce Animations */
+.bounce-in {
+  opacity: 0;
+  transform: translateY(50px) scale(0.8);
+  transition: all 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.bounce-in.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Floating Animation */
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Pulse Animation */
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Loading Animation */
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}

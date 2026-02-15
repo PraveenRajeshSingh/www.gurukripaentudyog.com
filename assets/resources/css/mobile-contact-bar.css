@@ -1,0 +1,306 @@
+/* Mobile Quick Contact Bar */
+.mobile-contact-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  border-top: 1px solid #e9ecef;
+  backdrop-filter: blur(10px);
+  padding: 12px 0;
+}
+
+/* Show only on mobile */
+@media (max-width: 767px) {
+  .mobile-contact-bar {
+    display: flex;
+  }
+}
+
+.contact-bar-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 100%;
+  width: 100%;
+  padding: 0 15px;
+}
+
+.contact-bar-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 5px;
+  border: none;
+  background: transparent;
+  color: #333;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  min-height: 60px;
+  gap: 6px;
+}
+
+.contact-bar-btn:hover {
+  background: rgba(166, 92, 45, 0.1);
+  color: #a65c2d;
+  transform: translateY(-3px);
+}
+
+.contact-bar-btn i {
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.contact-bar-btn:hover i {
+  transform: scale(1.2);
+}
+
+/* Call Button */
+.call-btn-mobile {
+  color: #28a745;
+}
+
+.call-btn-mobile:hover {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+/* WhatsApp Button */
+.whatsapp-btn-mobile {
+  color: #25D366;
+}
+
+.whatsapp-btn-mobile:hover {
+  background: rgba(37, 211, 102, 0.1);
+  color: #25D366;
+}
+
+/* Cart Button */
+.cart-btn-mobile {
+  color: #a65c2d;
+}
+
+.cart-btn-mobile:hover {
+  background: rgba(166, 92, 45, 0.1);
+  color: #a65c2d;
+}
+
+.cart-btn-mobile .badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* Home Button */
+.home-btn-mobile {
+  color: #6c757d;
+}
+
+.home-btn-mobile:hover {
+  background: rgba(108, 117, 125, 0.1);
+  color: #6c757d;
+}
+
+/* Contact Bar Animation */
+.mobile-contact-bar.slide-up {
+  animation: slideUpBar 0.4s ease forwards;
+}
+
+.mobile-contact-bar.slide-down {
+  animation: slideDownBar 0.4s ease forwards;
+}
+
+@keyframes slideUpBar {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDownBar {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* Hide when scrolling down, show when scrolling up */
+.mobile-contact-bar.hide-on-scroll {
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+/* Cart Badge Animation */
+.cart-badge {
+  position: relative;
+}
+
+.cart-badge::after {
+  content: attr(data-count);
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+  animation: badgePulse 0.5s ease;
+}
+
+@keyframes badgePulse {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Button Ripple Effect */
+.contact-bar-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-bar-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.contact-bar-btn:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Text Labels */
+.contact-bar-label {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Active State */
+.contact-bar-btn.active {
+  background: rgba(166, 92, 45, 0.2);
+  color: #a65c2d;
+  box-shadow: 0 2px 8px rgba(166, 92, 45, 0.2);
+}
+
+/* Accessibility */
+.contact-bar-btn:focus {
+  outline: 2px solid #a65c2d;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .mobile-contact-bar {
+    border-top: 2px solid #000;
+  }
+  
+  .contact-bar-btn {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-contact-bar,
+  .contact-bar-btn,
+  .contact-bar-btn::after {
+    transition: none;
+    animation: none;
+  }
+  
+  .cart-badge::after {
+    animation: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .mobile-contact-bar {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    border-top: 1px solid #444;
+  }
+  
+  .contact-bar-btn {
+    color: #e0e0e0;
+  }
+  
+  .contact-bar-btn:hover {
+    background: rgba(166, 92, 45, 0.2);
+  }
+}
+
+/* Landscape Mode Adjustments */
+@media (max-width: 767px) and (orientation: landscape) {
+  .mobile-contact-bar {
+    padding: 8px 0;
+  }
+  
+  .contact-bar-btn {
+    min-height: 45px;
+    font-size: 0.75rem;
+  }
+  
+  .contact-bar-btn i {
+    font-size: 1.2rem;
+  }
+  
+  .contact-bar-label {
+    font-size: 0.65rem;
+  }
+}
+
+/* Touch Target Size */
+@media (max-width: 767px) {
+  .contact-bar-btn {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Animation Performance */
+.mobile-contact-bar {
+  will-change: transform;
+}
+
+.contact-bar-btn {
+  will-change: transform, background-color;
+}

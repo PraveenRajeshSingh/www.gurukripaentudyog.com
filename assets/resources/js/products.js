@@ -408,11 +408,15 @@ function viewProductDetails(productId) {
 
 // Initialize products on page load
 document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('productsContainer')) {
+    if (document.getElementById('productsGrid')) {
         // Set default filter to show all products
         currentCategory = 'all';
         priceRange = { min: 0, max: 20 };
-        filterProducts();
+        
+        // Render animated product cards
+        setTimeout(() => {
+            renderAnimatedProductCards();
+        }, 500);
     }
 });
 

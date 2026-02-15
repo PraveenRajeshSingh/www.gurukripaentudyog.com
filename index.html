@@ -122,11 +122,15 @@
     <link rel="preload" href="assets/resources/css/main.min.css" as="style" crossorigin>
     <link rel="stylesheet" href="assets/resources/css/main.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/clean.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/product-cards.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/scroll-effects.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/mobile-contact-bar.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/grid-system.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/grid-layout.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/buttons.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/layout-fixes.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/resources/css/typography.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/section-fixes.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/vendors/css/normalize.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/vendors/css/grid.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/vendors/css/ionicons.min.css" media="print" onload="this.media='all'">
@@ -549,61 +553,7 @@
             
             <!-- Products Grid -->
             <div class="products-grid-modern" id="productsGrid">
-                <!-- Loading Skeletons -->
-                <div class="product-skeleton">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-content">
-                        <div class="skeleton-line short"></div>
-                        <div class="skeleton-line medium"></div>
-                        <div class="skeleton-line"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
-                <div class="product-skeleton">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-content">
-                        <div class="skeleton-line short"></div>
-                        <div class="skeleton-line medium"></div>
-                        <div class="skeleton-line"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
-                <div class="product-skeleton">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-content">
-                        <div class="skeleton-line short"></div>
-                        <div class="skeleton-line medium"></div>
-                        <div class="skeleton-line"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
-                <div class="product-skeleton">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-content">
-                        <div class="skeleton-line short"></div>
-                        <div class="skeleton-line medium"></div>
-                        <div class="skeleton-line"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
-                <div class="product-skeleton">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-content">
-                        <div class="skeleton-line short"></div>
-                        <div class="skeleton-line medium"></div>
-                        <div class="skeleton-line"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
-                <div class="product-skeleton">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-content">
-                        <div class="skeleton-line short"></div>
-                        <div class="skeleton-line medium"></div>
-                        <div class="skeleton-line"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
+                <!-- Products will be dynamically loaded with animations -->
             </div>
             
             <!-- Pagination -->
@@ -614,11 +564,11 @@
     </section>
 
     <!-- Brick Calculator Section -->
-    <section class="brick-calculator-section">
+    <section class="brick-calculator-section" id="calculator">
         <div class="container">
-            <div class="section-header text-center" style="color: white;">
-                <h2 class="section-title" style="color: white;">Brick Calculator</h2>
-                <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">Calculate how many bricks you need for your project</p>
+            <div class="section-header text-center">
+                <h2 class="section-title">Brick Calculator</h2>
+                <p class="section-subtitle">Calculate how many bricks you need for your project</p>
             </div>
             <div class="calculator-container">
                 <div class="calculator-inputs">
@@ -781,8 +731,8 @@
         </div>
     </section>
 
-    <!-- Quality Section -->
-    <section class="section section-quality">
+    <!-- Quality Standards Section -->
+    <section class="section section-quality" id="quality">
         <div class="container">
             <div class="section-header text-center">
                 <h2 class="section-title">Quality Standards & Brick Grading</h2>
@@ -790,13 +740,13 @@
             </div>
             
             <!-- Brick Grading Information -->
-            <div class="brick-grading-grid">
+            <div class="quality-standards-grid">
                 <div class="grade-card grade-first">
                     <div class="grade-badge">First-Class</div>
-                    <h3>प्रथम श्रेणी की ईंटें</h3>
                     <div class="grade-icon">
                         <i class="ion-ios-star"></i>
                     </div>
+                    <h3>प्रथम श्रेणी की ईंटें</h3>
                     <p class="grade-description">These are the finest quality bricks, well-burnt with a uniform shape, consistent color, and no flaws.</p>
                     <p class="grade-description-hi">ये सर्वोत्तम गुणवत्ता वाली ईंटें हैं, अच्छी तरह से जली हुई, समान आकार, सुसंगत रंग और कोई दोष नहीं।</p>
                     <ul class="grade-features">
@@ -809,10 +759,10 @@
                 
                 <div class="grade-card grade-second">
                     <div class="grade-badge">Second-Class</div>
-                    <h3>द्वितीय श्रेणी की ईंटें</h3>
                     <div class="grade-icon">
                         <i class="ion-ios-star-half"></i>
                     </div>
+                    <h3>द्वितीय श्रेणी की ईंटें</h3>
                     <p class="grade-description">Well-burnt bricks with slight irregularities in shape and color or minor chips.</p>
                     <p class="grade-description-hi">अच्छी तरह से जली हुई ईंटें जिनमें आकार और रंग में मामूली अनियमितताएं या छोटे चिप्स हो सकते हैं।</p>
                     <ul class="grade-features">
@@ -825,10 +775,10 @@
                 
                 <div class="grade-card grade-third">
                     <div class="grade-badge">Third-Class</div>
-                    <h3>तृतीय श्रेणी की ईंटें</h3>
                     <div class="grade-icon">
                         <i class="ion-ios-star-outline"></i>
                     </div>
+                    <h3>तृतीय श्रेणी की ईंटें</h3>
                     <p class="grade-description">Under-burnt, softer bricks with irregular shape and lighter color. Higher water absorption.</p>
                     <p class="grade-description-hi">अधजली, नरम ईंटें जिनमें अनियमित आकार और हल्का रंग होता है। अधिक पानी अवशोषण।</p>
                     <ul class="grade-features">
@@ -841,10 +791,10 @@
                 
                 <div class="grade-card grade-fourth">
                     <div class="grade-badge">Fourth-Class</div>
-                    <h3>चतुर्थ श्रेणी की ईंटें</h3>
                     <div class="grade-icon">
                         <i class="ion-ios-close"></i>
                     </div>
+                    <h3>चतुर्थ श्रेणी की ईंटें</h3>
                     <p class="grade-description">Over-burnt, dark-colored, deformed, and often brittle. Used as crushed aggregate.</p>
                     <p class="grade-description-hi">अधिक जली हुई, गहरे रंग की, विकृत और अक्सर भंगुर ईंटें। कुचले हुए समुच्चय के रूप में उपयोग की जाती हैं।</p>
                     <ul class="grade-features">
@@ -957,7 +907,6 @@
     </section>
 
     <!-- Blog Section -->
-    <!-- Blog Section - Modern Design -->
     <section class="section section-blog" id="blog">
         <div class="container">
             <div class="section-header text-center">
@@ -969,41 +918,52 @@
                 <p class="section-subtitle">Latest news, tips, and insights about bricks and construction</p>
             </div>
             
-            <!-- Blog Filter Tabs -->
-            <div class="blog-filter-tabs">
-                <button class="blog-filter-tab active" data-category="all">
-                    <span>All Posts</span>
-                </button>
-                <button class="blog-filter-tab" data-category="construction">
-                    <span>Construction</span>
-                </button>
-                <button class="blog-filter-tab" data-category="quality">
-                    <span>Quality</span>
-                </button>
-                <button class="blog-filter-tab" data-category="tips">
-                    <span>Tips</span>
-                </button>
-            </div>
-            
             <!-- Blog Grid - Modern 3-Column -->
             <div class="blog-grid-modern" id="blogGrid">
-                <!-- Blog posts will be dynamically loaded here -->
-                <div class="blog-loading">
-                    <div class="loader"></div>
+                <!-- Sample Blog Posts -->
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="assets/resources/img/redbrick1.jpg" alt="Brick Quality Guide">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">January 15, 2024</div>
+                        <h3 class="blog-title">Complete Guide to Brick Quality Grades</h3>
+                        <p class="blog-excerpt">Understanding the different quality grades of bricks and how to choose the right one for your construction project...</p>
+                        <button class="btn-read-more">Read More</button>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Blog Pagination -->
-            <div class="blog-pagination" id="blogPagination">
-                <!-- Pagination will be dynamically generated -->
+                
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="assets/resources/img/newbricks_2.jpg" alt="Construction Tips">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">January 10, 2024</div>
+                        <h3 class="blog-title">5 Essential Construction Tips for Brick Laying</h3>
+                        <p class="blog-excerpt">Professional techniques and best practices for laying bricks that will ensure a strong and durable structure...</p>
+                        <button class="btn-read-more">Read More</button>
+                    </div>
+                </div>
+                
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="assets/resources/img/redbricks.jpg" alt="Maintenance Guide">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">January 5, 2024</div>
+                        <h3 class="blog-title">Brick Maintenance and Longevity Guide</h3>
+                        <p class="blog-excerpt">Learn how to properly maintain your brick structures to ensure they last for decades with proper care...</p>
+                        <button class="btn-read-more">Read More</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ Section - Accordion -->
-    <section class="faq-section">
+    <section class="faq-section" id="faq">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <h2 class="section-title">Frequently Asked Questions</h2>
                 <p class="section-subtitle">Find answers to common questions</p>
             </div>
@@ -1085,7 +1045,7 @@
     <!-- Contact Section -->
     <section class="section section-contact" id="contact">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <h2 class="section-title" data-translate="contact">Contact Us</h2>
                 <p class="section-subtitle">Get in touch for the best bricks</p>
             </div>
@@ -1113,40 +1073,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="contact-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2843.75099685615!2d82.79136717416928!3d25.604107915101448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39902fb80ba0141f%3A0x8383316b344c0741!2zR3VydUtyaXBhIEVhbnQgVWR5b2cgTmV3YWRh!5e1!3m2!1sen!2sin!4v1725638270630!5m2!1sen!2sin" 
-                            width="100%" height="100%" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-                <!-- Contact Form -->
-                <div class="contact-form-container">
-                    <form id="contactForm" class="contact-form" novalidate>
-                        <!-- Security: Honeypot field -->
-                        <div class="form-group honeypot" style="display: none;">
-                            <label for="honeypot">Leave this field empty</label>
-                            <input type="text" id="honeypot" name="honeypot" tabindex="-1">
-                        </div>
-                        
+                <div class="contact-form">
+                    <form id="contactForm" novalidate>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="contactName">Full Name *</label>
-                                <input type="text" id="contactName" name="name" required placeholder="Enter your full name" autocomplete="name" aria-describedby="name-help">
-                                <div id="name-help" class="field-help">Please enter your full name (2+ characters, letters only)</div>
+                                <input type="text" id="contactName" name="name" required placeholder="Enter your full name">
                             </div>
                             <div class="form-group">
                                 <label for="contactEmail">Email Address *</label>
-                                <input type="email" id="contactEmail" name="email" required placeholder="your@email.com" autocomplete="email" aria-describedby="email-help">
-                                <div id="email-help" class="field-help">We'll never share your email</div>
+                                <input type="email" id="contactEmail" name="email" required placeholder="your@email.com">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="contactPhone">Phone Number *</label>
-                                <input type="tel" id="contactPhone" name="phone" required placeholder="+91 98765 43210" autocomplete="tel" aria-describedby="phone-help">
-                                <div id="phone-help" class="field-help">10-15 digit phone number</div>
+                                <input type="tel" id="contactPhone" name="phone" required placeholder="+91 98765 43210">
                             </div>
                             <div class="form-group">
                                 <label for="contactSubject">Subject *</label>
-                                <select id="contactSubject" name="subject" required aria-describedby="subject-help">
+                                <select id="contactSubject" name="subject" required>
                                     <option value="">Select a subject</option>
                                     <option value="general">General Inquiry</option>
                                     <option value="products">Product Information</option>
@@ -1154,32 +1100,43 @@
                                     <option value="support">Technical Support</option>
                                     <option value="complaint">Complaint</option>
                                 </select>
-                                <div id="subject-help" class="field-help">Select the most relevant subject</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="contactMessage">Your Message *</label>
-                            <textarea id="contactMessage" name="message" rows="5" required placeholder="Please describe your inquiry in detail..." aria-describedby="message-help"></textarea>
-                            <div id="message-help" class="field-help">10-1000 characters describing your needs</div>
+                            <textarea id="contactMessage" name="message" rows="5" required placeholder="Please describe your inquiry in detail..."></textarea>
                         </div>
-                        <div class="form-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="contactConsent" name="consent" required>
-                                <span class="checkmark"></span>
-                                I agree to the <a href="#" target="_blank">Privacy Policy</a> and consent to data processing *
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary submit-btn">
+                        <button type="submit" class="submit-btn">
                             <span class="btn-text">Send Message</span>
-                            <span class="btn-loader" style="display: none;">
-                                <i class="ion-load-c"></i> Sending...
-                            </span>
                         </button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Mobile Quick Contact Bar -->
+    <div class="mobile-contact-bar" id="mobileContactBar">
+        <div class="contact-bar-container">
+            <button class="contact-bar-btn home-btn-mobile" onclick="scrollToSection('#home')">
+                <i class="ion-ios-home"></i>
+                <span class="contact-bar-label">Home</span>
+            </button>
+            <button class="contact-bar-btn call-btn-mobile" onclick="window.location.href='tel:+919198923230'">
+                <i class="ion-ios-telephone"></i>
+                <span class="contact-bar-label">Call</span>
+            </button>
+            <button class="contact-bar-btn whatsapp-btn-mobile" onclick="window.open('https://wa.me/919198923230', '_blank')">
+                <i class="ion-social-whatsapp"></i>
+                <span class="contact-bar-label">WhatsApp</span>
+            </button>
+            <button class="contact-bar-btn cart-btn-mobile" onclick="openCart()" id="mobileCartBtn">
+                <i class="ion-ios-cart"></i>
+                <span class="contact-bar-label">Cart</span>
+                <span class="cart-badge" id="mobileCartCount" data-count="0">0</span>
+            </button>
+        </div>
+    </div>
 
     <!-- Floating Actions - Before Footer -->
     <div class="floating-actions">
@@ -1477,6 +1434,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" defer></script>
     <script src="assets/vendors/js/jquery.waypoints.min.js" defer></script>
     
+    <!-- Animation and Effects Scripts -->
+    <script defer src="assets/resources/js/animations.js"></script>
+    
     <!-- Main Unified JavaScript -->
     <script defer src="assets/resources/js/main.min.js"></script>
     
@@ -1486,6 +1446,9 @@
     <script defer src="assets/resources/js/products.js"></script>
     <script defer src="assets/resources/js/chatbot.js"></script>
     <script defer src="assets/resources/js/script.js"></script>
+    
+    <!-- Section Fixes JavaScript -->
+    <script defer src="assets/resources/js/section-fixes.js"></script>
     
     <!-- Performance: Preload critical resources -->
     <link rel="preload" as="script" href="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js">
