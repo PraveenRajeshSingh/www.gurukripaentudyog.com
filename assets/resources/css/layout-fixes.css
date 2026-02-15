@@ -43,8 +43,13 @@
 
 /* Spacing fixes to prevent overlapping */
 .section {
-  position: relative;
-  clear: both;
+  padding: 50px 20px;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 35px 15px;
+  }
 }
 
 /* Header spacing fixes - Compact Size with Proper Overlap Prevention */
@@ -223,7 +228,9 @@ body {
   position: relative;
   overflow: hidden;
   margin-top: -92px; /* Compensate for fixed header (32px + 60px) */
-  padding: 60px 20px 40px;
+  padding: 90px 20px 60px;
+  min-height: auto;
+  /* Removed height: 100vh; */
   z-index: 1;
 }
 
@@ -273,7 +280,7 @@ body {
 @media (max-width: 767px) {
   .hero-section {
     margin-top: -87px; /* Compensate for mobile header (32px + 55px) */
-    padding: 50px 15px 30px;
+    padding: 70px 15px 40px;
   }
   
   .hero-title {
@@ -316,8 +323,7 @@ body {
 .products-grid-modern {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 25px;
-  margin-bottom: 50px;
+  gap: 18px;
 }
 
 @media (max-width: 1199px) {
@@ -904,4 +910,105 @@ img {
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 3rem;
+}
+
+/* Product Card Height Reduction */
+.product-card-modern {
+  padding: 15px;
+}
+
+.product-card-modern .product-image {
+  height: 180px;
+  object-fit: cover;
+}
+
+.product-card-modern .product-title {
+  margin: 10px 0;
+}
+
+/* Heading Spacing Reduction */
+.section-title {
+  margin-bottom: 25px;
+}
+
+/* Container Layout */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 15px;
+}
+
+/* FAQ Section Tightening */
+.faq-item {
+  padding: 12px 15px;
+}
+
+/* Blog Section Height Reduction */
+.blog-card {
+  padding: 15px;
+}
+
+.blog-card img {
+  height: 170px;
+  object-fit: cover;
+}
+
+/* Footer Height Reduction */
+.footer {
+  padding: 40px 20px;
+}
+
+@media (max-width: 767px) {
+  .footer {
+    padding: 30px 15px;
+  }
+}
+
+/* Product Categories Section */
+.product-categories-section {
+  padding: 40px 20px;
+}
+
+@media (max-width: 767px) {
+  .product-categories-section {
+    padding: 30px 15px;
+  }
+}
+
+/* Quality Standards Section */
+.quality-standards {
+  padding: 25px;
+}
+
+@media (max-width: 767px) {
+  .quality-standards {
+    padding: 20px;
+  }
+}
+
+/* Brick Calculator Section */
+.section-calculator {
+  padding: 40px 20px;
+}
+
+@media (max-width: 767px) {
+  .section-calculator {
+    padding: 30px 15px;
+  }
+}
+
+/* Contact Section */
+.section-contact {
+  padding: 40px 20px;
+}
+
+@media (max-width: 767px) {
+  .section-contact {
+    padding: 30px 15px;
+  }
+}
+
+/* Keep line-height balanced */
+* {
+  line-height: 1.5;
 }
