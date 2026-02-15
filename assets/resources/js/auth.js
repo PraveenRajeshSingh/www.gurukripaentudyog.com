@@ -4,16 +4,8 @@
 
 // Open Login Modal
 function openLoginModal() {
-    const modal = document.getElementById('loginModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        // Focus on first input
-        setTimeout(() => {
-            const emailInput = document.getElementById('login-email');
-            if (emailInput) emailInput.focus();
-        }, 100);
-    }
+    openModal();
+    showLogin();
 }
 
 // Close Login Modal
@@ -27,16 +19,8 @@ function closeLoginModal() {
 
 // Open Register Modal
 function openRegisterModal() {
-    const modal = document.getElementById('registerModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        // Focus on first input
-        setTimeout(() => {
-            const nameInput = document.getElementById('register-name');
-            if (nameInput) nameInput.focus();
-        }, 100);
-    }
+    openModal();
+    showRegister();
 }
 
 // Close Register Modal
@@ -290,4 +274,206 @@ function checkUserStatus() {
 // Initialize user status on page load
 document.addEventListener('DOMContentLoaded', function() {
     checkUserStatus();
+});
+
+// ============================================
+// MODERN AUTH MODAL FUNCTIONS
+// ============================================
+
+// Open Modal
+function openModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.classList.add('modal-open');
+        document.body.style.overflow = 'hidden';
+        
+        // Focus on first input
+        setTimeout(() => {
+            const firstInput = modal.querySelector('input');
+            if (firstInput) firstInput.focus();
+        }, 300);
+    }
+}
+
+// Close Modal
+function closeModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+    }
+}
+
+// Show Login Tab
+function showLogin() {
+    document.getElementById('loginForm').classList.add('active');
+    document.getElementById('registerForm').classList.remove('active');
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.querySelectorAll('.tab-btn')[1].classList.remove('active');
+    
+    // Focus on login email
+    setTimeout(() => {
+        document.querySelector('#loginForm input[type="email"]').focus();
+    }, 100);
+}
+
+// Show Register Tab
+function showRegister() {
+    document.getElementById('registerForm').classList.add('active');
+    document.getElementById('loginForm').classList.remove('active');
+    document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    document.querySelectorAll('.tab-btn')[0].classList.remove('active');
+    
+    // Focus on register name
+    setTimeout(() => {
+        document.querySelector('#registerForm input[type="text"]').focus();
+    }, 100);
+}
+
+// Toggle Password Visibility
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const toggle = input.nextElementSibling;
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        toggle.textContent = '🙈';
+    } else {
+        input.type = 'password';
+        toggle.textContent = '👁️';
+    }
+}
+
+// Handle Login Form
+function handleLoginForm(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const email = form.querySelector('input[type="email"]').value;
+    const password = form.querySelector('input[type="password"]').value;
+    const rememberMe = form.querySelector('input[name="remember"]').checked;
+    
+    // Validation
+    if (!email || !password) {
+        showUserFriendlyError('Please fill in all fields');
+        return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showUserFriendlyError('Please enter a valid email address');
+        return;
+    }
+    
+    // Simulate login
+    const submitBtn = form.querySelector('.auth-submit');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Logging in...';
+    submitBtn.disabled = true;
+    
+    setTimeout(() => {
+        // Demo login - accept any credentials
+        const user = {
+            id: 1,
+            name: email.split('@')[0],
+            email: email
+        };
+        
+        localStorage.setItem('user', JSON.stringify(user));
+        if (rememberMe) {
+            localStorage.setItem('rememberMe', 'true');
+        }
+        
+        updateUserInterface(user);
+        closeModal();
+        showUserFriendlyError('Login successful! Welcome back!', 3000);
+        
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        form.reset();
+    }, 1500);
+}
+
+// Handle Register Form
+function handleRegisterForm(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const inputs = form.querySelectorAll('input');
+    const name = inputs[0].value;
+    const email = inputs[1].value;
+    const password = inputs[2].value;
+    const confirmPassword = inputs[3].value;
+    
+    // Validation
+    if (!name || !email || !password || !confirmPassword) {
+        showUserFriendlyError('Please fill in all fields');
+        return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showUserFriendlyError('Please enter a valid email address');
+        return;
+    }
+    
+    // Password validation
+    if (password.length < 6) {
+        showUserFriendlyError('Password must be at least 6 characters');
+        return;
+    }
+    
+    // Confirm password
+    if (password !== confirmPassword) {
+        showUserFriendlyError('Passwords do not match');
+        return;
+    }
+    
+    // Simulate registration
+    const submitBtn = form.querySelector('.auth-submit');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Registering...';
+    submitBtn.disabled = true;
+    
+    setTimeout(() => {
+        // Demo registration
+        const user = {
+            id: Date.now(),
+            name: name,
+            email: email
+        };
+        
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        updateUserInterface(user);
+        closeModal();
+        showUserFriendlyError('Registration successful! Welcome!', 3000);
+        
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        form.reset();
+        showLogin(); // Switch to login tab
+    }, 1500);
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('authModal');
+    if (e.target === modal) {
+        closeModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('authModal');
+        if (modal && modal.style.display === 'flex') {
+            closeModal();
+        }
+    }
 });
