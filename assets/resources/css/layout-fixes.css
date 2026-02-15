@@ -60,6 +60,148 @@
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 25px;
+}
+
+.btn-icon {
+  background: linear-gradient(135deg, #8B0000, #6B0000);
+  color: white;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.2);
+  /* Ensure buttons are always visible */
+  display: flex !important;
+}
+
+.btn-icon:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 8px 25px rgba(139, 0, 0, 0.3);
+}
+
+/* User Menu Styles */
+.user-menu {
+  position: relative;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  padding: 10px 0;
+  display: none;
+  z-index: 1001;
+}
+
+.user-menu:hover .user-dropdown {
+  display: block;
+}
+
+.user-dropdown a {
+  display: block;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.user-dropdown a:hover {
+  background: #f8f9fa;
+  color: #8B0000;
+}
+
+/* Mobile Navigation */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1001;
+}
+
+.nav-toggle span {
+  width: 25px;
+  height: 3px;
+  background: #8B0000;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+@media (max-width: 767px) {
+  .nav-toggle {
+    display: flex;
+  }
+  
+  /* Mobile Auth Styles */
+  .mobile-auth {
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .mobile-auth .btn {
+    margin: 5px 0;
+  }
+  
+  .mobile-user-menu {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .user-info {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+  }
+  
+  .user-info span {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .user-actions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .user-actions li {
+    margin: 5px 0;
+  }
+  
+  .user-actions a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+  }
+  
+  .user-actions a:hover {
+    background: #f8f9fa;
+    color: #8B0000;
+  }
+}
+
 /* Prevent header overlap with content - COMPACT spacing */
 body {
   padding-top: 92px; /* 32px (utility header) + 60px (nav) */

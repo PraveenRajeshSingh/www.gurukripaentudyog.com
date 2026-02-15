@@ -358,7 +358,10 @@
                         <i class="ion-ios-cart"></i>
                         <span class="cart-badge" id="cartCount">0</span>
                     </button>
-                    <button class="btn-icon" id="loginBtn" style="display: none;" data-translate="login">Login</button>
+                    <!-- Show Login/Register buttons by default -->
+                    <button class="btn-icon" id="loginBtn" data-translate="login" onclick="openLoginModal()">Login</button>
+                    <button class="btn-icon" id="registerBtn" data-translate="register" onclick="openRegisterModal()">Register</button>
+                    <!-- Hide user menu by default -->
                     <div id="userMenu" style="display: none;" class="user-menu">
                         <button class="btn-icon" id="userMenuBtn">
                             <i class="ion-ios-person"></i>
@@ -393,6 +396,24 @@
             <li><a href="#about" class="nav-link" data-translate="aboutUs">About</a></li>
             <li><a href="#cities" class="nav-link" data-translate="cities">Cities</a></li>
             <li><a href="#contact" class="nav-link" data-translate="contact">Contact</a></li>
+            <!-- Mobile Auth Buttons -->
+            <li class="mobile-auth">
+                <button class="btn btn-primary btn-full" onclick="openLoginModal(); closeMobileMenu();" data-translate="login">Login</button>
+            </li>
+            <li class="mobile-auth">
+                <button class="btn btn-secondary btn-full" onclick="openRegisterModal(); closeMobileMenu();" data-translate="register">Register</button>
+            </li>
+            <!-- Mobile User Menu -->
+            <li id="mobileUserMenu" style="display: none;" class="mobile-user-menu">
+                <div class="user-info">
+                    <span id="mobileUserName"></span>
+                </div>
+                <ul class="user-actions">
+                    <li><a href="#dashboard" data-translate="dashboard">Dashboard</a></li>
+                    <li><a href="#dashboard" data-translate="myOrders">My Orders</a></li>
+                    <li><a href="#" onclick="logoutUser(); closeMobileMenu(); return false;" data-translate="logout">Logout</a></li>
+                </ul>
+            </li>
         </ul>
     </div>
 
@@ -1494,6 +1515,7 @@
     <script defer src="assets/resources/js/products.js"></script>
     <script defer src="assets/resources/js/chatbot.js"></script>
     <script defer src="assets/resources/js/script.js"></script>
+    <script defer src="assets/resources/js/auth.js"></script>
     
     <!-- Section Fixes JavaScript -->
     <script defer src="assets/resources/js/section-fixes.js"></script>
