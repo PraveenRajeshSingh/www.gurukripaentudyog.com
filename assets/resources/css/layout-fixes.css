@@ -1,0 +1,495 @@
+/* Layout Break Fixes and Overlapping Prevention */
+/* Prevent overlapping elements */
+* {
+  box-sizing: border-box;
+}
+
+/* Clear floats and prevent overflow */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Prevent content overflow */
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+/* Z-index management */
+.z-header { z-index: 1000; }
+.z-dropdown { z-index: 1001; }
+.z-modal { z-index: 10000; }
+.z-toast { z-index: 10001; }
+.z-tooltip { z-index: 10002; }
+
+/* Position utilities */
+.position-relative { position: relative; }
+.position-absolute { position: absolute; }
+.position-fixed { position: fixed; }
+.position-sticky { position: sticky; }
+
+/* Spacing fixes to prevent overlapping */
+.section {
+  position: relative;
+  clear: both;
+}
+
+/* Header spacing fixes */
+.modern-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Prevent header overlap with content */
+body {
+  padding-top: 75px; /* Height of the header */
+}
+
+@media (max-width: 767px) {
+  body {
+    padding-top: 65px; /* Smaller header on mobile */
+  }
+}
+
+/* Hero section fixes */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  margin-top: -75px; /* Compensate for fixed header */
+  padding-top: 75px;
+}
+
+@media (max-width: 767px) {
+  .hero-section {
+    margin-top: -65px;
+    padding-top: 65px;
+  }
+}
+
+/* Prevent floating buttons from overlapping */
+.floating-actions {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+@media (max-width: 767px) {
+  .floating-actions {
+    right: 20px;
+    bottom: 20px;
+    gap: 12px;
+  }
+}
+
+/* Footer spacing fixes */
+.footer {
+  position: relative;
+  clear: both;
+  margin-top: 0;
+}
+
+/* Prevent content from being hidden behind footer */
+.main-content {
+  min-height: calc(100vh - 200px); /* Adjust based on header and footer height */
+}
+
+/* Modal positioning fixes */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  position: relative;
+  z-index: 10001;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+}
+
+/* Prevent horizontal scrolling */
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Fix for images causing horizontal overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent long text from breaking layout */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-break {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Grid item alignment fixes */
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.grid-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Prevent margin collapse */
+.section-header {
+  margin-top: 0;
+  padding-top: 1px; /* Prevent margin collapse */
+}
+
+/* Card spacing fixes */
+.card {
+  margin-bottom: 30px;
+}
+
+.card:last-child {
+  margin-bottom: 0;
+}
+
+/* List spacing fixes */
+ul, ol {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+li:last-child {
+  margin-bottom: 0;
+}
+
+/* Form element spacing */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Button spacing fixes */
+.btn-group {
+  margin-bottom: 1rem;
+}
+
+.btn {
+  margin-bottom: 0.5rem;
+}
+
+.btn:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive spacing adjustments */
+@media (max-width: 767px) {
+  .section {
+    padding: 60px 0;
+  }
+  
+  .section-header {
+    margin-bottom: 40px;
+  }
+  
+  .card {
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Prevent sticky elements from overlapping */
+.sticky {
+  position: sticky;
+  top: 75px; /* Account for header height */
+  z-index: 999;
+}
+
+@media (max-width: 767px) {
+  .sticky {
+    top: 65px;
+  }
+}
+
+/* Fix for absolutely positioned elements */
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute-top-right {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.absolute-bottom-right {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+/* Prevent content jumping during loading */
+.skeleton-loader {
+  min-height: 200px;
+}
+
+/* Fix for flexbox alignment issues */
+.flex-align-start {
+  align-items: flex-start;
+}
+
+.flex-align-center {
+  align-items: center;
+}
+
+.flex-align-end {
+  align-items: flex-end;
+}
+
+.flex-justify-start {
+  justify-content: flex-start;
+}
+
+.flex-justify-center {
+  justify-content: center;
+}
+
+.flex-justify-end {
+  justify-content: flex-end;
+}
+
+.flex-justify-between {
+  justify-content: space-between;
+}
+
+.flex-justify-around {
+  justify-content: space-around;
+}
+
+/* Prevent text selection on buttons */
+.btn {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Fix for focus outlines */
+*:focus {
+  outline: 2px solid #a65c2d;
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Prevent double tap zoom on mobile */
+@media (max-width: 767px) {
+  body {
+    touch-action: manipulation;
+  }
+  
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+}
+
+/* Fix for viewport height issues on mobile */
+.mobile-vh-fix {
+  height: 100vh;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: fill-available;
+}
+
+/* Prevent image dragging */
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Fix for scroll anchoring */
+.scroll-anchor {
+  overflow-anchor: none;
+}
+
+/* Prevent content shifting during font loading */
+.font-loading {
+  font-display: swap;
+}
+
+/* Fix for CSS transitions on scroll */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Prevent layout shifts during animation */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Fix for aspect ratio issues */
+.aspect-ratio-16-9 {
+  aspect-ratio: 16/9;
+}
+
+.aspect-ratio-4-3 {
+  aspect-ratio: 4/3;
+}
+
+.aspect-ratio-1-1 {
+  aspect-ratio: 1/1;
+}
+
+/* Prevent content from being cut off */
+.clip-path-none {
+  clip-path: none;
+}
+
+/* Fix for CSS grid alignment issues */
+.grid-align-center {
+  justify-items: center;
+  align-items: center;
+}
+
+.grid-align-start {
+  justify-items: start;
+  align-items: start;
+}
+
+.grid-align-end {
+  justify-items: end;
+  align-items: end;
+}
+
+/* Prevent content from overflowing grid containers */
+.grid-container {
+  overflow: hidden;
+}
+
+/* Fix for flexbox wrapping issues */
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+/* Prevent margin issues with grid items */
+.grid-item {
+  margin: 0;
+}
+
+/* Fix for CSS specificity issues */
+.override-important {
+  all: unset !important;
+}
+
+/* Prevent content from being hidden behind fixed elements */
+.content-offset {
+  scroll-margin-top: 100px;
+}
+
+/* Fix for CSS inheritance issues */
+.inherit-all {
+  all: inherit;
+}
+
+/* Prevent layout issues with CSS custom properties */
+:root {
+  --primary-color: #a65c2d;
+  --secondary-color: #f8f9fa;
+  --text-color: #333;
+  --background-color: #ffffff;
+  --border-color: #e9ecef;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.3s;
+  --border-radius: 12px;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 3rem;
+}

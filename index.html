@@ -121,6 +121,12 @@
     <!-- Main Stylesheet - Unified & Optimized -->
     <link rel="preload" href="assets/resources/css/main.min.css" as="style" crossorigin>
     <link rel="stylesheet" href="assets/resources/css/main.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/clean.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/grid-system.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/grid-layout.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/buttons.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/layout-fixes.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/resources/css/typography.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/vendors/css/normalize.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/vendors/css/grid.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/vendors/css/ionicons.min.css" media="print" onload="this.media='all'">
@@ -388,26 +394,28 @@
 
     <!-- Hero Section - Redesigned with Parallax & Particle Effects -->
     <header class="hero-section" id="home">
-        <div id="main-content"></div>
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1 class="hero-title">
-                गुरुकृपा ईंट — उत्तम गुणवत्ता, मजबूत ईंटें
-            </h1>
-            <p class="hero-subtitle">25+ Years of Excellence in Brick Manufacturing</p>
-            <p class="hero-description">Premium Quality | Trusted Across Jaunpur & Varanasi</p>
-            <div class="hero-cta">
-                <a href="tel:+919198923230" class="btn btn-primary">
-                    <i class="ion-ios-telephone"></i> हमसे कॉल करें
-                </a>
-                <a href="#products" class="btn btn-secondary">
-                    <i class="ion-ios-grid"></i> उत्पाद देखें
-                </a>
+        <div class="container">
+            <div id="main-content"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    गुरुकृपा ईंट — उत्तम गुणवत्ता, मजबूत ईंटें
+                </h1>
+                <p class="hero-subtitle">25+ Years of Excellence in Brick Manufacturing</p>
+                <p class="hero-description">Premium Quality | Trusted Across Jaunpur & Varanasi</p>
+                <div class="hero-cta">
+                    <a href="tel:+919198923230" class="btn btn-primary">
+                        <i class="ion-ios-telephone"></i> हमसे कॉल करें
+                    </a>
+                    <a href="#products" class="btn btn-secondary">
+                        <i class="ion-ios-grid"></i> उत्पाद देखें
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="scroll-indicator">
-            <span>Scroll</span>
-            <i class="ion-ios-arrow-down"></i>
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <i class="ion-ios-arrow-down"></i>
+            </div>
         </div>
     </header>
 
@@ -416,11 +424,11 @@
     <!-- Product Categories Section - Horizontal Grid -->
     <section class="product-categories-section">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <h2 class="section-title">Our Product Categories</h2>
                 <p class="section-subtitle">Choose from our premium range of bricks</p>
             </div>
-            <div class="categories-horizontal-grid">
+            <div class="categories-grid">
                 <div class="category-card" data-category="shiv" onclick="setCategory('shiv')">
                     <img src="assets/resources/img/redbrick1.jpg" alt="Shiv Eent" class="category-bg">
                     <div class="category-content">
@@ -465,12 +473,11 @@
         </div>
     </section>
 
-    <!-- Products Section -->
     <!-- Products Section - Modern Design -->
     <section class="section section-products" id="products">
-        <div class="products-container">
+        <div class="container">
             <!-- Products Header with Search -->
-            <div class="products-header-modern">
+            <div class="products-header-modern text-center">
                 <div class="products-title-section">
                     <span class="section-tag">Premium Quality</span>
                     <h2 class="section-title">
@@ -603,15 +610,13 @@
             <div class="products-pagination" id="productsPagination">
                 <!-- Pagination will be dynamically generated -->
             </div>
-            
-
         </div>
     </section>
 
     <!-- Brick Calculator Section -->
     <section class="brick-calculator-section">
         <div class="container">
-            <div class="section-header" style="color: white;">
+            <div class="section-header text-center" style="color: white;">
                 <h2 class="section-title" style="color: white;">Brick Calculator</h2>
                 <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">Calculate how many bricks you need for your project</p>
             </div>
@@ -671,7 +676,7 @@
     <!-- Why Choose Gurukripa - Enhanced Features Section -->
     <section class="section section-about" id="about">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <h2 class="section-title" data-translate="whyChoose">Why Choose Gurukripa Bricks?</h2>
                 <p class="section-subtitle">4 Key Reasons to Trust Us</p>
             </div>
@@ -711,7 +716,7 @@
     <!-- Video Section -->
     <section class="video-section">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <h2 class="section-title">See Our Manufacturing Process</h2>
                 <p class="section-subtitle">Watch how we make premium quality bricks</p>
             </div>
@@ -728,7 +733,7 @@
     <!-- Customer Reviews Section -->
     <section class="reviews-section">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <h2 class="section-title">What Our Customers Say</h2>
                 <p class="section-subtitle">Testimonials from satisfied customers across Jaunpur</p>
             </div>
@@ -779,7 +784,7 @@
     <!-- Quality Section -->
     <section class="section section-quality">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <h2 class="section-title">Quality Standards & Brick Grading</h2>
                 <p class="section-subtitle">Understanding Brick Quality Grades</p>
             </div>
@@ -878,7 +883,7 @@
     <!-- Cities Section -->
     <section class="section section-cities" id="cities">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <h2 class="section-title" data-translate="cities">We Serve</h2>
                 <p class="section-subtitle">Delivering quality bricks across multiple cities</p>
             </div>
@@ -955,7 +960,7 @@
     <!-- Blog Section - Modern Design -->
     <section class="section section-blog" id="blog">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header text-center">
                 <span class="section-tag">Latest Updates</span>
                 <h2 class="section-title" data-translate="blogTitle">
                     <span class="title-main">Our Blog</span>
