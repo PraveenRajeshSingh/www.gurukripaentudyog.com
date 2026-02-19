@@ -86,13 +86,21 @@ function saveCart() {
 
 function updateCartUI() {
     const cartCount = document.getElementById('cartCount');
+    const cartBadge = document.getElementById('cartBadge');
     const cartTotal = document.getElementById('cartTotal');
     const cartItems = document.getElementById('cartItems');
     
+    const count = getCartCount();
+    
     if (cartCount) {
-        const count = getCartCount();
         cartCount.textContent = count;
         cartCount.style.display = count > 0 ? 'block' : 'none';
+    }
+    
+    // Update navbar cart badge
+    if (cartBadge) {
+        cartBadge.textContent = count;
+        cartBadge.style.display = count > 0 ? 'block' : 'none';
     }
     
     if (cartTotal) {
