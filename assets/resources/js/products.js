@@ -38,6 +38,27 @@ window.products = [
         }
     },
     {
+        id: 7,
+        name: 'Fly Ash Brick',
+        nameHi: 'फ्लाई ऐश ईंट',
+        category: 'premium',
+        price: 7,
+        oldPrice: 9,
+        image: 'assets/resources/img/newbricks_2.jpg',
+        description: 'Environment-friendly fly ash bricks with good strength and smooth finish. Ideal for modern construction with reduced environmental impact.',
+        descriptionHi: 'पर्यावरण के अनुकूल फ्लाई ऐश ईंटें, अच्छी शक्ति और चिकनी फिनिश के साथ। आधुनिक निर्माण के लिए आदर्श, पर्यावरणीय प्रभाव को कम करती हैं।',
+        inStock: true,
+        rating: 4.7,
+        reviews: 34,
+        features: ['Eco-friendly', 'Smooth Finish', 'Good Strength', 'Cost Effective'],
+        specs: {
+            size: '190×90×90 mm',
+            weight: '2.2-2.6 kg',
+            strength: '7-10 N/mm²',
+            absorption: '<18%'
+        }
+    },
+    {
         id: 3,
         name: 'Machine Made Brick',
         nameHi: 'मशीन से बनी ईंट',
