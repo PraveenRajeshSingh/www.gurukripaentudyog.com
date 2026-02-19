@@ -2,9 +2,13 @@
 // AUTHENTICATION AND MODAL FUNCTIONS
 // ============================================
 
-// Open Login Modal
+// Open Login Modal (dedicated modal only)
 function openLoginModal() {
-    openAuth('login');
+    const modal = document.getElementById('loginModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.classList.add('modal-open');
+    }
 }
 
 // Close Login Modal
@@ -16,9 +20,13 @@ function closeLoginModal() {
     }
 }
 
-// Open Register Modal
+// Open Register Modal (dedicated modal only)
 function openRegisterModal() {
-    openAuth('register');
+    const modal = document.getElementById('registerModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.classList.add('modal-open');
+    }
 }
 
 // Close Register Modal
@@ -30,24 +38,32 @@ function closeRegisterModal() {
     }
 }
 
-// Close modals when clicking outside
+// Close only auth modals when clicking their backdrop
 document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal')) {
+    if (e.target.id === 'loginModal' || e.target.id === 'registerModal') {
         e.target.style.display = 'none';
-        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
     }
 });
 
-// Close modals with Escape key
+// Close auth modals with Escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        const modals = document.querySelectorAll('.modal');
-        modals.forEach(modal => {
-            if (modal.style.display === 'flex') {
-                modal.style.display = 'none';
-                document.body.style.overflow = '';
-            }
-        });
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+
+        let closed = false;
+        if (loginModal && loginModal.style.display === 'flex') {
+            loginModal.style.display = 'none';
+            closed = true;
+        }
+        if (registerModal && registerModal.style.display === 'flex') {
+            registerModal.style.display = 'none';
+            closed = true;
+        }
+        if (closed) {
+            document.body.classList.remove('modal-open');
+        }
     }
 });
 
@@ -275,74 +291,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================
-// MODERN AUTH MODAL FUNCTIONS
+// LEGACY AUTH MODAL / POPUP SYSTEM (REMOVED)
 // ============================================
 
-// Open Modal
-function openModal() {
-    const modal = document.getElementById('authModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.body.classList.add('modal-open');
-        document.body.style.overflow = 'hidden';
-        
-        // Focus on first input
-        setTimeout(() => {
-            const firstInput = modal.querySelector('input');
-            if (firstInput) firstInput.focus();
-        }, 300);
-    }
-}
-
-// Close Modal
-function closeModal() {
-    const modal = document.getElementById('authModal');
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-    }
-}
-
-// Show Login Tab
-function showLogin() {
-    document.getElementById('loginForm').classList.add('active');
-    document.getElementById('registerForm').classList.remove('active');
-    document.querySelectorAll('.tab-btn')[0].classList.add('active');
-    document.querySelectorAll('.tab-btn')[1].classList.remove('active');
-    
-    // Focus on login email
-    setTimeout(() => {
-        document.querySelector('#loginForm input[type="email"]').focus();
-    }, 100);
-}
-
-// Show Register Tab
-function showRegister() {
-    document.getElementById('registerForm').classList.add('active');
-    document.getElementById('loginForm').classList.remove('active');
-    document.querySelectorAll('.tab-btn')[1].classList.add('active');
-    document.querySelectorAll('.tab-btn')[0].classList.remove('active');
-    
-    // Focus on register name
-    setTimeout(() => {
-        document.querySelector('#registerForm input[type="text"]').focus();
-    }, 100);
-}
-
-// Toggle Password Visibility
-function togglePassword(inputId) {
-    const input = document.getElementById(inputId);
-    const toggle = input.nextElementSibling;
-    
-    if (input.type === 'password') {
-        input.type = 'text';
-        toggle.textContent = '🙈';
-    } else {
-        input.type = 'password';
-        toggle.textContent = '👁️';
-    }
-}
+// The older overlay-based auth/cart popup system and duplicate helpers
+// (openModal/closeModal/showLogin/showRegister/togglePassword/etc.) have been
+// intentionally removed to avoid multiple modal systems and conflicting events.
 
 // Handle Login Form
 function handleLoginForm(event) {
@@ -458,122 +412,19 @@ function handleRegisterForm(event) {
     }, 1500);
 }
 
-// Close modal when clicking outside
-document.addEventListener('click', function(e) {
-    const modal = document.getElementById('authModal');
-    if (e.target === modal) {
-        closeModal();
-    }
-});
-
-// Close modal with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        const modal = document.getElementById('authModal');
-        if (modal && modal.style.display === 'flex') {
-            closeModal();
-        }
-    }
-});
+// Note: legacy event listeners that targeted #authModal have been disabled
+// so that only the dedicated #loginModal and #registerModal are used.
 
 // ============================================
 // MODERN WORLD-CLASS POPUP SYSTEM
 // ============================================
 
-// Get modal elements
-const overlay = document.getElementById("overlay");
-const authModal = document.getElementById("authModal");
-const cartModal = document.getElementById("cartModal");
+// Legacy overlay/cart system has been retired. Cart behaviour is now
+// handled exclusively by assets/resources/js/cart.js and the cart modal in index.html.
 
-// Open Authentication Modal
-function openAuth(type) {
-    overlay.classList.add("active");
-    authModal.classList.add("active");
-    document.body.classList.add("modal-open");
-    
-    if (type === "register") {
-        switchTab("register");
-    } else {
-        switchTab("login");
-    }
-    
-    // Focus on first input
-    setTimeout(() => {
-        const firstInput = authModal.querySelector('input');
-        if (firstInput) firstInput.focus();
-    }, 300);
-}
+// Legacy tab switching for authModal removed (we now use dedicated forms/modals).
 
-// Open Cart Modal
-function openCart() {
-    overlay.classList.add("active");
-    cartModal.classList.add("active");
-    document.body.classList.add("modal-open");
-    
-    // Update cart content
-    updateCartDisplay();
-}
-
-// Close All Modals
-function closeAll() {
-    overlay.classList.remove("active");
-    authModal.classList.remove("active");
-    cartModal.classList.remove("active");
-    document.body.classList.remove("modal-open");
-}
-
-// Switch Between Login/Register Tabs
-function switchTab(tab) {
-    // Hide all forms
-    document.getElementById("loginForm").classList.remove("active");
-    document.getElementById("registerForm").classList.remove("active");
-    
-    // Remove active class from all tabs
-    document.getElementById("loginTab").classList.remove("active");
-    document.getElementById("registerTab").classList.remove("active");
-    
-    // Show selected form and tab
-    if (tab === "login") {
-        document.getElementById("loginForm").classList.add("active");
-        document.getElementById("loginTab").classList.add("active");
-        
-        // Focus on login email
-        setTimeout(() => {
-            document.querySelector('#loginForm input[type="email"]').focus();
-        }, 100);
-    } else {
-        document.getElementById("registerForm").classList.add("active");
-        document.getElementById("registerTab").classList.add("active");
-        
-        // Focus on register name
-        setTimeout(() => {
-            document.querySelector('#registerForm input[type="text"]').focus();
-        }, 100);
-    }
-}
-
-// Update Cart Display
-function updateCartDisplay() {
-    const cartItems = document.querySelector('.cart-items');
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    if (cart.length === 0) {
-        cartItems.innerHTML = '<p>No products in cart.</p>';
-    } else {
-        // For now, show simple cart items
-        let cartHTML = '<div class="cart-list">';
-        cart.forEach(item => {
-            cartHTML += `
-                <div class="cart-item">
-                    <span>${item.name || 'Product'}</span>
-                    <span>₹${item.price || 0}</span>
-                </div>
-            `;
-        });
-        cartHTML += '</div>';
-        cartItems.innerHTML = cartHTML;
-    }
-}
+// Legacy cart rendering for overlay cart removed in favour of cart.js implementation.
 
 // Handle Login Form Submission
 function handleLoginForm(event) {
@@ -676,85 +527,18 @@ function handleRegisterForm(event) {
     }, 1500);
 }
 
-// Close modals with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        if (overlay.classList.contains('active')) {
-            closeAll();
-        }
-    }
-});
+// Overlay-level close handlers removed – dedicated modals now manage their own close behaviour.
 
-// Close modals when clicking outside
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal')) {
-        closeAll();
-    }
-});
-
-// Update existing functions to use new system
-function openLoginModal() {
-    openAuth('login');
-}
-
-function openRegisterModal() {
-    openAuth('register');
-}
+// At the bottom we already defined openLoginModal/openRegisterModal
+// to work with the lightweight dedicated modals; no remapping needed here.
 
 // ============================================
 // PREMIUM MODAL SYSTEM 2026
 // ============================================
 
-// Update existing modal elements
-const authTitle = document.getElementById("authTitle");
-const cartBadge = document.getElementById("cartBadge");
+// Legacy premium modal/cart badge helpers and authTitle have been removed.
 
-// Update cart badge
-function updateCartBadge() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    
-    if (cartBadge) {
-        cartBadge.textContent = totalCount;
-        cartBadge.style.display = totalCount > 0 ? 'block' : 'none';
-    }
-}
-
-// Open Authentication Modal
-function openAuth(type) {
-    overlay.classList.add("active");
-    authModal.classList.add("active");
-    document.body.classList.add("modal-open");
-    
-    if (type === "register") {
-        authTitle.innerText = "Create Account";
-    } else {
-        authTitle.innerText = "Login";
-    }
-    
-    // Focus on email field
-    setTimeout(() => {
-        document.getElementById('authEmail').focus();
-    }, 300);
-}
-
-// Open Cart Modal (Slide-in from right)
-function openCart() {
-    overlay.classList.add("active");
-    cartModal.classList.add("active");
-    document.body.classList.add("modal-open");
-    
-    // Update cart content
-    updateCartDisplay();
-}
-
-// Close All Modals
-function closeAll() {
-    overlay.classList.remove("active");
-    authModal.classList.remove("active");
-    cartModal.classList.remove("active");
-    document.body.classList.remove("modal-open");
-}
+// Premium auth/cart overlay open/close functions removed (superseded by simpler modals + cart.js).
 
 // Toggle Password Visibility
 function togglePassword() {

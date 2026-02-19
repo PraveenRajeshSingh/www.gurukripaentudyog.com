@@ -221,15 +221,8 @@ function scrollToSection(selector) {
     }
 }
 
-// Open cart function
-function openCart() {
-    // Trigger existing cart modal
-    if (typeof showCartModal === 'function') {
-        showCartModal();
-    } else if (document.getElementById('cartModal')) {
-        document.getElementById('cartModal').style.display = 'flex';
-    }
-}
+// Note: cart opening is handled centrally in cart.js (window.openCart).
+// We intentionally do not redefine openCart here to avoid conflicts.
 
 // Enhanced product card rendering
 function renderAnimatedProductCards() {

@@ -87,6 +87,8 @@ function saveCart() {
 function updateCartUI() {
     const cartCount = document.getElementById('cartCount');
     const cartBadge = document.getElementById('cartBadge');
+    const mobileCartCount = document.getElementById('mobileCartCount');
+    const allCartBadges = document.querySelectorAll('.cart-badge');
     const cartTotal = document.getElementById('cartTotal');
     const cartItems = document.getElementById('cartItems');
     
@@ -102,6 +104,19 @@ function updateCartUI() {
         cartBadge.textContent = count;
         cartBadge.style.display = count > 0 ? 'block' : 'none';
     }
+
+    // Update mobile cart badge/button
+    if (mobileCartCount) {
+        mobileCartCount.textContent = count;
+        mobileCartCount.setAttribute('data-count', count);
+        mobileCartCount.style.display = count > 0 ? 'inline-flex' : 'none';
+    }
+
+    // Update any other generic cart badges
+    allCartBadges.forEach(badge => {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'block' : 'none';
+    });
     
     if (cartTotal) {
         cartTotal.textContent = `₹${getCartTotal().toFixed(2)}`;
