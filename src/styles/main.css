@@ -1,0 +1,16 @@
+/**
+ * Gurukripa Bricks - Main Stylesheet (Entry Point)
+ * All imports are ordered: variables → base → layout → components → cards → nav → animations → chatbot → utilities → sections
+ * (Sections last so they can override base/component rules.)
+ */
+
+@import './variables.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';
+@import './cards.css';
+@import './navigation.css';
+@import './animations.css';
+@import './chatbot.css';
+@import './utilities.css';
+@import './sections.css';

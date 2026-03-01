@@ -1,0 +1,204 @@
+/**
+ * Gurukripa Bricks - Base Styles & Reset (Overhauled)
+ */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--gray-700);
+    background-color: var(--white);
+    overflow-x: hidden;
+    padding-top: var(--header-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* ── Hindi Text ── */
+.text-hindi,
+[data-lang-text],
+.title-hindi,
+.lang-hi {
+    font-family: var(--font-hindi), var(--font-primary);
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+}
+
+/* ── Links ── */
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--transition-base);
+}
+
+a:hover {
+    color: var(--primary);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+/* ── Skip Link ── */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 16px;
+    background: var(--primary);
+    color: var(--white);
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    z-index: var(--z-loader);
+    transition: top .3s;
+}
+
+.skip-link:focus {
+    top: 16px;
+}
+
+/* ── Typography Scale ── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    line-height: 1.22;
+    color: var(--gray-900);
+    font-family: var(--font-primary);
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+h2 {
+    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+}
+
+h3 {
+    font-size: clamp(1.25rem, 2.5vw, 1.8rem);
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+p {
+    color: var(--gray-600);
+}
+
+/* ── Section Headers ── */
+.section-header {
+    margin-bottom: 56px;
+}
+
+.section-tag {
+    display: inline-block;
+    padding: 6px 18px;
+    background: rgba(139, 0, 0, .08);
+    color: var(--primary);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    border-radius: var(--radius-full);
+    margin-bottom: 14px;
+    border: 1px solid rgba(139, 0, 0, .15);
+}
+
+.section-title {
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    line-height: 1.18;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.title-main {
+    color: var(--gray-900);
+    background: linear-gradient(135deg, var(--gray-900) 0%, var(--primary-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.title-hindi {
+    font-size: .62em;
+    color: var(--primary);
+    font-family: var(--font-hindi), var(--font-primary);
+    font-weight: 600;
+    opacity: .85;
+}
+
+.section-subtitle {
+    font-size: 1.05rem;
+    color: var(--gray-500);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.title-divider {
+    width: 56px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: var(--radius-full);
+    margin: 18px auto 0;
+}
+
+.text-center .title-divider {
+    margin: 18px auto 0;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    body {
+        font-size: .95rem;
+        padding-top: var(--header-height-mobile);
+    }
+
+    .section-header {
+        margin-bottom: 36px;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+}
