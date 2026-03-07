@@ -26,11 +26,11 @@
     <meta name="msapplication-config" content="browserconfig.xml">
 
     <!-- Page Title & Meta Description -->
-    <title>Gurukripa Bricks - Best Brick Manufacturer in Jaunpur | Varanasi</title>
+    <title>Gurukripa Bricks Industry - Jaunpur's Best Brick Manufacturer Since 1995</title>
     <meta name="description"
-        content="गुरुकृपा ईंट उद्योग - जौनपुर में सर्वश्रेष्ठ ईंट निर्माता। 25+ वर्षों का अनुभव। Best brick manufacturer in Jaunpur and Varanasi.">
+        content="Gurukripa Bricks Industry - Jaunpur's finest quality brick manufacturer for over 25 years. Premium quality red bricks, machine-finished durability, and same-day delivery across Varanasi and UP.">
     <meta name="keywords"
-        content="Brick manufacturer, Brick supplier, Jaunpur bricks, Varanasi bricks, Clay bricks, Red bricks, Premium bricks, Construction bricks">
+        content="Best Bricks in Jaunpur, Premium Quality Bricks in Varanasi, Gurukripa Brick Manufacturer, Brick manufacturer Jaunpur, Brick supplier UP, Clay bricks Jaunpur, Red bricks Varanasi, Premium bricks Jaunpur, Construction bricks UP, ईंट निर्माता जौनपुर, गुरुकृपा ईंट उद्योग, machine made bricks, Shiv Eent bricks, best brick price Jaunpur, brick delivery Jaunpur, Jalalpur bricks">
     <meta name="subject" content="Brick Manufacturing & Supply">
     <meta name="abstract" content="Premium Bricks for Construction">
     <meta name="author" content="Gurukripa Bricks">
@@ -58,7 +58,7 @@
     <meta property="og:title" content="Gurukripa Bricks - Best Brick Manufacturer in Jaunpur | Varanasi">
     <meta property="og:description"
         content="गुरुकृपा ईंट उद्योग - जौनपुर में सर्वश्रेष्ठ ईंट निर्माता। 25+ वर्षों का अनुभव।">
-    <meta property="og:image" content="src/assets/images/gurukripaLogo.jpg">
+    <meta property="og:image" content="src/assets/images/logo-new.svg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="hi_IN">
@@ -70,7 +70,7 @@
     <meta name="twitter:url" content="https://praveenrajeshsingh.github.io/www.gurukripaentudyog.com/">
     <meta name="twitter:title" content="Gurukripa Bricks - Best Brick Manufacturer">
     <meta name="twitter:description" content="गुरुकृपा ईंट उद्योग - जौनपुर में सर्वश्रेष्ठ ईंट निर्माता।">
-    <meta name="twitter:image" content="src/assets/images/gurukripaLogo.jpg">
+    <meta name="twitter:image" content="src/assets/images/logo-new.svg">
     <meta name="twitter:creator" content="@gurukripa">
     <meta name="twitter:domain" content="gurukripa.com">
 
@@ -238,40 +238,37 @@
         }
 
         .loader-spinner {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
         }
 
-        .loader-spinner .spinner-dot {
-            width: 12px;
-            height: 12px;
+        .spinner-ring {
+            position: absolute;
+            inset: 0;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #f39027;
             border-radius: 50%;
-            background: linear-gradient(135deg, #f39027, #8B0000);
-            animation: loaderDots 1.4s ease-in-out infinite;
-            box-shadow: 0 0 15px rgba(243, 144, 39, 0.5);
+            animation: loaderSpin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
 
-        .loader-spinner .spinner-dot:nth-child(2) {
-            animation-delay: 0.2s;
+        .spinner-ring-inner {
+            position: absolute;
+            inset: 8px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-bottom-color: #8B0000;
+            border-radius: 50%;
+            animation: loaderSpin 1.8s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse;
         }
 
-        .loader-spinner .spinner-dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes loaderDots {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0.4);
-                opacity: 0.3;
+        @keyframes loaderSpin {
+            0% {
+                transform: rotate(0deg);
             }
 
-            40% {
-                transform: scale(1.2);
-                opacity: 1;
+            100% {
+                transform: rotate(360deg);
             }
         }
     </style>
@@ -356,13 +353,13 @@
             <div class="loader-logo">
                 <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks">
             </div>
-            <div class="loader-brand">गुरुकृपा ईंट उद्योग</div>
-            <div class="loader-tagline">Premium Brick Manufacturer</div>
+            <div class="loader-brand" data-translate="heroTitle">Gurukripa Bricks Industry</div>
+            <div class="loader-tagline" data-translate="heroSubtitle">Premium Brick Manufacturer</div>
             <div class="loader-spinner">
-                <div class="spinner-dot"></div>
-                <div class="spinner-dot"></div>
-                <div class="spinner-dot"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring-inner"></div>
             </div>
+
         </div>
     </div>
 
@@ -390,7 +387,7 @@
                 </div>
                 <div class="utility-header-item">
                     <i class="ion-ios-time"></i>
-                    <span>9:00 AM - 6:00 PM</span>
+                    <span>9:00 AM - 7:00 PM</span>
                 </div>
             </div>
             <div class="utility-header-right">
@@ -408,8 +405,67 @@
                     <a href="#home" class="logo-link">
                         <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks Logo" class="logo-img"
                             onerror="this.onerror=null; this.src='src/assets/images/logo-new.svg';">
-                        <span class="brand-text">गुरुकृपा ईंट</span>
+                        <span class="brand-text" data-translate="heroTitle">Gurukripa Bricks</span>
                     </a>
+                </div>
+
+                <div class="nav-actions">
+                    <!-- Mobile Language switcher -->
+                    <button class="icon-btn mobile-lang-btn" id="mobileLangToggle"
+                        onclick="setLanguage(TranslationService.getLanguage() === 'hi' ? 'en' : 'hi')">
+                        <i class="ion-ios-world-outline"></i>
+                    </button>
+
+                    <!-- Cart button (desktop) -->
+                    <button class="icon-btn desktop-cart-btn" onclick="openCart()" aria-label="Open cart">
+                        🛒
+                        <span class="cart-count" id="cartBadge">0</span>
+                    </button>
+
+                    <!-- Auth buttons (Login/Register) -->
+                    <div id="authActions" class="auth-actions">
+                        <button class="text-btn" id="loginBtn" data-translate="login"
+                            onclick="openLoginModal()">Login</button>
+                        <button class="primary-btn" id="registerBtn" data-translate="register"
+                            onclick="openRegisterModal()">Register</button>
+                    </div>
+
+                    <!-- User menu (shown after login) -->
+                    <div id="userMenu" class="user-menu" style="display: none;">
+                        <button class="user-menu-btn" id="userMenuBtn">
+                            <div class="user-avatar">
+                                <i class="ion-ios-person"></i>
+                            </div>
+                            <span id="userName" class="user-name-text">User</span>
+                            <i class="ion-ios-arrow-down dropdown-icon"></i>
+                        </button>
+                        <div class="user-dropdown">
+                            <div class="dropdown-header">
+                                <p class="dropdown-welcome">Welcome back,</p>
+                                <p id="fullUserName" class="dropdown-name">User Name</p>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="#profile" onclick="navigateTo('profile')">
+                                <i class="ion-ios-person-outline"></i> <span data-translate="myProfile">My
+                                    Profile</span>
+                            </a>
+                            <a href="#orders" onclick="navigateTo('orders')">
+                                <i class="ion-ios-list-outline"></i> <span data-translate="myOrders">My
+                                    Orders</span>
+                            </a>
+                            <a href="#settings" onclick="navigateTo('settings')">
+                                <i class="ion-ios-settings"></i> <span data-translate="settings">Settings</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="logout-link" onclick="logoutUser(); return false;">
+                                <i class="ion-log-out"></i> <span data-translate="logout">Logout</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Language toggle (Desktop only) -->
+                    <button class="btn-icon nav-lang-btn" id="langToggle" aria-label="Toggle language"
+                        onclick="setLanguage(TranslationService.getLanguage() === 'hi' ? 'en' : 'hi')">EN</button>
                 </div>
 
                 <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
@@ -425,56 +481,6 @@
                     <li><a href="#about" class="nav-link" data-translate="aboutUs">About</a></li>
                     <li><a href="#cities" class="nav-link" data-translate="cities">Cities</a></li>
                     <li><a href="#contact" class="nav-link" data-translate="contact">Contact</a></li>
-                    <li class="nav-actions">
-                        <!-- Cart button -->
-                        <button class="icon-btn" onclick="openCart()" aria-label="Open cart">
-                            🛒
-                            <span class="cart-count" id="cartBadge">0</span>
-                        </button>
-
-                        <!-- Desktop auth buttons -->
-                        <button class="text-btn" id="loginBtn" data-translate="login"
-                            onclick="openLoginModal()">Login</button>
-                        <button class="primary-btn" id="registerBtn" data-translate="register"
-                            onclick="openRegisterModal()">Register</button>
-
-                        <!-- User menu (shown after login) -->
-                        <div id="userMenu" class="user-menu" style="display: none;">
-                            <button class="user-menu-btn" id="userMenuBtn">
-                                <div class="user-avatar">
-                                    <i class="ion-ios-person"></i>
-                                </div>
-                                <span id="userName" class="user-name-text">User</span>
-                                <i class="ion-ios-arrow-down dropdown-icon"></i>
-                            </button>
-                            <div class="user-dropdown">
-                                <div class="dropdown-header">
-                                    <p class="dropdown-welcome">Welcome back,</p>
-                                    <p id="fullUserName" class="dropdown-name">Praveen Singh</p>
-                                </div>
-                                <div class="dropdown-divider"></div>
-                                <a href="#profile" onclick="navigateTo('profile')">
-                                    <i class="ion-ios-person-outline"></i> <span data-translate="myProfile">My
-                                        Profile</span>
-                                </a>
-                                <a href="#orders" onclick="navigateTo('orders')">
-                                    <i class="ion-ios-list-outline"></i> <span data-translate="myOrders">My
-                                        Orders</span>
-                                </a>
-                                <a href="#settings" onclick="navigateTo('settings')">
-                                    <i class="ion-ios-settings"></i> <span data-translate="settings">Settings</span>
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="logout-link" onclick="logoutUser(); return false;">
-                                    <i class="ion-log-out"></i> <span data-translate="logout">Logout</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Language toggle -->
-                        <button class="btn-icon" id="langToggle" aria-label="Toggle language"
-                            onclick="setLanguage(TranslationService.getLanguage() === 'hi' ? 'en' : 'hi')">EN</button>
-                    </li>
                 </ul>
             </div>
         </nav>
@@ -485,27 +491,42 @@
     <div class="mobile-drawer" id="mobileDrawer">
         <div class="drawer-header">
             <div class="nav-brand">
-                <img src="src/assets/images/gurukripaLogo.jpg" alt="Gurukripa Bricks" class="nav-logo">
-                <span class="brand-text">गुरुकृपा ईंट</span>
+                <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks" class="nav-logo">
+                <span class="brand-text" data-translate="heroTitle">Gurukripa Bricks</span>
             </div>
             <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
         </div>
+        <!-- Quick Contact inside drawer -->
+        <div class="drawer-quick-contact">
+            <a href="tel:+919198923230" class="drawer-contact-link">
+                <i class="ion-ios-telephone"></i> +91 91989 23230
+            </a>
+            <a href="https://wa.me/919198923230" target="_blank" class="drawer-contact-link drawer-wa-link">
+                <i class="ion-social-whatsapp"></i> WhatsApp
+            </a>
+        </div>
         <ul class="drawer-menu">
-            <li><a href="#home" class="nav-link active" data-translate="home">Home</a></li>
-            <li><a href="#products" class="nav-link" data-translate="products">Products</a></li>
-            <li><a href="#blog" class="nav-link" data-translate="blog">Blog</a></li>
-            <li><a href="#about" class="nav-link" data-translate="aboutUs">About</a></li>
-            <li><a href="#cities" class="nav-link" data-translate="cities">Cities</a></li>
-            <li><a href="#contact" class="nav-link" data-translate="contact">Contact</a></li>
+            <li><a href="#home" class="nav-link active" data-translate="home"><i class="ion-ios-home"></i> Home</a></li>
+            <li><a href="#products" class="nav-link" data-translate="products"><i class="ion-ios-grid-view"></i>
+                    Products</a></li>
+            <li><a href="#blog" class="nav-link" data-translate="blog"><i class="ion-ios-paper"></i> Blog</a></li>
+            <li><a href="#about" class="nav-link" data-translate="aboutUs"><i class="ion-ios-information-circle"></i>
+                    About</a></li>
+            <li><a href="#cities" class="nav-link" data-translate="cities"><i class="ion-ios-location"></i> Cities</a>
+            </li>
+            <li><a href="#contact" class="nav-link" data-translate="contact"><i class="ion-ios-chatboxes"></i>
+                    Contact</a></li>
             <!-- Mobile Auth Buttons -->
-            <li class="mobile-auth">
-                <button class="btn btn-primary btn-full" onclick="openLoginModal(); closeMobileMenu();"
-                    data-translate="login">Login</button>
-            </li>
-            <li class="mobile-auth">
-                <button class="btn btn-secondary btn-full" onclick="openRegisterModal(); closeMobileMenu();"
-                    data-translate="register">Register</button>
-            </li>
+            <div id="mobileAuthButtons">
+                <li class="mobile-auth">
+                    <button class="btn btn-primary btn-full" onclick="openLoginModal(); closeMobileMenu();"
+                        data-translate="login"><i class="ion-log-in"></i> Login</button>
+                </li>
+                <li class="mobile-auth">
+                    <button class="btn btn-secondary btn-full" onclick="openRegisterModal(); closeMobileMenu();"
+                        data-translate="register"><i class="ion-ios-person-add"></i> Register</button>
+                </li>
+            </div>
             <!-- Mobile User Menu -->
             <li id="mobileUserMenu" style="display: none;" class="mobile-user-menu">
                 <div class="user-drawer-info">
@@ -535,6 +556,11 @@
                 </ul>
             </li>
         </ul>
+        <!-- Mobile Language Selector -->
+        <div class="drawer-lang-selector">
+            <button class="drawer-lang-btn active" data-lang="en" onclick="setLanguage('en')">🇬🇧 English</button>
+            <button class="drawer-lang-btn" data-lang="hi" onclick="setLanguage('hi')">🇮🇳 हिंदी</button>
+        </div>
     </div>
 
     <!-- Hero Section - Redesigned with Parallax & Particle Effects -->
@@ -543,22 +569,24 @@
             <div id="main-content"></div>
             <div class="hero-overlay"></div>
             <div class="hero-content">
-                <h1 class="hero-title">
-                    गुरुकृपा ईंट — उत्तम गुणवत्ता, मजबूत ईंटें
+                <h1 class="hero-title" data-translate="heroTitle">
+                    Gurukripa Bricks Industry
                 </h1>
-                <p class="hero-subtitle">25+ Years of Excellence in Brick Manufacturing</p>
-                <p class="hero-description">Premium Quality | Trusted Across Jaunpur & Varanasi</p>
+                <p class="hero-subtitle" data-translate="heroSubtitle">25+ Years of Excellence in Brick Manufacturing
+                </p>
+                <p class="hero-description" data-translate="heroDescription">Premium Quality | Trusted Across Jaunpur &
+                    Varanasi</p>
                 <div class="hero-cta">
                     <a href="tel:+919198923230" class="btn btn-primary">
-                        <i class="ion-ios-telephone"></i> हमसे कॉल करें
+                        <i class="ion-ios-telephone"></i> <span data-translate="callUs">Call Now</span>
                     </a>
                     <a href="#products" class="btn btn-secondary">
-                        <i class="ion-ios-grid"></i> उत्पाद देखें
+                        <i class="ion-ios-grid"></i> <span data-translate="catalog">Products</span>
                     </a>
                 </div>
             </div>
             <div class="scroll-indicator">
-                <span>Scroll</span>
+                <span data-translate="home">Scroll</span>
                 <i class="ion-ios-arrow-down"></i>
             </div>
         </div>
@@ -571,11 +599,11 @@
         <div class="container">
             <div class="section-header text-center">
                 <span class="section-tag">Premium Categories</span>
-                <h2 class="section-title">
-                    <span class="title-main">Explore Our Range</span>
-                    <span class="title-hindi">हमारी श्रेणियों का अन्वेषण करें</span>
+                <h2 class="section-title" data-translate="categories">
+                    Explore Our Range
                 </h2>
-                <p class="section-subtitle">Choose from our wide range of premium quality bricks</p>
+                <p class="section-subtitle" data-translate="whyChooseDesc">Choose from our wide range of premium quality
+                    bricks</p>
                 <div class="title-divider"></div>
             </div>
             <div class="categories-grid-premium">
@@ -589,7 +617,7 @@
                     </div>
                 </div>
                 <div class="category-card-premium reveal-item" onclick="setCategory('premium')">
-                    <img src="src/assets/images/newbricks_2.jpg" alt="Premium Red Clay Bricks">
+                    <img src="src/assets/images/redbricks.jpg" alt="Premium Red Clay Bricks">
                     <div class="category-info-premium">
                         <div class="cat-icon-premium"><i class="ion-ios-checkmark-circle"></i></div>
                         <h3>Premium Red Bricks</h3>
@@ -607,7 +635,7 @@
                     </div>
                 </div>
                 <div class="category-card-premium reveal-item" onclick="setCategory('machine-made')">
-                    <img src="src/assets/images/newbricks_2.jpg" alt="Machine Made Wirecut Bricks">
+                    <img src="src/assets/images/redbrick1.jpg" alt="Machine Made Wirecut Bricks">
                     <div class="category-info-premium">
                         <div class="cat-icon-premium"><i class="ion-ios-cog"></i></div>
                         <h3>Machine Made</h3>
@@ -625,20 +653,19 @@
             <!-- Products Header with Search -->
             <div class="products-header-modern text-center">
                 <div class="products-title-section">
-                    <span class="section-tag">Premium Quality Bricks</span>
-                    <h2 class="section-title">
-                        <span class="title-main"><i class="ion-ios-grid-view"></i> Our Products</span>
-                        <span class="title-hindi">हमारे उत्कृष्ट उत्पाद</span>
+                    <span class="section-tag" data-translate="verified">Premium Quality Bricks</span>
+                    <h2 class="section-title" data-translate="productsTitle">
+                        Our Products
                     </h2>
-                    <p class="section-subtitle" id="categoryTitle">Serving Jaunpur &amp; Varanasi for 25+ Years</p>
+                    <p class="section-subtitle" data-translate="featuresDescription">Serving Jaunpur &amp; Varanasi for
+                        25+ Years</p>
                     <div class="title-divider"></div>
                 </div>
 
                 <div class="products-search-bar">
                     <div class="search-container">
-                        <input type="text" id="productSearch" class="search-input"
-                            placeholder="Search products... (ईंटें खोजें)" aria-label="Search products"
-                            oninput="setSearch(event)">
+                        <input type="text" id="productSearch" class="search-input" placeholder="Search products..."
+                            aria-label="Search products" data-placeholder="search" oninput="setSearch(event)">
                         <button class="search-btn" id="searchBtn" aria-label="Search"
                             onclick="setSearch({target: {value: document.getElementById('productSearch').value}})">
                             <i class="ion-ios-search"></i>
@@ -651,19 +678,19 @@
             <div class="products-filter-controls">
                 <div class="filter-tabs">
                     <button class="filter-tab active" onclick="setCategory('all')">
-                        <span>All Products</span>
+                        <span data-translate="allProducts">All Products</span>
                     </button>
                     <button class="filter-tab" onclick="setCategory('shiv-eent')">
                         <span>Shiv Eent</span>
                     </button>
                     <button class="filter-tab" onclick="setCategory('premium')">
-                        <span>Premium</span>
+                        <span data-translate="premium">Premium</span>
                     </button>
                     <button class="filter-tab" onclick="setCategory('standard')">
-                        <span>Standard</span>
+                        <span data-translate="standard">Standard</span>
                     </button>
                     <button class="filter-tab" onclick="setCategory('machine-made')">
-                        <span>Machine Made</span>
+                        <span data-translate="machineMade">Machine Made</span>
                     </button>
                 </div>
 
@@ -723,55 +750,56 @@
     <section class="brick-calculator-section" id="calculator">
         <div class="container">
             <div class="section-header text-center">
-                <h2 class="section-title">Brick Calculator</h2>
-                <p class="section-subtitle">Calculate how many bricks you need for your project</p>
+                <h2 class="section-title" data-translate="calcTitle">Brick Calculator</h2>
+                <p class="section-subtitle" data-translate="calcSubtitle">Calculate how many bricks you need for your
+                    project</p>
             </div>
             <div class="calculator-container">
                 <div class="calculator-inputs">
                     <div class="calc-input-group">
-                        <label for="wallLength">Wall Length (meters)</label>
+                        <label for="wallLength" data-translate="calcLength">Wall Length (meters)</label>
                         <input type="number" id="wallLength" placeholder="e.g., 10" min="0" step="0.1">
                     </div>
                     <div class="calc-input-group">
-                        <label for="wallWidth">Wall Width (meters)</label>
+                        <label for="wallWidth" data-translate="calcWidth">Wall Width (meters)</label>
                         <input type="number" id="wallWidth" placeholder="e.g., 0.23" min="0" step="0.01" value="0.23">
                     </div>
                     <div class="calc-input-group">
-                        <label for="wallHeight">Wall Height (meters)</label>
+                        <label for="wallHeight" data-translate="calcHeight">Wall Height (meters)</label>
                         <input type="number" id="wallHeight" placeholder="e.g., 3" min="0" step="0.1">
                     </div>
                     <div class="calc-input-group">
-                        <label for="brickType">Brick Type</label>
+                        <label for="brickType" data-translate="calcBrickType">Brick Type</label>
                         <select id="brickType">
-                            <option value="standard">Standard</option>
+                            <option value="standard" data-translate="standard">Standard</option>
                             <option value="shiv">Shiv Eent</option>
-                            <option value="premium">Premium</option>
-                            <option value="machine">Machine Made</option>
+                            <option value="premium" data-translate="premium">Premium</option>
+                            <option value="machine" data-translate="machineMade">Machine Made</option>
                         </select>
                     </div>
                 </div>
                 <button class="calc-btn" id="calculateBricks">
-                    <i class="ion-ios-calculator"></i> Calculate Now
+                    <i class="ion-ios-calculator"></i> <span data-translate="calculateNow">Calculate Now</span>
                 </button>
                 <div class="calc-results" id="calcResults">
                     <div class="calc-result-item">
-                        <span>Total Bricks Required:</span>
+                        <span data-translate="bricksRequired">Total Bricks Required:</span>
                         <strong id="resultBricks">—</strong>
                     </div>
                     <div class="calc-result-item">
-                        <span>Cement Required:</span>
+                        <span data-translate="cementRequired">Cement Required:</span>
                         <strong id="resultCement">—</strong>
                     </div>
                     <div class="calc-result-item">
-                        <span>Sand Required:</span>
+                        <span data-translate="sandRequired">Sand Required:</span>
                         <strong id="resultSand">—</strong>
                     </div>
                     <div class="calc-result-item">
-                        <span>Estimated Total Cost:</span>
+                        <span data-translate="estimatedCost">Estimated Total Cost:</span>
                         <strong id="resultCost">—</strong>
                     </div>
                     <div class="calc-result-item">
-                        <span>Delivery Availability:</span>
+                        <span data-translate="deliveryStatus">Delivery Availability:</span>
                         <strong id="resultDelivery">—</strong>
                     </div>
                 </div>
@@ -875,7 +903,7 @@
                 </div>
                 <div class="review-card">
                     <div class="review-header">
-                        <img src="src/assets/images/gurukripaLogo.jpg" alt="Customer" class="customer-photo">
+                        <img src="src/assets/images/logo-new.svg" alt="Customer" class="customer-photo" loading="lazy">
                         <div class="customer-info">
                             <h4>Ramesh Kumar</h4>
                             <p class="customer-location">Jalalpur, UP</p>
@@ -1094,7 +1122,7 @@
                 <div class="blog-card">
                     <div class="demo-tag">Demo Content</div>
                     <div class="blog-image">
-                        <img src="src/assets/images/redbrick1.jpg" alt="Brick Quality Guide">
+                        <img src="src/assets/images/redbrick1.jpg" alt="Brick Quality Guide" loading="lazy">
                     </div>
                     <div class="blog-content">
                         <div class="blog-date">January 15, 2024</div>
@@ -1108,7 +1136,7 @@
                 <div class="blog-card">
                     <div class="demo-tag">Demo Content</div>
                     <div class="blog-image">
-                        <img src="src/assets/images/newbricks_2.jpg" alt="Construction Tips">
+                        <img src="src/assets/images/newbricks_2.jpg" alt="Construction Tips" loading="lazy">
                     </div>
                     <div class="blog-content">
                         <div class="blog-date">January 10, 2024</div>
@@ -1122,7 +1150,7 @@
                 <div class="blog-card">
                     <div class="demo-tag">Demo Content</div>
                     <div class="blog-image">
-                        <img src="src/assets/images/redbricks.jpg" alt="Maintenance Guide">
+                        <img src="src/assets/images/redbricks.jpg" alt="Maintenance Guide" loading="lazy">
                     </div>
                     <div class="blog-content">
                         <div class="blog-date">January 5, 2024</div>
@@ -1263,38 +1291,55 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="contactName">Full Name *</label>
-                                <input type="text" id="contactName" name="name" required
-                                    placeholder="Enter your full name">
+                                <div class="form-icon-group">
+                                    <i class="ion-ios-person input-icon"></i>
+                                    <input type="text" id="contactName" name="name" required
+                                        placeholder="Enter your full name">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="contactEmail">Email Address *</label>
-                                <input type="email" id="contactEmail" name="email" required
-                                    placeholder="your@email.com">
+                                <div class="form-icon-group">
+                                    <i class="ion-ios-email input-icon"></i>
+                                    <input type="email" id="contactEmail" name="email" required
+                                        placeholder="your@email.com">
+                                </div>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="contactPhone">Phone Number *</label>
-                                <input type="tel" id="contactPhone" name="phone" required placeholder="+91 98765 43210">
+                                <div class="form-icon-group">
+                                    <i class="ion-ios-telephone input-icon"></i>
+                                    <input type="tel" id="contactPhone" name="phone" required
+                                        placeholder="+91 98765 43210">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="contactSubject">Subject *</label>
-                                <select id="contactSubject" name="subject" required>
-                                    <option value="">Select a subject</option>
-                                    <option value="general">General Inquiry</option>
-                                    <option value="products">Product Information</option>
-                                    <option value="orders">Order Status</option>
-                                    <option value="support">Technical Support</option>
-                                    <option value="complaint">Complaint</option>
-                                </select>
+                                <div class="form-icon-group">
+                                    <i class="ion-ios-list input-icon"></i>
+                                    <select id="contactSubject" name="subject" required>
+                                        <option value="">Select a subject</option>
+                                        <option value="general">General Inquiry</option>
+                                        <option value="products">Product Information</option>
+                                        <option value="orders">Order Status</option>
+                                        <option value="support">Technical Support</option>
+                                        <option value="complaint">Complaint</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="contactMessage">Your Message *</label>
-                            <textarea id="contactMessage" name="message" rows="5" required
-                                placeholder="Please describe your inquiry in detail..."></textarea>
+                            <div class="form-icon-group">
+                                <i class="ion-ios-chatboxes input-icon"></i>
+                                <textarea id="contactMessage" name="message" rows="5" required
+                                    placeholder="Please describe your inquiry in detail..."></textarea>
+                            </div>
                         </div>
                         <button type="submit" class="submit-btn">
+                            <i class="ion-ios-send"></i>
                             <span class="btn-text">Send Message</span>
                         </button>
                     </form>
@@ -1303,29 +1348,7 @@
         </div>
     </section>
 
-    <!-- Mobile Quick Contact Bar -->
-    <div class="mobile-contact-bar" id="mobileContactBar">
-        <div class="contact-bar-container">
-            <button class="contact-bar-btn home-btn-mobile" onclick="scrollToSection('#home')">
-                <i class="ion-ios-home"></i>
-                <span class="contact-bar-label">Home</span>
-            </button>
-            <button class="contact-bar-btn call-btn-mobile" onclick="window.location.href='tel:+919198923230'">
-                <i class="ion-ios-telephone"></i>
-                <span class="contact-bar-label">Call</span>
-            </button>
-            <button class="contact-bar-btn whatsapp-btn-mobile"
-                onclick="window.open('https://wa.me/919198923230', '_blank')">
-                <i class="ion-social-whatsapp"></i>
-                <span class="contact-bar-label">WhatsApp</span>
-            </button>
-            <button class="contact-bar-btn cart-btn-mobile" onclick="openCart()" id="mobileCartBtn">
-                <i class="ion-ios-cart"></i>
-                <span class="contact-bar-label">Cart</span>
-                <span class="cart-badge" id="mobileCartCount" data-count="0">0</span>
-            </button>
-        </div>
-    </div>
+
 
 
     <!-- AI Chatbot Widget -->
@@ -1436,14 +1459,27 @@
                     </div>
 
                     <div class="footer-newsletter">
-                        <h4>Newsletter</h4>
-                        <p>Get offers &amp; updates in your inbox</p>
+                        <h4 data-translate="newsletterTitle">Newsletter</h4>
+                        <p data-translate="newsletterDesc">Get offers &amp; updates in your inbox</p>
                         <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)"
                             aria-label="Newsletter subscription">
                             <input type="email" class="newsletter-input" placeholder="your@email.com" required
                                 aria-label="Email address for newsletter">
-                            <button type="submit" class="newsletter-btn" aria-label="Subscribe">Subscribe</button>
+                            <button type="submit" class="newsletter-btn" aria-label="Subscribe"
+                                data-translate="subscribe">Subscribe</button>
                         </form>
+                    </div>
+
+                    <!-- Security & Trust Badges -->
+                    <div class="trust-badges">
+                        <div class="trust-badge-item">
+                            <i class="ion-ios-checkmark-circle"></i>
+                            <span data-translate="trustVerified">Trusted Supplier Verified</span>
+                        </div>
+                        <div class="trust-badge-item">
+                            <i class="ion-ios-lock"></i>
+                            <span data-translate="secureSsl">HTTPS Secure SSL</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1451,12 +1487,18 @@
 
             <!-- Footer Bottom Bar -->
             <div class="footer-bottom">
-                <p>&copy; 2025 गुरुकृपा ईंट उद्योग. All rights reserved. | Crafted with ❤️ in Jaunpur</p>
+                <p>&copy; 2025 <span data-translate="heroTitle">Gurukripa Bricks Industry</span>. <span
+                        data-translate="allRightsReserved">All rights reserved.</span> | <span
+                        data-translate="craftedIn">Crafted with ❤️ in Jaunpur</span></p>
                 <div class="footer-bottom-links">
-                    <a href="#" onclick="showUserFriendlyError('Coming Soon — Privacy Policy')">Privacy Policy</a>
-                    <a href="#" onclick="showUserFriendlyError('Coming Soon — Terms')">Terms &amp; Conditions</a>
-                    <a href="#" onclick="showUserFriendlyError('Coming Soon — Shipping')">Shipping Policy</a>
-                    <a href="#" onclick="showUserFriendlyError('Coming Soon — Return')">Return Policy</a>
+                    <a href="javascript:void(0)" onclick="Modals.open('privacyModal')"
+                        data-translate="privacyPolicy">Privacy Policy</a>
+                    <a href="javascript:void(0)" onclick="Modals.open('termsModal')"
+                        data-translate="termsConditions">Terms &amp; Conditions</a>
+                    <a href="javascript:void(0)" onclick="Modals.open('shippingModal')"
+                        data-translate="shippingPolicy">Shipping Policy</a>
+                    <a href="javascript:void(0)" onclick="Modals.open('returnModal')"
+                        data-translate="returnPolicy">Return Policy</a>
                 </div>
             </div>
 
@@ -1468,7 +1510,7 @@
     <div class="modal" id="cartModal">
         <div class="modal-content modal-large">
             <div class="modal-header">
-                <h2>🛒 Your Cart</h2>
+                <h2>🛒 <span data-translate="cart">Your Cart</span></h2>
                 <button class="modal-close" onclick="Modals.close('cartModal')" aria-label="Close cart">&times;</button>
             </div>
             <div class="modal-body">
@@ -1480,8 +1522,8 @@
                         <strong data-translate="total">Total:</strong>
                         <span id="cartTotal">₹0.00</span>
                     </div>
-                    <button class="btn btn-primary" onclick="proceedToCheckout()" data-translate="checkout">
-                        🎯 &nbsp;Proceed to Checkout
+                    <button class="btn btn-primary" onclick="proceedToCheckout()">
+                        🎯 &nbsp;<span data-translate="checkout">Proceed to Checkout</span>
                     </button>
                 </div>
             </div>
@@ -1567,6 +1609,11 @@
                                     onclick="Modals.close('checkoutModal'); Modals.open('cartModal');">← Back</button>
                                 <button type="submit" class="btn btn-primary btn-full">✅ Place Order</button>
                             </div>
+                            <div class="checkout-security-badges">
+                                <span class="security-badge"><i class="ion-ios-locked"></i> SSL Secure</span>
+                                <span class="security-badge"><i class="ion-ios-checkmark-circle"></i> Trusted
+                                    Manufacturer</span>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -1626,7 +1673,7 @@
                 <div class="invoice-container">
                     <div class="invoice-header">
                         <div class="invoice-brand">
-                            <img src="src/assets/images/gurukripaLogo.jpg" alt="Logo" class="invoice-logo">
+                            <img src="src/assets/images/logo-new.svg" alt="Logo" class="invoice-logo">
                             <div>
                                 <h1>गुरुकृपा ईंट उद्योग</h1>
                                 <p>Jaunpur, Uttar Pradesh — 222001</p>
@@ -1705,7 +1752,7 @@
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🔐 Welcome Back</h2>
+                <h2 data-translate="login">🔐 Welcome Back</h2>
                 <button class="modal-close" onclick="Modals.close('loginModal')"
                     aria-label="Close login">&times;</button>
             </div>
@@ -1734,7 +1781,8 @@
                             <span>Remember me on this device</span>
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full">🚀 &nbsp;Login to Your Account</button>
+                    <button type="submit" class="btn btn-primary btn-full" data-translate="login">🚀 &nbsp;Login to Your
+                        Account</button>
                     <p style="text-align: center; margin-top: 20px;">
                         Don't have an account? &nbsp;<a href="#"
                             onclick="Modals.close('loginModal'); Modals.open('registerModal'); return false;"
@@ -1749,7 +1797,7 @@
     <div class="modal" id="registerModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>✨ Create Account</h2>
+                <h2 data-translate="register">✨ Create Account</h2>
                 <button class="modal-close" onclick="Modals.close('registerModal')"
                     aria-label="Close register">&times;</button>
             </div>
@@ -1811,7 +1859,7 @@
                             placeholder="House no., street, city..."></textarea>
                         <span id="register-address-error" class="error-message" role="alert" aria-live="polite"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full">🎉 &nbsp;Create My Account</button>
+                    <button type="submit" class="btn btn-primary btn-full" data-translate="register">Sign Up</button>
                     <p style="text-align: center; margin-top: 20px;">
                         Already have an account? &nbsp;<a href="#"
                             onclick="closeRegisterModal(); openLoginModal(); return false;"
@@ -1821,6 +1869,138 @@
             </div>
         </div>
     </div>
+
+    <!-- Privacy Policy Modal -->
+    <div class="modal" id="privacyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🛡️ Privacy Policy</h2>
+                <button class="modal-close" onclick="Modals.close('privacyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Welcome to Gurukripa Bricks. Your privacy is important to us. Our privacy policy explains how we
+                    collect, use, and protect your personal information.</p>
+                <h3>1. Information Collection</h3>
+                <p>We may collect information such as your name, email address, and phone number when you register or
+                    use our contact form.</p>
+                <h3>2. Information Usage</h3>
+                <p>The information we collect is used to improve our services and process your orders efficiently.</p>
+                <h3>3. Data Protection</h3>
+                <p>We implement security measures to ensure the safety of your personal data.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate="cart">🛒 Your shopping bag</h2>
+                <button class="modal-close" onclick="Modals.close('cartModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Cart items will be dynamically loaded here -->
+                <div id="cart-items-container">
+                    <p data-translate="cartEmpty">Your cart is empty.</p>
+                </div>
+                <div class="cart-summary">
+                    <p><strong data-translate="subtotal">Subtotal:</strong> <span id="cartSubtotal">₹0.00</span></p>
+                    <p><strong data-translate="shipping">Shipping:</strong> <span id="cartShipping">₹0.00</span></p>
+                    <p><strong data-translate="total">Total:</strong> <span id="cartTotal">₹0.00</span></p>
+                </div>
+                <div class="cart-actions">
+                    <button class="btn btn-secondary" onclick="Modals.close('cartModal')"
+                        data-translate="continueShopping">Continue Shopping</button>
+                    <button class="btn btn-primary" onclick="checkout()" data-translate="checkout">Proceed to
+                        Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal" id="termsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate="termsAndConditions">📋 Terms & Conditions</h2>
+                <button class="modal-close" onclick="Modals.close('termsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>By using this website, you agree to comply with our terms and conditions.</p>
+                <h3>1. Orders</h3>
+                <p>All orders are subject to availability and confirmation of the order price.</p>
+                <h3>2. Payments</h3>
+                <p>Payments for orders must be made via the available payment gateways or as discussed with our support
+                    team.</p>
+                <h3>3. Limitation of Liability</h3>
+                <p>Gurukripa Bricks will not be liable for any indirect or direct damages resulting from the use of our
+                    website or products.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipping Modal -->
+    <div class="modal" id="shippingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🚚 Shipping Policy</h2>
+                <button class="modal-close" onclick="Modals.close('shippingModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>We deliver premium bricks across Jaunpur, Varanasi, and neighboring districts.</p>
+                <h3>1. Delivery Areas</h3>
+                <p>Standard delivery is available within a 100km radius of our manufacturing units in Jaunpur.</p>
+                <h3>2. Delivery Time</h3>
+                <p>Orders are usually delivered within 2-5 business days depending on quantity and distance.</p>
+                <h3>3. Shipping Costs</h3>
+                <p>Shipping costs vary based on distance and order volume. Please contact us for a precise quote.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Return Modal -->
+    <div class="modal" id="returnModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔄 Return & Refund Policy</h2>
+                <button class="modal-close" onclick="Modals.close('returnModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>We strive for 100% customer satisfaction with our premium quality bricks.</p>
+                <h3>1. Damaged Goods</h3>
+                <p>Any bricks damaged during transit will be replaced at no extra cost if reported within 24 hours of
+                    delivery.</p>
+                <h3>2. Cancellations</h3>
+                <p>Orders can be cancelled up to 24 hours before the scheduled dispatch time for a full refund.</p>
+                <h3>3. Quality Disputues</h3>
+                <p>If you are unsatisfied with the quality, please contact our support team immediately for inspection
+                    and resolution.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="#home" class="nav-link active" title="Home">
+            <i class="ion-ios-home"></i>
+            <span data-translate="home">Home</span>
+        </a>
+        <a href="#products" class="nav-link" title="Products">
+            <i class="ion-ios-grid"></i>
+            <span data-translate="products">Catalog</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openCart()" title="Cart">
+            <div class="cart-icon-wrapper">
+                <i class="ion-ios-cart"></i>
+                <span class="cart-badge" id="mobileCartCount" style="display: none;">0</span>
+            </div>
+            <span data-translate="cart">Cart</span>
+        </a>
+        <a href="#profile" class="nav-link" onclick="handleProfileClick(); return false;" title="Profile">
+            <i class="ion-ios-person"></i>
+            <span data-translate="profile">Profile</span>
+        </a>
+    </nav>
 
     <!-- Scripts - Optimized Loading -->
     <!-- Critical scripts loaded first -->

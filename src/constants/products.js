@@ -56,7 +56,7 @@ var PRODUCTS = [
         category: 'machine-made',
         price: 9,
         oldPrice: 11,
-        image: 'src/assets/images/newbricks_2.jpg',
+        image: 'src/assets/images/redbrick1.jpg',
         description: 'Precision-cut bricks with perfect horizontal lines. Reduces mortar consumption by 20% due to uniform shape.',
         descriptionHi: 'सटीक क्षैतिज रेखाओं वाली वायरकट ईंटें। समान आकार के कारण मोर्टार की खपत को 20% तक कम करती हैं।',
         tag: 'High Strength',

@@ -38,7 +38,16 @@ body {
 .lang-hi {
     font-family: var(--font-hindi), var(--font-primary);
     line-height: 1.8;
-    letter-spacing: 0.01em;
+}
+
+body.lang-hi {
+    line-height: 1.8;
+}
+
+/* Adjust font size for Hindi in bottom nav to prevent overflow */
+body.lang-hi .mobile-bottom-nav .nav-link span {
+    font-size: 0.6rem;
+    letter-spacing: 0;
 }
 
 /* ── Links ── */

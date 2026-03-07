@@ -47,19 +47,21 @@ var AuthService = {
     },
 
     updateUI: (user) => {
-        const loginBtn = document.getElementById('loginBtn');
-        const registerBtn = document.getElementById('registerBtn');
+        const authActions = document.getElementById('authActions');
         const userMenu = document.getElementById('userMenu');
         const userName = document.getElementById('userName');
         const fullUserName = document.getElementById('fullUserName');
         const mobileUserMenu = document.getElementById('mobileUserMenu');
         const mobileUserName = document.getElementById('mobileUserName');
 
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (registerBtn) registerBtn.style.display = 'none';
+        if (authActions) authActions.style.display = 'none';
 
         if (userMenu) {
-            userMenu.style.display = 'block';
+            // Only show desktop user-menu on wide screens;
+            // on mobile the bottom nav Profile button handles this
+            if (window.innerWidth > 768) {
+                userMenu.style.display = 'block';
+            }
             if (userName) userName.textContent = user.name.split(' ')[0];
             if (fullUserName) fullUserName.textContent = user.name;
         }
@@ -67,7 +69,13 @@ var AuthService = {
         if (mobileUserMenu) {
             mobileUserMenu.style.display = 'block';
             if (mobileUserName) mobileUserName.textContent = user.name;
-            document.querySelectorAll('.mobile-auth').forEach(el => el.style.display = 'none');
+            const mobileAuth = document.getElementById('mobileAuthButtons');
+            if (mobileAuth) mobileAuth.style.display = 'none';
+        }
+
+        // Update mobile bottom nav profile button state
+        if (typeof window.updateMobileNavProfileState === 'function') {
+            window.updateMobileNavProfileState();
         }
 
         // Render dashboard if we are on dashboard page
@@ -157,19 +165,23 @@ var AuthService = {
     },
 
     resetUI: () => {
-        const loginBtn = document.getElementById('loginBtn');
-        const registerBtn = document.getElementById('registerBtn');
+        const authActions = document.getElementById('authActions');
         const userMenu = document.getElementById('userMenu');
         const mobileUserMenu = document.getElementById('mobileUserMenu');
         const dashboardSection = document.getElementById('dashboard');
 
-        if (loginBtn) loginBtn.style.display = 'inline-block';
-        if (registerBtn) registerBtn.style.display = 'inline-block';
+        if (authActions) authActions.style.display = 'flex';
         if (userMenu) userMenu.style.display = 'none';
         if (dashboardSection) dashboardSection.style.display = 'none';
         if (mobileUserMenu) {
             mobileUserMenu.style.display = 'none';
-            document.querySelectorAll('.mobile-auth').forEach(el => el.style.display = 'block');
+            const mobileAuth = document.getElementById('mobileAuthButtons');
+            if (mobileAuth) mobileAuth.style.display = 'block';
+        }
+
+        // Update mobile bottom nav profile button state
+        if (typeof window.updateMobileNavProfileState === 'function') {
+            window.updateMobileNavProfileState();
         }
     },
 

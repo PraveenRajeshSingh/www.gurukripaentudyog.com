@@ -48,15 +48,18 @@ const App = {
     toggleMobileMenu: (isOpen) => {
         const drawer = document.getElementById('mobileDrawer');
         const overlay = document.getElementById('drawerOverlay');
+        const navToggle = document.getElementById('navToggle');
         if (drawer && overlay) {
             if (isOpen) {
                 drawer.classList.add('active');
                 overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
+                if (navToggle) navToggle.classList.add('active');
+                document.body.classList.add('modal-open');
             } else {
                 drawer.classList.remove('active');
                 overlay.classList.remove('active');
-                document.body.style.overflow = '';
+                if (navToggle) navToggle.classList.remove('active');
+                document.body.classList.remove('modal-open');
             }
         }
     },
@@ -93,10 +96,12 @@ const App = {
         });
 
         // Mobile Menu Toggles
-        const navToggle = document.getElementById('navToggle');
-        const drawerClose = document.getElementById('drawerClose');
-
-        if (navToggle) navToggle.onclick = () => App.toggleMobileMenu(true);
+        if (navToggle) {
+            navToggle.onclick = () => {
+                const isOpen = !navToggle.classList.contains('active');
+                App.toggleMobileMenu(isOpen);
+            };
+        }
         if (drawerClose) drawerClose.onclick = () => App.toggleMobileMenu(false);
 
         // Expose closeMobileMenu for inline onclicks
@@ -107,11 +112,29 @@ const App = {
             link.addEventListener('click', () => App.toggleMobileMenu(false));
         });
 
+        // User menu dropdown toggle
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        if (userMenuBtn) {
+            userMenuBtn.onclick = (e) => {
+                e.stopPropagation();
+                const dropdown = userMenuBtn.nextElementSibling;
+                if (dropdown) dropdown.classList.toggle('active');
+            };
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            const dropdowns = document.querySelectorAll('.user-dropdown');
+            dropdowns.forEach(d => d.classList.remove('active'));
+        });
+
         // Escape Key Handling
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 Modals.closeAll();
                 App.toggleMobileMenu(false);
+                const dropdowns = document.querySelectorAll('.user-dropdown');
+                dropdowns.forEach(d => d.classList.remove('active'));
             }
         });
 
@@ -134,36 +157,73 @@ const App = {
             }
         });
 
+        // Initialized auth & profile state
+        App.updateMobileNavProfileState();
+        window.handleProfileClick = App.handleProfileClick;
+        window.updateMobileNavProfileState = App.updateMobileNavProfileState;
+
         // Initialize dashboard if hash is present on load
         if (window.location.hash === '#dashboard' || window.location.hash === '#profile') {
             setTimeout(AuthService.renderDashboard, 1000);
         }
 
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(link => {
+        // Smooth scroll for nav links & Auto-close drawer
+        document.querySelectorAll('.nav-link, .drawer-menu .nav-link, a[href^="#"]').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
-                if (href === '#dashboard' || href === '#profile') return; // Handled by hashchange
+                if (!href || !href.startsWith('#') || href === '#') return;
+                if (href === '#dashboard' || href === '#profile') return;
 
                 const target = document.querySelector(href);
                 if (target) {
                     e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    // Update active nav link
+                    App.toggleMobileMenu(false); // Close drawer on click
+
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Immediate active class update
                     document.querySelectorAll('.nav-link').forEach(nl => nl.classList.remove('active'));
-                    document.querySelectorAll(`.nav-link[href="${href}"]`)
-                        .forEach(nl => nl.classList.add('active'));
+                    document.querySelectorAll(`.nav-link[href="${href}"]`).forEach(nl => nl.classList.add('active'));
                 }
             });
         });
 
-        // Contact form submission
+        // Highlight nav links on scroll
+        App.initActiveLinkObserver();
+
+        // Contact form submission with enhanced validation
         const contactForm = document.getElementById('contactForm');
         if (contactForm) {
             contactForm.addEventListener('submit', (e) => {
                 e.preventDefault();
+                let isValid = true;
+
+                const name = document.getElementById('contact-name')?.value;
+                const email = document.getElementById('contact-email')?.value;
+                const phone = document.getElementById('contact-phone')?.value;
+
+                // Simple Regex
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const phoneRegex = /^[0-9]{10}$/;
+
+                if (!name) { isValid = false; showToast('⚠️ Name is required', 3000); }
+                else if (email && !emailRegex.test(email)) { isValid = false; showToast('⚠️ Invalid email format', 3000); }
+                else if (phone && !phoneRegex.test(phone)) { isValid = false; showToast('⚠️ Please enter a valid 10-digit phone number', 3000); }
+
+                if (!isValid) return;
+
                 showToast('✅ Message sent successfully! We will contact you soon.', 4000);
                 contactForm.reset();
+                contactForm.querySelectorAll('.form-group').forEach(g => {
+                    g.classList.remove('valid', 'invalid');
+                });
             });
         }
 
@@ -181,12 +241,74 @@ const App = {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    // Add animation class if specified
+                    const animation = entry.target.dataset.animation;
+                    if (animation) {
+                        entry.target.classList.add(animation);
+                    }
                     observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.reveal, .reveal-item').forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal, .reveal-item, [data-aos]').forEach(el => observer.observe(el));
+    },
+
+    initActiveLinkObserver: () => {
+        const sections = document.querySelectorAll('section[id], header[id]');
+        const options = {
+            threshold: 0.5,
+            rootMargin: '-80px 0px -20% 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    const activeLinks = document.querySelectorAll(`.nav-link[href="#${id}"]`);
+                    if (activeLinks.length > 0) {
+                        document.querySelectorAll('.nav-link').forEach(nl => nl.classList.remove('active'));
+                        activeLinks.forEach(nl => nl.classList.add('active'));
+                    }
+                }
+            });
+        }, options);
+
+        sections.forEach(section => observer.observe(section));
+    },
+
+    // ═══════ PROFILE & AUTH HELPERS ═══════
+    handleProfileClick: () => {
+        const user = AuthService.getUser();
+        if (user) {
+            // Navigate to dashboard/profile
+            if (typeof navigateTo === 'function') {
+                navigateTo('profile');
+            } else {
+                window.location.hash = 'profile';
+            }
+        } else {
+            // Open login modal
+            Modals.open('loginModal');
+            showToast('🔒 Please login to view your profile.');
+        }
+    },
+
+    updateMobileNavProfileState: () => {
+        const user = AuthService.getUser();
+        const profileLinks = document.querySelectorAll('.mobile-bottom-nav a[href="#profile"]');
+        profileLinks.forEach(link => {
+            if (user) {
+                link.classList.add('logged-in');
+                // Change icon to show user is logged in
+                const icon = link.querySelector('i');
+                if (icon) icon.className = 'ion-ios-contact';
+            } else {
+                link.classList.remove('logged-in');
+                const icon = link.querySelector('i');
+                if (icon) icon.className = 'ion-ios-person';
+            }
+        });
     },
 
     // ═══════ BRICK CALCULATOR ═══════
@@ -431,8 +553,14 @@ window.submitOrder = (e) => {
 
     if (isUPI) {
         showToast(`🚀 Redirecting to UPI Pay (${payment.toUpperCase()})...`, 2000);
-        // Simulate deep link: 
-        // window.location.href = `upi://pay?pa=gurukripa@upi&pn=GurukripaBricks&am=${amount}&cu=INR`;
+        // Calculate amount for deep link
+        const totalAmount = cartSnapshot.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+        // On mobile, try to open the UPI app
+        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            const upiUrl = `upi://pay?pa=gurukripa@upi&pn=GurukripaBricks&am=${totalAmount}&cu=INR&tn=Order_${Date.now()}`;
+            window.location.href = upiUrl;
+        }
     } else {
         showToast('📦 Processing your Cash on Delivery order...', 2000);
     }
@@ -645,3 +773,42 @@ window.closeLoginModal = () => Modals.close('loginModal');
 window.openRegisterModal = () => Modals.open('registerModal');
 window.closeRegisterModal = () => Modals.close('registerModal');
 window.ProductService = ProductService;
+
+// ═══════ MOBILE PROFILE BUTTON HANDLER ═══════
+/**
+ * Handles the Profile button in the mobile bottom nav.
+ * - If logged in → open the mobile drawer (which shows user info + actions)
+ * - If not logged in → open the login modal
+ */
+window.handleMobileProfileClick = () => {
+    const user = AuthService.getUser();
+    if (user) {
+        // User is logged in — open mobile drawer to show profile info
+        App.toggleMobileMenu(true);
+    } else {
+        // Not logged in — prompt login
+        Modals.open('loginModal');
+    }
+};
+
+/**
+ * Updates the mobile bottom nav profile button appearance
+ * based on login state. Called after auth state changes.
+ */
+window.updateMobileNavProfileState = () => {
+    const btn = document.getElementById('mobileNavProfileBtn');
+    const user = AuthService.getUser();
+    if (!btn) return;
+    if (user) {
+        btn.classList.add('logged-in');
+        btn.setAttribute('title', 'Profile: ' + (user.name || 'User'));
+    } else {
+        btn.classList.remove('logged-in');
+        btn.setAttribute('title', 'Login / Profile');
+    }
+};
+
+// Initialize profile button state on load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(window.updateMobileNavProfileState, 1200);
+});

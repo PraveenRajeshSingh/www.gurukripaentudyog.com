@@ -123,7 +123,7 @@ var ProductService = {
                 ${product.tag ? `<div class="product-tag ${product.tagClass || ''}">${product.tag}</div>` : ''}
                 <div class="product-image-wrapper">
                     <img src="${product.image}" alt="${name}" loading="lazy" class="product-image"
-                         onerror="this.src='src/assets/images/gurukripaLogo.jpg'">
+                         onerror="this.src='src/assets/images/logo-new.svg'">
                     <div class="product-overlay">
                         <button class="overlay-btn" onclick="viewProductDetails(${product.id})">
                             <i class="ion-ios-eye"></i> ${detailsLabel}
@@ -131,6 +131,18 @@ var ProductService = {
                     </div>
                 </div>
                 <div class="product-info">
+                    <div class="product-trust-row">
+                        <div class="product-rating">
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star-half"></i>
+                        </div>
+                        <div class="verified-badge" title="${isHindi ? 'गुणवत्ता सत्यापित' : 'Quality Verified'}">
+                            <i class="ion-ios-checkmark-circle"></i> ${isHindi ? 'सत्यापित' : 'Verified'}
+                        </div>
+                    </div>
                     <h3 class="product-title">${name}</h3>
                     <div class="product-price-row">
                         <span class="product-price">₹${product.price}/pc</span>
@@ -138,10 +150,10 @@ var ProductService = {
                     </div>
                     <p class="product-description">${desc}</p>
                     <div class="product-actions">
-                        <button class="btn btn-primary" onclick="addToCart(${product.id})">
+                        <button class="btn btn-primary btn-add-cart" onclick="addToCart(${product.id})">
                             <i class="ion-ios-cart"></i> ${buyLabel}
                         </button>
-                        <a href="tel:+919198923230" class="btn btn-secondary" title="${callLabel}">
+                        <a href="tel:+919198923230" class="btn btn-secondary btn-icon-only" title="${callLabel}">
                             <i class="ion-ios-telephone"></i>
                         </a>
                     </div>

@@ -58,8 +58,8 @@
     --header-height-mobile: 80px;
     --header-shrunk: 75px;
     --nav-height: 83px;
-    --section-padding: 100px;
-    --section-padding-mobile: 60px;
+    --section-padding: 80px;
+    --section-padding-mobile: 40px;
 
     /* ── Border Radius ── */
     --radius-sm: 8px;

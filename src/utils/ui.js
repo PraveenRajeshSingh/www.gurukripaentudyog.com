@@ -48,7 +48,7 @@ var Modals = {
     open(id) {
         const modal = document.getElementById(id);
         if (modal) {
-            modal.style.display = 'flex';
+            modal.classList.add('active');
             document.body.classList.add('modal-open');
             // Focus first input
             setTimeout(() => {
@@ -60,15 +60,15 @@ var Modals = {
     close(id) {
         const modal = document.getElementById(id);
         if (modal) {
-            modal.style.display = 'none';
+            modal.classList.remove('active');
             // Check if any other modal is open before removing class
-            const anyOpen = Array.from(document.querySelectorAll('.modal')).some(m => m.style.display === 'flex');
+            const anyOpen = Array.from(document.querySelectorAll('.modal, [id$="Modal"]')).some(m => m.classList.contains('active'));
             if (!anyOpen) document.body.classList.remove('modal-open');
         }
     },
     closeAll() {
         const modals = document.querySelectorAll('.modal, [id$="Modal"]');
-        modals.forEach(m => m.style.display = 'none');
+        modals.forEach(m => m.classList.remove('active'));
         document.body.classList.remove('modal-open');
     }
 };
