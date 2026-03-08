@@ -22,13 +22,14 @@ body {
     font-family: var(--font-primary);
     font-size: 1rem;
     line-height: 1.7;
-    color: var(--gray-700);
-    background-color: var(--white);
+    color: var(--text-main);
+    background-color: var(--surface);
     overflow-x: hidden;
     padding-top: var(--header-height);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ── Hindi Text ── */
@@ -106,7 +107,7 @@ h5,
 h6 {
     font-weight: 700;
     line-height: 1.22;
-    color: var(--gray-900);
+    color: var(--text-title);
     font-family: var(--font-primary);
 }
 
@@ -127,7 +128,8 @@ h4 {
 }
 
 p {
-    color: var(--gray-600);
+    color: var(--text-main);
+    opacity: 0.9;
 }
 
 /* ── Section Headers ── */
@@ -201,13 +203,37 @@ p {
     body {
         font-size: .95rem;
         padding-top: var(--header-height-mobile);
+        padding-bottom: 65px;
+        padding-bottom: calc(65px + env(safe-area-inset-bottom, 0px));
     }
 
     .section-header {
-        margin-bottom: 36px;
+        margin-bottom: 28px;
     }
 
     .section-title {
-        font-size: 1.6rem;
+        font-size: clamp(1.4rem, 5vw, 1.9rem);
+        line-height: 1.25;
+    }
+
+    .section-subtitle {
+        font-size: 0.92rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 0.9rem;
+    }
+
+    .section-header {
+        margin-bottom: 20px;
+    }
+}
+
+/* ── Safe area for modern iPhones ── */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .mobile-bottom-nav {
+        padding-bottom: env(safe-area-inset-bottom);
     }
 }

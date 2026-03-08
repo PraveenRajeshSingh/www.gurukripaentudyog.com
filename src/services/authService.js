@@ -3,7 +3,7 @@
  */
 var AuthService = {
     getUser: () => JSON.parse(localStorage.getItem(STORAGE_KEYS.USER)),
-
+    isLoggedIn: () => !!JSON.parse(localStorage.getItem(STORAGE_KEYS.USER)),
     login: (email, password, rememberMe) => {
         return new Promise((resolve, reject) => {
             // Simulated API delay
@@ -50,28 +50,54 @@ var AuthService = {
         const authActions = document.getElementById('authActions');
         const userMenu = document.getElementById('userMenu');
         const userName = document.getElementById('userName');
-        const fullUserName = document.getElementById('fullUserName');
         const mobileUserMenu = document.getElementById('mobileUserMenu');
         const mobileUserName = document.getElementById('mobileUserName');
 
         if (authActions) authActions.style.display = 'none';
 
         if (userMenu) {
-            // Only show desktop user-menu on wide screens;
-            // on mobile the bottom nav Profile button handles this
-            if (window.innerWidth > 768) {
-                userMenu.style.display = 'block';
-            }
+            userMenu.style.display = 'block';
             if (userName) userName.textContent = user.name.split(' ')[0];
-            if (fullUserName) fullUserName.textContent = user.name;
         }
 
         if (mobileUserMenu) {
             mobileUserMenu.style.display = 'block';
             if (mobileUserName) mobileUserName.textContent = user.name;
+            const mobileEmail = mobileUserMenu.querySelector('.mobile-user-email');
+            if (mobileEmail) mobileEmail.textContent = user.email;
             const mobileAuth = document.getElementById('mobileAuthButtons');
             if (mobileAuth) mobileAuth.style.display = 'none';
         }
+
+        // Update profile images across all instances
+        AuthService.syncAllAvatars(user);
+
+        // Update mobile bottom nav profile button state
+        if (typeof window.updateMobileNavProfileState === 'function') {
+            window.updateMobileNavProfileState();
+        }
+
+        // Render dashboard if we are on dashboard page
+        if (window.location.hash === '#dashboard' || window.location.hash === '#profile') {
+            AuthService.renderDashboard();
+        }
+    },
+
+    syncAllAvatars: (user) => {
+        const avatarContainers = document.querySelectorAll('.user-avatar-premium, .profile-avatar-container');
+        avatarContainers.forEach(container => {
+            const img = container.querySelector('img');
+            const span = container.querySelector('span');
+
+            if (user && user.profileImage && img) {
+                img.src = user.profileImage;
+                img.style.display = 'block';
+                if (span) span.style.display = 'none';
+            } else if (span) {
+                span.style.display = 'flex';
+                if (img) img.style.display = 'none';
+            }
+        });
 
         // Update mobile bottom nav profile button state
         if (typeof window.updateMobileNavProfileState === 'function') {
@@ -95,73 +121,92 @@ var AuthService = {
         const isHindi = TranslationService.getLanguage() === 'hi';
 
         container.innerHTML = `
-            <div class="dashboard-grid">
-                <div class="dashboard-sidebar">
-                    <div class="user-profile-card">
-                        <div class="user-avatar-lg">${user.name[0]}</div>
-                        <h3>${user.name}</h3>
-                        <p>${user.email}</p>
-                        <div class="profile-stats">
-                            <div class="stat-box">
-                                <span class="stat-val">3</span>
-                                <span class="stat-lbl">${isHindi ? 'ऑर्डर' : 'Orders'}</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-val">₹12k</span>
-                                <span class="stat-lbl">${isHindi ? 'बचत' : 'Saved'}</span>
+            <div class="dashboard-modern">
+                <header class="dashboard-header">
+                    <div class="dash-welcome">
+                        <h2>${isHindi ? 'नमस्ते' : 'Hello'}, ${user.name.split(' ')[0]}! 👋</h2>
+                        <p>${isHindi ? 'अपने अकाउंट और ऑर्डर ट्रैक करें' : 'Welcome to your premium dashboard.'}</p>
+                    </div>
+                    <div class="dash-actions">
+                         <button class="btn btn-primary btn-sm" onclick="Modals.open('profileModal')"><i class="ion-ios-person"></i> Quick Menu</button>
+                    </div>
+                </header>
+
+                <div class="dashboard-grid">
+                    <div class="dash-card profile-summary-card">
+                        <div class="user-avatar-premium">
+                            ${user.profileImage ? `<img src="${user.profileImage}" alt="${user.name}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : AuthService.getInitials(user.name)}
+                        </div>
+                        <div class="profile-info">
+                            <h3>${user.name}</h3>
+                            <p>${user.email}</p>
+                            <div class="dash-profile-badges">
+                                <span class="user-badge">${user.role || 'Premium Customer'}</span>
+                                <button class="btn-dash-edit" onclick="openEditProfileModal()"><i class="ion-ios-compose-outline"></i> Edit Account</button>
                             </div>
                         </div>
                     </div>
-                    <nav class="dashboard-nav">
-                        <button class="dash-nav-link active"><i class="ion-ios-grid-view-outline"></i> Dashboard</button>
-                        <button class="dash-nav-link"><i class="ion-ios-list-outline"></i> My Orders</button>
-                        <button class="dash-nav-link"><i class="ion-ios-person-outline"></i> Profile Settings</button>
-                        <button class="dash-nav-link" onclick="logoutUser()"><i class="ion-log-out"></i> Logout</button>
-                    </nav>
-                </div>
-                <div class="dashboard-main">
-                    <div class="dashboard-welcome">
-                        <h2>${isHindi ? 'नमस्ते' : 'Hello'}, ${user.name}! 👋</h2>
-                        <p>${isHindi ? 'अपने अकाउंट और ऑर्डर ट्रैक करें' : 'Track your accounts and orders below.'}</p>
-                    </div>
-                    
-                    <div class="recent-orders">
-                        <div class="section-card">
-                            <div class="card-header">
-                                <h3>Recent Orders</h3>
-                                <button class="btn-sm btn-outline">View All</button>
+
+                    <div class="dash-stats-grid">
+                        <div class="stat-card">
+                            <i class="ion-ios-list-outline"></i>
+                            <div class="stat-body">
+                                <span class="stat-num">3</span>
+                                <span class="stat-label">Orders</span>
                             </div>
-                            <div class="table-responsive">
-                                <table class="order-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Order ID</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>#GB-2041</td>
-                                            <td>May 12, 2026</td>
-                                            <td><span class="badge badge-success">Delivered</span></td>
-                                            <td>₹4,500</td>
-                                        </tr>
-                                        <tr>
-                                            <td>#GB-1982</td>
-                                            <td>Apr 28, 2026</td>
-                                            <td><span class="badge badge-pending">Processing</span></td>
-                                            <td>₹8,200</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        </div>
+                        <div class="stat-card">
+                            <i class="ion-ios-cart-outline"></i>
+                            <div class="stat-body">
+                                <span class="stat-num">₹12k</span>
+                                <span class="stat-label">Total Spent</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="ion-ios-ribbon-outline"></i>
+                            <div class="stat-body">
+                                <span class="stat-num">Gold</span>
+                                <span class="stat-label">Member</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dash-card recent-activity">
+                        <div class="card-header">
+                            <h3>Recent Orders</h3>
+                            <a href="javascript:void(0)" class="view-all">View All</a>
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="item-icon success"><i class="ion-ios-checkmark-empty"></i></div>
+                                <div class="item-info">
+                                    <span class="item-title">Order #GB-2041 Delivered</span>
+                                    <span class="item-date">May 12, 2026</span>
+                                </div>
+                                <span class="item-amount">₹4,500</span>
+                            </div>
+                            <div class="activity-item">
+                                <div class="item-icon pending"><i class="ion-ios-timer-outline"></i></div>
+                                <div class="item-info">
+                                    <span class="item-title">Order #GB-1982 Processing</span>
+                                    <span class="item-date">Apr 28, 2026</span>
+                                </div>
+                                <span class="item-amount">₹8,200</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         `;
+    },
+
+    getInitials: (name) => {
+        if (!name) return 'U';
+        const parts = name.split(' ');
+        if (parts.length > 1) {
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        return name.substring(0, 1).toUpperCase();
     },
 
     resetUI: () => {
@@ -185,6 +230,37 @@ var AuthService = {
         }
     },
 
+    updateUser: (newData) => {
+        const currentUser = AuthService.getUser();
+        if (!currentUser) return;
+
+        const updatedUser = { ...currentUser, ...newData };
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(updatedUser));
+
+        // Refresh UI everywhere
+        AuthService.updateUI(updatedUser);
+
+        // If on dashboard, re-render it
+        if (window.location.hash === '#dashboard' || window.location.hash === '#profile') {
+            AuthService.renderDashboard();
+        }
+
+        showToast('✅ Profile updated successfully!');
+        return updatedUser;
+    },
+
+    updateProfileImage: (imageData) => {
+        const user = AuthService.getUser();
+        if (!user) return;
+
+        user.profileImage = imageData;
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+
+        // Use the central synchronization method
+        AuthService.syncAllAvatars(user);
+        showToast('📸 Profile picture updated!');
+    },
+
     init: () => {
         const user = AuthService.getUser();
         if (user) {
@@ -198,6 +274,9 @@ var AuthService = {
         window.closeRegisterModal = () => Modals.close('registerModal');
         window.logoutUser = AuthService.logout;
         window.renderDashboard = AuthService.renderDashboard;
+
+        // Expose editing functions
+        window.updateUserProfile = AuthService.updateUser;
     }
 };
 

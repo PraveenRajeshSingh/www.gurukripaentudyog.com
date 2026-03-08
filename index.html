@@ -26,7 +26,13 @@
     <meta name="msapplication-config" content="browserconfig.xml">
 
     <!-- Page Title & Meta Description -->
-    <title>Gurukripa Bricks Industry - Jaunpur's Best Brick Manufacturer Since 1995</title>
+    <!-- Performance: Critical Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://ajax.googleapis.com">
+
+    <title data-translate="heroTitle">Gurukripa Bricks Industry | Premium Red Clay Bricks manufacturing in Jaunpur
+    </title>
     <meta name="description"
         content="Gurukripa Bricks Industry - Jaunpur's finest quality brick manufacturer for over 25 years. Premium quality red bricks, machine-finished durability, and same-day delivery across Varanasi and UP.">
     <meta name="keywords"
@@ -126,7 +132,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Main Stylesheet - Standardized Modular Architecture -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
     <link rel="stylesheet" href="src/styles/variables.css">
+    <!-- Critical Path: Preload Hero Image -->
+    <link rel="preload" as="image" href="src/assets/images/redbrick1.jpg">
+
     <link rel="stylesheet" href="src/styles/base.css">
     <link rel="stylesheet" href="src/styles/layout.css">
     <link rel="stylesheet" href="src/styles/components.css">
@@ -136,6 +146,7 @@
     <link rel="stylesheet" href="src/styles/chatbot.css">
     <link rel="stylesheet" href="src/styles/utilities.css">
     <link rel="stylesheet" href="src/styles/sections.css">
+    <link rel="stylesheet" href="src/styles/responsive.css">
 
     <!-- Vendor Styles -->
     <link rel="stylesheet" href="src/assets/vendors/css/normalize.css">
@@ -347,7 +358,7 @@
     <!-- Skip to Content Link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- Page Loader — Modern Dark with Logo -->
+    <!-- Premium Page Loader -->
     <div class="page-loader" id="pageLoader">
         <div class="loader-container">
             <div class="loader-logo">
@@ -359,7 +370,6 @@
                 <div class="spinner-ring"></div>
                 <div class="spinner-ring-inner"></div>
             </div>
-
         </div>
     </div>
 
@@ -432,35 +442,16 @@
 
                     <!-- User menu (shown after login) -->
                     <div id="userMenu" class="user-menu" style="display: none;">
-                        <button class="user-menu-btn" id="userMenuBtn">
-                            <div class="user-avatar">
-                                <i class="ion-ios-person"></i>
+                        <button class="user-menu-btn" id="userMenuBtn" onclick="openProfileModal()"
+                            aria-label="Open profile menu" title="View Profile">
+                            <div class="user-avatar user-avatar-premium" id="navAvatar">
+                                <span><i class="ion-ios-person"></i></span>
+                                <img src="" alt=""
+                                    style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
                             </div>
                             <span id="userName" class="user-name-text">User</span>
-                            <i class="ion-ios-arrow-down dropdown-icon"></i>
+                            <i class="ion-ios-arrow-down dropdown-icon" aria-hidden="true"></i>
                         </button>
-                        <div class="user-dropdown">
-                            <div class="dropdown-header">
-                                <p class="dropdown-welcome">Welcome back,</p>
-                                <p id="fullUserName" class="dropdown-name">User Name</p>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <a href="#profile" onclick="navigateTo('profile')">
-                                <i class="ion-ios-person-outline"></i> <span data-translate="myProfile">My
-                                    Profile</span>
-                            </a>
-                            <a href="#orders" onclick="navigateTo('orders')">
-                                <i class="ion-ios-list-outline"></i> <span data-translate="myOrders">My
-                                    Orders</span>
-                            </a>
-                            <a href="#settings" onclick="navigateTo('settings')">
-                                <i class="ion-ios-settings"></i> <span data-translate="settings">Settings</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="logout-link" onclick="logoutUser(); return false;">
-                                <i class="ion-log-out"></i> <span data-translate="logout">Logout</span>
-                            </a>
-                        </div>
                     </div>
 
                     <!-- Language toggle (Desktop only) -->
@@ -490,11 +481,10 @@
     <div class="mobile-drawer-overlay" id="drawerOverlay"></div>
     <div class="mobile-drawer" id="mobileDrawer">
         <div class="drawer-header">
-            <div class="nav-brand">
-                <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks" class="nav-logo">
-                <span class="brand-text" data-translate="heroTitle">Gurukripa Bricks</span>
+            <div class="drawer-header-content">
+                <img src="src/assets/images/logo-new.svg" alt="Logo" class="nav-logo">
+                <button class="drawer-close" onclick="closeMobileMenu()" aria-label="Close menu">&times;</button>
             </div>
-            <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
         </div>
         <!-- Quick Contact inside drawer -->
         <div class="drawer-quick-contact">
@@ -527,21 +517,22 @@
                         data-translate="register"><i class="ion-ios-person-add"></i> Register</button>
                 </li>
             </div>
-            <!-- Mobile User Menu -->
+            <!-- Mobile User Profile Section (Simplified) -->
             <li id="mobileUserMenu" style="display: none;" class="mobile-user-menu">
-                <div class="user-drawer-info">
-                    <div class="user-avatar-mobile">
-                        <i class="ion-ios-person"></i>
+                <div class="user-drawer-info" onclick="openProfileModal(); closeMobileMenu();">
+                    <div class="user-avatar-mobile user-avatar-premium">
+                        <span><i class="ion-ios-person"></i></span>
+                        <img src="" alt=""
+                            style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
                     </div>
                     <div class="user-details-mobile">
                         <span id="mobileUserName" class="mobile-user-name">User Name</span>
-                        <span class="mobile-user-welcome">Welcome back!</span>
+                        <span class="mobile-user-email"
+                            style="font-size: 0.75rem; opacity: 0.7; display: block;">user@example.com</span>
                     </div>
+                    <i class="ion-ios-arrow-forward" style="margin-left: auto; opacity: 0.5;"></i>
                 </div>
                 <ul class="user-actions">
-                    <li><a href="#profile" onclick="closeMobileMenu(); navigateTo('profile')">
-                            <i class="ion-ios-person-outline"></i> <span data-translate="myProfile">My Profile</span>
-                        </a></li>
                     <li><a href="#orders" onclick="closeMobileMenu(); navigateTo('orders')">
                             <i class="ion-ios-list-outline"></i> <span data-translate="myOrders">My Orders</span>
                         </a></li>
@@ -577,10 +568,10 @@
                 <p class="hero-description" data-translate="heroDescription">Premium Quality | Trusted Across Jaunpur &
                     Varanasi</p>
                 <div class="hero-cta">
-                    <a href="tel:+919198923230" class="btn btn-primary">
+                    <a href="tel:+919198923230" class="hero-btn primary">
                         <i class="ion-ios-telephone"></i> <span data-translate="callUs">Call Now</span>
                     </a>
-                    <a href="#products" class="btn btn-secondary">
+                    <a href="#products" class="hero-btn secondary">
                         <i class="ion-ios-grid"></i> <span data-translate="catalog">Products</span>
                     </a>
                 </div>
@@ -594,6 +585,13 @@
 
 
 
+    <!-- Dashboard Section (Modern SaaS Style) -->
+    <section class="section section-dashboard" id="dashboard" style="display: none;">
+        <div class="container" id="dashboardContent">
+            <!-- Content dynamically rendered by AuthService.renderDashboard -->
+        </div>
+    </section>
+
     <!-- Product Categories Section - Premium Redesign -->
     <section class="product-categories-section" id="categories">
         <div class="container">
@@ -606,7 +604,7 @@
                     bricks</p>
                 <div class="title-divider"></div>
             </div>
-            <div class="categories-grid-premium">
+            <div class="categories-grid-premium" data-aos="fade-up">
                 <div class="category-card-premium reveal-item" onclick="setCategory('shiv-eent')">
                     <img src="src/assets/images/redbrick1.jpg" alt="Shiv Eent — Grade-A Premium Bricks">
                     <div class="category-info-premium">
@@ -651,14 +649,14 @@
     <section class="section section-products" id="products">
         <div class="container">
             <!-- Products Header with Search -->
-            <div class="products-header-modern text-center">
+            <div class="products-header-modern text-center" data-aos="fade-up">
                 <div class="products-title-section">
-                    <span class="section-tag" data-translate="verified">Premium Quality Bricks</span>
+                    <span class="section-tag" data-translate="verified">Verified Quality</span>
                     <h2 class="section-title" data-translate="productsTitle">
-                        Our Products
+                        Our Premium Selection
                     </h2>
-                    <p class="section-subtitle" data-translate="featuresDescription">Serving Jaunpur &amp; Varanasi for
-                        25+ Years</p>
+                    <p class="section-subtitle">Discover our range of machine-finished and hand-crafted building
+                        materials.</p>
                     <div class="title-divider"></div>
                 </div>
 
@@ -808,40 +806,38 @@
     </section>
 
     <!-- Why Choose Gurukripa - Enhanced Features Section -->
-    <section class="section section-about" id="about">
+    <section class="section-features" id="about">
         <div class="container">
-            <div class="section-header text-center">
-                <h2 class="section-title" data-translate="whyChoose">Why Choose Gurukripa Bricks?</h2>
-                <p class="section-subtitle">4 Key Reasons to Trust Us</p>
+            <div class="section-header">
+                <span class="section-tag">Our Value</span>
+                <h2 class="section-title">Why Gurukripa?</h2>
+                <p class="section-subtitle">Since 1995, we've set the standard for masonry excellence in India.</p>
+                <div class="title-divider"></div>
             </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="ion-ios-pulse-strong"></i>
-                    </div>
-                    <h3>Superior Strength</h3>
-                    <p>Our bricks are tested for maximum compressive strength to ensure long-lasting durability</p>
+
+            <div class="features-grid-modern">
+                <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon-wrapper"><i class="ion-ios-star"></i></div>
+                    <h3>Grade-A Quality</h3>
+                    <p>Rigorous 5-point quality checks on every single brick produced in our kiln for maximum
+                        durability.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="ion-ios-infinite"></i>
-                    </div>
-                    <h3>Exceptional Durability</h3>
-                    <p>Weather-resistant and built to withstand harsh conditions for decades</p>
+                <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon-wrapper"><i class="ion-ios-timer"></i></div>
+                    <h3>Rapid Delivery</h3>
+                    <p>Proprietary logistics fleet ensuring your materials reach your site within 24-48 hours across the
+                        region.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="ion-ios-crop"></i>
-                    </div>
-                    <h3>Uniform Shape</h3>
-                    <p>Precision-made for perfect alignment and easy construction work</p>
+                <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon-wrapper"><i class="ion-ios-ribbon"></i></div>
+                    <h3>25+ Year Legacy</h3>
+                    <p>A quarter-century of trust and excellence in building Uttar Pradesh's construction landscape.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="ion-ios-speedometer"></i>
-                    </div>
-                    <h3>Fast Delivery</h3>
-                    <p>Same-day delivery available across Jaunpur and surrounding areas</p>
+                <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon-wrapper"><i class="ion-ios-bolt"></i></div>
+                    <h3>Eco-Friendly</h3>
+                    <p>Modern production techniques that minimize environmental impact while maximizing thermal
+                        efficiency.</p>
                 </div>
             </div>
         </div>
@@ -875,7 +871,8 @@
             <div class="reviews-grid">
                 <div class="review-card">
                     <div class="review-header">
-                        <img src="src/assets/images/Naveen_Singh.jpeg" alt="Customer" class="customer-photo">
+                        <img src="src/assets/images/Naveen_Singh.jpeg" alt="Naveen Singh - Happy Customer"
+                            class="customer-photo" loading="lazy">
                         <div class="customer-info">
                             <h4>Naveen Singh</h4>
                             <p class="customer-location">Jaunpur, UP</p>
@@ -884,12 +881,14 @@
                     <div class="star-rating">
                         ★★★★★
                     </div>
-                    <p class="review-text">"गुरुकृपा की ईंटें सचमुच उत्तम हैं। मजबूत और समान आकार। मेरे घर के निर्माण
+                    <p class="review-text">"गुरुकृपा की ईंटें सचमुच उत्तम हैं। मजबूत और समान आकार। मेरे घर
+                        के निर्माण
                         में बहुत अच्छा काम आया।"</p>
                 </div>
                 <div class="review-card">
                     <div class="review-header">
-                        <img src="src/assets/images/Vishal_Singh.jpeg" alt="Customer" class="customer-photo">
+                        <img src="src/assets/images/Vishal_Singh.jpeg" alt="Vishal Singh - Happy Customer"
+                            class="customer-photo" loading="lazy">
                         <div class="customer-info">
                             <h4>Vishal Singh</h4>
                             <p class="customer-location">Trilochan, UP</p>
@@ -898,7 +897,8 @@
                     <div class="star-rating">
                         ★★★★★
                     </div>
-                    <p class="review-text">"Best quality bricks in Jaunpur. Delivered on time and excellent customer
+                    <p class="review-text">"Best quality bricks in Jaunpur. Delivered on time and excellent
+                        customer
                         service. Highly recommended!"</p>
                 </div>
                 <div class="review-card">
@@ -912,7 +912,8 @@
                     <div class="star-rating">
                         ★★★★★
                     </div>
-                    <p class="review-text">"सबसे अच्छी बात ये है कि समय पर डिलीवरी मिलती है। 25 साल से यहीं से लेते
+                    <p class="review-text">"सबसे अच्छी बात ये है कि समय पर डिलीवरी मिलती है। 25 साल से यहीं
+                        से लेते
                         हैं।"</p>
                 </div>
             </div>
@@ -935,9 +936,11 @@
                         <i class="ion-ios-star"></i>
                     </div>
                     <h3>प्रथम श्रेणी की ईंटें</h3>
-                    <p class="grade-description">These are the finest quality bricks, well-burnt with a uniform shape,
+                    <p class="grade-description">These are the finest quality bricks, well-burnt with a
+                        uniform shape,
                         consistent color, and no flaws.</p>
-                    <p class="grade-description-hi">ये सर्वोत्तम गुणवत्ता वाली ईंटें हैं, अच्छी तरह से जली हुई, समान
+                    <p class="grade-description-hi">ये सर्वोत्तम गुणवत्ता वाली ईंटें हैं, अच्छी तरह से जली
+                        हुई, समान
                         आकार, सुसंगत रंग और कोई दोष नहीं।</p>
                     <ul class="grade-features">
                         <li><i class="ion-ios-checkmark"></i> Highest strength</li>
@@ -953,9 +956,11 @@
                         <i class="ion-ios-star-half"></i>
                     </div>
                     <h3>द्वितीय श्रेणी की ईंटें</h3>
-                    <p class="grade-description">Well-burnt bricks with slight irregularities in shape and color or
+                    <p class="grade-description">Well-burnt bricks with slight irregularities in shape and
+                        color or
                         minor chips.</p>
-                    <p class="grade-description-hi">अच्छी तरह से जली हुई ईंटें जिनमें आकार और रंग में मामूली अनियमितताएं
+                    <p class="grade-description-hi">अच्छी तरह से जली हुई ईंटें जिनमें आकार और रंग में मामूली
+                        अनियमितताएं
                         या छोटे चिप्स हो सकते हैं।</p>
                     <ul class="grade-features">
                         <li><i class="ion-ios-checkmark"></i> Good strength</li>
@@ -971,9 +976,11 @@
                         <i class="ion-ios-star-outline"></i>
                     </div>
                     <h3>तृतीय श्रेणी की ईंटें</h3>
-                    <p class="grade-description">Under-burnt, softer bricks with irregular shape and lighter color.
+                    <p class="grade-description">Under-burnt, softer bricks with irregular shape and lighter
+                        color.
                         Higher water absorption.</p>
-                    <p class="grade-description-hi">अधजली, नरम ईंटें जिनमें अनियमित आकार और हल्का रंग होता है। अधिक पानी
+                    <p class="grade-description-hi">अधजली, नरम ईंटें जिनमें अनियमित आकार और हल्का रंग होता
+                        है। अधिक पानी
                         अवशोषण।</p>
                     <ul class="grade-features">
                         <li><i class="ion-ios-checkmark"></i> Moderate strength</li>
@@ -989,9 +996,11 @@
                         <i class="ion-ios-close"></i>
                     </div>
                     <h3>चतुर्थ श्रेणी की ईंटें</h3>
-                    <p class="grade-description">Over-burnt, dark-colored, deformed, and often brittle. Used as crushed
+                    <p class="grade-description">Over-burnt, dark-colored, deformed, and often brittle. Used
+                        as crushed
                         aggregate.</p>
-                    <p class="grade-description-hi">अधिक जली हुई, गहरे रंग की, विकृत और अक्सर भंगुर ईंटें। कुचले हुए
+                    <p class="grade-description-hi">अधिक जली हुई, गहरे रंग की, विकृत और अक्सर भंगुर ईंटें।
+                        कुचले हुए
                         समुच्चय के रूप में उपयोग की जाती हैं।</p>
                     <ul class="grade-features">
                         <li><i class="ion-ios-close"></i> Not for standard construction</li>
@@ -1113,7 +1122,8 @@
                     <span class="title-main">Our Blog</span>
                     <span class="title-hindi">हमारा ब्लॉग</span>
                 </h2>
-                <p class="section-subtitle">Latest news, tips, and insights about bricks and construction</p>
+                <p class="section-subtitle">Latest news, tips, and insights about bricks and construction
+                </p>
             </div>
 
             <!-- Blog Grid - Modern 3-Column -->
@@ -1127,7 +1137,8 @@
                     <div class="blog-content">
                         <div class="blog-date">January 15, 2024</div>
                         <h3 class="blog-title">Complete Guide to Brick Quality Grades</h3>
-                        <p class="blog-excerpt">Understanding the different quality grades of bricks and how to choose
+                        <p class="blog-excerpt">Understanding the different quality grades of bricks and how
+                            to choose
                             the right one for your construction project...</p>
                         <button class="btn-read-more">Read More (Demo)</button>
                     </div>
@@ -1141,7 +1152,8 @@
                     <div class="blog-content">
                         <div class="blog-date">January 10, 2024</div>
                         <h3 class="blog-title">5 Essential Construction Tips for Brick Laying</h3>
-                        <p class="blog-excerpt">Professional techniques and best practices for laying bricks that will
+                        <p class="blog-excerpt">Professional techniques and best practices for laying bricks
+                            that will
                             ensure a strong and durable structure...</p>
                         <button class="btn-read-more">Read More (Demo)</button>
                     </div>
@@ -1155,7 +1167,8 @@
                     <div class="blog-content">
                         <div class="blog-date">January 5, 2024</div>
                         <h3 class="blog-title">Brick Maintenance and Longevity Guide</h3>
-                        <p class="blog-excerpt">Learn how to properly maintain your brick structures to ensure they last
+                        <p class="blog-excerpt">Learn how to properly maintain your brick structures to
+                            ensure they last
                             for decades with proper care...</p>
                         <button class="btn-read-more">Read More (Demo)</button>
                     </div>
@@ -1178,8 +1191,10 @@
                         <i class="ion-ios-arrow-down faq-icon"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>ईंट की कीमत प्रकार पर निर्भर करती है। Standard ईंट ₹8 प्रति पीस से शुरू, Premium ईंट ₹12
-                            प्रति पीस तक। Brick prices vary by type: Standard bricks start from ₹8 per piece, Premium
+                        <p>ईंट की कीमत प्रकार पर निर्भर करती है। Standard ईंट ₹8 प्रति पीस से शुरू, Premium
+                            ईंट ₹12
+                            प्रति पीस तक। Brick prices vary by type: Standard bricks start from ₹8 per
+                            piece, Premium
                             bricks up to ₹12 per piece.</p>
                     </div>
                 </div>
@@ -1189,8 +1204,10 @@
                         <i class="ion-ios-arrow-down faq-icon"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>हम जौनपुर, वाराणसी, ट्राइलोचन, जलालपुर और आसपास के सभी क्षेत्रों में डिलीवरी करते हैं।
-                            Same-day delivery available in Jaunpur district. We deliver to Jaunpur, Varanasi, Trilochan,
+                        <p>हम जौनपुर, वाराणसी, ट्राइलोचन, जलालपुर और आसपास के सभी क्षेत्रों में डिलीवरी करते
+                            हैं।
+                            Same-day delivery available in Jaunpur district. We deliver to Jaunpur,
+                            Varanasi, Trilochan,
                             Jalalpur and surrounding areas.</p>
                     </div>
                 </div>
@@ -1200,8 +1217,10 @@
                         <i class="ion-ios-arrow-down faq-icon"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>हां, हम छोटे और बड़े दोनों प्रकार के ऑर्डर स्वीकार करते हैं। Minimum order quantity may
-                            apply. Yes, we accept both small and bulk orders. Minimum order quantity may apply.</p>
+                        <p>हां, हम छोटे और बड़े दोनों प्रकार के ऑर्डर स्वीकार करते हैं। Minimum order
+                            quantity may
+                            apply. Yes, we accept both small and bulk orders. Minimum order quantity may
+                            apply.</p>
                     </div>
                 </div>
                 <div class="faq-item">
@@ -1210,8 +1229,10 @@
                         <i class="ion-ios-arrow-down faq-icon"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>हमारी सभी ईंटें अच्छी तरह से जली हुई (well-burnt), समान आकार और मजबूत हैं। 100% quality
-                            assured. Our bricks are well-burnt, uniform in shape, and tested for strength. First-class
+                        <p>हमारी सभी ईंटें अच्छी तरह से जली हुई (well-burnt), समान आकार और मजबूत हैं। 100%
+                            quality
+                            assured. Our bricks are well-burnt, uniform in shape, and tested for strength.
+                            First-class
                             quality guaranteed.</p>
                     </div>
                 </div>
@@ -1221,7 +1242,8 @@
                         <i class="ion-ios-arrow-down faq-icon"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>हम Cash, Online Transfer, UPI और Cheque स्वीकार करते हैं। We accept Cash, Online Transfer,
+                        <p>हम Cash, Online Transfer, UPI और Cheque स्वीकार करते हैं। We accept Cash, Online
+                            Transfer,
                             UPI (PhonePe, Google Pay, Paytm), and Cheque payments.</p>
                     </div>
                 </div>
@@ -1233,7 +1255,8 @@
     <section class="cta-banner">
         <div class="cta-content">
             <h2>Order Premium Bricks Today — Fast Delivery in Jaunpur!</h2>
-            <p style="font-size: 1.1rem; margin-bottom: 30px; opacity: 0.95;">आज ही ऑर्डर करें और अपने सपनों का घर बनाएं
+            <p style="font-size: 1.1rem; margin-bottom: 30px; opacity: 0.95;">आज ही ऑर्डर करें और अपने सपनों
+                का घर बनाएं
             </p>
             <div class="cta-buttons">
                 <a href="tel:+919198923230" class="btn-cta-call">
@@ -1367,7 +1390,8 @@
         </div>
         <div class="chatbot-messages" id="chatbotMessages">
             <div class="chatbot-message bot-message">
-                <p>नमस्ते! 🙏 मैं आपकी कैसे मदद कर सकता हूं? उत्पादों, कीमतों, या डिलीवरी के बारे में पूछें।</p>
+                <p>नमस्ते! 🙏 मैं आपकी कैसे मदद कर सकता हूं? उत्पादों, कीमतों, या डिलीवरी के बारे में पूछें।
+                </p>
             </div>
         </div>
         <div class="chatbot-input-container">
@@ -1380,14 +1404,15 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer" role="contentinfo" aria-label="Site footer">
+    <footer class="footer" role="contentinfo" aria-label="Site footer" data-aos="fade-in">
         <div class="container">
             <div class="footer-content">
 
                 <!-- Column 1: Brand & Contact -->
                 <div class="footer-brand">
                     <h3>गुरुकृपा ईंट उद्योग</h3>
-                    <p>Best Brick Manufacturer in Jaunpur &amp; Varanasi. हम 25+ वर्षों से उत्कृष्ट गुणवत्ता की ईंटें
+                    <p>Best Brick Manufacturer in Jaunpur &amp; Varanasi. हम 25+ वर्षों से उत्कृष्ट गुणवत्ता
+                        की ईंटें
                         प्रदान कर रहे हैं — strength, durability, and trust you can build on.</p>
 
                     <div class="footer-contact-info">
@@ -1415,10 +1440,10 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="#home" data-translate="home">Home</a></li>
-                        <li><a href="#quality" data-translate="quality">Quality Standards</a></li>
+                        <li><a href="#about" data-translate="aboutUs">About Us</a></li>
                         <li><a href="#products" data-translate="products">Our Products</a></li>
                         <li><a href="#blog" data-translate="blog">Blog &amp; News</a></li>
-                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#faq" data-translate="faq">FAQ</a></li>
                         <li><a href="#contact" data-translate="contact">Contact Us</a></li>
                     </ul>
                 </div>
@@ -1506,25 +1531,39 @@
     </footer>
 
 
-    <!-- Cart Modal -->
+    <!-- Cart Modal (Redesigned) -->
     <div class="modal" id="cartModal">
         <div class="modal-content modal-large">
             <div class="modal-header">
-                <h2>🛒 <span data-translate="cart">Your Cart</span></h2>
+                <h2>🛒 <span data-translate="cart">Your Shopping Cart</span></h2>
                 <button class="modal-close" onclick="Modals.close('cartModal')" aria-label="Close cart">&times;</button>
             </div>
-            <div class="modal-body">
-                <div id="cartItems" class="cart-items-container">
+            <div class="modal-body" style="padding: 0;">
+                <div id="cartItems" class="cart-items-container" style="padding: 24px 30px;">
                     <!-- Cart items rendered by cart.js -->
                 </div>
+
                 <div class="cart-footer">
-                    <div class="cart-total">
-                        <strong data-translate="total">Total:</strong>
-                        <span id="cartTotal">₹0.00</span>
+                    <div class="cart-total-info">
+                        <div class="cart-total-row">
+                            <span class="cart-total-label">Subtotal</span>
+                            <span class="cart-total-value" style="font-size: 1.2rem; opacity: 0.7;"
+                                id="cartSubtotal">₹0.00</span>
+                        </div>
+                        <div class="cart-total-row">
+                            <span class="cart-total-label" data-translate="total">Order Total</span>
+                            <span id="cartTotal" class="cart-total-value">₹0.00</span>
+                        </div>
                     </div>
-                    <button class="btn btn-primary" onclick="proceedToCheckout()">
-                        🎯 &nbsp;<span data-translate="checkout">Proceed to Checkout</span>
-                    </button>
+
+                    <div class="cart-actions">
+                        <button class="btn btn-outline btn-full" onclick="Modals.close('cartModal')">Continue
+                            Shopping</button>
+                        <button class="btn btn-primary btn-full" onclick="proceedToCheckout()">
+                            <i class="ion-ios-checkmark-circle"></i> &nbsp;<span
+                                data-translate="checkout">Checkout</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1606,12 +1645,16 @@
                             </div>
                             <div class="checkout-actions">
                                 <button type="button" class="btn btn-secondary"
-                                    onclick="Modals.close('checkoutModal'); Modals.open('cartModal');">← Back</button>
-                                <button type="submit" class="btn btn-primary btn-full">✅ Place Order</button>
+                                    onclick="Modals.close('checkoutModal'); Modals.open('cartModal');">←
+                                    Back</button>
+                                <button type="submit" class="btn btn-primary btn-full">✅ Place
+                                    Order</button>
                             </div>
                             <div class="checkout-security-badges">
-                                <span class="security-badge"><i class="ion-ios-locked"></i> SSL Secure</span>
-                                <span class="security-badge"><i class="ion-ios-checkmark-circle"></i> Trusted
+                                <span class="security-badge"><i class="ion-ios-locked"></i> SSL
+                                    Secure</span>
+                                <span class="security-badge"><i class="ion-ios-checkmark-circle"></i>
+                                    Trusted
                                     Manufacturer</span>
                             </div>
                         </div>
@@ -1734,7 +1777,8 @@
                     <div class="invoice-footer">
                         <div class="invoice-notes">
                             <p><strong>Notes:</strong></p>
-                            <p>Thank you for choosing Gurukripa Bricks. This is a computer-generated invoice and does
+                            <p>Thank you for choosing Gurukripa Bricks. This is a computer-generated invoice
+                                and does
                                 not require a physical signature.</p>
                         </div>
                         <div class="invoice-signature">
@@ -1745,7 +1789,8 @@
                 </div>
             </div>
             <div class="modal-footer no-print">
-                <button class="btn btn-primary btn-full" onclick="Modals.close('invoiceModal')">Finish & Close</button>
+                <button class="btn btn-primary btn-full" onclick="Modals.close('invoiceModal')">Finish &
+                    Close</button>
             </div>
         </div>
     </div>
@@ -1781,7 +1826,8 @@
                             <span>Remember me on this device</span>
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full" data-translate="login">🚀 &nbsp;Login to Your
+                    <button type="submit" class="btn btn-primary btn-full" data-translate="login">🚀
+                        &nbsp;Login to Your
                         Account</button>
                     <p style="text-align: center; margin-top: 20px;">
                         Don't have an account? &nbsp;<a href="#"
@@ -1827,27 +1873,25 @@
                         <span id="register-email-error" class="error-message" role="alert" aria-live="polite"></span>
                     </div>
                     <div class="form-row">
-                        <div class="form-group" style="position:relative;">
+                        <div class="form-group password-group">
                             <label for="register-password">Password *</label>
                             <input type="password" id="register-password" name="password" required minlength="6"
                                 aria-required="true" aria-describedby="register-password-error"
-                                autocomplete="new-password" placeholder="Min. 6 characters"
-                                style="padding-right:48px !important;">
-                            <button type="button" onclick="toggleRegisterPassword()"
-                                style="position:absolute;right:12px;top:34px;background:none;border:none;cursor:pointer;font-size:1.15rem;color:#8B0000;padding:4px;line-height:1;"
-                                aria-label="Toggle password" id="regPasswordToggle">👁</button>
+                                autocomplete="new-password" placeholder="Min. 6 characters">
+                            <button type="button" onclick="toggleRegisterPassword()" class="password-toggle-btn"
+                                aria-label="Toggle password" id="regPasswordToggle"
+                                title="Show/Hide Password">👁</button>
                             <span id="register-password-error" class="error-message" role="alert"
                                 aria-live="polite"></span>
                         </div>
-                        <div class="form-group" style="position:relative;">
+                        <div class="form-group password-group">
                             <label for="register-confirm-password">Confirm Password *</label>
                             <input type="password" id="register-confirm-password" name="confirmPassword" required
                                 minlength="6" aria-required="true" aria-describedby="register-confirm-password-error"
-                                autocomplete="new-password" placeholder="Re-enter password"
-                                style="padding-right:48px !important;">
-                            <button type="button" onclick="toggleRegisterConfirmPassword()"
-                                style="position:absolute;right:12px;top:34px;background:none;border:none;cursor:pointer;font-size:1.15rem;color:#8B0000;padding:4px;line-height:1;"
-                                aria-label="Toggle confirm password" id="regConfirmPasswordToggle">👁</button>
+                                autocomplete="new-password" placeholder="Re-enter password">
+                            <button type="button" onclick="toggleRegisterConfirmPassword()" class="password-toggle-btn"
+                                aria-label="Toggle confirm password" id="regConfirmPasswordToggle"
+                                title="Show/Hide Password">👁</button>
                             <span id="register-confirm-password-error" class="error-message" role="alert"
                                 aria-live="polite"></span>
                         </div>
@@ -1859,7 +1903,8 @@
                             placeholder="House no., street, city..."></textarea>
                         <span id="register-address-error" class="error-message" role="alert" aria-live="polite"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full" data-translate="register">Sign Up</button>
+                    <button type="submit" class="btn btn-primary btn-full" data-translate="register">Sign
+                        Up</button>
                     <p style="text-align: center; margin-top: 20px;">
                         Already have an account? &nbsp;<a href="#"
                             onclick="closeRegisterModal(); openLoginModal(); return false;"
@@ -1878,13 +1923,16 @@
                 <button class="modal-close" onclick="Modals.close('privacyModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Welcome to Gurukripa Bricks. Your privacy is important to us. Our privacy policy explains how we
+                <p>Welcome to Gurukripa Bricks. Your privacy is important to us. Our privacy policy explains
+                    how we
                     collect, use, and protect your personal information.</p>
                 <h3>1. Information Collection</h3>
-                <p>We may collect information such as your name, email address, and phone number when you register or
+                <p>We may collect information such as your name, email address, and phone number when you
+                    register or
                     use our contact form.</p>
                 <h3>2. Information Usage</h3>
-                <p>The information we collect is used to improve our services and process your orders efficiently.</p>
+                <p>The information we collect is used to improve our services and process your orders
+                    efficiently.</p>
                 <h3>3. Data Protection</h3>
                 <p>We implement security measures to ensure the safety of your personal data.</p>
             </div>
@@ -1911,10 +1959,144 @@
                 <div class="cart-actions">
                     <button class="btn btn-secondary" onclick="Modals.close('cartModal')"
                         data-translate="continueShopping">Continue Shopping</button>
-                    <button class="btn btn-primary" onclick="checkout()" data-translate="checkout">Proceed to
+                    <button class="btn btn-primary" onclick="proceedToCheckout()" data-translate="checkout">Proceed to
                         Checkout</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Profile Popup Modal (Redesigned) -->
+    <div class="modal profile-modal" id="profileModal">
+        <div class="profile-modal-content">
+            <button class="profile-close-btn" onclick="Modals.close('profileModal')" aria-label="Close profile">
+                <i class="ion-ios-close-empty"></i>
+            </button>
+
+            <div class="profile-modal-header">
+                <div class="profile-avatar-outer">
+                    <div class="profile-avatar-container" id="profileModalAvatar">
+                        <span id="profileModalInitial">U</span>
+                        <img id="profileModalImg" src="" alt="Profile" style="display: none;">
+                    </div>
+                    <button class="avatar-edit-badge" onclick="document.getElementById('profileImageInput').click()">
+                        <i class="ion-ios-camera"></i>
+                    </button>
+                    <input type="file" id="profileImageInput" accept="image/*" style="display: none;"
+                        onchange="handleProfileImageUpload(event)">
+                </div>
+                <h3 id="profileModalName" class="profile-user-name">User Name</h3>
+                <span id="profileModalEmail" class="profile-user-email">user@example.com</span>
+                <div class="profile-badge-row">
+                    <span class="profile-user-role" id="profileModalRole">Premium Customer</span>
+                    <button class="btn-edit-inline" onclick="openEditProfileModal()">
+                        <i class="ion-ios-compose-outline"></i> Edit
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Overview Stats -->
+            <div class="profile-stats-row">
+                <div class="profile-stat-item">
+                    <span class="stat-value" id="profileStatOrders">0</span>
+                    <span class="stat-label">Orders</span>
+                </div>
+                <div class="profile-stat-item">
+                    <span class="stat-value" id="profileCartCount">0</span>
+                    <span class="stat-label">Cart Items</span>
+                </div>
+                <div class="profile-stat-item">
+                    <span class="stat-value">₹0</span>
+                    <span class="stat-label">Saved</span>
+                </div>
+            </div>
+
+            <!-- Profile Tabs -->
+            <div class="profile-tabs-wrapper">
+                <div class="profile-tab active" data-tab="overview" onclick="switchProfileTab('overview')">Overview
+                </div>
+                <div class="profile-tab" data-tab="security" onclick="switchProfileTab('security')">Settings</div>
+            </div>
+
+            <div class="profile-tab-content-area">
+                <!-- Overview Tab -->
+                <div id="tab-overview" class="profile-tab-pane active">
+                    <div class="profile-menu">
+                        <a href="javascript:void(0)" class="profile-menu-item"
+                            onclick="Modals.close('profileModal'); navigateTo('dashboard');">
+                            <i class="ion-ios-speedometer-outline"></i>
+                            <span>Account Dashboard</span>
+                        </a>
+                        <a href="javascript:void(0)" class="profile-menu-item"
+                            onclick="Modals.close('profileModal'); navigateTo('orders');">
+                            <i class="ion-ios-list-outline"></i>
+                            <span>My Orders</span>
+                        </a>
+                        <a href="javascript:void(0)" class="profile-menu-item"
+                            onclick="Modals.close('profileModal'); openCart();">
+                            <i class="ion-ios-cart-outline"></i>
+                            <span>Shopping Cart</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Security Tab -->
+                <div id="tab-security" class="profile-tab-pane">
+                    <div class="profile-menu">
+                        <a href="javascript:void(0)" class="profile-menu-item" onclick="App.toggleTheme()">
+                            <i class="ion-ios-color-palette-outline"></i>
+                            <span>Toggle Dark Mode</span>
+                        </a>
+                        <a href="javascript:void(0)" class="profile-menu-item"
+                            onclick="Modals.close('profileModal'); navigateTo('settings');">
+                            <i class="ion-ios-gear-outline"></i>
+                            <span>Account Settings</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-modal-footer">
+                <button class="logout-btn-premium" onclick="logoutUser()">
+                    <i class="ion-log-out"></i>
+                    <span>Log Out</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal (New) -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content profile-edit-content">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="close-btn" onclick="Modals.close('editProfileModal')">&times;</button>
+            </div>
+            <form id="editProfileForm" onsubmit="handleProfileUpdate(event)">
+                <div class="form-group-grid">
+                    <div class="form-group">
+                        <label for="editName">Full Name</label>
+                        <input type="text" id="editName" name="name" required placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email Address</label>
+                        <input type="email" id="editEmail" name="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhone">Phone Number</label>
+                        <input type="tel" id="editPhone" name="phone" placeholder="Your mobile number">
+                    </div>
+                    <div class="form-group">
+                        <label for="editRole">Current Role</label>
+                        <input type="text" id="editRole" name="role" readonly value="Premium Customer">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline"
+                        onclick="Modals.close('editProfileModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1930,10 +2112,12 @@
                 <h3>1. Orders</h3>
                 <p>All orders are subject to availability and confirmation of the order price.</p>
                 <h3>2. Payments</h3>
-                <p>Payments for orders must be made via the available payment gateways or as discussed with our support
+                <p>Payments for orders must be made via the available payment gateways or as discussed with
+                    our support
                     team.</p>
                 <h3>3. Limitation of Liability</h3>
-                <p>Gurukripa Bricks will not be liable for any indirect or direct damages resulting from the use of our
+                <p>Gurukripa Bricks will not be liable for any indirect or direct damages resulting from the
+                    use of our
                     website or products.</p>
             </div>
         </div>
@@ -1949,11 +2133,14 @@
             <div class="modal-body">
                 <p>We deliver premium bricks across Jaunpur, Varanasi, and neighboring districts.</p>
                 <h3>1. Delivery Areas</h3>
-                <p>Standard delivery is available within a 100km radius of our manufacturing units in Jaunpur.</p>
+                <p>Standard delivery is available within a 100km radius of our manufacturing units in
+                    Jaunpur.</p>
                 <h3>2. Delivery Time</h3>
-                <p>Orders are usually delivered within 2-5 business days depending on quantity and distance.</p>
+                <p>Orders are usually delivered within 2-5 business days depending on quantity and distance.
+                </p>
                 <h3>3. Shipping Costs</h3>
-                <p>Shipping costs vary based on distance and order volume. Please contact us for a precise quote.</p>
+                <p>Shipping costs vary based on distance and order volume. Please contact us for a precise
+                    quote.</p>
             </div>
         </div>
     </div>
@@ -1968,12 +2155,15 @@
             <div class="modal-body">
                 <p>We strive for 100% customer satisfaction with our premium quality bricks.</p>
                 <h3>1. Damaged Goods</h3>
-                <p>Any bricks damaged during transit will be replaced at no extra cost if reported within 24 hours of
+                <p>Any bricks damaged during transit will be replaced at no extra cost if reported within 24
+                    hours of
                     delivery.</p>
                 <h3>2. Cancellations</h3>
-                <p>Orders can be cancelled up to 24 hours before the scheduled dispatch time for a full refund.</p>
+                <p>Orders can be cancelled up to 24 hours before the scheduled dispatch time for a full
+                    refund.</p>
                 <h3>3. Quality Disputues</h3>
-                <p>If you are unsatisfied with the quality, please contact our support team immediately for inspection
+                <p>If you are unsatisfied with the quality, please contact our support team immediately for
+                    inspection
                     and resolution.</p>
             </div>
         </div>
@@ -1996,8 +2186,12 @@
             </div>
             <span data-translate="cart">Cart</span>
         </a>
-        <a href="#profile" class="nav-link" onclick="handleProfileClick(); return false;" title="Profile">
-            <i class="ion-ios-person"></i>
+        <a href="#profile" class="nav-link" id="mobileNavProfileBtn" onclick="handleProfileClick(); return false;"
+            title="Profile">
+            <div class="user-avatar-premium" id="mobileNavAvatar">
+                <span><i class="ion-ios-person"></i></span>
+                <img src="" alt="Profile" style="display: none;">
+            </div>
             <span data-translate="profile">Profile</span>
         </a>
     </nav>
@@ -2020,6 +2214,7 @@
     <script src="src/services/authService.js" defer></script>
     <script src="src/services/cartService.js" defer></script>
     <script src="src/services/productService.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <script src="src/services/chatbot.js" defer></script>
     <script src="src/main.js" defer></script>
 
@@ -2042,17 +2237,43 @@
         </button>
     </div>
 
-    <!-- Fail-safe Loader Removal -->
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav">
+        <a href="#home" class="nav-link active" onclick="navigateTo('home')">
+            <i class="ion-ios-home-outline"></i>
+            <span data-translate="home">Home</span>
+        </a>
+        <a href="#products" class="nav-link" onclick="navigateTo('products')">
+            <i class="ion-ios-grid-view-outline"></i>
+            <span data-translate="products">Products</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openCart()">
+            <i class="ion-ios-cart-outline"></i>
+            <span data-translate="cart">Cart</span>
+            <span class="cart-count cart-badge" id="mobileCartCount">0</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link" id="mobileBottomProfile" onclick="openProfileModal()">
+            <div class="user-avatar-premium" id="mobileNavAvatar">
+                <span class="avatar-initials"><i class="ion-ios-person"></i></span>
+                <img src="" alt=""
+                    style="display:none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            </div>
+            <span data-translate="profile">Profile</span>
+        </a>
+    </nav>
     <script>
         setTimeout(function () {
-            var loader = document.getElementById('pageLoader');
-            if (loader && loader.style.display !== 'none') {
-                loader.style.opacity = '0';
-                setTimeout(function () {
-                    loader.style.display = 'none';
-                }, 600);
-            }
-        }, 4000);
+            var loaders = document.querySelectorAll('#pageLoader, #page-loader, .page-loader');
+            loaders.forEach(function (loader) {
+                if (loader && loader.style.display !== 'none') {
+                    loader.style.opacity = '0';
+                    setTimeout(function () {
+                        loader.style.display = 'none';
+                        document.body.classList.remove('loading');
+                    }, 600);
+                }
+            });
+        }, 5000);
     </script>
 </body>
 

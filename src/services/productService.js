@@ -101,6 +101,19 @@ var ProductService = {
         if (!grid) return;
 
         const filtered = ProductService.getProducts();
+
+        // Show skeletons briefly for smooth transition if needed, or if grid is empty
+        if (grid.children.length === 0) {
+            ProductService.renderSkeletons();
+            setTimeout(() => ProductService.renderFiltered(filtered), 400);
+        } else {
+            ProductService.renderFiltered(filtered);
+        }
+    },
+
+    renderFiltered: (filtered) => {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
         const isHindi = typeof TranslationService !== 'undefined' && TranslationService.getLanguage() === 'hi';
 
         if (filtered.length === 0) {
@@ -111,51 +124,55 @@ var ProductService = {
         grid.innerHTML = filtered.map(product => ProductService.createCardHTML(product, isHindi)).join('');
     },
 
+    renderSkeletons: () => {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+
+        const skeletonCount = 8;
+        const skeletonHTML = Array(skeletonCount).fill(0).map(() => `
+            <div class="product-skeleton"></div>
+        `).join('');
+
+        grid.innerHTML = skeletonHTML;
+    },
+
     createCardHTML: (product, isHindi) => {
         const name = isHindi ? product.nameHi : product.name;
         const desc = isHindi ? product.descriptionHi : product.description;
-        const buyLabel = isHindi ? 'कार्ट में जोड़ें' : 'Add to Cart';
-        const detailsLabel = isHindi ? 'विवरण' : 'Details';
-        const callLabel = isHindi ? 'कॉल करें' : 'Call Now';
+        const buyLabel = isHindi ? 'अभी खरीदें' : 'Buy Now';
+        const detailsLabel = isHindi ? 'विवरण देखें' : 'View Details';
 
         return `
             <div class="product-card-modern ${product.isNew ? 'is-new' : ''}" data-aos="fade-up">
-                ${product.tag ? `<div class="product-tag ${product.tagClass || ''}">${product.tag}</div>` : ''}
-                <div class="product-image-wrapper">
+                ${product.tag ? `<div class="product-tag">${product.tag}</div>` : ''}
+                
+                <div class="product-image-wrapper" onclick="viewProductDetails(${product.id})">
                     <img src="${product.image}" alt="${name}" loading="lazy" class="product-image"
                          onerror="this.src='src/assets/images/logo-new.svg'">
-                    <div class="product-overlay">
-                        <button class="overlay-btn" onclick="viewProductDetails(${product.id})">
-                            <i class="ion-ios-eye"></i> ${detailsLabel}
-                        </button>
+                    <div class="image-overlay">
+                        <span class="overlay-btn"><i class="ion-ios-search"></i> ${detailsLabel}</span>
                     </div>
                 </div>
+
                 <div class="product-info">
-                    <div class="product-trust-row">
+                    <div class="product-meta">
+                        <span class="verified-status"><i class="ion-ios-checkmark-circle"></i> Verified</span>
                         <div class="product-rating">
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star-half"></i>
-                        </div>
-                        <div class="verified-badge" title="${isHindi ? 'गुणवत्ता सत्यापित' : 'Quality Verified'}">
-                            <i class="ion-ios-checkmark-circle"></i> ${isHindi ? 'सत्यापित' : 'Verified'}
+                            <i class="ion-ios-star"></i> 4.8
                         </div>
                     </div>
-                    <h3 class="product-title">${name}</h3>
-                    <div class="product-price-row">
-                        <span class="product-price">₹${product.price}/pc</span>
-                        ${product.oldPrice ? `<span class="product-old-price">₹${product.oldPrice}</span>` : ''}
-                    </div>
+                    
+                    <h3 class="product-title" onclick="viewProductDetails(${product.id})">${name}</h3>
                     <p class="product-description">${desc}</p>
-                    <div class="product-actions">
-                        <button class="btn btn-primary btn-add-cart" onclick="addToCart(${product.id})">
+                    
+                    <div class="product-footer">
+                        <div class="price-block">
+                            <span class="product-price">₹${product.price}</span>
+                            ${product.oldPrice ? `<span class="product-old-price">₹${product.oldPrice}</span>` : ''}
+                        </div>
+                        <button class="btn-buy-modern" onclick="addToCart(${product.id})">
                             <i class="ion-ios-cart"></i> ${buyLabel}
                         </button>
-                        <a href="tel:+919198923230" class="btn btn-secondary btn-icon-only" title="${callLabel}">
-                            <i class="ion-ios-telephone"></i>
-                        </a>
                     </div>
                 </div>
             </div>

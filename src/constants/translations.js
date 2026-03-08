@@ -100,9 +100,16 @@ var TRANSLATIONS = {
         forgotPassword: "Forgot Password?",
         rememberMe: "Stay Signed In",
         dashboard: "User Dashboard",
+        myProfile: "My Profile",
         myOrders: "My Orders",
         orderHistory: "History",
-        accountSettings: "Settings",
+        settings: "Settings",
+        accountSettings: "Account Settings",
+
+        // Cart & Checkout
+        continueShopping: "Continue Shopping",
+        subtotal: "Subtotal",
+        shipping: "Shipping",
 
         // Common UI
         loading: "Please wait...",
@@ -232,9 +239,16 @@ var TRANSLATIONS = {
         forgotPassword: "पासवर्ड भूल गए?",
         rememberMe: "लॉगिन रखें",
         dashboard: "यूजर डैशबोर्ड",
+        myProfile: "मेरी प्रोफ़ाइल",
         myOrders: "मेरे ऑर्डर",
         orderHistory: "इतिहास",
-        accountSettings: "सेटिंग्स",
+        settings: "सेटिंग्स",
+        accountSettings: "खाता सेटिंग्स",
+
+        // Cart & Checkout
+        continueShopping: "खरीदारी जारी रखें",
+        subtotal: "उप-कुल",
+        shipping: "डिलिवरी",
 
         // Common UI
         loading: "कृपया प्रतीक्षा करें...",

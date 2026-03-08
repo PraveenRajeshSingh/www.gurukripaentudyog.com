@@ -8,67 +8,225 @@ const App = {
     init: () => {
         console.log('🚀 Gurukripa Bricks Initializing...');
 
-        // Initialize Core Services
-        safeExecute(() => {
-            TranslationService.init();
-            AuthService.init();
-            CartService.init();
-            ProductService.init();
-        }, null, 'Core initialization failed');
+        try {
+            // Initialize Theme
+            App.initTheme();
 
-        // Global Event Listeners
-        App.bindGlobalEvents();
+            // Register PWA Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js').then(reg => {
+                        console.log('📡 Service Worker registered:', reg.scope);
+                    }).catch(err => {
+                        console.error('❌ Service Worker registration failed:', err);
+                    });
+                });
+            }
 
-        // Initialize Calculator
-        App.initCalculator();
+            // Initialize Form Validation
+            App.initValidation();
 
-        // Initialize Counters
-        App.initCounters();
+            // Initialize Core Services
+            safeExecute(() => {
+                TranslationService.init();
+                AuthService.init();
+                CartService.init();
+                ProductService.init();
+            }, null, 'Core initialization failed');
 
-        // Initialize Chatbot Toggle
-        App.initChatbot();
+            // Handle initial routing (deep linking)
+            App.handleRouting();
 
-        // Finalize UI
-        setTimeout(App.hideLoader, 800);
+            // Global Event Listeners
+            App.bindGlobalEvents();
 
-        console.log('✅ Gurukripa Bricks Ready.');
-    },
+            // Initialize Calculator
+            App.initCalculator();
 
-    hideLoader: () => {
-        const loader = document.getElementById('pageLoader');
-        if (loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => {
-                loader.style.display = 'none';
-                document.body.classList.remove('loading');
-            }, 600);
+            // Initialize Counters
+            App.initCounters();
+
+            // Initialize Chatbot Toggle
+            App.initChatbot();
+
+            console.log('✅ Gurukripa Bricks Ready.');
+        } catch (error) {
+            console.error('💥 Critical initialization error:', error);
+        } finally {
+            // Initialize AOS
+            if (window.AOS) {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out',
+                    once: true,
+                    offset: 100
+                });
+            }
+
+            // Finalize UI - Always ensure loader disappears
+            setTimeout(App.hideLoader, 500);
         }
     },
 
-    toggleMobileMenu: (isOpen) => {
+    hideLoader: () => {
+        const loaders = document.querySelectorAll('#pageLoader, #page-loader, .page-loader');
+        loaders.forEach(loader => {
+            loader.style.transition = 'opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 600);
+        });
+        document.body.classList.remove('loading');
+    },
+
+    handleRouting: () => {
+        let hash = window.location.hash || '#home';
+        if (!hash.startsWith('#')) hash = '#' + hash;
+
+        const sectionId = hash.substring(1);
+        const sections = ['home', 'products', 'blog', 'about', 'cities', 'contact', 'dashboard', 'categories'];
+
+        // Protected Routes check
+        const protectedRoutes = ['dashboard', 'profile', 'orders', 'settings'];
+        if (protectedRoutes.includes(sectionId)) {
+            const user = AuthService.getUser();
+            if (!user) {
+                window.location.hash = '#home';
+                Modals.open('loginModal');
+                return;
+            }
+        }
+
+        // Standard Routing Logic
+        if (sectionId === 'home' || sectionId === '') {
+            document.querySelectorAll('header.hero-section, section:not(.modal)').forEach(s => {
+                if (s.id !== 'dashboard' && !s.classList.contains('header')) {
+                    s.style.display = '';
+                }
+            });
+            const dashboard = document.getElementById('dashboard');
+            if (dashboard) dashboard.style.display = 'none';
+        } else {
+            // Show only the target section if it's a "page" style section
+            // or just ensure targeting works if we are coming from a hidden state
+            const target = document.getElementById(sectionId);
+            if (target) {
+                document.querySelectorAll('header.hero-section, section:not(.modal)').forEach(s => {
+                    if (s.id !== 'dashboard' && !s.classList.contains('header')) {
+                        s.style.display = ''; // Restore visibility to all for normal scrolling
+                    }
+                });
+                const dashboard = document.getElementById('dashboard');
+                if (dashboard) dashboard.style.display = 'none';
+
+                // Smooth scroll to target
+                setTimeout(() => {
+                    const offset = 80;
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = target.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
+        }
+
+        // Render Dashboard if active
+        if (sectionId === 'dashboard' || protectedRoutes.includes(sectionId)) {
+            const dashboard = document.getElementById('dashboard');
+            if (dashboard) {
+                document.querySelectorAll('header.hero-section, section:not(.modal)').forEach(s => {
+                    if (s.id !== 'dashboard' && !s.classList.contains('header')) {
+                        s.style.display = 'none';
+                    }
+                });
+                dashboard.style.display = 'block';
+                AuthService.renderDashboard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        App.updateActiveStates();
+    },
+
+    toggleMobileMenu: (force) => {
         const drawer = document.getElementById('mobileDrawer');
         const overlay = document.getElementById('drawerOverlay');
-        const navToggle = document.getElementById('navToggle');
-        if (drawer && overlay) {
-            if (isOpen) {
-                drawer.classList.add('active');
-                overlay.classList.add('active');
-                if (navToggle) navToggle.classList.add('active');
-                document.body.classList.add('modal-open');
+        const toggle = document.querySelector('.nav-toggle');
+
+        const isActive = force !== undefined ? force : !drawer.classList.contains('active');
+
+        if (drawer) drawer.classList.toggle('active', isActive);
+        if (overlay) overlay.classList.toggle('active', isActive);
+        if (toggle) toggle.classList.toggle('active', isActive);
+
+        document.body.style.overflow = isActive ? 'hidden' : '';
+
+        // If closing, ensure active states are updated
+        if (!isActive) App.updateActiveStates();
+    },
+
+    updateActiveStates: () => {
+        const hash = window.location.hash || '#home';
+        document.querySelectorAll('.nav-link, .drawer-menu a, .mobile-bottom-nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && (href === hash || (hash === '#home' && (href === '#' || href === '#home')))) {
+                link.classList.add('active');
             } else {
-                drawer.classList.remove('active');
-                overlay.classList.remove('active');
-                if (navToggle) navToggle.classList.remove('active');
-                document.body.classList.remove('modal-open');
+                link.classList.remove('active');
+            }
+        });
+    },
+
+    updateMobileNavProfileState: () => {
+        const user = AuthService.getUser();
+        const avatarContainer = document.getElementById('mobileNavAvatar');
+        if (avatarContainer) {
+            const span = avatarContainer.querySelector('span');
+            const img = avatarContainer.querySelector('img');
+
+            if (user && user.profileImage) {
+                if (img) {
+                    img.src = user.profileImage;
+                    img.style.display = 'block';
+                }
+                if (span) span.style.display = 'none';
+                avatarContainer.style.border = '2px solid var(--primary)';
+            } else if (user) {
+                // Logged in but no image
+                if (span) {
+                    span.innerHTML = `<i class="ion-ios-person"></i>`;
+                    span.style.display = 'flex';
+                }
+                if (img) img.style.display = 'none';
+                avatarContainer.style.border = '2px solid var(--primary)';
+            } else {
+                // Logged out
+                if (span) {
+                    span.innerHTML = `<i class="ion-ios-person"></i>`;
+                    span.style.display = 'flex';
+                }
+                if (img) img.style.display = 'none';
+                avatarContainer.style.border = '1.5px solid var(--border-main)';
             }
         }
     },
 
     bindGlobalEvents: () => {
+        // Explicitly fetch elements
+        const navToggle = document.getElementById('navToggle');
+        const drawerClose = document.getElementById('drawerClose');
+        const contactForm = document.getElementById('contactForm');
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+
         // Scroll Behavior for Header & Back to Top Button
         window.addEventListener('scroll', () => {
             const header = document.querySelector('.header');
-            const scrollTopBtn = document.getElementById('scrollTopBtn');
 
             if (header) {
                 header.classList.toggle('header-scrolled', window.scrollY > 50);
@@ -102,30 +260,17 @@ const App = {
                 App.toggleMobileMenu(isOpen);
             };
         }
-        if (drawerClose) drawerClose.onclick = () => App.toggleMobileMenu(false);
+        if (drawerClose) {
+            drawerClose.onclick = () => App.toggleMobileMenu(false);
+        }
 
-        // Expose closeMobileMenu for inline onclicks
+        // Expose closeMobileMenu and profile sync for inline onclicks
         window.closeMobileMenu = () => App.toggleMobileMenu(false);
+        window.updateMobileNavProfileState = App.updateMobileNavProfileState;
 
         // Close mobile menu on nav link click
         document.querySelectorAll('.drawer-menu .nav-link').forEach(link => {
             link.addEventListener('click', () => App.toggleMobileMenu(false));
-        });
-
-        // User menu dropdown toggle
-        const userMenuBtn = document.getElementById('userMenuBtn');
-        if (userMenuBtn) {
-            userMenuBtn.onclick = (e) => {
-                e.stopPropagation();
-                const dropdown = userMenuBtn.nextElementSibling;
-                if (dropdown) dropdown.classList.toggle('active');
-            };
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', () => {
-            const dropdowns = document.querySelectorAll('.user-dropdown');
-            dropdowns.forEach(d => d.classList.remove('active'));
         });
 
         // Escape Key Handling
@@ -133,39 +278,19 @@ const App = {
             if (e.key === 'Escape') {
                 Modals.closeAll();
                 App.toggleMobileMenu(false);
-                const dropdowns = document.querySelectorAll('.user-dropdown');
-                dropdowns.forEach(d => d.classList.remove('active'));
             }
         });
 
-        // Hash Change handling for Dashboard/Profile
+        // Hash Change handling - Core Navigation
         window.addEventListener('hashchange', () => {
-            const hash = window.location.hash;
-            if (hash === '#dashboard' || hash === '#profile') {
-                const user = AuthService.getUser();
-                if (user) {
-                    AuthService.renderDashboard();
-                    window.scrollTo({ top: document.getElementById('dashboard').offsetTop - 100, behavior: 'smooth' });
-                } else {
-                    showToast('🔒 Please login to access your profile.');
-                    Modals.open('loginModal');
-                    window.location.hash = 'home';
-                }
-            } else {
-                const dashboard = document.getElementById('dashboard');
-                if (dashboard) dashboard.style.display = 'none';
-            }
+            App.handleRouting();
         });
 
         // Initialized auth & profile state
         App.updateMobileNavProfileState();
         window.handleProfileClick = App.handleProfileClick;
         window.updateMobileNavProfileState = App.updateMobileNavProfileState;
-
-        // Initialize dashboard if hash is present on load
-        if (window.location.hash === '#dashboard' || window.location.hash === '#profile') {
-            setTimeout(AuthService.renderDashboard, 1000);
-        }
+        window.toggleTheme = App.toggleTheme;
 
         // Smooth scroll for nav links & Auto-close drawer
         document.querySelectorAll('.nav-link, .drawer-menu .nav-link, a[href^="#"]').forEach(link => {
@@ -199,15 +324,15 @@ const App = {
         App.initActiveLinkObserver();
 
         // Contact form submission with enhanced validation
-        const contactForm = document.getElementById('contactForm');
         if (contactForm) {
             contactForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 let isValid = true;
 
-                const name = document.getElementById('contact-name')?.value;
-                const email = document.getElementById('contact-email')?.value;
-                const phone = document.getElementById('contact-phone')?.value;
+                // Standardized IDs
+                const name = (document.getElementById('contactName') || document.getElementById('contact-name'))?.value;
+                const email = (document.getElementById('contactEmail') || document.getElementById('contact-email'))?.value;
+                const phone = (document.getElementById('contactPhone') || document.getElementById('contact-phone'))?.value;
 
                 // Simple Regex
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -281,34 +406,38 @@ const App = {
     handleProfileClick: () => {
         const user = AuthService.getUser();
         if (user) {
-            // Navigate to dashboard/profile
-            if (typeof navigateTo === 'function') {
-                navigateTo('profile');
+            // Open profile modal - Ensure openProfileModal is global or use Modals.open
+            if (window.openProfileModal) {
+                window.openProfileModal();
             } else {
-                window.location.hash = 'profile';
+                Modals.open('profileModal');
             }
         } else {
             // Open login modal
-            Modals.open('loginModal');
+            if (window.openLoginModal) {
+                window.openLoginModal();
+            } else {
+                Modals.open('loginModal');
+            }
             showToast('🔒 Please login to view your profile.');
         }
     },
 
     updateMobileNavProfileState: () => {
         const user = AuthService.getUser();
-        const profileLinks = document.querySelectorAll('.mobile-bottom-nav a[href="#profile"]');
-        profileLinks.forEach(link => {
-            if (user) {
-                link.classList.add('logged-in');
-                // Change icon to show user is logged in
-                const icon = link.querySelector('i');
-                if (icon) icon.className = 'ion-ios-contact';
-            } else {
-                link.classList.remove('logged-in');
-                const icon = link.querySelector('i');
-                if (icon) icon.className = 'ion-ios-person';
-            }
-        });
+        const btn = document.getElementById('mobileNavProfileBtn');
+        if (!btn) return;
+        if (user) {
+            btn.classList.add('logged-in');
+            btn.setAttribute('title', 'Profile: ' + (user.name || 'User'));
+            const icon = btn.querySelector('i');
+            if (icon) icon.className = 'ion-ios-contact';
+        } else {
+            btn.classList.remove('logged-in');
+            btn.setAttribute('title', 'Login / Profile');
+            const icon = btn.querySelector('i');
+            if (icon) icon.className = 'ion-ios-person';
+        }
     },
 
     // ═══════ BRICK CALCULATOR ═══════
@@ -406,6 +535,89 @@ const App = {
         }, { threshold: 0.3 });
 
         counters.forEach(counter => counterObserver.observe(counter));
+    },
+
+    // ═══════ THEME SYSTEM ═══════
+    initTheme: () => {
+        const savedTheme = localStorage.getItem('theme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const theme = savedTheme || systemTheme;
+
+        document.documentElement.setAttribute('data-theme', theme);
+        App.updateThemeUI(theme);
+    },
+
+    toggleTheme: () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        App.updateThemeUI(newTheme);
+
+        // Visual feedback
+        if (typeof showToast !== 'undefined') {
+            showToast(`🌙 ${newTheme === 'dark' ? 'Dark' : 'Light'} Mode Activated`);
+        }
+    },
+
+    updateThemeUI: (theme) => {
+        const icon = document.getElementById('themeIcon');
+        if (icon) {
+            icon.className = theme === 'dark' ? 'ion-ios-sunny-outline' : 'ion-ios-moon-outline';
+        }
+    },
+
+    // ═══════ FORM VALIDATION ═══════
+    initValidation: () => {
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            const inputs = form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', () => App.handleRealTimeValidation(input));
+                input.addEventListener('blur', () => App.handleRealTimeValidation(input));
+            });
+        });
+    },
+
+    handleRealTimeValidation: (input) => {
+        if (!window.Validation) return;
+
+        const val = input.value.trim();
+        const type = input.type;
+        const name = input.name;
+
+        if (val === '') {
+            Validation.clear(input);
+            return;
+        }
+
+        if (type === 'email') {
+            if (!Validation.isEmail(val)) {
+                Validation.showError(input, 'Please enter a valid email address');
+            } else {
+                Validation.showSuccess(input);
+            }
+        } else if (name === 'mobile') {
+            if (!Validation.isPhone(val)) {
+                Validation.showError(input, 'Enter 10 digit mobile number');
+            } else {
+                Validation.showSuccess(input);
+            }
+        } else if (type === 'password' && input.id === 'register-password') {
+            if (val.length < 6) {
+                Validation.showError(input, 'Password must be at least 6 characters');
+            } else {
+                Validation.showSuccess(input);
+            }
+        } else if (input.id === 'register-confirm-password') {
+            const pass = document.getElementById('register-password').value;
+            if (val !== pass) {
+                Validation.showError(input, 'Passwords do not match');
+            } else {
+                Validation.showSuccess(input);
+            }
+        }
     },
 
     // ═══════ CHATBOT INIT ═══════
@@ -652,15 +864,8 @@ window.downloadInvoicePDF = () => {
     html2pdf().set(opt).from(element).save();
 };
 
-window.logoutUser = () => {
-    AuthService.logout();
-    window.location.reload();
-};
+// Navigation and Auth helper functions moved to window scope
 
-window.navigateTo = (page) => {
-    showToast(`Redirecting to ${page}...`, 2000);
-    window.location.hash = page;
-};
 
 // ═══════ AUTH FORM HANDLERS ═══════
 window.handleLogin = async (e) => {
@@ -777,34 +982,161 @@ window.ProductService = ProductService;
 // ═══════ MOBILE PROFILE BUTTON HANDLER ═══════
 /**
  * Handles the Profile button in the mobile bottom nav.
- * - If logged in → open the mobile drawer (which shows user info + actions)
+ * - If logged in → open the profile modal
  * - If not logged in → open the login modal
  */
-window.handleMobileProfileClick = () => {
+window.handleProfileClick = () => {
     const user = AuthService.getUser();
     if (user) {
-        // User is logged in — open mobile drawer to show profile info
-        App.toggleMobileMenu(true);
+        window.openProfileModal();
     } else {
-        // Not logged in — prompt login
         Modals.open('loginModal');
     }
 };
 
+window.handleMobileProfileClick = window.handleProfileClick; // Alias for consistency
+
+
+/**
+ * Opens the profile modal and populates user data.
+ */
+window.openProfileModal = () => {
+    const user = AuthService.getUser();
+    if (!user) {
+        Modals.open('loginModal');
+        return;
+    }
+
+    // Open Modal first
+    Modals.open('profileModal');
+
+    // Populate Data — Modern Card IDs
+    const nameEls = document.querySelectorAll('.profile-user-name, #profileModalName');
+    const emailEls = document.querySelectorAll('.profile-user-email, #profileModalEmail');
+    const roleEls = document.querySelectorAll('.profile-user-role, #profileModalRole');
+    const initialEls = document.querySelectorAll('.profile-avatar-container span, #profileModalInitial');
+    const imgEls = document.querySelectorAll('.profile-avatar-container img, #profileModalImg');
+
+    const initials = AuthService.getInitials(user.name);
+
+    nameEls.forEach(el => el.textContent = user.name || 'User');
+    emailEls.forEach(el => el.textContent = user.email || '');
+    roleEls.forEach(el => el.textContent = user.role || 'Member');
+
+    // Handle Profile Image/Initials
+    if (user.profileImage) {
+        imgEls.forEach(img => {
+            img.src = user.profileImage;
+            img.style.display = 'block';
+        });
+        initialEls.forEach(span => span.style.display = 'none');
+    } else {
+        imgEls.forEach(img => img.style.display = 'none');
+        initialEls.forEach(span => {
+            span.textContent = initials;
+            span.style.display = 'block';
+        });
+    }
+
+    // Sync stats
+    const cartCountEl = document.getElementById('profileCartCount');
+    if (cartCountEl) {
+        const count = CartService.getCartCount();
+        cartCountEl.textContent = count;
+        cartCountEl.style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    // Random/Static values for demo purposes
+    const ordersStat = document.getElementById('profileStatOrders');
+    if (ordersStat) ordersStat.textContent = '3'; // Demo fallback
+
+    // Apply translation for the newly opened modal
+    if (window.TranslationService) {
+        TranslationService.translatePage();
+    }
+};
+
+window.openEditProfileModal = () => {
+    const user = AuthService.getUser();
+    if (!user) return;
+
+    const form = document.getElementById('editProfileForm');
+    if (form) {
+        form.name.value = user.name || '';
+        form.email.value = user.email || '';
+        form.phone.value = user.phone || '';
+    }
+    Modals.open('editProfileModal');
+};
+
+window.handleProfileUpdate = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone')
+    };
+
+    AuthService.updateUser(data);
+    Modals.close('editProfileModal');
+    // Re-open profile modal to show changes
+    setTimeout(() => window.openProfileModal(), 300);
+};
+
+window.handleProfileImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validation
+    if (!file.type.startsWith('image/')) {
+        showToast('❌ Please select an image file', 3000);
+        return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+        showToast('❌ Image too large (Max 2MB)', 3000);
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        AuthService.updateProfileImage(event.target.result);
+    };
+    reader.readAsDataURL(file);
+};
+
+/**
+ * Switches tabs within the profile modal.
+ */
+window.switchProfileTab = (tabId) => {
+    // Update tab triggers
+    document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.tab === tabId);
+    });
+
+    // Update tab panes
+    document.querySelectorAll('.profile-tab-pane').forEach(pane => {
+        pane.classList.toggle('active', pane.id === `tab-${tabId}`);
+    });
+};
+
 /**
  * Updates the mobile bottom nav profile button appearance
- * based on login state. Called after auth state changes.
  */
 window.updateMobileNavProfileState = () => {
     const btn = document.getElementById('mobileNavProfileBtn');
     const user = AuthService.getUser();
     if (!btn) return;
+    const icon = btn.querySelector('i');
     if (user) {
         btn.classList.add('logged-in');
         btn.setAttribute('title', 'Profile: ' + (user.name || 'User'));
+        if (icon) icon.className = 'ion-ios-contact';
     } else {
         btn.classList.remove('logged-in');
         btn.setAttribute('title', 'Login / Profile');
+        if (icon) icon.className = 'ion-ios-person';
     }
 };
 
@@ -812,3 +1144,141 @@ window.updateMobileNavProfileState = () => {
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(window.updateMobileNavProfileState, 1200);
 });
+
+/**
+ * Mobile-specific: Swipe to close for bottom-sheet modals
+ */
+function initMobileSwipeClose(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal || window.innerWidth > 768) return;
+
+    const content = modal.querySelector('.modal-content') || modal.querySelector('.profile-modal-content');
+    if (!content) return;
+
+    let startY = 0;
+    let currentY = 0;
+
+    const onTouchStart = (e) => {
+        startY = e.touches[0].clientY;
+    };
+
+    const onTouchMove = (e) => {
+        currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+        if (diff > 0) {
+            content.style.transform = `translateY(${diff}px)`;
+            content.style.transition = 'none';
+        }
+    };
+
+    const onTouchEnd = () => {
+        const diff = currentY - startY;
+        if (diff > 100) {
+            Modals.close(modalId);
+        }
+        content.style.transform = '';
+        content.style.transition = 'transform 0.3s ease';
+    };
+
+    content.addEventListener('touchstart', onTouchStart, { passive: true });
+    content.addEventListener('touchmove', onTouchMove, { passive: true });
+    content.addEventListener('touchend', onTouchEnd);
+}
+
+// Global Exports
+window.handleProfileClick = App.handleProfileClick;
+window.setLanguage = TranslationService.setLanguage;
+window.openCart = () => Modals.open('cartModal');
+window.openProfileModal = () => Modals.open('profileModal');
+// ═══════ CLOUD/GLOBAL EXPORTS ═══════
+// These are exposed to the global window object for HTML onclick handlers
+window.openLoginModal = () => Modals.open('loginModal');
+window.openRegisterModal = () => Modals.open('registerModal');
+window.closeMobileMenu = () => App.toggleMobileMenu(false);
+window.calculateBricks = App.initCalculator;
+window.toggleMobileMenu = App.toggleMobileMenu;
+
+window.navigateTo = (page) => {
+    const targetHash = page.startsWith('#') ? page : '#' + page;
+    if (window.location.hash === targetHash) {
+        App.handleRouting(); // Force refresh if already on same hash
+    } else {
+        window.location.hash = targetHash;
+    }
+};
+
+window.handleProfileUpdate = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const updatedData = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone')
+    };
+
+    const user = AuthService.getUser();
+    const newUser = { ...user, ...updatedData };
+
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(newUser));
+    AuthService.updateUI(newUser);
+
+    Modals.close('editProfileModal');
+    showToast('✅ Profile updated successfully!');
+
+    // Re-open profile modal to see changes
+    setTimeout(() => Modals.open('profileModal'), 300);
+};
+
+window.openEditProfileModal = () => {
+    const user = AuthService.getUser();
+    if (!user) return;
+
+    const form = document.getElementById('editProfileForm');
+    if (form) {
+        form.querySelector('#editName').value = user.name || '';
+        form.querySelector('#editEmail').value = user.email || '';
+        form.querySelector('#editPhone').value = user.phone || '';
+    }
+
+    Modals.close('profileModal');
+    setTimeout(() => Modals.open('editProfileModal'), 100);
+};
+
+window.logoutUser = () => {
+    Modals.close('profileModal');
+    AuthService.logout();
+    if (App.updateMobileNavProfileState) App.updateMobileNavProfileState();
+    setTimeout(() => window.location.assign('/'), 500);
+};
+
+window.handleProfileImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const imageUrl = e.target.result;
+            AuthService.updateProfileImage(imageUrl);
+            showToast('📸 Profile picture updated!');
+
+            // Sync all instances
+            const user = AuthService.getUser();
+            if (user) AuthService.syncAllAvatars(user);
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+window.switchProfileTab = (tabName) => {
+    // Update tabs active state
+    document.querySelectorAll('.profile-tab').forEach(el => {
+        el.classList.toggle('active', el.getAttribute('data-tab') === tabName);
+    });
+
+    // Update content panes
+    document.querySelectorAll('.profile-tab-pane').forEach(el => {
+        el.classList.toggle('active', el.id === `tab-${tabName}`);
+    });
+};
+
+// Initialized by App.init
+App.init();

@@ -65,14 +65,23 @@ var CartService = {
             el.style.display = count > 0 ? (el.id.includes('mobile') ? 'inline-flex' : 'block') : 'none';
         });
 
-        const totalElements = document.querySelectorAll('#cartTotal, #checkoutTotal');
+        const totalElements = document.querySelectorAll('#cartTotal, #checkoutTotal, #cartSubtotal');
         totalElements.forEach(el => {
             el.textContent = `₹${total.toFixed(2)}`;
         });
 
+        // Update profile modal cart badge
+        const profileCartBadge = document.getElementById('profileCartCount');
+        if (profileCartBadge) {
+            profileCartBadge.textContent = count;
+            profileCartBadge.style.display = count > 0 ? 'inline-flex' : 'none';
+        }
+
         CartService.renderCartItems();
         CartService.renderCheckoutItems();
     },
+
+    updateCartUI: () => CartService.updateUI(), // Alias for compatibility
 
     renderCheckoutItems: () => {
         const container = document.getElementById('checkoutItems');
@@ -107,36 +116,42 @@ var CartService = {
         if (!cartItems) return;
 
         if (cart.length === 0) {
-            cartItems.innerHTML = `<div class="empty-cart"><p>${TranslationService.getLabel('emptyCart')}</p></div>`;
+            cartItems.innerHTML = `
+                <div class="empty-cart">
+                    <i class="ion-ios-cart-outline" style="font-size: 3rem; opacity: 0.2; display: block; margin-bottom: 15px;"></i>
+                    <p>${TranslationService.getLabel('emptyCart')}</p>
+                </div>`;
             return;
         }
 
         const isHindi = TranslationService.getLanguage() === 'hi';
         cartItems.innerHTML = cart.map(item => `
             <div class="cart-item">
-                <img src="${item.image}" alt="${isHindi ? item.nameHi : item.name}" />
+                <div class="cart-item-img-wrapper">
+                    <img src="${item.image}" alt="${isHindi ? item.nameHi : item.name}" />
+                </div>
                 <div class="cart-item-info">
                     <h4>${isHindi ? item.nameHi : item.name}</h4>
-                    <p>₹${item.price}/piece</p>
+                    <span class="cart-item-price">₹${item.price.toFixed(2)}</span>
                 </div>
-                <div class="cart-item-controls">
-                    <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">
-                        <i class="ion-ios-minus-empty"></i>
-                    </button>
-                    <span>${item.quantity}</span>
-                    <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">
-                        <i class="ion-ios-plus-empty"></i>
-                    </button>
-                </div>
-                <div class="cart-item-total">
-                    <span>₹${(item.price * item.quantity).toFixed(2)}</span>
-                    <button class="btn-remove" onclick="removeFromCart(${item.id})" title="Remove item">
+                <div class="cart-item-right">
+                    <button class="btn-remove" onclick="removeFromCart(${item.id})" title="Remove">
                         <i class="ion-ios-trash-outline"></i>
                     </button>
+                    <div class="cart-item-controls">
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">
+                            <i class="ion-ios-minus-empty"></i>
+                        </button>
+                        <span>${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">
+                            <i class="ion-ios-plus-empty"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         `).join('');
-    }, clearCart: () => {
+    },
+    clearCart: () => {
         cart = [];
         CartService.saveCart();
         CartService.updateUI();

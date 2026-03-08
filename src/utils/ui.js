@@ -86,3 +86,56 @@ function safeExecute(fn, fallback = null, errorMessage = 'Something went wrong')
     }
 }
 
+
+/**
+ * Form Validation Utilities
+ */
+const Validation = {
+    showError(input, message) {
+        const group = input.closest('.form-group');
+        if (!group) return;
+
+        group.classList.add('has-error');
+        group.classList.remove('has-success');
+
+        let errorSpan = group.querySelector('.error-message');
+        if (!errorSpan) {
+            errorSpan = document.createElement('span');
+            errorSpan.className = 'error-message';
+            errorSpan.role = 'alert';
+            errorSpan.ariaLive = 'polite';
+            group.appendChild(errorSpan);
+        }
+        errorSpan.textContent = message;
+    },
+
+    showSuccess(input) {
+        const group = input.closest('.form-group');
+        if (!group) return;
+
+        group.classList.remove('has-error');
+        group.classList.add('has-success');
+
+        const errorSpan = group.querySelector('.error-message');
+        if (errorSpan) errorSpan.textContent = '';
+    },
+
+    clear(input) {
+        const group = input.closest('.form-group');
+        if (!group) return;
+        group.classList.remove('has-error');
+        group.classList.remove('has-success');
+        const errorSpan = group.querySelector('.error-message');
+        if (errorSpan) errorSpan.textContent = '';
+    },
+
+    isEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    },
+
+    isPhone(phone) {
+        return /^[0-9]{10}$/.test(phone);
+    }
+};
+
+window.Validation = Validation;
