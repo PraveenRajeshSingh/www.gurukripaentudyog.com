@@ -146,6 +146,7 @@
     <link rel="stylesheet" href="src/styles/chatbot.css">
     <link rel="stylesheet" href="src/styles/utilities.css">
     <link rel="stylesheet" href="src/styles/sections.css">
+    <link rel="stylesheet" href="src/styles/dashboard.css">
     <link rel="stylesheet" href="src/styles/responsive.css">
 
     <!-- Vendor Styles -->
@@ -1539,7 +1540,7 @@
                 <button class="modal-close" onclick="Modals.close('cartModal')" aria-label="Close cart">&times;</button>
             </div>
             <div class="modal-body" style="padding: 0;">
-                <div id="cartItems" class="cart-items-container" style="padding: 24px 30px;">
+                <div id="cartItems" class="cart-items-container">
                     <!-- Cart items rendered by cart.js -->
                 </div>
 
@@ -1939,32 +1940,7 @@
         </div>
     </div>
 
-    <!-- Cart Modal -->
-    <div class="modal" id="cartModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 data-translate="cart">🛒 Your shopping bag</h2>
-                <button class="modal-close" onclick="Modals.close('cartModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <!-- Cart items will be dynamically loaded here -->
-                <div id="cart-items-container">
-                    <p data-translate="cartEmpty">Your cart is empty.</p>
-                </div>
-                <div class="cart-summary">
-                    <p><strong data-translate="subtotal">Subtotal:</strong> <span id="cartSubtotal">₹0.00</span></p>
-                    <p><strong data-translate="shipping">Shipping:</strong> <span id="cartShipping">₹0.00</span></p>
-                    <p><strong data-translate="total">Total:</strong> <span id="cartTotal">₹0.00</span></p>
-                </div>
-                <div class="cart-actions">
-                    <button class="btn btn-secondary" onclick="Modals.close('cartModal')"
-                        data-translate="continueShopping">Continue Shopping</button>
-                    <button class="btn btn-primary" onclick="proceedToCheckout()" data-translate="checkout">Proceed to
-                        Checkout</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Profile Popup Modal (Redesigned) -->
     <div class="modal profile-modal" id="profileModal">
@@ -2074,6 +2050,22 @@
             </div>
             <form id="editProfileForm" onsubmit="handleProfileUpdate(event)">
                 <div class="form-group-grid">
+                    <div class="form-group profile-image-edit-group"
+                        style="grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; padding: 15px; background: var(--gray-50); border-radius: var(--radius-lg); margin-bottom: 20px;">
+                        <div class="user-avatar-premium" style="width: 80px; height: 80px; font-size: 1.5rem;">
+                            <img id="editProfilePreview" src="" alt="" style="display: none;">
+                            <span id="editProfileInitials">U</span>
+                        </div>
+                        <div>
+                            <label style="margin-bottom: 8px; display: block;">Profile Picture</label>
+                            <input type="file" id="profileImageInput" accept="image/*" hidden
+                                onchange="handleProfileImageUpload(event)">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                onclick="document.getElementById('profileImageInput').click()">
+                                <i class="ion-ios-camera-outline"></i> Change Photo
+                            </button>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="editName">Full Name</label>
                         <input type="text" id="editName" name="name" required placeholder="Enter your name">
@@ -2169,32 +2161,7 @@
         </div>
     </div>
 
-    <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-bottom-nav">
-        <a href="#home" class="nav-link active" title="Home">
-            <i class="ion-ios-home"></i>
-            <span data-translate="home">Home</span>
-        </a>
-        <a href="#products" class="nav-link" title="Products">
-            <i class="ion-ios-grid"></i>
-            <span data-translate="products">Catalog</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-link" onclick="openCart()" title="Cart">
-            <div class="cart-icon-wrapper">
-                <i class="ion-ios-cart"></i>
-                <span class="cart-badge" id="mobileCartCount" style="display: none;">0</span>
-            </div>
-            <span data-translate="cart">Cart</span>
-        </a>
-        <a href="#profile" class="nav-link" id="mobileNavProfileBtn" onclick="handleProfileClick(); return false;"
-            title="Profile">
-            <div class="user-avatar-premium" id="mobileNavAvatar">
-                <span><i class="ion-ios-person"></i></span>
-                <img src="" alt="Profile" style="display: none;">
-            </div>
-            <span data-translate="profile">Profile</span>
-        </a>
-    </nav>
+
 
     <!-- Scripts - Optimized Loading -->
     <!-- Critical scripts loaded first -->
@@ -2218,24 +2185,34 @@
     <script src="src/services/chatbot.js" defer></script>
     <script src="src/main.js" defer></script>
 
-    <!-- Floating Action Buttons Container -->
-    <div class="floating-container" id="floatingActions">
-        <button class="floating-btn chatbot-btn" id="chatbotToggle" title="Chat with us" aria-label="Open chatbot">
-            <i class="ion-ios-chatboxes"></i>
-        </button>
-        <button class="floating-btn whatsapp-btn" onclick="window.open('https://wa.me/919198923230', '_blank')"
-            title="Chat on WhatsApp" aria-label="WhatsApp">
-            <i class="ion-social-whatsapp"></i>
-        </button>
-        <button class="floating-btn call-btn" onclick="window.location.href='tel:+919198923230'" title="Call us"
-            aria-label="Call">
-            <i class="ion-ios-telephone"></i>
-        </button>
-        <button class="floating-btn scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-            title="Back to top" aria-label="Scroll to top" id="scrollTopBtn">
-            <i class="ion-ios-arrow-up"></i>
+    <!-- Modern Floating Support FAB -->
+    <div class="fab-wrapper" id="supportFab">
+        <div class="fab-menu" id="fabMenu">
+            <button class="fab-item chatbot-btn" id="chatbotToggle" title="Live Chat">
+                <i class="ion-ios-chatboxes"></i>
+                <span class="fab-label">Chat</span>
+            </button>
+            <button class="fab-item whatsapp-btn" onclick="window.open('https://wa.me/919198923230', '_blank')"
+                title="WhatsApp Support">
+                <i class="ion-social-whatsapp"></i>
+                <span class="fab-label">WhatsApp</span>
+            </button>
+            <button class="fab-item call-btn" onclick="window.location.href='tel:+919198923230'" title="Call Support">
+                <i class="ion-ios-telephone"></i>
+                <span class="fab-label">Call</span>
+            </button>
+        </div>
+        <button class="fab-main" id="fabMainBtn" aria-label="Support Menu">
+            <i class="ion-ios-help-buoy" id="mainIcon"></i>
+            <i class="ion-android-close" id="closeIcon" style="display: none;"></i>
         </button>
     </div>
+
+    <!-- Scroll Top Button -->
+    <button class="floating-btn scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top"
+        aria-label="Scroll to top" id="scrollTopBtn">
+        <i class="ion-ios-arrow-up"></i>
+    </button>
 
     <!-- Mobile Bottom Navigation Bar -->
     <nav class="mobile-bottom-nav">
@@ -2248,11 +2225,14 @@
             <span data-translate="products">Products</span>
         </a>
         <a href="javascript:void(0)" class="nav-link" onclick="openCart()">
-            <i class="ion-ios-cart-outline"></i>
+            <div class="cart-icon-wrapper">
+                <i class="ion-ios-cart-outline"></i>
+                <span class="cart-count cart-badge" id="mobileCartCount">0</span>
+            </div>
             <span data-translate="cart">Cart</span>
-            <span class="cart-count cart-badge" id="mobileCartCount">0</span>
         </a>
-        <a href="javascript:void(0)" class="nav-link" id="mobileBottomProfile" onclick="openProfileModal()">
+        <a href="javascript:void(0)" class="nav-link" id="mobileNavProfileBtn"
+            onclick="handleProfileClick(); return false;">
             <div class="user-avatar-premium" id="mobileNavAvatar">
                 <span class="avatar-initials"><i class="ion-ios-person"></i></span>
                 <img src="" alt=""

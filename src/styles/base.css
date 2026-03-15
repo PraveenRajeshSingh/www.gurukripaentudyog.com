@@ -32,6 +32,10 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+body.modal-open {
+    overflow: hidden !important;
+}
+
 /* ── Hindi Text ── */
 .text-hindi,
 [data-lang-text],

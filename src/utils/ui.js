@@ -50,6 +50,13 @@ var Modals = {
         if (modal) {
             modal.classList.add('active');
             document.body.classList.add('modal-open');
+
+            // Hide FAB and Scroll-Top button when modal is open
+            const fab = document.getElementById('supportFab');
+            const scrollTop = document.getElementById('scrollTopBtn');
+            if (fab) fab.style.display = 'none';
+            if (scrollTop) scrollTop.style.display = 'none';
+
             // Focus first input
             setTimeout(() => {
                 const firstInput = modal.querySelector('input');
@@ -61,9 +68,17 @@ var Modals = {
         const modal = document.getElementById(id);
         if (modal) {
             modal.classList.remove('active');
-            // Check if any other modal is open before removing class
+
+            // Re-show FAB and Scroll-Top button if no modals are left open
             const anyOpen = Array.from(document.querySelectorAll('.modal, [id$="Modal"]')).some(m => m.classList.contains('active'));
-            if (!anyOpen) document.body.classList.remove('modal-open');
+            if (!anyOpen) {
+                document.body.classList.remove('modal-open');
+                const fab = document.getElementById('supportFab');
+                const scrollTop = document.getElementById('scrollTopBtn');
+                if (fab) fab.style.display = 'flex';
+                // Note: scrollTop visibility is usually handled by scroll listeners, but we reset display
+                if (scrollTop) scrollTop.style.display = 'flex';
+            }
         }
     },
     closeAll() {

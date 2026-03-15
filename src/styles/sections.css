@@ -973,27 +973,155 @@ div[id] {
     }
 }
 
-@media (max-width: 600px) {
-    .quality-standards-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .quality-steps {
-        display: flex;
-        overflow-x: auto;
-        gap: 16px;
-        padding-bottom: 20px;
-        scrollbar-width: none;
-    }
-
-    .quality-steps::-webkit-scrollbar {
-        display: none;
-    }
-
-    .quality-step {
-        flex: 0 0 260px;
-    }
+/* Grade Cards */
+.grade-card {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: 28px 24px;
+    border: 1px solid var(--gray-200);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
+
+.grade-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.grade-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    width: fit-content;
+}
+
+.grade-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.grade-card h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text-title);
+    margin: 0;
+}
+
+.grade-description {
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.grade-description-hi {
+    font-size: 0.82rem;
+    color: var(--gray-500);
+    line-height: 1.6;
+    font-family: var(--font-hindi), var(--font-primary);
+    margin: 0;
+}
+
+.grade-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.grade-features li {
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-main);
+}
+
+.grade-features li i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Grade-specific colors */
+.grade-first {
+    border-top: 3px solid #22c55e;
+}
+
+.grade-first .grade-badge {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.grade-first .grade-icon {
+    color: #22c55e;
+}
+
+.grade-first .grade-features li i {
+    color: #22c55e;
+}
+
+.grade-second {
+    border-top: 3px solid #3b82f6;
+}
+
+.grade-second .grade-badge {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.grade-second .grade-icon {
+    color: #3b82f6;
+}
+
+.grade-second .grade-features li i {
+    color: #3b82f6;
+}
+
+.grade-third {
+    border-top: 3px solid #f59e0b;
+}
+
+.grade-third .grade-badge {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.grade-third .grade-icon {
+    color: #f59e0b;
+}
+
+.grade-third .grade-features li i {
+    color: #f59e0b;
+}
+
+.grade-fourth {
+    border-top: 3px solid #ef4444;
+}
+
+.grade-fourth .grade-badge {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.grade-fourth .grade-icon {
+    color: #ef4444;
+}
+
+.grade-fourth .grade-features li i {
+    color: #ef4444;
+}
+
 
 /* Quality Steps */
 .quality-standards {
@@ -1012,6 +1140,17 @@ div[id] {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 28px;
+}
+
+@media (max-width: 600px) {
+    .quality-standards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quality-steps {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
 }
 
 .quality-step {

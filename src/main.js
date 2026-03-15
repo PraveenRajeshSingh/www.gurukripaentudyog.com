@@ -49,6 +49,9 @@ const App = {
             // Initialize Chatbot Toggle
             App.initChatbot();
 
+            // Initialize FAB Menu
+            App.initFabMenu();
+
             console.log('✅ Gurukripa Bricks Ready.');
         } catch (error) {
             console.error('💥 Critical initialization error:', error);
@@ -680,6 +683,37 @@ const App = {
         }
     },
 
+    // ═══════ FAB MENU INIT ═══════
+    initFabMenu: () => {
+        const fabMain = document.getElementById('fabMainBtn');
+        const fabWrapper = document.getElementById('supportFab');
+        const mainIcon = document.getElementById('mainIcon');
+        const closeIcon = document.getElementById('closeIcon');
+
+        if (!fabMain || !fabWrapper) return;
+
+        fabMain.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fabWrapper.classList.toggle('active');
+            if (fabWrapper.classList.contains('active')) {
+                if (mainIcon) mainIcon.style.display = 'none';
+                if (closeIcon) closeIcon.style.display = 'block';
+            } else {
+                if (mainIcon) mainIcon.style.display = 'block';
+                if (closeIcon) closeIcon.style.display = 'none';
+            }
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!fabWrapper.contains(e.target) && fabWrapper.classList.contains('active')) {
+                fabWrapper.classList.remove('active');
+                if (mainIcon) mainIcon.style.display = 'block';
+                if (closeIcon) closeIcon.style.display = 'none';
+            }
+        });
+    },
+
     chatbotResponse: (text) => {
         const input = text.toLowerCase();
 
@@ -710,7 +744,7 @@ const App = {
 };
 
 // Start the Application
-document.addEventListener('DOMContentLoaded', App.init);
+// document.addEventListener('DOMContentLoaded', App.init); // Removed duplicate call
 
 // Expose Globals for HTML event handlers
 window.App = App;
@@ -1065,6 +1099,23 @@ window.openEditProfileModal = () => {
         form.name.value = user.name || '';
         form.email.value = user.email || '';
         form.phone.value = user.phone || '';
+
+        // Handle Preview
+        const preview = document.getElementById('editProfilePreview');
+        const initials = document.getElementById('editProfileInitials');
+        if (user.profileImage) {
+            if (preview) {
+                preview.src = user.profileImage;
+                preview.style.display = 'block';
+            }
+            if (initials) initials.style.display = 'none';
+        } else {
+            if (preview) preview.style.display = 'none';
+            if (initials) {
+                initials.textContent = AuthService.getInitials(user.name);
+                initials.style.display = 'flex';
+            }
+        }
     }
     Modals.open('editProfileModal');
 };
@@ -1185,13 +1236,14 @@ function initMobileSwipeClose(modalId) {
     content.addEventListener('touchend', onTouchEnd);
 }
 
-// Global Exports
+// ═══════ CLOUD/GLOBAL EXPORTS ═══════
+// These are exposed to the global window object for HTML onclick handlers
+// NOTE: openProfileModal is already defined above at line ~1003 with full data-populating logic.
+// Do NOT redefine it here. Just alias what's needed.
 window.handleProfileClick = App.handleProfileClick;
 window.setLanguage = TranslationService.setLanguage;
 window.openCart = () => Modals.open('cartModal');
-window.openProfileModal = () => Modals.open('profileModal');
-// ═══════ CLOUD/GLOBAL EXPORTS ═══════
-// These are exposed to the global window object for HTML onclick handlers
+// openProfileModal: use the full data-populating version defined above
 window.openLoginModal = () => Modals.open('loginModal');
 window.openRegisterModal = () => Modals.open('registerModal');
 window.closeMobileMenu = () => App.toggleMobileMenu(false);
@@ -1207,78 +1259,20 @@ window.navigateTo = (page) => {
     }
 };
 
-window.handleProfileUpdate = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const updatedData = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone')
-    };
-
-    const user = AuthService.getUser();
-    const newUser = { ...user, ...updatedData };
-
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(newUser));
-    AuthService.updateUI(newUser);
-
-    Modals.close('editProfileModal');
-    showToast('✅ Profile updated successfully!');
-
-    // Re-open profile modal to see changes
-    setTimeout(() => Modals.open('profileModal'), 300);
-};
-
-window.openEditProfileModal = () => {
-    const user = AuthService.getUser();
-    if (!user) return;
-
-    const form = document.getElementById('editProfileForm');
-    if (form) {
-        form.querySelector('#editName').value = user.name || '';
-        form.querySelector('#editEmail').value = user.email || '';
-        form.querySelector('#editPhone').value = user.phone || '';
-    }
-
-    Modals.close('profileModal');
-    setTimeout(() => Modals.open('editProfileModal'), 100);
-};
+// NOTE: openEditProfileModal is already defined above at line ~1059. Not redefined here.
 
 window.logoutUser = () => {
     Modals.close('profileModal');
     AuthService.logout();
     if (App.updateMobileNavProfileState) App.updateMobileNavProfileState();
-    setTimeout(() => window.location.assign('/'), 500);
+    // Navigate to home instead of '/' which may 404 on GitHub Pages 
+    setTimeout(() => { window.location.hash = '#home'; window.scrollTo({ top: 0, behavior: 'smooth' }); }, 500);
 };
 
-window.handleProfileImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const imageUrl = e.target.result;
-            AuthService.updateProfileImage(imageUrl);
-            showToast('📸 Profile picture updated!');
-
-            // Sync all instances
-            const user = AuthService.getUser();
-            if (user) AuthService.syncAllAvatars(user);
-        };
-        reader.readAsDataURL(file);
-    }
-};
-
-window.switchProfileTab = (tabName) => {
-    // Update tabs active state
-    document.querySelectorAll('.profile-tab').forEach(el => {
-        el.classList.toggle('active', el.getAttribute('data-tab') === tabName);
-    });
-
-    // Update content panes
-    document.querySelectorAll('.profile-tab-pane').forEach(el => {
-        el.classList.toggle('active', el.id === `tab-${tabName}`);
-    });
-};
+// NOTE: handleProfileImageUpload and switchProfileTab are already defined above.
+// Not redefined here to avoid overwriting the data-aware versions.
 
 // Initialized by App.init
-App.init();
+document.addEventListener('DOMContentLoaded', () => {
+    App.init();
+});

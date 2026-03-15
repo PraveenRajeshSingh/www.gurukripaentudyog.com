@@ -208,6 +208,11 @@
     animation: scaleIn .5s cubic-bezier(.165, .84, .44, 1) forwards;
 }
 
+.animate-slide-down {
+    opacity: 0;
+    animation: slideDown .6s cubic-bezier(.165, .84, .44, 1) forwards;
+}
+
 /* Hover scale */
 .hover-scale {
     transition: transform .35s cubic-bezier(.165, .84, .44, 1);

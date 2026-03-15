@@ -2,126 +2,126 @@
  * Gurukripa Bricks - Utilities, Floating Actions & Misc (Overhauled)
  */
 
-/* ══════════════ FLOATING ACTION BUTTONS ══════════════ */
-.floating-container {
+/* ══════════════ MODERN FAB MENU (Floating Action Button) ══════════════ */
+.fab-wrapper {
     position: fixed;
-    bottom: 34px;
-    right: 28px;
+    bottom: 30px;
+    right: 25px;
+    z-index: var(--z-sticky);
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    z-index: var(--z-modal);
     align-items: flex-end;
+    gap: 15px;
 }
 
-.floating-btn {
-    width: 54px;
-    height: 54px;
+@media (max-width: 768px) {
+    .fab-wrapper {
+        bottom: 90px;
+        right: 15px;
+    }
+}
+
+.fab-main {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    box-shadow: 0 8px 32px rgba(139, 0, 0, 0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2;
+}
+
+.fab-main:hover {
+    transform: scale(1.1) rotate(5deg);
+    background: var(--primary-dark);
+}
+
+.fab-wrapper.active .fab-main {
+    transform: rotate(90deg);
+    background: var(--gray-800);
+}
+
+.fab-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.8);
+    transition: all 0.35s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    pointer-events: none;
+}
+
+.fab-wrapper.active .fab-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+.fab-item {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     cursor: pointer;
-    box-shadow: var(--shadow-md);
-    transition: var(--transition-spring);
+    color: var(--white);
     font-size: 1.4rem;
-    color: var(--white);
+    box-shadow: var(--shadow-md);
     position: relative;
-    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.floating-btn::before {
-    content: '';
+.fab-item:hover {
+    transform: scale(1.15) translateX(-5px);
+}
+
+.fab-label {
     position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, .18);
-    transform: scale(0);
-    border-radius: 50%;
-    transition: transform .4s ease;
-}
-
-.floating-btn:hover::before {
-    transform: scale(1);
-}
-
-.floating-btn:hover {
-    transform: scale(1.13) translateY(-3px);
-    box-shadow: var(--shadow-lg);
-}
-
-.chatbot-btn {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    box-shadow: var(--shadow-primary-sm);
-}
-
-.whatsapp-btn {
-    background: linear-gradient(135deg, #25d366, #1ebe5d);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, .4);
-}
-
-.call-btn {
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, .4);
-}
-
-/* Tooltip labels refined */
-.floating-btn[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    right: 70px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(10, 5, 5, 0.9);
-    backdrop-filter: blur(4px);
-    color: var(--white);
+    right: 65px;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--text-title);
     padding: 6px 14px;
-    border-radius: 10px;
-    font-size: 0.8rem;
-    font-weight: 700;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 800;
     white-space: nowrap;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    z-index: 10;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
     pointer-events: none;
-    animation: tooltipFadeIn 0.3s ease;
 }
 
-@keyframes tooltipFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-50%) translateX(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(-50%) translateX(0);
-    }
+.fab-item:hover .fab-label {
+    opacity: 1;
+    transform: translateX(0);
 }
 
-.floating-btn:active {
-    transform: scale(0.9) !important;
+/* Staggered animation for menu items */
+.fab-wrapper.active .fab-item:nth-child(1) {
+    transition-delay: 0.05s;
 }
 
-/* ══════════════ FLOATING ACTIONS ══════════════ */
-@media (max-width: 768px) {
-    .floating-container {
-        bottom: 80px;
-        right: 18px;
-    }
-
-    .floating-btn {
-        width: 48px;
-        height: 48px;
-        font-size: 1.2rem;
-    }
-
-    /* Hide Call & WhatsApp floating buttons on mobile —
-       they are already in the bottom nav bar */
-    .floating-container .call-btn,
-    .floating-container .whatsapp-btn {
-        display: none;
-    }
+.fab-wrapper.active .fab-item:nth-child(2) {
+    transition-delay: 0.1s;
 }
+
+.fab-wrapper.active .fab-item:nth-child(3) {
+    transition-delay: 0.15s;
+}
+
 
 /* ══════════════ SEARCH & FILTER ══════════════ */
 .search-filter-section {
@@ -285,14 +285,33 @@
 
 /* ══════════════ SCROLL TO TOP ══════════════ */
 .scroll-top-btn {
+    position: fixed;
+    bottom: 110px;
+    right: 25px;
+    z-index: var(--z-sticky);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
     background: var(--primary);
     color: var(--white);
-    transition: var(--transition-bounce);
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     opacity: 0;
     visibility: hidden;
-    display: none;
-    order: -1;
-    /* Keep it at the top of the stack if needed */
+}
+
+@media (max-width: 768px) {
+    .scroll-top-btn {
+        bottom: 160px;
+        right: 15px;
+        width: 44px;
+        height: 44px;
+    }
 }
 
 .scroll-top-btn.visible {

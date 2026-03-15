@@ -122,79 +122,216 @@ var AuthService = {
 
         container.innerHTML = `
             <div class="dashboard-modern">
-                <header class="dashboard-header">
+                <!-- 1. Welcome Section -->
+                <header class="dashboard-header animate-slide-down">
                     <div class="dash-welcome">
-                        <h2>${isHindi ? 'नमस्ते' : 'Hello'}, ${user.name.split(' ')[0]}! 👋</h2>
-                        <p>${isHindi ? 'अपने अकाउंट और ऑर्डर ट्रैक करें' : 'Welcome to your premium dashboard.'}</p>
+                        <h2>${isHindi ? `नमस्ते, ${user.name}! 👋` : `Welcome, ${user.name}! 👋`}</h2>
+                        <p>${isHindi ? 'अपने अकाउंट और ऑर्डर ट्रैक करें' : 'Manage your account and track your orders in real-time.'}</p>
                     </div>
                     <div class="dash-actions">
-                         <button class="btn btn-primary btn-sm" onclick="Modals.open('profileModal')"><i class="ion-ios-person"></i> Quick Menu</button>
+                         <button class="btn-dash btn-dash-primary" onclick="navigateTo('home')">
+                            <i class="ion-ios-home-outline"></i> ${isHindi ? 'होम पर जाएं' : 'Go Home'}
+                         </button>
+                         <button class="btn-dash btn-dash-outline" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                            <i class="ion-ios-refresh"></i> ${isHindi ? 'रिफ्रेश करें' : 'Refresh'}
+                         </button>
                     </div>
                 </header>
 
                 <div class="dashboard-grid">
-                    <div class="dash-card profile-summary-card">
-                        <div class="user-avatar-premium">
-                            ${user.profileImage ? `<img src="${user.profileImage}" alt="${user.name}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : AuthService.getInitials(user.name)}
+                    <!-- 2. Profile Summary Card -->
+                    <aside class="dash-card profile-summary-card animate-fade-in">
+                        <div class="user-avatar-premium" id="dashAvatarLarge">
+                            ${user.profileImage ? `<img src="${user.profileImage}" alt="${user.name}">` : `<span>${AuthService.getInitials(user.name)}</span>`}
                         </div>
                         <div class="profile-info">
                             <h3>${user.name}</h3>
                             <p>${user.email}</p>
+                            
+                            <div class="membership-status">
+                                <i class="ion-ios-ribbon"></i>
+                                <span>${isHindi ? 'गोल्ड मेंबर' : 'Gold Member'}</span>
+                            </div>
+
                             <div class="dash-profile-badges">
-                                <span class="user-badge">${user.role || 'Premium Customer'}</span>
-                                <button class="btn-dash-edit" onclick="openEditProfileModal()"><i class="ion-ios-compose-outline"></i> Edit Account</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dash-stats-grid">
-                        <div class="stat-card">
-                            <i class="ion-ios-list-outline"></i>
-                            <div class="stat-body">
-                                <span class="stat-num">3</span>
-                                <span class="stat-label">Orders</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <i class="ion-ios-cart-outline"></i>
-                            <div class="stat-body">
-                                <span class="stat-num">₹12k</span>
-                                <span class="stat-label">Total Spent</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <i class="ion-ios-ribbon-outline"></i>
-                            <div class="stat-body">
-                                <span class="stat-num">Gold</span>
-                                <span class="stat-label">Member</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dash-card recent-activity">
-                        <div class="card-header">
-                            <h3>Recent Orders</h3>
-                            <a href="javascript:void(0)" class="view-all">View All</a>
-                        </div>
-                        <div class="activity-list">
-                            <div class="activity-item">
-                                <div class="item-icon success"><i class="ion-ios-checkmark-empty"></i></div>
-                                <div class="item-info">
-                                    <span class="item-title">Order #GB-2041 Delivered</span>
-                                    <span class="item-date">May 12, 2026</span>
+                                <span class="user-badge">${user.role || (isHindi ? 'प्रीमियम ग्राहक' : 'Premium Customer')}</span>
+                                
+                                <div class="dash-profile-actions">
+                                    <button class="btn-dash btn-dash-primary" onclick="openEditProfileModal()">
+                                        <i class="ion-ios-compose-outline"></i> ${isHindi ? 'प्रोफ़ाइल बदलें' : 'Edit Profile'}
+                                    </button>
+                                    <button class="btn-dash btn-dash-outline" onclick="showToast('📍 Address manager coming soon!')">
+                                        <i class="ion-ios-location-outline"></i> ${isHindi ? 'पता बदलें' : 'Manage Address'}
+                                    </button>
+                                    <button class="btn-dash btn-dash-outline" onclick="logoutUser()" style="color: var(--error); border-color: rgba(239, 68, 68, 0.2);">
+                                        <i class="ion-log-out"></i> ${isHindi ? 'लॉगआउट' : 'Logout'}
+                                    </button>
                                 </div>
-                                <span class="item-amount">₹4,500</span>
-                            </div>
-                            <div class="activity-item">
-                                <div class="item-icon pending"><i class="ion-ios-timer-outline"></i></div>
-                                <div class="item-info">
-                                    <span class="item-title">Order #GB-1982 Processing</span>
-                                    <span class="item-date">Apr 28, 2026</span>
-                                </div>
-                                <span class="item-amount">₹8,200</span>
                             </div>
                         </div>
-                    </div>
+                    </aside>
+
+                    <main class="dashboard-main-content">
+                        <!-- 3. Quick Stats Cards -->
+                        <div class="dash-stats-grid">
+                            <div class="stat-card animate-scale-in" style="animation-delay: 0.1s">
+                                <i class="ion-ios-list-outline"></i>
+                                <div class="stat-body">
+                                    <span class="stat-num">3</span>
+                                    <span class="stat-label">${isHindi ? 'ऑर्डर' : 'Orders'}</span>
+                                </div>
+                            </div>
+                            <div class="stat-card animate-scale-in" style="animation-delay: 0.2s">
+                                <i class="ion-ios-cart-outline"></i>
+                                <div class="stat-body">
+                                    <span class="stat-num">₹12,000</span>
+                                    <span class="stat-label">${isHindi ? 'कुल खर्च' : 'Total Spent'}</span>
+                                </div>
+                            </div>
+                            <div class="stat-card animate-scale-in" style="animation-delay: 0.3s">
+                                <i class="ion-ios-star-outline"></i>
+                                <div class="stat-body">
+                                    <span class="stat-num">Gold</span>
+                                    <span class="stat-label">${isHindi ? 'मेंबरशिप' : 'Level'}</span>
+                                </div>
+                            </div>
+                            <div class="stat-card animate-scale-in" style="animation-delay: 0.4s">
+                                <i class="ion-ios-heart-outline"></i>
+                                <div class="stat-body">
+                                    <span class="stat-num">5</span>
+                                    <span class="stat-label">${isHindi ? 'विशलिस्ट' : 'Wishlist'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Quick Action Menu -->
+                        <div class="quick-menu-section animate-fade-in" style="animation-delay: 0.5s">
+                            <h3 class="section-title-dash"><i class="ion-ios-keypad-outline"></i> ${isHindi ? 'त्वरित लिंक' : 'Account Settings'}</h3>
+                            <div class="quick-actions-list">
+                                <a href="#orders" class="action-row-card" onclick="navigateTo('orders')">
+                                    <div class="action-row-left">
+                                        <i class="ion-ios-list-outline"></i>
+                                        <span>${isHindi ? 'मेरे ऑर्डर' : 'My Orders'}</span>
+                                    </div>
+                                    <i class="ion-ios-arrow-forward"></i>
+                                </a>
+                                <a href="javascript:void(0)" class="action-row-card" onclick="showToast('🔍 Tracking system loading...')">
+                                    <div class="action-row-left">
+                                        <i class="ion-ios-navigate-outline"></i>
+                                        <span>${isHindi ? 'ट्रैक ऑर्डर' : 'Track Order'}</span>
+                                    </div>
+                                    <i class="ion-ios-arrow-forward"></i>
+                                </a>
+                                <a href="javascript:void(0)" class="action-row-card" onclick="showToast('❤️ Wishlist coming soon!')">
+                                    <div class="action-row-left">
+                                        <i class="ion-ios-heart-outline"></i>
+                                        <span>${isHindi ? 'विशलिस्ट' : 'My Wishlist'}</span>
+                                    </div>
+                                    <i class="ion-ios-arrow-forward"></i>
+                                </a>
+                                <a href="javascript:void(0)" class="action-row-card" onclick="showToast('🏠 Address manager loading...')">
+                                    <div class="action-row-left">
+                                        <i class="ion-ios-home-outline"></i>
+                                        <span>${isHindi ? 'सेव किए गए पते' : 'Saved Addresses'}</span>
+                                    </div>
+                                    <i class="ion-ios-arrow-forward"></i>
+                                </a>
+                                <a href="javascript:void(0)" class="action-row-card" onclick="showToast('💳 Payments secure...')">
+                                    <div class="action-row-left">
+                                        <i class="ion-ios-card"></i>
+                                        <span>${isHindi ? 'पेमेंट तरीके' : 'Payment Methods'}</span>
+                                    </div>
+                                    <i class="ion-ios-arrow-forward"></i>
+                                </a>
+                                <a href="javascript:void(0)" class="action-row-card" onclick="showToast('🎧 Support team notified!')">
+                                    <div class="action-row-left">
+                                        <i class="ion-ios-help-buoy"></i>
+                                        <span>${isHindi ? 'मदद और सहायता' : 'Help & Support'}</span>
+                                    </div>
+                                    <i class="ion-ios-arrow-forward"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 5. Recent Orders Section -->
+                        <div class="recent-orders-section animate-fade-in" style="animation-delay: 0.6s">
+                            <h3 class="section-title-dash"><i class="ion-ios-box-outline"></i> ${isHindi ? 'हाल के ऑर्डर' : 'Recent Orders'}</h3>
+                            <div class="orders-list">
+                                <!-- Order Item 1 -->
+                                <div class="order-card">
+                                    <div class="order-header">
+                                        <span class="order-id">ID: #GB-2041</span>
+                                        <span class="order-status status-delivered">${isHindi ? 'डिलिवर हो गया' : 'Delivered'}</span>
+                                    </div>
+                                    <div class="order-body">
+                                        <div class="order-detail">
+                                            <span class="detail-label">${isHindi ? 'तारीख' : 'Order Date'}</span>
+                                            <span class="detail-value">May 12, 2026</span>
+                                        </div>
+                                        <div class="order-detail">
+                                            <span class="detail-label">${isHindi ? 'कुल राशि' : 'Total Amount'}</span>
+                                            <span class="detail-value">₹4,500</span>
+                                        </div>
+                                        <div class="order-detail">
+                                            <span class="detail-label">${isHindi ? 'आइटम' : 'Items'}</span>
+                                            <span class="detail-value">Red Bricks (500)</span>
+                                        </div>
+                                    </div>
+                                    <div class="order-footer">
+                                        <button class="btn-dash btn-dash-outline btn-sm">${isHindi ? 'विवरण' : 'Details'}</button>
+                                        <button class="btn-dash btn-dash-primary btn-sm">${isHindi ? 'फिर से ऑर्डर करें' : 'Reorder'}</button>
+                                    </div>
+                                </div>
+
+                                <!-- Order Item 2 (With Tracking UI) -->
+                                <div class="order-card">
+                                    <div class="order-header">
+                                        <span class="order-id">ID: #GB-1982</span>
+                                        <span class="order-status status-shipped">${isHindi ? 'भेजा गया' : 'Shipped'}</span>
+                                    </div>
+                                    <div class="order-body">
+                                        <div class="order-detail">
+                                            <span class="detail-label">${isHindi ? 'तारीख' : 'Order Date'}</span>
+                                            <span class="detail-value">Apr 28, 2026</span>
+                                        </div>
+                                        <div class="order-detail">
+                                            <span class="detail-label">${isHindi ? 'कुल राशि' : 'Total Amount'}</span>
+                                            <span class="detail-value">₹8,200</span>
+                                        </div>
+                                        
+                                        <!-- 6. Order Tracking UI -->
+                                        <div class="tracking-container">
+                                            <div class="tracking-steps">
+                                                <div class="step completed">
+                                                    <div class="step-icon"><i class="ion-ios-checkmark-empty"></i></div>
+                                                    <span class="step-label">${isHindi ? 'ऑर्डर किया' : 'Ordered'}</span>
+                                                </div>
+                                                <div class="step completed">
+                                                    <div class="step-icon"><i class="ion-ios-checkmark-empty"></i></div>
+                                                    <span class="step-label">${isHindi ? 'पैक किया' : 'Packed'}</span>
+                                                </div>
+                                                <div class="step active">
+                                                    <div class="step-icon"><i class="ion-ios-box"></i></div>
+                                                    <span class="step-label">${isHindi ? 'शिप किया गया' : 'Shipped'}</span>
+                                                </div>
+                                                <div class="step">
+                                                    <div class="step-icon">4</div>
+                                                    <span class="step-label">${isHindi ? 'डिलीवरी के लिए तैयार' : 'Out for Delivery'}</span>
+                                                </div>
+                                                <div class="step">
+                                                    <div class="step-icon">5</div>
+                                                    <span class="step-label">${isHindi ? 'डिलिवर हो गया' : 'Delivered'}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-footer">
+                                        <button class="btn-dash btn-dash-primary btn-sm">${isHindi ? 'ट्रैक करें' : 'Track Order'}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
                 </div>
             </div>
         `;

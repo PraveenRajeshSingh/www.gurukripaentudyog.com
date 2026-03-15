@@ -127,25 +127,34 @@ var CartService = {
         const isHindi = TranslationService.getLanguage() === 'hi';
         cartItems.innerHTML = cart.map(item => `
             <div class="cart-item">
-                <div class="cart-item-img-wrapper">
-                    <img src="${item.image}" alt="${isHindi ? item.nameHi : item.name}" />
-                </div>
-                <div class="cart-item-info">
-                    <h4>${isHindi ? item.nameHi : item.name}</h4>
-                    <span class="cart-item-price">₹${item.price.toFixed(2)}</span>
-                </div>
-                <div class="cart-item-right">
-                    <button class="btn-remove" onclick="removeFromCart(${item.id})" title="Remove">
-                        <i class="ion-ios-trash-outline"></i>
-                    </button>
-                    <div class="cart-item-controls">
-                        <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">
-                            <i class="ion-ios-minus-empty"></i>
-                        </button>
-                        <span>${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">
-                            <i class="ion-ios-plus-empty"></i>
-                        </button>
+                <div class="cart-item-main">
+                    <div class="cart-item-img">
+                        <img src="${item.image}" alt="${isHindi ? item.nameHi : item.name}" />
+                    </div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-header">
+                            <h4>${isHindi ? item.nameHi : item.name}</h4>
+                            <button class="btn-remove-lite" onclick="removeFromCart(${item.id})" title="Remove">
+                                <i class="ion-ios-close-empty"></i>
+                            </button>
+                        </div>
+                        <div class="cart-item-meta">
+                            <span class="cart-item-price">₹${item.price.toLocaleString()}</span>
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="cart-qty-selector">
+                                <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">
+                                    <i class="ion-ios-minus-empty"></i>
+                                </button>
+                                <span class="qty-value">${item.quantity}</span>
+                                <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">
+                                    <i class="ion-ios-plus-empty"></i>
+                                </button>
+                            </div>
+                            <div class="cart-item-subtotal">
+                                <span>₹${(item.price * item.quantity).toLocaleString()}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
