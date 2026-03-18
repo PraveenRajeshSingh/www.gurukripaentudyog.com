@@ -6002,10 +6002,7 @@ body.lang-hi .nav-link {
 .glass-glow::after {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    inset: 0;
     background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -6477,6 +6474,20 @@ body.lang-hi .nav-link {
 .fab-main:hover {
     transform: scale(1.1) rotate(5deg);
     background: var(--primary-dark);
+}
+
+.fab-main #mainIcon { display: flex; }
+.fab-main #closeIcon { display: none; }
+
+.fab-wrapper.active .fab-main #mainIcon { display: none; }
+.fab-wrapper.active .fab-main #closeIcon { 
+    display: flex;
+    animation: rotateIn 0.3s ease-out;
+}
+
+@keyframes rotateIn {
+    from { transform: rotate(-90deg); opacity: 0; }
+    to { transform: rotate(0); opacity: 1; }
 }
 
 .fab-wrapper.active .fab-main {

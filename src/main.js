@@ -266,11 +266,7 @@ const App = {
         if (!mainBtn || !wrapper) return;
         mainBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const isActive = wrapper.classList.toggle('active');
-            const mainIcon = document.getElementById('mainIcon');
-            const closeIcon = document.getElementById('closeIcon');
-            if (mainIcon) mainIcon.style.display = isActive ? 'none' : 'block';
-            if (closeIcon) closeIcon.style.display = isActive ? 'block' : 'none';
+            wrapper.classList.toggle('active');
         });
         document.addEventListener('click', (e) => { if (!wrapper.contains(e.target)) wrapper.classList.remove('active'); });
     },
