@@ -6449,7 +6449,7 @@ body.lang-hi .nav-link {
 
 @media (max-width: 768px) {
     .fab-wrapper {
-        bottom: 90px;
+        bottom: 25px;
         right: 15px;
     }
 }
@@ -6755,7 +6755,7 @@ body.lang-hi .nav-link {
 
 @media (max-width: 768px) {
     .scroll-top-btn {
-        bottom: 90px;
+        bottom: 25px;
         right: 80px;
         width: 44px;
         height: 44px;
