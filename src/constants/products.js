@@ -17,6 +17,7 @@ var PRODUCTS = [
         tagClass: 'tag-best-seller',
         inStock: true,
         isNew: true,
+        isHot: true,
         specs: { size: '9" x 4.5" x 3"', strength: '1500+ PSI', water: '<12%' }
     },
     {

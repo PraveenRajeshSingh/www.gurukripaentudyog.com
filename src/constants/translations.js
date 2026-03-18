@@ -49,7 +49,7 @@ var TRANSLATIONS = {
 
         // Ordering & Checkout
         orderNow: "Order Today",
-        cart: "Shopping Cart",
+        cart: "Cart",
         checkout: "Secure Checkout",
         quantity: "Qty",
         total: "Grand Total",

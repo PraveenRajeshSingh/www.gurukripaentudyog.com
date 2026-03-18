@@ -194,6 +194,23 @@
     </div>
     
     <script>
+        // SPA redirect hack for static hosting (GitHub Pages)
+        (function() {
+            var path = window.location.pathname;
+            var search = window.location.search;
+            var hash = window.location.hash;
+            
+            // If the path is not root, store it and redirect
+            if (path && path !== '/www.gurukripaentudyog.com/' && path !== '/www.gurukripaentudyog.com/index.html') {
+                localStorage.setItem('spa_redirect', JSON.stringify({
+                    path: path,
+                    search: search,
+                    hash: hash
+                }));
+                window.location.href = '/www.gurukripaentudyog.com/';
+            }
+        })();
+        
         // Track 404 errors for analytics
         if ('gtag' in window) {
             gtag('event', '404_error', {

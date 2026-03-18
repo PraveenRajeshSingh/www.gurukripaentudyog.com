@@ -131,33 +131,18 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Main Stylesheet - Standardized Modular Architecture -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-    <link rel="stylesheet" href="src/styles/variables.css">
+    <!-- Combined Premium Styles -->
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="src/assets/vendors/css/ionicons.min.css">
+    
+    <!-- Animate On Scroll -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    
+    <!-- Toastify for advanced notifications (fallback to custom UI) -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
     <!-- Critical Path: Preload Hero Image -->
     <link rel="preload" as="image" href="src/assets/images/redbrick1.jpg">
-
-    <link rel="stylesheet" href="src/styles/base.css">
-    <link rel="stylesheet" href="src/styles/layout.css">
-    <link rel="stylesheet" href="src/styles/components.css">
-    <link rel="stylesheet" href="src/styles/cards.css">
-    <link rel="stylesheet" href="src/styles/navigation.css">
-    <link rel="stylesheet" href="src/styles/animations.css">
-    <link rel="stylesheet" href="src/styles/chatbot.css">
-    <link rel="stylesheet" href="src/styles/utilities.css">
-    <link rel="stylesheet" href="src/styles/sections.css">
-    <link rel="stylesheet" href="src/styles/dashboard.css">
-    <link rel="stylesheet" href="src/styles/responsive.css">
-
-    <!-- Vendor Styles -->
-    <link rel="stylesheet" href="src/assets/vendors/css/normalize.css">
-    <link rel="stylesheet" href="src/assets/vendors/css/ionicons.min.css">
-    <noscript>
-        <link rel="stylesheet" href="src/styles/main.min.css">
-        <link rel="stylesheet" href="src/assets/vendors/css/normalize.css">
-        <link rel="stylesheet" href="src/assets/vendors/css/grid.css">
-        <link rel="stylesheet" href="src/assets/vendors/css/ionicons.min.css">
-    </noscript>
 
     <!-- Performance: Defer non-critical CSS -->
     <style>
@@ -443,16 +428,65 @@
 
                     <!-- User menu (shown after login) -->
                     <div id="userMenu" class="user-menu" style="display: none;">
-                        <button class="user-menu-btn" id="userMenuBtn" onclick="openProfileModal()"
-                            aria-label="Open profile menu" title="View Profile">
-                            <div class="user-avatar user-avatar-premium" id="navAvatar">
-                                <span><i class="ion-ios-person"></i></span>
-                                <img src="" alt=""
-                                    style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                        <div class="user-menu-wrapper">
+                            <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserDropdown(event)"
+                                aria-label="Open profile menu" title="View Profile">
+                                <div class="user-avatar user-avatar-premium" id="navAvatar">
+                                    <span><i class="ion-ios-person"></i></span>
+                                    <img src="" alt=""
+                                        style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                                </div>
+                                <span id="userName" class="user-name-text">User</span>
+                                <i class="ion-ios-arrow-down dropdown-icon" aria-hidden="true"></i>
+                            </button>
+
+                            <!-- Modern Desktop Dropdown -->
+                            <div id="userDropdown" class="user-dropdown">
+                                <div class="dropdown-header">
+                                    <div class="dropdown-user-info">
+                                        <div class="user-avatar user-avatar-premium" id="dropdownAvatar">
+                                            <span><i class="ion-ios-person"></i></span>
+                                            <img src="" alt=""
+                                                style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                                        </div>
+                                        <div class="dropdown-text">
+                                            <p class="dropdown-name" id="dropdownUserName">Praveen Singh</p>
+                                            <p class="dropdown-email" id="dropdownUserEmail">praveen@example.com</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-body">
+                                    <a href="#dashboard" onclick="navigateTo('dashboard'); closeUserDropdown();"
+                                        class="dropdown-item">
+                                        <i class="ion-ios-speedometer-outline"></i>
+                                        <span data-translate="myDashboard">My Dashboard</span>
+                                    </a>
+                                    <a href="#orders" onclick="navigateTo('orders'); closeUserDropdown();"
+                                        class="dropdown-item">
+                                        <i class="ion-ios-list-outline"></i>
+                                        <span data-translate="myOrders">My Orders</span>
+                                    </a>
+                                    <a href="javascript:void(0)" onclick="openCart(); closeUserDropdown();"
+                                        class="dropdown-item">
+                                        <i class="ion-ios-cart-outline"></i>
+                                        <span data-translate="cart">Shopping Cart</span>
+                                    </a>
+                                    <a href="javascript:void(0)" onclick="openEditProfileModal(); closeUserDropdown();"
+                                        class="dropdown-item">
+                                        <i class="ion-ios-settings"></i>
+                                        <span data-translate="settings">Settings</span>
+                                    </a>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-footer">
+                                    <button class="dropdown-item logout-link" onclick="logoutUser()">
+                                        <i class="ion-log-out"></i>
+                                        <span data-translate="logout">Logout</span>
+                                    </button>
+                                </div>
                             </div>
-                            <span id="userName" class="user-name-text">User</span>
-                            <i class="ion-ios-arrow-down dropdown-icon" aria-hidden="true"></i>
-                        </button>
+                        </div>
                     </div>
 
                     <!-- Language toggle (Desktop only) -->
@@ -518,35 +552,7 @@
                         data-translate="register"><i class="ion-ios-person-add"></i> Register</button>
                 </li>
             </div>
-            <!-- Mobile User Profile Section (Simplified) -->
-            <li id="mobileUserMenu" style="display: none;" class="mobile-user-menu">
-                <div class="user-drawer-info" onclick="openProfileModal(); closeMobileMenu();">
-                    <div class="user-avatar-mobile user-avatar-premium">
-                        <span><i class="ion-ios-person"></i></span>
-                        <img src="" alt=""
-                            style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
-                    </div>
-                    <div class="user-details-mobile">
-                        <span id="mobileUserName" class="mobile-user-name">User Name</span>
-                        <span class="mobile-user-email"
-                            style="font-size: 0.75rem; opacity: 0.7; display: block;">user@example.com</span>
-                    </div>
-                    <i class="ion-ios-arrow-forward" style="margin-left: auto; opacity: 0.5;"></i>
-                </div>
-                <ul class="user-actions">
-                    <li><a href="#orders" onclick="closeMobileMenu(); navigateTo('orders')">
-                            <i class="ion-ios-list-outline"></i> <span data-translate="myOrders">My Orders</span>
-                        </a></li>
-                    <li><a href="#settings" onclick="closeMobileMenu(); navigateTo('settings')">
-                            <i class="ion-ios-settings"></i> <span data-translate="settings">Settings</span>
-                        </a></li>
-                    <li class="logout-divider"></li>
-                    <li><a href="#" onclick="logoutUser(); closeMobileMenu(); return false;" class="mobile-logout-link"
-                            data-translate="logout">
-                            <i class="ion-log-out"></i> Logout
-                        </a></li>
-                </ul>
-            </li>
+            <!-- Redundant profile removed from drawer to favor Bottom Nav / Dashboard -->
         </ul>
         <!-- Mobile Language Selector -->
         <div class="drawer-lang-selector">
@@ -673,41 +679,37 @@
                 </div>
             </div>
 
-            <!-- Filter Controls & View Toggle -->
-            <div class="products-filter-controls">
-                <div class="filter-tabs">
-                    <button class="filter-tab active" onclick="setCategory('all')">
-                        <span data-translate="allProducts">All Products</span>
-                    </button>
-                    <button class="filter-tab" onclick="setCategory('shiv-eent')">
-                        <span>Shiv Eent</span>
-                    </button>
-                    <button class="filter-tab" onclick="setCategory('premium')">
-                        <span data-translate="premium">Premium</span>
-                    </button>
-                    <button class="filter-tab" onclick="setCategory('standard')">
-                        <span data-translate="standard">Standard</span>
-                    </button>
-                    <button class="filter-tab" onclick="setCategory('machine-made')">
-                        <span data-translate="machineMade">Machine Made</span>
-                    </button>
-                </div>
-
-                <div class="view-sort-controls">
-                    <div class="view-toggle">
-                        <button class="view-btn active" data-view="grid" title="Grid View">
-                            <i class="ion-ios-grid"></i>
+            <!-- Filter Controls & View Toggle (Redesigned) -->
+            <div class="products-filter-controls-modern">
+                <div class="filter-scroll-wrapper">
+                    <div class="filter-tabs-modern">
+                        <button class="filter-tab-pill active" onclick="setCategory('all')">
+                            <i class="ion-ios-infinite"></i>
+                            <span data-translate="allProducts">All Products</span>
                         </button>
-                        <button class="view-btn" data-view="grid-2" title="Large Grid">
-                            <i class="ion-ios-browsers"></i>
+                        <button class="filter-tab-pill" onclick="setCategory('shiv-eent')">
+                            <i class="ion-ios-star"></i>
+                            <span>Shiv Eent</span>
                         </button>
-                        <button class="view-btn" data-view="list" title="List View">
+                        <button class="filter-tab-pill" onclick="setCategory('premium')">
+                            <i class="ion-ios-color-filter"></i>
+                            <span data-translate="premium">Premium</span>
+                        </button>
+                        <button class="filter-tab-pill" onclick="setCategory('standard')">
                             <i class="ion-ios-list"></i>
+                            <span data-translate="standard">Standard</span>
+                        </button>
+                        <button class="filter-tab-pill" onclick="setCategory('machine-made')">
+                            <i class="ion-settings"></i>
+                            <span data-translate="machineMade">Machine Made</span>
                         </button>
                     </div>
+                </div>
 
-                    <div class="sort-dropdown">
-                        <select id="productSort" class="sort-select" aria-label="Sort products">
+                <div class="filter-footer-controls">
+                    <div class="sort-wrapper-modern">
+                        <i class="ion-ios-shuffle"></i>
+                        <select id="productSort" class="sort-select-modern" aria-label="Sort products">
                             <option value="featured">Featured</option>
                             <option value="price-low">Price: Low to High</option>
                             <option value="price-high">Price: High to Low</option>
@@ -715,6 +717,15 @@
                             <option value="newest">Newest First</option>
                             <option value="name">Name A-Z</option>
                         </select>
+                    </div>
+
+                    <div class="view-toggle-modern">
+                        <button class="view-btn-icon active" data-view="grid" title="Compact Grid">
+                            <i class="ion-ios-grid-view"></i>
+                        </button>
+                        <button class="view-btn-icon" data-view="list" title="List View">
+                            <i class="ion-ios-list"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -727,19 +738,36 @@
                 </div>
             </div>
 
-            <!-- Trust Line & Call to Action -->
-            <div class="products-footer-modern text-center">
-                <div class="trust-line-modern">
-                    <div class="trust-line-text">
-                        <i class="ion-ios-ribbon"></i> Serving Jaunpur &amp; Varanasi for 25+ Years
+            <!-- Premium Bulk Inquiry Banner -->
+            <div class="products-footer-modern">
+                <div class="bulk-inquiry-banner animate-slide-up" data-aos="zoom-in">
+                    <div class="trust-line-modern">
+                        <div class="trust-line-text" data-translate="bulkInquiry">
+                            Looking for Bulk Supplies?
+                        </div>
+                        <p class="trust-line-sub">Get personalized quotations and prioritized delivery for large construction projects across Jaunpur & Varanasi.</p>
                     </div>
-                    <p class="trust-line-sub">High Quality Clay &bull; Durable &bull; Affordable &bull; Eco-Friendly</p>
-                </div>
 
-                <div class="view-all-container" style="margin-top: 40px;">
-                    <a href="tel:+919198923230" class="btn btn-primary" style="margin: 10px;">
-                        <i class="ion-ios-telephone"></i> Call for Bulk Inquiry
-                    </a>
+                    <div class="banner-stats">
+                        <div class="banner-stat-item">
+                            <i class="ion-ios-star-outline"></i>
+                            <span>Premium Quality</span>
+                        </div>
+                        <div class="banner-stat-item">
+                            <i class="ion-ios-speedometer-outline"></i>
+                            <span>Fast Delivery</span>
+                        </div>
+                        <div class="banner-stat-item">
+                            <i class="ion-ios-infinite-outline"></i>
+                            <span>Unlimited Stock</span>
+                        </div>
+                    </div>
+
+                    <div class="view-all-container">
+                        <a href="tel:+919198923230" class="btn btn-primary btn-pulse glass-glow">
+                            <i class="ion-ios-telephone"></i> <span data-translate="callForInquiry">Call for Bulk Inquiry</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1084,34 +1112,6 @@
         </div>
     </section>
 
-    <!-- Statistics -->
-    <section class="section section-stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-icon"><i class="ion-ios-calendar"></i></div>
-                    <div class="stat-number"><span class="counter" data-target="25">0</span>+</div>
-                    <div class="stat-label">Years Experience</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-icon"><i class="ion-ios-people"></i></div>
-                    <div class="stat-number"><span class="counter" data-target="23000">0</span>+</div>
-                    <div class="stat-label">Happy Customers</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-icon"><i class="ion-ios-home"></i></div>
-                    <div class="stat-number"><span class="counter" data-target="4">0</span>+</div>
-                    <div class="stat-label">Cities Served</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-icon"><i class="ion-ios-star"></i></div>
-                    <div class="stat-number"><span class="counter" data-target="100">0</span>%</div>
-                    <div class="stat-label">Quality</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
 
 
     <!-- Blog Section -->
@@ -1270,14 +1270,7 @@
         </div>
     </section>
 
-    <!-- Customer Dashboard Section -->
-    <section class="section section-dashboard" id="dashboard" style="display: none;">
-        <div class="container">
-            <div id="dashboardContent">
-                <!-- Dashboard content will be rendered here -->
-            </div>
-        </div>
-    </section>
+
 
     <!-- Contact Section -->
     <section class="section section-contact" id="contact">
@@ -1532,40 +1525,59 @@
     </footer>
 
 
-    <!-- Cart Modal (Redesigned) -->
-    <div class="modal" id="cartModal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h2>🛒 <span data-translate="cart">Your Shopping Cart</span></h2>
-                <button class="modal-close" onclick="Modals.close('cartModal')" aria-label="Close cart">&times;</button>
+    <!-- Cart Drawer (Zepto Style) -->
+    <div class="cart-drawer" id="cartModal">
+        <div class="cart-drawer-overlay" onclick="Modals.close('cartModal')"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <div class="cart-header-left">
+                    <h2>My Cart</h2>
+                    <span class="cart-count-summary"><span id="cartCount">0</span> items</span>
+                </div>
+                <button class="cart-close-btn" onclick="Modals.close('cartModal')" aria-label="Close cart">
+                    <i class="ion-ios-close-empty"></i>
+                </button>
             </div>
-            <div class="modal-body" style="padding: 0;">
-                <div id="cartItems" class="cart-items-container">
-                    <!-- Cart items rendered by cart.js -->
+
+            <div class="cart-drawer-body">
+                <div id="cartItems" class="cart-items-list-modern">
+                    <!-- Items rendered by CartService -->
                 </div>
 
-                <div class="cart-footer">
-                    <div class="cart-total-info">
-                        <div class="cart-total-row">
-                            <span class="cart-total-label">Subtotal</span>
-                            <span class="cart-total-value" style="font-size: 1.2rem; opacity: 0.7;"
-                                id="cartSubtotal">₹0.00</span>
-                        </div>
-                        <div class="cart-total-row">
-                            <span class="cart-total-label" data-translate="total">Order Total</span>
-                            <span id="cartTotal" class="cart-total-value">₹0.00</span>
-                        </div>
+                <!-- Bill Details Section -->
+                <div class="bill-details-modern">
+                    <h3>Bill Details</h3>
+                    <div class="bill-row">
+                        <span>Item Total</span>
+                        <span id="cartSubtotal">₹0.00</span>
                     </div>
-
-                    <div class="cart-actions">
-                        <button class="btn btn-outline btn-full" onclick="Modals.close('cartModal')">Continue
-                            Shopping</button>
-                        <button class="btn btn-primary btn-full" onclick="proceedToCheckout()">
-                            <i class="ion-ios-checkmark-circle"></i> &nbsp;<span
-                                data-translate="checkout">Checkout</span>
-                        </button>
+                    <div class="bill-row">
+                        <span>Delivery Partner Fee</span>
+                        <span class="fee-free">FREE</span>
+                    </div>
+                    <div class="bill-row grand-total">
+                        <span>Grand Total</span>
+                        <span id="cartTotal">₹0.00</span>
                     </div>
                 </div>
+            </div>
+
+            <div class="cart-drawer-footer">
+                <div class="checkout-hint">
+                    <i class="ion-ios-information-outline"></i>
+                    <span>Review your items before proceeding to payment</span>
+                </div>
+                <button class="btn-proceed-checkout" onclick="proceedToCheckout()">
+                    <div class="checkout-btn-content">
+                        <div class="total-summary">
+                            <span id="checkoutTotalRow">₹0.00</span>
+                            <span class="total-label">TOTAL</span>
+                        </div>
+                        <div class="btn-main-label">
+                            Proceed to Checkout <i class="ion-ios-arrow-forward"></i>
+                        </div>
+                    </div>
+                </button>
             </div>
         </div>
     </div>
@@ -1955,10 +1967,10 @@
                         <span id="profileModalInitial">U</span>
                         <img id="profileModalImg" src="" alt="Profile" style="display: none;">
                     </div>
-                    <button class="avatar-edit-badge" onclick="document.getElementById('profileImageInput').click()">
+                    <button class="avatar-edit-badge" onclick="document.getElementById('profileModalImageInput').click()">
                         <i class="ion-ios-camera"></i>
                     </button>
-                    <input type="file" id="profileImageInput" accept="image/*" style="display: none;"
+                    <input type="file" id="profileModalImageInput" accept="image/*" style="display: none;"
                         onchange="handleProfileImageUpload(event)">
                 </div>
                 <h3 id="profileModalName" class="profile-user-name">User Name</h3>
@@ -2050,19 +2062,18 @@
             </div>
             <form id="editProfileForm" onsubmit="handleProfileUpdate(event)">
                 <div class="form-group-grid">
-                    <div class="form-group profile-image-edit-group"
-                        style="grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; padding: 15px; background: var(--gray-50); border-radius: var(--radius-lg); margin-bottom: 20px;">
+                    <div class="form-group profile-image-edit-group">
                         <div class="user-avatar-premium" style="width: 80px; height: 80px; font-size: 1.5rem;">
                             <img id="editProfilePreview" src="" alt="" style="display: none;">
                             <span id="editProfileInitials">U</span>
                         </div>
                         <div>
-                            <label style="margin-bottom: 8px; display: block;">Profile Picture</label>
-                            <input type="file" id="profileImageInput" accept="image/*" hidden
+                            <label data-translate="profile_picture">Profile Picture</label>
+                            <input type="file" id="editModalImageInput" accept="image/*" hidden
                                 onchange="handleProfileImageUpload(event)">
                             <button type="button" class="btn btn-primary btn-sm"
-                                onclick="document.getElementById('profileImageInput').click()">
-                                <i class="ion-ios-camera-outline"></i> Change Photo
+                                onclick="document.getElementById('editModalImageInput').click()">
+                                <i class="ion-ios-camera-outline"></i> <span data-translate="change_photo">Change Photo</span>
                             </button>
                         </div>
                     </div>
@@ -2170,22 +2181,63 @@
     <!-- Vendor Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
-    <script src="src/assets/vendors/js/jquery.waypoints.min.js" defer></script>
-
+    <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
+ 
     <!-- Project Services -->
     <script src="src/constants/config.js" defer></script>
     <script src="src/constants/translations.js" defer></script>
     <script src="src/constants/products.js" defer></script>
     <script src="src/utils/ui.js" defer></script>
-    <script src="src/services/translationService.js" defer></script>
-    <script src="src/services/authService.js" defer></script>
-    <script src="src/services/cartService.js" defer></script>
-    <script src="src/services/productService.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
-    <script src="src/services/chatbot.js" defer></script>
+    <script src="src/utils/authService.js" defer></script>
+    <script src="src/utils/cartService.js" defer></script>
+    <script src="src/utils/productService.js" defer></script>
+    <script src="src/utils/translationService.js" defer></script>
+    <script src="src/utils/calculator.js" defer></script>
+    <script src="src/utils/chatbot.js" defer></script>
     <script src="src/main.js" defer></script>
+ 
+    <!-- Init -->
+    <script>
+        window.addEventListener('load', () => {
+            if (window.App) App.init();
+        });
+    </script>
 
     <!-- Modern Floating Support FAB -->
+    <div class="chatbot-overlay" id="chatbotOverlay"></div>
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <div class="chatbot-header-info">
+                <div class="chatbot-avatar">
+                    <i class="ion-ios-person"></i>
+                    <div class="chatbot-status"></div>
+                </div>
+                <div>
+                    <h4>Gurukripa AI Assistant</h4>
+                    <p>Online | Replying instantly</p>
+                </div>
+            </div>
+            <button class="chatbot-close" id="chatbotClose" aria-label="Close chat">
+                <i class="ion-ios-close-empty"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chatbot-message bot-message">
+                <p>Namaste! 🙏 How can I help you today?</p>
+            </div>
+        </div>
+        <div class="chatbot-suggestions">
+            <button onclick="document.getElementById('chatbotInput').value='Brick Prices'; handleChatMessage();">Price List</button>
+            <button onclick="document.getElementById('chatbotInput').value='Delivery Area'; handleChatMessage();">Delivery Area</button>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatbotInput" placeholder="Type a message..." autocomplete="off">
+            <button id="chatbotSend" class="chatbot-send">
+                <i class="ion-ios-paperplane"></i>
+            </button>
+        </div>
+    </div>
     <div class="fab-wrapper" id="supportFab">
         <div class="fab-menu" id="fabMenu">
             <button class="fab-item chatbot-btn" id="chatbotToggle" title="Live Chat">
@@ -2242,18 +2294,14 @@
         </a>
     </nav>
     <script>
-        setTimeout(function () {
-            var loaders = document.querySelectorAll('#pageLoader, #page-loader, .page-loader');
-            loaders.forEach(function (loader) {
-                if (loader && loader.style.display !== 'none') {
-                    loader.style.opacity = '0';
-                    setTimeout(function () {
-                        loader.style.display = 'none';
-                        document.body.classList.remove('loading');
-                    }, 600);
-                }
-            });
-        }, 5000);
+        // Emergency loader cleanup if needed
+        setTimeout(() => {
+            var loader = document.getElementById('pageLoader');
+            if (loader && loader.style.display !== 'none') {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; }, 600);
+            }
+        }, 3000);
     </script>
 </body>
 
