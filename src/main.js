@@ -297,6 +297,15 @@ const App = {
             if (span) { span.innerHTML = '<i class="ion-ios-person"></i>'; span.style.display = 'flex'; }
             if (img) img.style.display = 'none';
         }
+    },
+
+    toggleTheme: () => {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        App.updateThemeUI(next);
+        showToast(next === 'dark' ? '🌙 Dark mode enabled' : '☀️ Light mode enabled', 2500);
     }
 };
 
@@ -483,3 +492,65 @@ window.submitOrder = (e) => {
         navigateTo('home');
     }, 1500);
 };
+
+// ── Backward Compatibility Aliases ──
+window.closeRegisterModal = () => Modals.close('registerModal');
+window.openCart = () => Modals.open('cartModal');
+
+// ── Counter Animation (for city sections) ──
+function animateCounter(el) {
+    const target = parseInt(el.dataset.target, 10);
+    if (!target || isNaN(target)) return;
+    
+    const duration = 2000;
+    const step = Math.ceil(target / (duration / 16));
+    let current = 0;
+    
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        el.textContent = current.toLocaleString('en-IN');
+    }, 16);
+}
+
+// Trigger counters when visible
+(function initCounters() {
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counters = entry.target.querySelectorAll('.counter[data-target]');
+                counters.forEach(animateCounter);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.section-cities, .cities-grid').forEach(el => {
+            counterObserver.observe(el);
+        });
+        document.querySelectorAll('.city-card').forEach(el => {
+            counterObserver.observe(el);
+        });
+    });
+})();
+
+// ── Improved FAQ Toggle (CSS max-height approach) ──
+window.toggleFaq = (btn) => {
+    const item = btn.closest('.faq-item') || btn.parentElement;
+    const isActive = item.classList.contains('active');
+    
+    // Close all
+    document.querySelectorAll('.faq-item.active').forEach(i => {
+        i.classList.remove('active');
+    });
+    
+    // Toggle clicked
+    if (!isActive) {
+        item.classList.add('active');
+    }
+};
+

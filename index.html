@@ -134,10 +134,10 @@
     <!-- Combined Premium Styles -->
     <link rel="stylesheet" href="src/styles/main.css">
     <link rel="stylesheet" href="src/assets/vendors/css/ionicons.min.css">
-    
+
     <!-- Animate On Scroll -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
-    
+
     <!-- Toastify for advanced notifications (fallback to custom UI) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
@@ -745,7 +745,8 @@
                         <div class="trust-line-text" data-translate="bulkInquiry">
                             Looking for Bulk Supplies?
                         </div>
-                        <p class="trust-line-sub">Get personalized quotations and prioritized delivery for large construction projects across Jaunpur & Varanasi.</p>
+                        <p class="trust-line-sub">Get personalized quotations and prioritized delivery for large
+                            construction projects across Jaunpur & Varanasi.</p>
                     </div>
 
                     <div class="banner-stats">
@@ -765,7 +766,8 @@
 
                     <div class="view-all-container">
                         <a href="tel:+919198923230" class="btn btn-primary btn-pulse glass-glow">
-                            <i class="ion-ios-telephone"></i> <span data-translate="callForInquiry">Call for Bulk Inquiry</span>
+                            <i class="ion-ios-telephone"></i> <span data-translate="callForInquiry">Call for Bulk
+                                Inquiry</span>
                         </a>
                     </div>
                 </div>
@@ -1967,7 +1969,8 @@
                         <span id="profileModalInitial">U</span>
                         <img id="profileModalImg" src="" alt="Profile" style="display: none;">
                     </div>
-                    <button class="avatar-edit-badge" onclick="document.getElementById('profileModalImageInput').click()">
+                    <button class="avatar-edit-badge"
+                        onclick="document.getElementById('profileModalImageInput').click()">
                         <i class="ion-ios-camera"></i>
                     </button>
                     <input type="file" id="profileModalImageInput" accept="image/*" style="display: none;"
@@ -2073,7 +2076,8 @@
                                 onchange="handleProfileImageUpload(event)">
                             <button type="button" class="btn btn-primary btn-sm"
                                 onclick="document.getElementById('editModalImageInput').click()">
-                                <i class="ion-ios-camera-outline"></i> <span data-translate="change_photo">Change Photo</span>
+                                <i class="ion-ios-camera-outline"></i> <span data-translate="change_photo">Change
+                                    Photo</span>
                             </button>
                         </div>
                     </div>
@@ -2183,7 +2187,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
- 
+
     <!-- Project Services -->
     <script src="src/constants/config.js" defer></script>
     <script src="src/constants/translations.js" defer></script>
@@ -2196,7 +2200,7 @@
     <script src="src/utils/calculator.js" defer></script>
     <script src="src/utils/chatbot.js" defer></script>
     <script src="src/main.js" defer></script>
- 
+
     <!-- Init -->
     <script>
         window.addEventListener('load', () => {
@@ -2210,11 +2214,10 @@
         <div class="chatbot-header">
             <div class="chatbot-header-info">
                 <div class="chatbot-avatar">
-                    <i class="ion-ios-person"></i>
-                    <div class="chatbot-status"></div>
+                    <i class="ion-ios-chatboxes"></i>
                 </div>
                 <div>
-                    <h4>Gurukripa AI Assistant</h4>
+                    <h4>Gurukripa Assistant</h4>
                     <p>Online | Replying instantly</p>
                 </div>
             </div>
@@ -2230,10 +2233,11 @@
         <div class="chatbot-suggestions">
             <button onclick="document.getElementById('chatbotInput').value='Brick Prices'; handleChatMessage();">Price List</button>
             <button onclick="document.getElementById('chatbotInput').value='Delivery Area'; handleChatMessage();">Delivery Area</button>
+            <button onclick="document.getElementById('chatbotInput').value='Order Now'; handleChatMessage();">Order Now</button>
         </div>
         <div class="chatbot-input-container">
-            <input type="text" id="chatbotInput" placeholder="Type a message..." autocomplete="off">
-            <button id="chatbotSend" class="chatbot-send">
+            <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Type a message..." autocomplete="off">
+            <button id="chatbotSend" class="chatbot-send" aria-label="Send message">
                 <i class="ion-ios-paperplane"></i>
             </button>
         </div>
