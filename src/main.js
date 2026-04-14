@@ -369,8 +369,28 @@ window.handleLogin = async (e) => {
 };
 
 window.proceedToCheckout = () => {
-    if (CartService.getCartCount() === 0) { showToast('⚠️ Cart is empty'); return; }
-    Modals.close('cartModal'); Modals.open('checkoutModal');
+    const count = CartService.getCount();
+    if (count === 0) {
+        showToast('⚠️ Your cart is empty. Please add products before checking out.');
+        return;
+    }
+    
+    // Ensure user is logged in
+    const user = AuthService.getUser();
+    if (!user) {
+        showToast('🔐 Please login or register to proceed to checkout.');
+        Modals.close('cartModal');
+        Modals.open('loginModal');
+        return;
+    }
+
+    Modals.close('cartModal');
+    Modals.open('checkoutModal');
+    // Pre-fill user data if available
+    const nameInput = document.getElementById('checkout-name');
+    const mobileInput = document.getElementById('checkout-mobile');
+    if (nameInput && user.name) nameInput.value = user.name;
+    if (mobileInput && user.mobile) mobileInput.value = user.mobile;
 };
 
 // Start App
@@ -482,15 +502,47 @@ window.handleNewsletterSubmit = (e) => {
 // Order Submission
 window.submitOrder = (e) => {
     e.preventDefault();
-    if (CartService.getCount() === 0) { showToast('⚠️ Your cart is empty'); return; }
+    const count = CartService.getCount();
+    if (count === 0) {
+        showToast('⚠️ Your cart is empty');
+        return;
+    }
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Place Order';
     
-    showToast('⏳ Processing your order...');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="ion-load-c animate-spin"></i> Processing...';
+    }
+
+    showToast('⏳ Securely processing your order...');
+    
     setTimeout(() => {
+        const orderData = {
+            items: CartService.getCart(),
+            total: CartService.getTotal(),
+            customer: {
+                name: document.getElementById('checkout-name').value,
+                mobile: document.getElementById('checkout-mobile').value,
+                address: document.getElementById('checkout-address').value
+            },
+            date: new Date().toISOString()
+        };
+        
+        console.log('📦 Order Placed:', orderData);
+        
         CartService.clearCart();
         Modals.close('checkoutModal');
-        showToast('📦 Order placed successfully! Check your email for confirmation.', 6000);
+        
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        }
+
+        showToast('🎉 Order placed successfully! Check your email for confirmation.', 6000);
         navigateTo('home');
-    }, 1500);
+    }, 2000);
 };
 
 // ── Backward Compatibility Aliases ──
