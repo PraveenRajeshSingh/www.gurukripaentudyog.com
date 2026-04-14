@@ -1616,7 +1616,7 @@
                             </div>
 
                             <div class="payment-methods-section">
-                                <h3>💳 Select Payment Method</h3>
+                                <h3>💳 <span data-translate="paymentMethod">Select Payment Method</span></h3>
                                 <div class="payment-grid">
                                     <label class="payment-option">
                                         <input type="radio" name="payment" value="gpay" required>
@@ -1659,18 +1659,17 @@
                                 <span id="checkoutTotal" class="price-highlight">₹0.00</span>
                             </div>
                             <div class="checkout-actions">
-                                <button type="button" class="btn btn-secondary"
-                                    onclick="Modals.close('checkoutModal'); Modals.open('cartModal');">←
-                                    Back</button>
-                                <button type="submit" class="btn btn-primary btn-full">✅ Place
-                                    Order</button>
+                                <button type="submit" class="btn btn-primary btn-full">
+                                    ✅ Place Order Now
+                                </button>
+                                <button type="button" class="btn btn-outline btn-full"
+                                    onclick="Modals.close('checkoutModal'); Modals.open('cartModal');">
+                                    ← Back to Cart
+                                </button>
                             </div>
                             <div class="checkout-security-badges">
-                                <span class="security-badge"><i class="ion-ios-locked"></i> SSL
-                                    Secure</span>
-                                <span class="security-badge"><i class="ion-ios-checkmark-circle"></i>
-                                    Trusted
-                                    Manufacturer</span>
+                                <span class="security-badge"><i class="ion-ios-locked"></i> SSL Secure</span>
+                                <span class="security-badge"><i class="ion-ios-checkmark-circle"></i> Secure Payment</span>
                             </div>
                         </div>
                     </div>

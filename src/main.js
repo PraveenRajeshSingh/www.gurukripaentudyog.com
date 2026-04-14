@@ -50,7 +50,7 @@ const App = {
             console.error('💥 Initialization error:', error);
         } finally {
             if (window.AOS) {
-                AOS.init({ duration: 800, easing: 'ease-in-out', once: true, offset: 100 });
+                AOS.init({ duration: 500, easing: 'ease-out-cubic', once: true, offset: 50 });
             }
             setTimeout(App.hideLoader, 500);
         }
@@ -125,17 +125,21 @@ const App = {
         const dashboard = document.getElementById('dashboard');
         if (dashboard) dashboard.style.display = 'none';
 
-        const target = document.getElementById(sectionId) || document.getElementById('home');
+        const target = document.getElementById(sectionId) || (sectionId === 'home' ? document.documentElement : null);
+        
         if (target) {
-            if (sectionId === 'home' || !sectionId) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                setTimeout(() => {
-                    const offset = 80;
-                    const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
-                    window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
-                }, 100);
-            }
+            const header = document.querySelector('.header');
+            const headerOffset = header ? header.offsetHeight : 80;
+            
+            setTimeout(() => {
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: sectionId === 'home' ? 0 : offsetPosition,
+                    behavior: 'smooth'
+                });
+            }, 50);
         }
     },
 
