@@ -3,12 +3,26 @@
  * Initializes all modular services and standardized components.
  */
 
+// Debounce utility for performance
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
 const App = {
     init: () => {
         console.log('🚀 Gurukripa Bricks Initializing...');
 
         try {
             App.initTheme();
+            App.initLazyLoading();
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -50,7 +64,14 @@ const App = {
             console.error('💥 Initialization error:', error);
         } finally {
             if (window.AOS) {
-                AOS.init({ duration: 500, easing: 'ease-out-cubic', once: true, offset: 50 });
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                AOS.init({ 
+                    duration: prefersReducedMotion ? 0 : 500, 
+                    easing: 'ease-out-cubic', 
+                    once: true, 
+                    offset: 50,
+                    disable: prefersReducedMotion
+                });
             }
             setTimeout(App.hideLoader, 500);
         }
@@ -167,7 +188,8 @@ const App = {
         const scrollTopBtn = document.getElementById('scrollTopBtn');
         const contactForm = document.getElementById('contactForm');
 
-        window.addEventListener('scroll', () => {
+        // Optimized scroll handler with debounce
+        const handleScroll = debounce(() => {
             const header = document.querySelector('.header');
             if (header) header.classList.toggle('header-scrolled', window.scrollY > 50);
             
@@ -176,7 +198,9 @@ const App = {
                 scrollTopBtn.classList.toggle('visible', visible);
                 scrollTopBtn.style.display = visible ? 'flex' : 'none';
             }
-        });
+        }, 16); // ~60fps
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
 
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal')) Modals.closeAll();
@@ -210,16 +234,27 @@ const App = {
     },
 
     initScrollReveal: () => {
+        let ticking = false;
+        
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    const anim = entry.target.dataset.animation;
-                    if (anim) entry.target.classList.add(anim);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => {
+                                entry.target.classList.add('visible');
+                                const anim = entry.target.dataset.animation || 'fade-in-up';
+                                entry.target.classList.add(anim);
+                                observer.unobserve(entry.target);
+                            }, index * 80); // Stagger effect
+                        }
+                    });
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+        
         document.querySelectorAll('.reveal, .reveal-item, [data-aos]').forEach(el => observer.observe(el));
     },
 
@@ -240,6 +275,25 @@ const App = {
         const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
         App.updateThemeUI(theme);
+    },
+    
+    initLazyLoading: () => {
+        const images = document.querySelectorAll('img[loading="lazy"]');
+        
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.classList.add('loaded');
+                    observer.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '50px 0px',
+            threshold: 0.01
+        });
+        
+        images.forEach(img => imageObserver.observe(img));
     },
 
     updateThemeUI: (theme) => {

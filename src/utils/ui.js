@@ -154,3 +154,55 @@ const Validation = {
 };
 
 window.Validation = Validation;
+
+/**
+ * Error Boundary & Fallback Utilities
+ */
+const ErrorBoundary = {
+    // Handle section load failures
+    handleSectionError: (sectionId, error) => {
+        console.error(`[Error Boundary] Section ${sectionId} failed:`, error);
+        
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">⚠️</div>
+                    <h3 class="empty-state-title">Something went wrong</h3>
+                    <p class="empty-state-description">We're having trouble loading this section. Please try refreshing the page.</p>
+                    <button class="btn-primary-modern" onclick="window.location.reload()">Refresh Page</button>
+                </div>
+            `;
+        }
+    },
+    
+    // Handle image load failures
+    handleImageError: (img) => {
+        if (!img) return;
+        
+        const fallbackSrc = img.dataset.fallback || 'src/assets/images/fallback.jpg';
+        
+        if (img.src !== fallbackSrc) {
+            img.src = fallbackSrc;
+        } else {
+            img.style.display = 'none';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'image-placeholder';
+            placeholder.style.height = img.style.height || '200px';
+            img.parentNode.insertBefore(placeholder, img);
+        }
+    },
+    
+    // Safe function execution with fallback
+    safeExecute: async (fn, fallback = null, errorMessage = 'Something went wrong') => {
+        try {
+            return await fn();
+        } catch (error) {
+            console.error('[Error Boundary]', error);
+            showToast(`❌ ${errorMessage}`, 5000);
+            return typeof fallback === 'function' ? fallback(error) : fallback;
+        }
+    }
+};
+
+window.ErrorBoundary = ErrorBoundary;

@@ -129,10 +129,13 @@
     <!-- Fonts with Fallback -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Combined Premium Styles -->
     <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="src/styles/modern-ui.css">
     <link rel="stylesheet" href="src/assets/vendors/css/ionicons.min.css">
 
     <!-- Animate On Scroll -->
@@ -2306,6 +2309,34 @@
             }
         }, 3000);
     </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav-modern" id="mobileBottomNav">
+        <a href="#home" class="bottom-nav-item active">
+            <i class="ion-ios-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#products" class="bottom-nav-item">
+            <i class="ion-ios-grid"></i>
+            <span>Products</span>
+        </a>
+        <a href="javascript:void(0)" class="bottom-nav-item" onclick="openCart()">
+            <div class="bottom-nav-fab">
+                <i class="ion-ios-cart"></i>
+            </div>
+            <span>Cart</span>
+        </a>
+        <a href="#calculator" class="bottom-nav-item">
+            <i class="ion-ios-calculator"></i>
+            <span>Calculator</span>
+        </a>
+        <a href="javascript:void(0)" class="bottom-nav-item" id="mobileNavProfileBtn" onclick="handleProfileClick()">
+            <div class="bottom-nav-avatar" id="mobileNavAvatar">
+                <span><i class="ion-ios-person"></i></span>
+            </div>
+            <span>Profile</span>
+        </a>
+    </nav>
 </body>
 
 </html>

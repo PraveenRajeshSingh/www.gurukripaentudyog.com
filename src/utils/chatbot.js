@@ -1,7 +1,11 @@
 /**
  * Gurukripa Bricks - AI Chatbot Module
+ * Enhanced with conversation history and context memory
  */
 const Chatbot = {
+    conversationHistory: [],
+    maxHistoryLength: 50,
+    
     init: () => {
         const toggleBtn = document.getElementById('chatbotToggle');
         const chatbot = document.getElementById('chatbot');
@@ -12,12 +16,20 @@ const Chatbot = {
         const overlay = document.getElementById('chatbotOverlay');
 
         if (!chatbot || !toggleBtn) return;
+        
+        // Load conversation history
+        Chatbot.loadHistory();
 
         const openChat = () => {
             chatbot.classList.add('active');
             if (overlay) overlay.classList.add('active');
             document.body.classList.add('chatbot-open');
             if (input) setTimeout(() => input.focus(), 350);
+            
+            // Render history if exists
+            if (Chatbot.conversationHistory.length > 0 && messagesDiv) {
+                Chatbot.renderHistory(messagesDiv);
+            }
         };
 
         const closeChat = () => {
@@ -65,24 +77,34 @@ const Chatbot = {
             // Add user message
             const userMsg = document.createElement('div');
             userMsg.className = 'chatbot-message user-message';
-            userMsg.innerHTML = `<p>${text}</p>`;
+            const userTimestamp = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            userMsg.innerHTML = `<p>${text}</p><small class="message-time">${userTimestamp}</small>`;
             messagesDiv.appendChild(userMsg);
+            
+            // Save to history
+            Chatbot.saveMessage('user', text);
+            
             input.value = '';
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             // Show typing indicator
             showTyping();
 
-            // Bot response after delay
+            // Bot response after delay (optimized)
             setTimeout(() => {
                 hideTyping();
                 const response = Chatbot.getResponse(text);
                 const botMsg = document.createElement('div');
                 botMsg.className = 'chatbot-message bot-message';
-                botMsg.innerHTML = `<p>${response}</p>`;
+                const botTimestamp = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                botMsg.innerHTML = `<p>${response}</p><small class="message-time">${botTimestamp}</small>`;
                 messagesDiv.appendChild(botMsg);
+                
+                // Save to history
+                Chatbot.saveMessage('bot', response);
+                
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            }, 900);
+            }, 600); // Faster response
         };
 
         if (sendBtn) sendBtn.addEventListener('click', handleChatMessage);
@@ -97,34 +119,130 @@ const Chatbot = {
 
     getResponse: (text) => {
         const t = text.toLowerCase();
+        
+        // Helper function to add suggestion chips
+        const withSuggestions = (message, suggestions) => {
+            const chips = suggestions.map(s => 
+                `<button class="suggestion-chip" onclick="handleChatMessage('${s}')">${s}</button>`
+            ).join('');
+            return `${message}<div class="suggestion-chips">${chips}</div>`;
+        };
+        
         if (t.includes('price') || t.includes('कीमत') || t.includes('rate') || t.includes('cost') || t.includes('दाम')) {
-            return '🧱 Our brick prices:<br>• Shiv Eent (Grade A): ₹10-11/pc<br>• Premium Red Clay: ₹8.5/pc<br>• Standard Field Brick: ₹6.5/pc<br>• Machine Made Wirecut: ₹9/pc<br><br>📞 Call <b>+91 91989 23230</b> for bulk pricing!';
+            return withSuggestions(
+                '🧱 Our brick prices:<br>• Shiv Eent (Grade A): ₹10-11/pc<br>• Premium Red Clay: ₹8.5/pc<br>• Standard Field Brick: ₹6.5/pc<br>• Machine Made Wirecut: ₹9/pc<br><br>📞 Call <b>+91 91989 23230</b> for bulk pricing!',
+                ['Delivery Info', 'Quality Details', 'Place Order']
+            );
         }
         if (t.includes('delivery') || t.includes('डिलीवरी') || t.includes('deliver')) {
-            return '🚛 We offer <b>same-day delivery</b> in Jaunpur district! For Varanasi & surrounding areas, delivery takes 1-2 days. Minimum order: 1000 bricks.';
+            return withSuggestions(
+                '🚛 We offer <b>same-day delivery</b> in Jaunpur district! For Varanasi & surrounding areas, delivery takes 1-2 days. Minimum order: 1000 bricks.',
+                ['View Prices', 'Place Order', 'Contact Us']
+            );
         }
         if (t.includes('quality') || t.includes('गुणवत्ता') || t.includes('grade')) {
-            return '⭐ All our bricks are <b>first-class quality</b> — well-burnt, uniform shape, and highly durable. We offer 4 grades from Standard to Premium Shiv Eent.';
+            return withSuggestions(
+                '⭐ All our bricks are <b>first-class quality</b> — well-burnt, uniform shape, and highly durable. We offer 4 grades from Standard to Premium Shiv Eent.',
+                ['View Prices', 'Delivery Info', 'Place Order']
+            );
         }
         if (t.includes('order') || t.includes('buy') || t.includes('खरीद') || t.includes('ऑर्डर')) {
-            return '🛒 To place an order:<br>1. Browse our Products section<br>2. Add items to cart<br>3. Proceed to checkout<br><br>Or call directly: <b>+91 91989 23230</b>';
+            return withSuggestions(
+                '🛒 To place an order:<br>1. Browse our Products section<br>2. Add items to cart<br>3. Proceed to checkout<br><br>Or call directly: <b>+91 91989 23230</b>',
+                ['View Products', 'View Prices', 'Contact Us']
+            );
         }
         if (t.includes('location') || t.includes('address') || t.includes('where') || t.includes('पता')) {
-            return '📍 We are located in <b>Jalalpur, Jaunpur, Uttar Pradesh — 222001</b>.<br>Serving: Jaunpur, Varanasi, Ghazipur, Sultanpur & nearby areas.';
+            return withSuggestions(
+                '📍 We are located in <b>Jalalpur, Jaunpur, Uttar Pradesh — 222001</b>.<br>Serving: Jaunpur, Varanasi, Ghazipur, Sultanpur & nearby areas.',
+                ['Contact Us', 'View Products', 'Delivery Info']
+            );
         }
         if (t.includes('time') || t.includes('hours') || t.includes('open') || t.includes('समय')) {
-            return '🕐 We are open <b>Monday – Saturday, 8:00 AM – 6:00 PM</b>.<br>Closed on Sundays and public holidays.';
+            return withSuggestions(
+                '🕐 We are open <b>Monday – Saturday, 8:00 AM – 6:00 PM</b>.<br>Closed on Sundays and public holidays.',
+                ['Contact Us', 'Place Order', 'View Products']
+            );
         }
         if (t.includes('contact') || t.includes('phone') || t.includes('call') || t.includes('संपर्क')) {
-            return '📞 Contact us:<br>• Phone: <b>+91 91989 23230</b><br>• WhatsApp: +91 91989 23230<br>• Email: info@gurukripaentudyog.com';
+            return withSuggestions(
+                '📞 Contact us:<br>• Phone: <b>+91 91989 23230</b><br>• WhatsApp: +91 91989 23230<br>• Email: info@gurukripaentudyog.com',
+                ['View Products', 'Place Order', 'Delivery Info']
+            );
         }
         if (t.includes('hi') || t.includes('hello') || t.includes('namaste') || t.includes('नमस्ते')) {
-            return 'Namaste! 🙏 Welcome to <b>Gurukripa Bricks</b>. How can I help you today? You can ask about prices, delivery, quality, or how to order.';
+            return withSuggestions(
+                'Namaste! 🙏 Welcome to <b>Gurukripa Bricks</b>. How can I help you today? You can ask about prices, delivery, quality, or how to order.',
+                ['View Prices', 'Delivery Info', 'Place Order', 'Contact Us']
+            );
         }
         if (t.includes('thank') || t.includes('धन्यवाद')) {
             return '🙏 You\'re most welcome! Feel free to ask if you need anything else. Happy building! 🏗️';
         }
-        return 'Thank you for your message! 😊 For detailed information, please call us at <b>+91 91989 23230</b> or visit our contact section. We\'re happy to help!';
+        return withSuggestions(
+            'Thank you for your message! 😊 For detailed information, please call us at <b>+91 91989 23230</b> or visit our contact section. We\'re happy to help!',
+            ['View Prices', 'Contact Us', 'Place Order']
+        );
+    },
+    
+    // Save message to history
+    saveMessage: (sender, text) => {
+        Chatbot.conversationHistory.push({
+            sender,
+            text,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Limit history length
+        if (Chatbot.conversationHistory.length > Chatbot.maxHistoryLength) {
+            Chatbot.conversationHistory = Chatbot.conversationHistory.slice(-Chatbot.maxHistoryLength);
+        }
+        
+        // Persist to localStorage
+        try {
+            localStorage.setItem('chatbot_history', JSON.stringify(Chatbot.conversationHistory));
+        } catch (e) {
+            console.warn('Failed to save chat history:', e);
+        }
+    },
+    
+    // Load history from localStorage
+    loadHistory: () => {
+        try {
+            const saved = localStorage.getItem('chatbot_history');
+            if (saved) {
+                Chatbot.conversationHistory = JSON.parse(saved);
+            }
+        } catch (e) {
+            console.warn('Failed to load chat history:', e);
+            Chatbot.conversationHistory = [];
+        }
+    },
+    
+    // Render conversation history
+    renderHistory: (messagesDiv) => {
+        // Clear existing messages
+        messagesDiv.innerHTML = '';
+        
+        // Show last 20 messages only for performance
+        const recentHistory = Chatbot.conversationHistory.slice(-20);
+        
+        recentHistory.forEach(msg => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chatbot-message ${msg.sender === 'user' ? 'user-message' : 'bot-message'}`;
+            const timestamp = new Date(msg.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            msgDiv.innerHTML = `<p>${msg.text}</p><small class="message-time">${timestamp}</small>`;
+            messagesDiv.appendChild(msgDiv);
+        });
+        
+        // Scroll to bottom
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    },
+    
+    // Clear conversation history
+    clearHistory: () => {
+        Chatbot.conversationHistory = [];
+        localStorage.removeItem('chatbot_history');
     }
 };
 
