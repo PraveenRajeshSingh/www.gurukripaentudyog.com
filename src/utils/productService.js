@@ -5,6 +5,7 @@ let currentCategory = 'all';
 let searchTerm = '';
 let currentSort = 'featured';
 let currentView = 'grid'; // grid, grid-2, list
+let maxPrice = 15; // Price filter ceiling
 
 var ProductService = {
     getProducts: () => {
@@ -24,6 +25,11 @@ var ProductService = {
             );
         }
 
+        // Price filter
+        if (maxPrice < 15) {
+            filtered = filtered.filter(p => p.price <= maxPrice);
+        }
+
         // Sorting
         switch (currentSort) {
             case 'price-low':
@@ -33,7 +39,7 @@ var ProductService = {
                 filtered.sort((a, b) => b.price - a.price);
                 break;
             case 'rating':
-                // Keep original order (all highly rated)
+                filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
                 break;
             case 'newest':
                 filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
@@ -58,14 +64,22 @@ var ProductService = {
         }
     },
 
+    searchDebounceTimer: null,
+
     setSearch: (termOrEvent) => {
+        let term = '';
         // Handle both event objects and direct string values
         if (typeof termOrEvent === 'object' && termOrEvent.target) {
-            searchTerm = (termOrEvent.target.value || '').trim();
+            term = (termOrEvent.target.value || '');
         } else {
-            searchTerm = (termOrEvent || '').trim();
+            term = (termOrEvent || '');
         }
-        ProductService.renderGrid();
+
+        clearTimeout(ProductService.searchDebounceTimer);
+        ProductService.searchDebounceTimer = setTimeout(() => {
+            searchTerm = term.trim();
+            ProductService.renderGrid();
+        }, 300);
     },
 
     setSort: (sortOrEvent) => {
@@ -96,13 +110,9 @@ var ProductService = {
 
         const filtered = ProductService.getProducts();
 
-        // Show skeletons briefly for smooth transition if needed, or if grid is empty
-        if (grid.children.length === 0) {
-            ProductService.renderSkeletons();
-            setTimeout(() => ProductService.renderFiltered(filtered), 400);
-        } else {
-            ProductService.renderFiltered(filtered);
-        }
+        // Always show skeletons briefly for smooth transition
+        ProductService.renderSkeletons();
+        setTimeout(() => ProductService.renderFiltered(filtered), 350);
     },
 
     renderFiltered: (filtered) => {
@@ -135,6 +145,23 @@ var ProductService = {
         grid.innerHTML = skeletonHTML;
     },
 
+    renderRatingStars: (rating = 4.8) => {
+        const fullStars = Math.floor(rating);
+        const hasHalf = rating % 1 !== 0;
+        let starsHTML = '';
+        for (let i = 0; i < fullStars; i++) {
+            starsHTML += '<i class="ion-ios-star"></i>';
+        }
+        if (hasHalf) {
+            starsHTML += '<i class="ion-ios-star-half"></i>';
+        }
+        const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+        for (let i = 0; i < emptyStars; i++) {
+            starsHTML += '<i class="ion-ios-star-outline"></i>';
+        }
+        return starsHTML;
+    },
+
     createCardHTML: (product, isHindi) => {
         const name = isHindi ? product.nameHi : product.name;
         const buyLabel = isHindi ? 'जोड़ें' : 'ADD';
@@ -151,26 +178,35 @@ var ProductService = {
         }
         
         // LEFT SIDE: Status & Marketing
-        // 1. Tag (Best Seller, Premium)
         if (product.tag) {
             leftBadges.push(`<div class="product-badge badge-tag">${product.tag}</div>`);
         }
-        
-        // 2. High Strength Check
         if (product.specs && product.specs.strength && parseInt(product.specs.strength) >= 1000) {
             leftBadges.push(`<div class="product-badge badge-strength"><i class="ion-ios-heart"></i> High Strength</div>`);
         }
-        
-        // 3. Hot deal logic
         if (product.isHot || (product.oldPrice && (product.oldPrice - product.price) / product.oldPrice > 0.2)) {
             leftBadges.push(`<div class="product-badge badge-hot btn-hot-pulse">🔥 HOT</div>`);
         }
+
+        // Stock indicator badge
+        let stockBadgeHTML = '';
+        if (product.inStock === false) {
+            stockBadgeHTML = '<span class="stock-badge stock-out">Out of Stock</span>';
+        } else if (product.stockLow) {
+            stockBadgeHTML = '<span class="stock-badge stock-low">Low Stock</span>';
+        } else {
+            stockBadgeHTML = '<span class="stock-badge stock-in">In Stock</span>';
+        }
+
+        // Wishlist heart
+        const isWished = typeof WishlistService !== 'undefined' && WishlistService.isWishlisted(product.id);
+        const heartClass = isWished ? 'wishlist-heart active' : 'wishlist-heart';
 
         const leftHtml = leftBadges.slice(0, 2).join('');
         const rightHtml = rightBadges.slice(0, 2).join('');
 
         return `
-            <div class="product-card-modern ${product.isNew ? 'is-new' : ''}" data-aos="fade-up">
+            <div class="product-card-modern ${product.isNew ? 'is-new' : ''}" data-aos="fade-up" data-product-id="${product.id}">
                 <div class="product-badges-left">
                     ${leftHtml}
                 </div>
@@ -178,6 +214,12 @@ var ProductService = {
                     ${rightHtml}
                 </div>
                 
+                <!-- Wishlist Heart -->
+                <button class="${heartClass}" data-product-id="${product.id}"
+                    onclick="event.stopPropagation(); WishlistService.toggle(${product.id})" aria-label="Toggle wishlist">
+                    ♥
+                </button>
+
                 <div class="product-image-wrapper" onclick="viewProductDetails(${product.id})">
                     <img src="${product.image}" alt="${name}" loading="lazy" class="product-image"
                          onerror="this.src='src/assets/images/logo-new.svg'">
@@ -193,6 +235,7 @@ var ProductService = {
                     
                     <div class="product-info-row">
                         <span class="product-size-label">${product.specs ? product.specs.size : ''}</span>
+                        ${stockBadgeHTML}
                     </div>
 
                     <div class="product-info-row">
@@ -202,7 +245,7 @@ var ProductService = {
                             <i class="ion-ios-star"></i>
                             <i class="ion-ios-star"></i>
                             <i class="ion-ios-star-half"></i>
-                            <span class="rating-value">4.8</span>
+                            <span class="rating-value">${product.rating || '4.8'}</span>
                         </div>
                     </div>
                     
@@ -298,6 +341,12 @@ var ProductService = {
         window.setSearch = ProductService.setSearch;
         window.setProductView = ProductService.setView;
         window.viewProductDetails = ProductService.viewProductDetails;
+        window.setPriceFilter = (val) => {
+            maxPrice = parseFloat(val);
+            const label = document.getElementById('priceRangeValue');
+            if (label) label.textContent = `₹0 - ₹${maxPrice}`;
+            ProductService.renderGrid();
+        };
 
         // Sort dropdown listener
         const sortSelect = document.getElementById('productSort');

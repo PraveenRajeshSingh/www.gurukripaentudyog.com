@@ -150,12 +150,17 @@
     <!-- Performance: Defer non-critical CSS -->
     <style>
         /* Critical CSS for above-the-fold content */
+        html {
+            scroll-behavior: smooth;
+            overscroll-behavior-y: none;
+        }
         body {
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+            overflow-x: hidden;
         }
 
         /* Modern Page Loader */
@@ -409,10 +414,26 @@
                 </div>
 
                 <div class="nav-actions">
+                    <!-- Live Search Bar (Desktop) -->
+                    <div class="header-search" id="headerSearch">
+                        <div class="header-search-input-wrap">
+                            <input type="text" id="headerSearchInput" class="header-search-input"
+                                placeholder="Search bricks, products..." autocomplete="off" aria-label="Search products">
+                            <span class="header-search-icon">🔍</span>
+                        </div>
+                        <div class="header-search-dropdown" id="headerSearchDropdown"></div>
+                    </div>
+
                     <!-- Mobile Language switcher -->
                     <button class="icon-btn mobile-lang-btn" id="mobileLangToggle"
                         onclick="setLanguage(TranslationService.getLanguage() === 'hi' ? 'en' : 'hi')">
                         <i class="ion-ios-world-outline"></i>
+                    </button>
+
+                    <!-- Wishlist button -->
+                    <button class="icon-btn wishlist-btn" id="wishlistBtn" onclick="navigateTo('dashboard'); switchProfileTab('wishlist');" aria-label="View wishlist">
+                        ♥
+                        <span class="wishlist-count" id="wishlistBadge">0</span>
                     </button>
 
                     <!-- Cart button (desktop) -->
@@ -463,7 +484,7 @@
                                     <a href="#dashboard" onclick="navigateTo('dashboard'); closeUserDropdown();"
                                         class="dropdown-item">
                                         <i class="ion-ios-speedometer-outline"></i>
-                                        <span data-translate="myDashboard">My Dashboard</span>
+                                        <span data-translate="dashboard">User Dashboard</span>
                                     </a>
                                     <a href="#orders" onclick="navigateTo('orders'); closeUserDropdown();"
                                         class="dropdown-item">
@@ -564,32 +585,127 @@
         </div>
     </div>
 
-    <!-- Hero Section - Redesigned with Parallax & Particle Effects -->
+    <!-- Hero Section - Premium Full-Viewport Redesign -->
     <header class="hero-section" id="home">
-        <div class="container">
-            <div id="main-content"></div>
-            <div class="hero-overlay"></div>
+        <!-- Animated Gradient Mesh Background -->
+        <div class="hero-mesh-bg"></div>
+        <!-- Floating Brick Decorations -->
+        <div class="hero-floating-bricks">
+            <div class="floating-brick floating-brick-1"></div>
+            <div class="floating-brick floating-brick-2"></div>
+            <div class="floating-brick floating-brick-3"></div>
+            <div class="floating-brick floating-brick-4"></div>
+            <div class="floating-brick floating-brick-5"></div>
+        </div>
+
+        <div class="container hero-container">
             <div class="hero-content">
-                <h1 class="hero-title" data-translate="heroTitle">
+                <!-- Badge -->
+                <div class="hero-badge" data-aos="fade-down" data-aos-delay="100">
+                    <span class="hero-badge-dot"></span>
+                    <span>Trusted Since 1998 • Jaunpur's #1 Brick Manufacturer</span>
+                </div>
+
+                <!-- Title -->
+                <h1 class="hero-title" data-translate="heroTitle" data-aos="fade-up" data-aos-delay="200">
                     Gurukripa Bricks Industry
                 </h1>
-                <p class="hero-subtitle" data-translate="heroSubtitle">25+ Years of Excellence in Brick Manufacturing
+
+                <!-- Subtitle -->
+                <p class="hero-subtitle" data-translate="heroSubtitle" data-aos="fade-up" data-aos-delay="300">
+                    25+ Years of Excellence in Brick Manufacturing
                 </p>
-                <p class="hero-description" data-translate="heroDescription">Premium Quality | Trusted Across Jaunpur &
-                    Varanasi</p>
-                <div class="hero-cta">
-                    <a href="tel:+919198923230" class="hero-btn primary">
+
+                <!-- Description -->
+                <p class="hero-description" data-translate="heroDescription" data-aos="fade-up" data-aos-delay="400">
+                    Premium Quality | Trusted Across Jaunpur & Varanasi
+                </p>
+
+                <!-- Rating Display -->
+                <div class="hero-rating" data-aos="fade-up" data-aos-delay="450">
+                    <div class="hero-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <span class="hero-rating-text">4.8/5 from 156+ happy customers</span>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="hero-cta" data-aos="fade-up" data-aos-delay="500">
+                    <a href="tel:+919198923230" class="hero-btn primary hero-btn-glow">
                         <i class="ion-ios-telephone"></i> <span data-translate="callUs">Call Now</span>
                     </a>
-                    <a href="#products" class="hero-btn secondary">
+                    <a href="#products" class="hero-btn secondary hero-btn-glass">
                         <i class="ion-ios-grid"></i> <span data-translate="catalog">Products</span>
                     </a>
                 </div>
+
+                <!-- Trust Indicators -->
+                <div class="hero-trust-row" data-aos="fade-up" data-aos-delay="600">
+                    <div class="hero-trust-item">
+                        <div class="hero-trust-icon">🏆</div>
+                        <div class="hero-trust-text">
+                            <strong>25+</strong>
+                            <span>Years Experience</span>
+                        </div>
+                    </div>
+                    <div class="hero-trust-divider"></div>
+                    <div class="hero-trust-item">
+                        <div class="hero-trust-icon">👥</div>
+                        <div class="hero-trust-text">
+                            <strong>10K+</strong>
+                            <span>Happy Customers</span>
+                        </div>
+                    </div>
+                    <div class="hero-trust-divider"></div>
+                    <div class="hero-trust-item">
+                        <div class="hero-trust-icon">🚛</div>
+                        <div class="hero-trust-text">
+                            <strong>Same Day</strong>
+                            <span>Fast Delivery</span>
+                        </div>
+                    </div>
+                    <div class="hero-trust-divider"></div>
+                    <div class="hero-trust-item">
+                        <div class="hero-trust-icon">⭐</div>
+                        <div class="hero-trust-text">
+                            <strong>Grade-A</strong>
+                            <span>Certified Quality</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="scroll-indicator">
-                <span data-translate="home">Scroll</span>
-                <i class="ion-ios-arrow-down"></i>
+
+            <!-- Animated Stats Counters -->
+            <div class="hero-stats-row" data-aos="fade-up" data-aos-delay="700">
+                <div class="hero-stat-card">
+                    <span class="hero-stat-number counter" data-target="50000">0</span>
+                    <span class="hero-stat-suffix">+</span>
+                    <span class="hero-stat-label">Bricks Delivered</span>
+                </div>
+                <div class="hero-stat-card">
+                    <span class="hero-stat-number counter" data-target="250">0</span>
+                    <span class="hero-stat-suffix">+</span>
+                    <span class="hero-stat-label">Projects Completed</span>
+                </div>
+                <div class="hero-stat-card">
+                    <span class="hero-stat-number counter" data-target="15">0</span>
+                    <span class="hero-stat-suffix">+</span>
+                    <span class="hero-stat-label">Cities Served</span>
+                </div>
+                <div class="hero-stat-card">
+                    <span class="hero-stat-number counter" data-target="98">0</span>
+                    <span class="hero-stat-suffix">%</span>
+                    <span class="hero-stat-label">Satisfaction Rate</span>
+                </div>
             </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="hero-scroll-indicator">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+            <span>Scroll to explore</span>
         </div>
     </header>
 
@@ -597,6 +713,14 @@
 
     <!-- Dashboard Section (Modern SaaS Style) -->
     <section class="section section-dashboard" id="dashboard" style="display: none;">
+        <div class="container">
+            <!-- Breadcrumb Navigation -->
+            <nav class="breadcrumb-nav" id="dashboardBreadcrumb" aria-label="Breadcrumb">
+                <a href="#home" class="breadcrumb-link" onclick="navigateTo('home')">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current" id="breadcrumbCurrent">Dashboard</span>
+            </nav>
+        </div>
         <div class="container" id="dashboardContent">
             <!-- Content dynamically rendered by AuthService.renderDashboard -->
         </div>
@@ -710,6 +834,18 @@
                 </div>
 
                 <div class="filter-footer-controls">
+                    <!-- Price Range Filter -->
+                    <div class="price-range-filter">
+                        <label class="price-range-label">
+                            <i class="ion-ios-pricetag"></i>
+                            <span>Price:</span>
+                            <strong id="priceRangeValue">₹0 - ₹15</strong>
+                        </label>
+                        <input type="range" id="priceRangeSlider" class="price-range-slider"
+                            min="0" max="15" step="0.5" value="15"
+                            oninput="setPriceFilter(this.value)" aria-label="Maximum price filter">
+                    </div>
+
                     <div class="sort-wrapper-modern">
                         <i class="ion-ios-shuffle"></i>
                         <select id="productSort" class="sort-select-modern" aria-label="Sort products">
@@ -1370,38 +1506,6 @@
         </div>
     </section>
 
-
-
-
-    <!-- AI Chatbot Widget -->
-    <div class="chatbot-container" id="chatbot">
-        <div class="chatbot-header">
-            <div class="chatbot-header-info">
-                <img src="src/assets/images/logo-new.svg" alt="Gurukripa AI" class="chatbot-avatar">
-                <div>
-                    <h4>Gurukripa AI</h4>
-                    <span class="chatbot-status">Online</span>
-                </div>
-            </div>
-            <button class="chatbot-close" id="chatbotClose" aria-label="Close chatbot">
-                <i class="ion-ios-close"></i>
-            </button>
-        </div>
-        <div class="chatbot-messages" id="chatbotMessages">
-            <div class="chatbot-message bot-message">
-                <p>नमस्ते! 🙏 मैं आपकी कैसे मदद कर सकता हूं? उत्पादों, कीमतों, या डिलीवरी के बारे में पूछें।
-                </p>
-            </div>
-        </div>
-        <div class="chatbot-input-container">
-            <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Type your message..."
-                autocomplete="off">
-            <button class="chatbot-send" id="chatbotSend" aria-label="Send message">
-                <i class="ion-ios-send"></i>
-            </button>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer" role="contentinfo" aria-label="Site footer" data-aos="fade-in">
         <div class="container">
@@ -1509,6 +1613,19 @@
 
             </div><!-- /.footer-content -->
 
+            <!-- Payment Methods -->
+            <div class="footer-payment-methods">
+                <span class="payment-label">We Accept:</span>
+                <div class="payment-icons">
+                    <span class="pay-icon" title="UPI">💳 UPI</span>
+                    <span class="pay-icon" title="Google Pay">🟢 GPay</span>
+                    <span class="pay-icon" title="PhonePe">📱 PhonePe</span>
+                    <span class="pay-icon" title="Paytm">🟠 Paytm</span>
+                    <span class="pay-icon" title="Visa/Mastercard">💳 Cards</span>
+                    <span class="pay-icon" title="Cash on Delivery">💵 COD</span>
+                </div>
+            </div>
+
             <!-- Footer Bottom Bar -->
             <div class="footer-bottom">
                 <p>&copy; 2025 <span data-translate="heroTitle">Gurukripa Bricks Industry</span>. <span
@@ -1545,8 +1662,23 @@
             </div>
 
             <div class="cart-drawer-body">
+                <!-- Cart Saved Indicator -->
+                <div class="cart-saved-badge" id="cartSavedBadge">
+                    <i class="ion-ios-checkmark-circle"></i> Cart auto-saved
+                </div>
+
                 <div id="cartItems" class="cart-items-list-modern">
                     <!-- Items rendered by CartService -->
+                </div>
+
+                <!-- Coupon Code -->
+                <div class="cart-coupon-section">
+                    <div class="coupon-input-row">
+                        <input type="text" id="couponInput" class="coupon-input" placeholder="Enter coupon code"
+                            aria-label="Coupon code">
+                        <button class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
+                    </div>
+                    <div class="coupon-message" id="couponMessage"></div>
                 </div>
 
                 <!-- Bill Details Section -->
@@ -1556,9 +1688,13 @@
                         <span>Item Total</span>
                         <span id="cartSubtotal">₹0.00</span>
                     </div>
-                    <div class="bill-row">
-                        <span>Delivery Partner Fee</span>
-                        <span class="fee-free">FREE</span>
+                    <div class="bill-row" id="shippingRow">
+                        <span>Shipping</span>
+                        <span id="shippingCost" class="fee-free">FREE</span>
+                    </div>
+                    <div class="bill-row" id="couponDiscountRow" style="display:none;">
+                        <span>Coupon Discount</span>
+                        <span id="couponDiscount" style="color: #16a34a;">-₹0.00</span>
                     </div>
                     <div class="bill-row grand-total">
                         <span>Grand Total</span>
@@ -1587,99 +1723,6 @@
         </div>
     </div>
 
-    <!-- Checkout Modal (Standardized) -->
-    <div class="modal" id="checkoutModal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h2>📦 <span data-translate="checkout">Checkout</span></h2>
-                <button class="modal-close" onclick="Modals.close('checkoutModal')"
-                    aria-label="Close checkout">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="checkoutForm" onsubmit="submitOrder(event); return false;" aria-label="Checkout form">
-                    <div class="checkout-grid">
-                        <div class="checkout-form-section">
-                            <h3>🚚 <span data-translate="shippingInfo">Shipping Information</span></h3>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="checkout-name">Full Name *</label>
-                                    <input type="text" id="checkout-name" name="name" required class="form-control"
-                                        placeholder="Your full name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="checkout-mobile">Mobile Number *</label>
-                                    <input type="tel" id="checkout-mobile" name="mobile" required pattern="[0-9]{10}"
-                                        class="form-control" placeholder="10-digit number">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="checkout-address">Delivery Address *</label>
-                                <textarea id="checkout-address" name="address" rows="3" required class="form-control"
-                                    placeholder="House no., street, locality..."></textarea>
-                            </div>
-
-                            <div class="payment-methods-section">
-                                <h3>💳 <span data-translate="paymentMethod">Select Payment Method</span></h3>
-                                <div class="payment-grid">
-                                    <label class="payment-option">
-                                        <input type="radio" name="payment" value="gpay" required>
-                                        <div class="payment-card">
-                                            <i class="ion-social-google"></i>
-                                            <span>Google Pay</span>
-                                        </div>
-                                    </label>
-                                    <label class="payment-option">
-                                        <input type="radio" name="payment" value="phonepe">
-                                        <div class="payment-card">
-                                            <i class="ion-ios-telephone"></i>
-                                            <span>PhonePe</span>
-                                        </div>
-                                    </label>
-                                    <label class="payment-option">
-                                        <input type="radio" name="payment" value="paytm">
-                                        <div class="payment-card">
-                                            <i class="ion-wallet"></i>
-                                            <span>Paytm</span>
-                                        </div>
-                                    </label>
-                                    <label class="payment-option">
-                                        <input type="radio" name="payment" value="cod">
-                                        <div class="payment-card">
-                                            <i class="ion-ios-box"></i>
-                                            <span>Cash on Delivery</span>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="checkout-summary-section">
-                            <h3>🧾 <span data-translate="orderSummary">Order Summary</span></h3>
-                            <div id="checkoutItems" class="checkout-items-list">
-                                <!-- Order items rendered by cart.js -->
-                            </div>
-                            <div class="order-total-bar">
-                                <strong>Grand Total:</strong>
-                                <span id="checkoutTotal" class="price-highlight">₹0.00</span>
-                            </div>
-                            <div class="checkout-actions">
-                                <button type="submit" class="btn btn-primary btn-full">
-                                    ✅ Place Order Now
-                                </button>
-                                <button type="button" class="btn btn-outline btn-full"
-                                    onclick="Modals.close('checkoutModal'); Modals.open('cartModal');">
-                                    ← Back to Cart
-                                </button>
-                            </div>
-                            <div class="checkout-security-badges">
-                                <span class="security-badge"><i class="ion-ios-locked"></i> SSL Secure</span>
-                                <span class="security-badge"><i class="ion-ios-checkmark-circle"></i> Secure Payment</span>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Product Detail Modal -->
     <div class="modal" id="productDetailModal">
@@ -1811,123 +1854,215 @@
             </div>
         </div>
     </div>
+    <!-- ═══════════ Login Modal (Glowing Animated) ═══════════ -->
     <div class="modal" id="loginModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 data-translate="login">🔐 Welcome Back</h2>
-                <button class="modal-close" onclick="Modals.close('loginModal')"
-                    aria-label="Close login">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="loginForm" onsubmit="handleLogin(event); return false;" aria-label="Login form">
-                    <div class="form-group">
-                        <label for="login-email">Email Address *</label>
-                        <input type="email" id="login-email" name="email" required aria-required="true"
-                            aria-describedby="login-email-error" inputmode="email" autocomplete="email"
-                            placeholder="your@email.com">
-                        <span id="login-email-error" class="error-message" role="alert" aria-live="polite"></span>
-                    </div>
-                    <div class="form-group" style="position:relative;">
-                        <label for="login-password">Password *</label>
-                        <input type="password" id="login-password" name="password" required aria-required="true"
-                            aria-describedby="login-password-error" autocomplete="current-password"
-                            placeholder="Enter your password" style="padding-right:48px !important;">
-                        <button type="button" onclick="toggleLoginPassword()"
-                            style="position:absolute;right:12px;top:34px;background:none;border:none;cursor:pointer;font-size:1.15rem;color:var(--primary);padding:4px;line-height:1;"
-                            aria-label="Toggle password visibility" id="loginPasswordToggle">👁</button>
-                        <span id="login-password-error" class="error-message" role="alert" aria-live="polite"></span>
-                    </div>
-                    <div class="form-group">
-                        <label style="text-transform:none;letter-spacing:0;font-weight:500;">
-                            <input type="checkbox" name="remember">
-                            <span>Remember me on this device</span>
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full" data-translate="login">🚀
-                        &nbsp;Login to Your
-                        Account</button>
-                    <p style="text-align: center; margin-top: 20px;">
-                        Don't have an account? &nbsp;<a href="#"
-                            onclick="Modals.close('loginModal'); Modals.open('registerModal'); return false;"
-                            style="color:#8B0000;font-weight:700;">Register Now →</a>
-                    </p>
-                </form>
+            <div class="auth-card-inner">
+                <!-- Animated Background Orbs -->
+                <div class="auth-orbs">
+                    <div class="auth-orb auth-orb--1"></div>
+                    <div class="auth-orb auth-orb--2"></div>
+                    <div class="auth-orb auth-orb--3"></div>
+                </div>
+                <!-- Floating Particles -->
+                <div class="auth-particles">
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                </div>
+
+                <!-- Close -->
+                <button class="auth-close" onclick="Modals.close('loginModal')" aria-label="Close login">&times;</button>
+
+                <!-- Header -->
+                <div class="auth-header">
+                    <div class="auth-header-icon">🔐</div>
+                    <h2 class="auth-title" data-translate="login">Welcome Back</h2>
+                    <p class="auth-subtitle">Sign in to access your account</p>
+                </div>
+
+                <!-- Form -->
+                <div class="auth-body">
+                    <form id="loginForm" onsubmit="handleLogin(event); return false;" aria-label="Login form" autocomplete="on">
+                        <!-- Email -->
+                        <div class="auth-input-group">
+                            <input type="email" id="login-email" name="email" class="auth-input" required
+                                aria-required="true" aria-describedby="login-email-error" inputmode="email"
+                                autocomplete="email" placeholder=" ">
+                            <span class="auth-input-icon"><i class="ion-ios-email-outline"></i></span>
+                            <label class="auth-label" for="login-email">Email Address</label>
+                            <span id="login-email-error" class="auth-error" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="auth-input-group">
+                            <input type="password" id="login-password" name="password" class="auth-input" required
+                                aria-required="true" aria-describedby="login-password-error"
+                                autocomplete="current-password" placeholder=" " style="padding-right:48px;">
+                            <span class="auth-input-icon"><i class="ion-ios-locked-outline"></i></span>
+                            <label class="auth-label" for="login-password">Password</label>
+                            <button type="button" onclick="toggleLoginPassword()" class="auth-password-toggle"
+                                aria-label="Toggle password visibility" id="loginPasswordToggle">👁</button>
+                            <span id="login-password-error" class="auth-error" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="auth-options">
+                            <label class="auth-checkbox">
+                                <input type="checkbox" id="remember-me" name="remember">
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="auth-forgot" onclick="showToast('📧 Password reset link sent to your email!'); return false;">Forgot password?</a>
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="submit" class="auth-submit" data-translate="login">
+                            <span>Login to Your Account</span>
+                            <span class="auth-submit-icon">→</span>
+                        </button>
+
+                        <!-- Social Login -->
+                        <div class="auth-divider"><span>or continue with</span></div>
+                        <div class="auth-social-btns">
+                            <button type="button" class="auth-social-btn" onclick="showToast('🔗 Google login coming soon!')">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                                <span>Google</span>
+                            </button>
+                            <button type="button" class="auth-social-btn" onclick="showToast('📱 OTP login coming soon!')">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="#6366F1"/></svg>
+                                <span>OTP</span>
+                            </button>
+                        </div>
+
+                        <!-- Switch -->
+                        <p class="auth-switch">
+                            Don't have an account?
+                            <a href="#" onclick="Modals.close('loginModal'); Modals.open('registerModal'); return false;">Register Now →</a>
+                        </p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Register Modal -->
+    <!-- ═══════════ Register Modal (Glowing Animated) ═══════════ -->
     <div class="modal" id="registerModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 data-translate="register">✨ Create Account</h2>
-                <button class="modal-close" onclick="Modals.close('registerModal')"
-                    aria-label="Close register">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="registerForm" onsubmit="handleRegister(event); return false;" aria-label="Registration form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="register-name">Full Name *</label>
-                            <input type="text" id="register-name" name="name" required aria-required="true"
-                                aria-describedby="register-name-error" autocomplete="name" placeholder="Your full name">
-                            <span id="register-name-error" class="error-message" role="alert" aria-live="polite"></span>
+            <div class="auth-card-inner">
+                <!-- Animated Background Orbs -->
+                <div class="auth-orbs">
+                    <div class="auth-orb auth-orb--1"></div>
+                    <div class="auth-orb auth-orb--2"></div>
+                    <div class="auth-orb auth-orb--3"></div>
+                </div>
+                <!-- Floating Particles -->
+                <div class="auth-particles">
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                    <div class="auth-particle"></div>
+                </div>
+
+                <!-- Close -->
+                <button class="auth-close" onclick="Modals.close('registerModal')" aria-label="Close register">&times;</button>
+
+                <!-- Header -->
+                <div class="auth-header">
+                    <div class="auth-header-icon">✨</div>
+                    <h2 class="auth-title" data-translate="register">Create Account</h2>
+                    <p class="auth-subtitle">Join Gurukripa Bricks today</p>
+                </div>
+
+                <!-- Form -->
+                <div class="auth-body">
+                    <form id="registerForm" onsubmit="handleRegister(event); return false;" aria-label="Registration form">
+                        <!-- Name & Mobile -->
+                        <div class="auth-row">
+                            <div class="auth-input-group">
+                                <input type="text" id="register-name" name="name" class="auth-input" required
+                                    aria-required="true" aria-describedby="register-name-error"
+                                    autocomplete="name" placeholder=" ">
+                                <span class="auth-input-icon"><i class="ion-ios-person-outline"></i></span>
+                                <label class="auth-label" for="register-name">Full Name</label>
+                                <span id="register-name-error" class="auth-error" role="alert" aria-live="polite"></span>
+                            </div>
+                            <div class="auth-input-group">
+                                <input type="tel" id="register-mobile" name="mobile" class="auth-input" required
+                                    pattern="[0-9]{10}" aria-required="true" aria-describedby="register-mobile-error"
+                                    inputmode="numeric" autocomplete="tel" placeholder=" ">
+                                <span class="auth-input-icon"><i class="ion-ios-telephone-outline"></i></span>
+                                <label class="auth-label" for="register-mobile">Mobile Number</label>
+                                <span id="register-mobile-error" class="auth-error" role="alert" aria-live="polite"></span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="register-mobile">Mobile Number *</label>
-                            <input type="tel" id="register-mobile" name="mobile" required pattern="[0-9]{10}"
-                                aria-required="true" aria-describedby="register-mobile-error" inputmode="numeric"
-                                autocomplete="tel" placeholder="10 digits">
-                            <span id="register-mobile-error" class="error-message" role="alert"
-                                aria-live="polite"></span>
+
+                        <!-- Email -->
+                        <div class="auth-input-group">
+                            <input type="email" id="register-email" name="email" class="auth-input" required
+                                aria-required="true" aria-describedby="register-email-error" inputmode="email"
+                                autocomplete="email" placeholder=" ">
+                            <span class="auth-input-icon"><i class="ion-ios-email-outline"></i></span>
+                            <label class="auth-label" for="register-email">Email Address</label>
+                            <span id="register-email-error" class="auth-error" role="alert" aria-live="polite"></span>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-email">Email Address *</label>
-                        <input type="email" id="register-email" name="email" required aria-required="true"
-                            aria-describedby="register-email-error" inputmode="email" autocomplete="email"
-                            placeholder="your@email.com">
-                        <span id="register-email-error" class="error-message" role="alert" aria-live="polite"></span>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group password-group">
-                            <label for="register-password">Password *</label>
-                            <input type="password" id="register-password" name="password" required minlength="6"
-                                aria-required="true" aria-describedby="register-password-error"
-                                autocomplete="new-password" placeholder="Min. 6 characters">
-                            <button type="button" onclick="toggleRegisterPassword()" class="password-toggle-btn"
-                                aria-label="Toggle password" id="regPasswordToggle"
-                                title="Show/Hide Password">👁</button>
-                            <span id="register-password-error" class="error-message" role="alert"
-                                aria-live="polite"></span>
+
+                        <!-- Password & Confirm -->
+                        <div class="auth-row">
+                            <div class="auth-input-group">
+                                <input type="password" id="register-password" name="password" class="auth-input" required
+                                    minlength="6" aria-required="true" aria-describedby="register-password-error"
+                                    autocomplete="new-password" placeholder=" " style="padding-right:48px;">
+                                <span class="auth-input-icon"><i class="ion-ios-locked-outline"></i></span>
+                                <label class="auth-label" for="register-password">Password</label>
+                                <button type="button" onclick="toggleRegisterPassword()" class="auth-password-toggle"
+                                    aria-label="Toggle password" id="regPasswordToggle" title="Show/Hide Password">👁</button>
+                                <span id="register-password-error" class="auth-error" role="alert" aria-live="polite"></span>
+                                <!-- Strength Meter -->
+                                <div class="auth-strength"><div class="auth-strength-bar" id="regStrengthBar"></div></div>
+                                <div class="auth-strength-text" id="regStrengthText"></div>
+                            </div>
+                            <div class="auth-input-group">
+                                <input type="password" id="register-confirm-password" name="confirmPassword" class="auth-input"
+                                    required minlength="6" aria-required="true"
+                                    aria-describedby="register-confirm-password-error" autocomplete="new-password"
+                                    placeholder=" " style="padding-right:48px;">
+                                <span class="auth-input-icon"><i class="ion-ios-locked-outline"></i></span>
+                                <label class="auth-label" for="register-confirm-password">Confirm Password</label>
+                                <button type="button" onclick="toggleRegisterConfirmPassword()" class="auth-password-toggle"
+                                    aria-label="Toggle confirm password" id="regConfirmPasswordToggle"
+                                    title="Show/Hide Password">👁</button>
+                                <span id="register-confirm-password-error" class="auth-error" role="alert" aria-live="polite"></span>
+                            </div>
                         </div>
-                        <div class="form-group password-group">
-                            <label for="register-confirm-password">Confirm Password *</label>
-                            <input type="password" id="register-confirm-password" name="confirmPassword" required
-                                minlength="6" aria-required="true" aria-describedby="register-confirm-password-error"
-                                autocomplete="new-password" placeholder="Re-enter password">
-                            <button type="button" onclick="toggleRegisterConfirmPassword()" class="password-toggle-btn"
-                                aria-label="Toggle confirm password" id="regConfirmPasswordToggle"
-                                title="Show/Hide Password">👁</button>
-                            <span id="register-confirm-password-error" class="error-message" role="alert"
-                                aria-live="polite"></span>
+
+                        <!-- Address -->
+                        <div class="auth-input-group">
+                            <textarea id="register-address" name="address" class="auth-textarea" rows="2"
+                                aria-describedby="register-address-error" autocomplete="street-address"
+                                placeholder=" "></textarea>
+                            <span class="auth-input-icon"><i class="ion-ios-location-outline"></i></span>
+                            <label class="auth-label" for="register-address">Delivery Address (optional)</label>
+                            <span id="register-address-error" class="auth-error" role="alert" aria-live="polite"></span>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-address">Delivery Address (optional)</label>
-                        <textarea id="register-address" name="address" rows="2"
-                            aria-describedby="register-address-error" autocomplete="street-address"
-                            placeholder="House no., street, city..."></textarea>
-                        <span id="register-address-error" class="error-message" role="alert" aria-live="polite"></span>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full" data-translate="register">Sign
-                        Up</button>
-                    <p style="text-align: center; margin-top: 20px;">
-                        Already have an account? &nbsp;<a href="#"
-                            onclick="closeRegisterModal(); openLoginModal(); return false;"
-                            style="color:#8B0000;font-weight:700;">Login Here →</a>
-                    </p>
-                </form>
+
+                        <!-- Submit -->
+                        <button type="submit" class="auth-submit" data-translate="register">
+                            <span>Create My Account</span>
+                            <span class="auth-submit-icon">✨</span>
+                        </button>
+
+                        <!-- Switch -->
+                        <p class="auth-switch">
+                            Already have an account?
+                            <a href="#" onclick="closeRegisterModal(); openLoginModal(); return false;">Login Here →</a>
+                        </p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -2201,6 +2336,7 @@
     <script src="src/utils/translationService.js" defer></script>
     <script src="src/utils/calculator.js" defer></script>
     <script src="src/utils/chatbot.js" defer></script>
+    <script src="src/utils/wishlistService.js" defer></script>
     <script src="src/main.js" defer></script>
 
     <!-- Init -->
@@ -2266,39 +2402,17 @@
         </button>
     </div>
 
-    <!-- Scroll Top Button -->
-    <button class="floating-btn scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top"
+    <!-- Scroll Top Button with Progress Ring -->
+    <button class="scroll-top-ring-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top"
         aria-label="Scroll to top" id="scrollTopBtn">
+        <svg class="scroll-progress-ring" viewBox="0 0 44 44">
+            <circle class="progress-ring-bg" cx="22" cy="22" r="20" fill="none" stroke-width="3"/>
+            <circle class="progress-ring-fill" cx="22" cy="22" r="20" fill="none" stroke-width="3"
+                stroke-dasharray="125.66" stroke-dashoffset="125.66" id="scrollProgressCircle"/>
+        </svg>
         <i class="ion-ios-arrow-up"></i>
     </button>
 
-    <!-- Mobile Bottom Navigation Bar -->
-    <nav class="mobile-bottom-nav">
-        <a href="#home" class="nav-link active" onclick="navigateTo('home')">
-            <i class="ion-ios-home-outline"></i>
-            <span data-translate="home">Home</span>
-        </a>
-        <a href="#products" class="nav-link" onclick="navigateTo('products')">
-            <i class="ion-ios-grid-view-outline"></i>
-            <span data-translate="products">Products</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-link" onclick="openCart()">
-            <div class="cart-icon-wrapper">
-                <i class="ion-ios-cart-outline"></i>
-                <span class="cart-count cart-badge" id="mobileCartCount">0</span>
-            </div>
-            <span data-translate="cart">Cart</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-link" id="mobileNavProfileBtn"
-            onclick="handleProfileClick(); return false;">
-            <div class="user-avatar-premium" id="mobileNavAvatar">
-                <span class="avatar-initials"><i class="ion-ios-person"></i></span>
-                <img src="" alt=""
-                    style="display:none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-            </div>
-            <span data-translate="profile">Profile</span>
-        </a>
-    </nav>
     <script>
         // Emergency loader cleanup if needed
         setTimeout(() => {
@@ -2312,29 +2426,31 @@
 
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-bottom-nav-modern" id="mobileBottomNav">
-        <a href="#home" class="bottom-nav-item active">
-            <i class="ion-ios-home"></i>
-            <span>Home</span>
+        <a href="#home" class="bottom-nav-item active" onclick="navigateTo('home')">
+            <i class="ion-ios-home-outline"></i>
+            <span data-translate="home">Home</span>
         </a>
-        <a href="#products" class="bottom-nav-item">
-            <i class="ion-ios-grid"></i>
-            <span>Products</span>
+        <a href="#products" class="bottom-nav-item" onclick="navigateTo('products')">
+            <i class="ion-ios-grid-view-outline"></i>
+            <span data-translate="products">Products</span>
         </a>
         <a href="javascript:void(0)" class="bottom-nav-item" onclick="openCart()">
             <div class="bottom-nav-fab">
-                <i class="ion-ios-cart"></i>
+                <i class="ion-ios-cart-outline"></i>
+                <span class="cart-count cart-badge" id="mobileCartCount">0</span>
             </div>
-            <span>Cart</span>
+            <span data-translate="cart">Cart</span>
         </a>
-        <a href="#calculator" class="bottom-nav-item">
-            <i class="ion-ios-calculator"></i>
-            <span>Calculator</span>
+        <a href="#calculator" class="bottom-nav-item" onclick="navigateTo('calculator')">
+            <i class="ion-ios-calculator-outline"></i>
+            <span data-translate="calculator">Calculator</span>
         </a>
-        <a href="javascript:void(0)" class="bottom-nav-item" id="mobileNavProfileBtn" onclick="handleProfileClick()">
-            <div class="bottom-nav-avatar" id="mobileNavAvatar">
-                <span><i class="ion-ios-person"></i></span>
+        <a href="javascript:void(0)" class="bottom-nav-item" id="mobileNavProfileBtn" onclick="handleProfileClick(); return false;">
+            <div class="bottom-nav-avatar user-avatar-premium" id="mobileNavAvatar">
+                <span class="avatar-initials"><i class="ion-ios-person"></i></span>
+                <img src="" alt="" style="display:none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
             </div>
-            <span>Profile</span>
+            <span data-translate="profile">Profile</span>
         </a>
     </nav>
 </body>

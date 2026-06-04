@@ -39,6 +39,7 @@ const App = {
                 AuthService.init();
                 CartService.init();
                 ProductService.init();
+                if (window.WishlistService) WishlistService.init();
             });
 
             App.handleRouting();
@@ -139,29 +140,38 @@ const App = {
         }
     },
 
+    // Known section IDs for routing validation
+    validSections: ['home', 'products', 'blog', 'about', 'cities', 'contact', 'calculator', 'faq', 'quality', 'categories', 'features', 'video', 'reviews', 'cta'],
+
     renderSection: (sectionId) => {
+        // Restore all sections visibility
         document.querySelectorAll('header.hero-section, section:not(.modal)').forEach(s => {
             if (s.id !== 'dashboard' && !s.classList.contains('header')) s.style.display = '';
         });
         const dashboard = document.getElementById('dashboard');
         if (dashboard) dashboard.style.display = 'none';
 
-        const target = document.getElementById(sectionId) || (sectionId === 'home' ? document.documentElement : null);
-        
-        if (target) {
-            const header = document.querySelector('.header');
-            const headerOffset = header ? header.offsetHeight : 80;
-            
-            setTimeout(() => {
-                const elementPosition = target.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                window.scrollTo({
-                    top: sectionId === 'home' ? 0 : offsetPosition,
-                    behavior: 'smooth'
-                });
-            }, 50);
+        if (sectionId === 'home') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
         }
+
+        const target = document.getElementById(sectionId);
+        if (!target) {
+            // Unknown section — fall back to home
+            console.warn(`[Router] Unknown section: "${sectionId}", falling back to home`);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        const header = document.querySelector('.header');
+        const headerOffset = header ? header.offsetHeight : 80;
+        
+        setTimeout(() => {
+            const elementPosition = target.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }, 50);
     },
 
     toggleMobileMenu: (force) => {
@@ -197,6 +207,16 @@ const App = {
                 const visible = window.scrollY > 400;
                 scrollTopBtn.classList.toggle('visible', visible);
                 scrollTopBtn.style.display = visible ? 'flex' : 'none';
+            }
+
+            // Update scroll progress ring
+            const progressCircle = document.getElementById('scrollProgressCircle');
+            if (progressCircle) {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+                const circumference = 125.66; // 2 * PI * 20
+                progressCircle.style.strokeDashoffset = circumference * (1 - progress);
             }
         }, 16); // ~60fps
 
@@ -327,6 +347,55 @@ const App = {
             wrapper.classList.toggle('active');
         });
         document.addEventListener('click', (e) => { if (!wrapper.contains(e.target)) wrapper.classList.remove('active'); });
+
+        // Initialize Live Search
+        App.initLiveSearch();
+    },
+
+    initLiveSearch: () => {
+        const searchInput = document.getElementById('headerSearchInput');
+        const dropdown = document.getElementById('headerSearchDropdown');
+        if (!searchInput || !dropdown) return;
+
+        const doSearch = debounce((query) => {
+            if (query.length < 2) {
+                dropdown.classList.remove('active');
+                return;
+            }
+            const products = typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
+            const q = query.toLowerCase();
+            const results = products.filter(p =>
+                p.name.toLowerCase().includes(q) ||
+                p.description.toLowerCase().includes(q) ||
+                p.category.toLowerCase().includes(q)
+            ).slice(0, 4);
+
+            if (results.length === 0) {
+                dropdown.innerHTML = '<div class="search-no-results">No products found</div>';
+                dropdown.classList.add('active');
+                return;
+            }
+            dropdown.innerHTML = results.map(p => `
+                <div class="search-result-item" onclick="navigateTo('products')">
+                    <img src="${p.image}" alt="${p.name}" class="search-result-img" onerror="this.src='src/assets/images/redbrick1.jpg'">
+                    <div class="search-result-info">
+                        <div class="search-result-name">${p.name}</div>
+                        <div class="search-result-price">₹${p.price.toFixed(2)}/pc</div>
+                    </div>
+                    <button class="search-result-add" onclick="event.stopPropagation(); CartService.add(${p.id}); showToast('✅ Added to cart');">Add</button>
+                </div>
+            `).join('');
+            dropdown.classList.add('active');
+        }, 250);
+
+        searchInput.addEventListener('input', (e) => doSearch(e.target.value.trim()));
+        searchInput.addEventListener('focus', (e) => {
+            if (e.target.value.trim().length >= 2) doSearch(e.target.value.trim());
+        });
+        document.addEventListener('click', (e) => {
+            const searchWrap = document.getElementById('headerSearch');
+            if (searchWrap && !searchWrap.contains(e.target)) dropdown.classList.remove('active');
+        });
     },
 
     updateMobileNavProfileState: () => {
@@ -420,10 +489,27 @@ window.handleLogin = async (e) => {
     e.preventDefault();
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-password').value;
+    const rememberMe = document.getElementById('remember-me')?.checked;
+    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.innerHTML : 'Login';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="ion-load-c animate-spin"></i> Processing...';
+    }
+    
     try {
-        await AuthService.login(email, pass);
+        await AuthService.login(email, pass, rememberMe);
         Modals.close('loginModal');
-    } catch (err) { showToast('❌ Login failed'); }
+        e.target.reset();
+    } catch (err) { 
+        showToast('❌ ' + err); 
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    }
 };
 
 window.proceedToCheckout = () => {
@@ -443,12 +529,7 @@ window.proceedToCheckout = () => {
     }
 
     Modals.close('cartModal');
-    Modals.open('checkoutModal');
-    // Pre-fill user data if available
-    const nameInput = document.getElementById('checkout-name');
-    const mobileInput = document.getElementById('checkout-mobile');
-    if (nameInput && user.name) nameInput.value = user.name;
-    if (mobileInput && user.mobile) mobileInput.value = user.mobile;
+    window.location.href = 'checkout.html';
 };
 
 // Start App
@@ -472,18 +553,53 @@ window.closeMobileMenu = () => App.toggleMobileMenu(false);
 
 window.handleRegister = async (e) => {
     e.preventDefault();
-    const name = document.getElementById('register-name').value;
-    const email = document.getElementById('register-email').value;
-    const mobile = document.getElementById('register-mobile').value;
+    const name = document.getElementById('register-name').value.trim();
+    const email = document.getElementById('register-email').value.trim();
+    const mobile = document.getElementById('register-mobile').value.trim();
     const pass = document.getElementById('register-password').value;
     const confirm = document.getElementById('register-confirm-password').value;
+    const address = document.getElementById('register-address')?.value.trim() || '';
 
-    if (pass !== confirm) { showToast('❌ Passwords do not match'); return; }
+    if (!name || !email || !mobile || !pass) {
+        showToast('⚠️ Please fill in all required fields');
+        return;
+    }
+    if (!Validation.isEmail(email)) {
+        showToast('⚠️ Invalid email format');
+        return;
+    }
+    if (!Validation.isPhone(mobile)) {
+        showToast('⚠️ Invalid mobile number (must be 10 digits)');
+        return;
+    }
+    if (pass.length < 6) {
+        showToast('⚠️ Password must be at least 6 characters');
+        return;
+    }
+    if (pass !== confirm) {
+        showToast('❌ Passwords do not match');
+        return;
+    }
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.innerHTML : 'Register';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="ion-load-c animate-spin"></i> Processing...';
+    }
 
     try {
-        await AuthService.register({ name, email, mobile, password: pass });
+        await AuthService.register({ name, email, mobile, password: pass, address });
         Modals.close('registerModal');
-    } catch (err) { showToast('❌ Registration failed'); }
+        e.target.reset();
+    } catch (err) {
+        showToast('❌ ' + err);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    }
 };
 
 window.openEditProfileModal = () => {
@@ -538,6 +654,36 @@ window.switchProfileTab = (tabId) => {
     if (pane) pane.classList.add('active');
 };
 
+// Dashboard Tab Switcher (wishlist, addresses, main)
+window.switchDashboardTab = (tab) => {
+    const mainContent = document.querySelector('.dashboard-grid');
+    const wishlist = document.getElementById('dashWishlistSection');
+    const addresses = document.getElementById('dashAddressesSection');
+    
+    if (tab === 'wishlist') {
+        if (mainContent) mainContent.querySelectorAll('.dash-links-section, .recent-orders-outer, .dash-stats-grid').forEach(el => el.style.display = 'none');
+        if (wishlist) { wishlist.style.display = 'block'; AuthService.renderDashboard(); }
+        if (addresses) addresses.style.display = 'none';
+        // Re-show wishlist after render
+        setTimeout(() => {
+            const w = document.getElementById('dashWishlistSection');
+            if (w) w.style.display = 'block';
+        }, 50);
+    } else if (tab === 'addresses') {
+        if (mainContent) mainContent.querySelectorAll('.dash-links-section, .recent-orders-outer, .dash-stats-grid').forEach(el => el.style.display = 'none');
+        if (wishlist) wishlist.style.display = 'none';
+        if (addresses) { addresses.style.display = 'block'; AuthService.renderDashboard(); }
+        setTimeout(() => {
+            const a = document.getElementById('dashAddressesSection');
+            if (a) a.style.display = 'block';
+        }, 50);
+    } else {
+        if (mainContent) mainContent.querySelectorAll('.dash-links-section, .recent-orders-outer, .dash-stats-grid').forEach(el => el.style.display = '');
+        if (wishlist) wishlist.style.display = 'none';
+        if (addresses) addresses.style.display = 'none';
+    }
+};
+
 // Password Toggles
 const toggleP = (id, btn) => {
     const i = document.getElementById(id);
@@ -557,55 +703,76 @@ window.handleNewsletterSubmit = (e) => {
     e.target.reset();
 };
 
-// Order Submission
-window.submitOrder = (e) => {
-    e.preventDefault();
-    const count = CartService.getCount();
-    if (count === 0) {
-        showToast('⚠️ Your cart is empty');
-        return;
-    }
-
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Place Order';
-    
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="ion-load-c animate-spin"></i> Processing...';
-    }
-
-    showToast('⏳ Securely processing your order...');
-    
-    setTimeout(() => {
-        const orderData = {
-            items: CartService.getCart(),
-            total: CartService.getTotal(),
-            customer: {
-                name: document.getElementById('checkout-name').value,
-                mobile: document.getElementById('checkout-mobile').value,
-                address: document.getElementById('checkout-address').value
-            },
-            date: new Date().toISOString()
-        };
-        
-        console.log('📦 Order Placed:', orderData);
-        
-        CartService.clearCart();
-        Modals.close('checkoutModal');
-        
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
-        }
-
-        showToast('🎉 Order placed successfully! Check your email for confirmation.', 6000);
-        navigateTo('home');
-    }, 2000);
-};
-
 // ── Backward Compatibility Aliases ──
 window.closeRegisterModal = () => Modals.close('registerModal');
 window.openCart = () => Modals.open('cartModal');
+
+// ── Auth Form Interactive Effects ──
+(function initAuthEffects() {
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Button Ripple Effect on Auth Submit
+        document.querySelectorAll('.auth-submit').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.width = ripple.style.height = '10px';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 700);
+            });
+        });
+
+        // 2. Password Strength Meter
+        const regPassword = document.getElementById('register-password');
+        const strengthBar = document.getElementById('regStrengthBar');
+        const strengthText = document.getElementById('regStrengthText');
+
+        if (regPassword && strengthBar && strengthText) {
+            regPassword.addEventListener('input', function () {
+                const val = this.value;
+                let score = 0;
+                if (val.length >= 6) score++;
+                if (val.length >= 10) score++;
+                if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+                if (/\d/.test(val)) score++;
+                if (/[^A-Za-z0-9]/.test(val)) score++;
+
+                const levels = ['', 'weak', 'fair', 'good', 'strong', 'strong'];
+                const labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Strong'];
+                const level = val.length === 0 ? 0 : Math.min(score, 5);
+
+                strengthBar.className = 'auth-strength-bar' + (level > 0 ? ' ' + levels[level] : '');
+                strengthText.className = 'auth-strength-text' + (level > 0 ? ' ' + levels[level] : '');
+                strengthText.textContent = labels[level] || '';
+            });
+        }
+
+        // 3. Interactive Mouse Glow Effect on Auth Cards
+        document.querySelectorAll('#loginModal .auth-card-inner, #registerModal .auth-card-inner').forEach(card => {
+            card.addEventListener('mousemove', function (e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                this.style.setProperty('--mouse-x', x + 'px');
+                this.style.setProperty('--mouse-y', y + 'px');
+            });
+        });
+
+        // 4. Input focus sound-like visual feedback
+        document.querySelectorAll('.auth-input, .auth-textarea').forEach(input => {
+            input.addEventListener('focus', function () {
+                this.closest('.auth-input-group')?.classList.add('focused');
+            });
+            input.addEventListener('blur', function () {
+                this.closest('.auth-input-group')?.classList.remove('focused');
+            });
+        });
+    });
+})();
 
 // ── Counter Animation (for city sections) ──
 function animateCounter(el) {
@@ -661,6 +828,33 @@ window.toggleFaq = (btn) => {
     // Toggle clicked
     if (!isActive) {
         item.classList.add('active');
+    }
+};
+
+window.downloadInvoicePDF = () => {
+    const element = document.getElementById('invoiceArea');
+    if (!element) {
+        showToast('❌ Invoice element not found');
+        return;
+    }
+    const invNo = document.getElementById('invNumber')?.textContent || 'Invoice';
+    
+    const opt = {
+        margin:       10,
+        filename:     `Gurukripa_Invoice_${invNo}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    
+    showToast('⏳ Generating PDF...');
+    
+    if (window.html2pdf) {
+        window.html2pdf().set(opt).from(element).save()
+            .then(() => showToast('🎉 PDF downloaded successfully!'))
+            .catch(() => showToast('❌ PDF generation failed'));
+    } else {
+        showToast('❌ html2pdf library not loaded. Please try printing instead.');
     }
 };
 

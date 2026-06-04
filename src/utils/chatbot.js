@@ -69,16 +69,22 @@ const Chatbot = {
             if (t) t.remove();
         };
 
-        const handleChatMessage = () => {
+        const handleChatMessage = (msgText) => {
             if (!input || !messagesDiv) return;
-            const text = input.value.trim();
-            if (!text) return;
+            const text = (typeof msgText === 'string' ? msgText : input.value).trim();
+            if (!text) {
+                showToast('⚠️ Please type a message first');
+                return;
+            }
 
             // Add user message
             const userMsg = document.createElement('div');
             userMsg.className = 'chatbot-message user-message';
             const userTimestamp = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-            userMsg.innerHTML = `<p>${text}</p><small class="message-time">${userTimestamp}</small>`;
+            
+            // Prevent XSS by escaping HTML tags
+            const escapedText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            userMsg.innerHTML = `<p>${escapedText}</p><small class="message-time">${userTimestamp}</small>`;
             messagesDiv.appendChild(userMsg);
             
             // Save to history
@@ -129,21 +135,39 @@ const Chatbot = {
         };
         
         if (t.includes('price') || t.includes('कीमत') || t.includes('rate') || t.includes('cost') || t.includes('दाम')) {
+            const products = typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
+            const priceList = products.map(p => `• ${p.name}: <b>₹${p.price.toFixed(2)}</b>/pc`).join('<br>');
             return withSuggestions(
-                '🧱 Our brick prices:<br>• Shiv Eent (Grade A): ₹10-11/pc<br>• Premium Red Clay: ₹8.5/pc<br>• Standard Field Brick: ₹6.5/pc<br>• Machine Made Wirecut: ₹9/pc<br><br>📞 Call <b>+91 91989 23230</b> for bulk pricing!',
+                `🧱 Our premium brick prices:<br>${priceList}<br><br>📞 Call <b>+91 91989 23230</b> for bulk/custom discounts!`,
                 ['Delivery Info', 'Quality Details', 'Place Order']
             );
         }
         if (t.includes('delivery') || t.includes('डिलीवरी') || t.includes('deliver')) {
             return withSuggestions(
-                '🚛 We offer <b>same-day delivery</b> in Jaunpur district! For Varanasi & surrounding areas, delivery takes 1-2 days. Minimum order: 1000 bricks.',
-                ['View Prices', 'Place Order', 'Contact Us']
+                '🚛 We offer <b>same-day priority delivery</b> in Jaunpur district! For Varanasi, Jaunpur Rural & surrounding areas, delivery takes 1-2 days. Minimum order: 1000 bricks.',
+                ['View Prices', 'Order Now', 'Contact Us']
             );
         }
         if (t.includes('quality') || t.includes('गुणवत्ता') || t.includes('grade')) {
             return withSuggestions(
-                '⭐ All our bricks are <b>first-class quality</b> — well-burnt, uniform shape, and highly durable. We offer 4 grades from Standard to Premium Shiv Eent.',
-                ['View Prices', 'Delivery Info', 'Place Order']
+                '⭐ All our bricks are <b>first-class quality</b> — well-burnt, uniform shape, high load capacity, and highly durable. We offer 4 grades from Standard Field Bricks to ultra-premium Shiv Eent Grade-A.',
+                ['View Prices', 'Delivery Info', 'Order Now']
+            );
+        }
+        if (t.includes('shiv') || t.includes('grade-a') || t.includes('grade a')) {
+            const shivEent = typeof PRODUCTS !== 'undefined' ? PRODUCTS.find(p => p.category === 'shiv-eent') : null;
+            const shivPrice = shivEent ? shivEent.price.toFixed(2) : '10.00';
+            return withSuggestions(
+                `🌟 <b>Shiv Eent (Grade-A)</b> is our ultra-premium quality brick, double-fired for maximum durability and strength. Ideal for load-bearing walls and high-end construction.<br>• Price: <b>₹${shivPrice} per brick</b><br>• Specs: Red Clay • 9×4.5×3 inches`,
+                ['View Prices', 'Delivery Info', 'Order Now']
+            );
+        }
+        if (t.includes('machine') || t.includes('wirecut') || t.includes('precision')) {
+            const machineBrick = typeof PRODUCTS !== 'undefined' ? PRODUCTS.find(p => p.category === 'machine-made') : null;
+            const machinePrice = machineBrick ? machineBrick.price.toFixed(2) : '9.00';
+            return withSuggestions(
+                `⚙️ Our <b>Machine Made Wirecut Bricks</b> have perfectly uniform shapes, sharp corners, and a smooth finish. Perfect for exposed brickwork, outer walls, and modern aesthetics.<br>• Price: <b>₹${machinePrice} per brick</b><br>• Specs: Precision Cut • 9×4.5×3 inches`,
+                ['View Prices', 'Delivery Info', 'Order Now']
             );
         }
         if (t.includes('order') || t.includes('buy') || t.includes('खरीद') || t.includes('ऑर्डर')) {
@@ -154,34 +178,46 @@ const Chatbot = {
         }
         if (t.includes('location') || t.includes('address') || t.includes('where') || t.includes('पता')) {
             return withSuggestions(
-                '📍 We are located in <b>Jalalpur, Jaunpur, Uttar Pradesh — 222001</b>.<br>Serving: Jaunpur, Varanasi, Ghazipur, Sultanpur & nearby areas.',
+                '📍 We are located in <b>Nevada, Jalalpur-Chawari Road, Jalalpur, Jaunpur, Uttar Pradesh — 222001</b>.<br>Serving: Jaunpur, Varanasi, Ghazipur, Sultanpur & nearby areas.',
                 ['Contact Us', 'View Products', 'Delivery Info']
             );
         }
         if (t.includes('time') || t.includes('hours') || t.includes('open') || t.includes('समय')) {
             return withSuggestions(
-                '🕐 We are open <b>Monday – Saturday, 8:00 AM – 6:00 PM</b>.<br>Closed on Sundays and public holidays.',
-                ['Contact Us', 'Place Order', 'View Products']
+                '🕐 We are open <b>Monday – Saturday, 9:00 AM – 7:00 PM</b>.<br>Closed on Sundays.',
+                ['Contact Us', 'Order Now', 'View Products']
             );
         }
         if (t.includes('contact') || t.includes('phone') || t.includes('call') || t.includes('संपर्क')) {
             return withSuggestions(
                 '📞 Contact us:<br>• Phone: <b>+91 91989 23230</b><br>• WhatsApp: +91 91989 23230<br>• Email: info@gurukripaentudyog.com',
-                ['View Products', 'Place Order', 'Delivery Info']
+                ['View Products', 'Order Now', 'Delivery Info']
             );
         }
         if (t.includes('hi') || t.includes('hello') || t.includes('namaste') || t.includes('नमस्ते')) {
             return withSuggestions(
                 'Namaste! 🙏 Welcome to <b>Gurukripa Bricks</b>. How can I help you today? You can ask about prices, delivery, quality, or how to order.',
-                ['View Prices', 'Delivery Info', 'Place Order', 'Contact Us']
+                ['View Prices', 'Best Brick?', 'Delivery Info', 'Order Now']
             );
+        }
+        if (t.includes('best') || t.includes('recommend') || t.includes('which brick') || t.includes('सबसे अच्छ') || t.includes('कौन सी')) {
+            const products = typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
+            const best = products.reduce((a, b) => (b.rating || 0) > (a.rating || 0) ? b : a, products[0]);
+            const bestPrice = best ? best.price.toFixed(2) : '10.00';
+            return withSuggestions(
+                `🌟 Based on quality ratings, I recommend <b>${best ? best.name : 'Shiv Eent (Grade-A)'}</b>!<br>• Rating: ⭐ ${best ? best.rating : '4.9'}/5<br>• Price: ₹${bestPrice}/pc<br>• ${best && best.specs ? best.specs.strength : '1500+ PSI'} strength<br><br>Ideal for load-bearing walls and premium construction.`,
+                ['View Prices', 'Delivery Info', 'Add to Cart']
+            );
+        }
+        if (t.includes('save my') || t.includes('callback') || t.includes('call me') || t.includes('contact me')) {
+            return '📞 I\'d love to help! Please call us directly at <b>+91 91989 23230</b> and our team will assist you immediately. We\'re available Mon-Sat, 9AM-7PM.';
         }
         if (t.includes('thank') || t.includes('धन्यवाद')) {
             return '🙏 You\'re most welcome! Feel free to ask if you need anything else. Happy building! 🏗️';
         }
         return withSuggestions(
             'Thank you for your message! 😊 For detailed information, please call us at <b>+91 91989 23230</b> or visit our contact section. We\'re happy to help!',
-            ['View Prices', 'Contact Us', 'Place Order']
+            ['View Prices', 'Best Brick?', 'Contact Us', 'Order Now']
         );
     },
     
@@ -231,7 +267,15 @@ const Chatbot = {
             const msgDiv = document.createElement('div');
             msgDiv.className = `chatbot-message ${msg.sender === 'user' ? 'user-message' : 'bot-message'}`;
             const timestamp = new Date(msg.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-            msgDiv.innerHTML = `<p>${msg.text}</p><small class="message-time">${timestamp}</small>`;
+            
+            // XSS Prevention for history render
+            const escapedText = msg.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            // Note: If msg is from bot, it might contain safe HTML tags like <b> or <br>, so we only escape user messages
+            if (msg.sender === 'user') {
+                msgDiv.innerHTML = `<p>${escapedText}</p><small class="message-time">${timestamp}</small>`;
+            } else {
+                msgDiv.innerHTML = `<p>${msg.text}</p><small class="message-time">${timestamp}</small>`;
+            }
             messagesDiv.appendChild(msgDiv);
         });
         

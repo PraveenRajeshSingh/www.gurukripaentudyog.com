@@ -8,7 +8,7 @@ var TranslationService = {
     setLanguage: (lang) => {
         const oldLang = currentLanguage;
         currentLanguage = lang;
-        localStorage.setItem('SELECTED_LANGUAGE', lang); // Use a stable key
+        localStorage.setItem(STORAGE_KEYS.LANGUAGE, lang); // Use standard key
         document.documentElement.lang = lang;
 
         // Add/Remove body classes for CSS targeting
@@ -27,28 +27,24 @@ var TranslationService = {
         const elements = document.querySelectorAll('[data-translate]');
         elements.forEach(element => {
             const key = element.getAttribute('data-translate');
-            if (TRANSLATIONS[currentLanguage] && TRANSLATIONS[currentLanguage][key]) {
-                const trans = TRANSLATIONS[currentLanguage][key];
+            const trans = TranslationService.getLabel(key);
 
-                // Specific manual overrides for complex HTML tags if needed
-                if (key === 'heroTitle') {
-                    const highlight = currentLanguage === 'hi' ? 'गुरुकृपा' : 'Gurukripa';
-                    const main = currentLanguage === 'hi' ? 'ईंट' : 'Bricks';
-                    element.innerHTML = `<span class="color-changing-text">${highlight}</span> ${main}`;
-                } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                    element.placeholder = trans;
-                } else {
-                    element.textContent = trans;
-                }
+            // Specific manual overrides for complex HTML tags if needed
+            if (key === 'heroTitle') {
+                const highlight = currentLanguage === 'hi' ? 'गुरुकृपा' : 'Gurukripa';
+                const main = currentLanguage === 'hi' ? 'ईंट' : 'Bricks';
+                element.innerHTML = `<span class="color-changing-text">${highlight}</span> ${main}`;
+            } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                element.placeholder = trans;
+            } else {
+                element.textContent = trans;
             }
         });
 
         // Placeholders explicitly
         document.querySelectorAll('[data-placeholder]').forEach(el => {
             const key = el.getAttribute('data-placeholder');
-            if (TRANSLATIONS[currentLanguage] && TRANSLATIONS[currentLanguage][key]) {
-                el.placeholder = TRANSLATIONS[currentLanguage][key];
-            }
+            el.placeholder = TranslationService.getLabel(key);
         });
     },
     updateToggle: () => {
@@ -63,13 +59,18 @@ var TranslationService = {
         });
     },
     getLabel: (key) => {
-        return (TRANSLATIONS[currentLanguage] && TRANSLATIONS[currentLanguage][key])
-            ? TRANSLATIONS[currentLanguage][key]
-            : key;
+        if (TRANSLATIONS[currentLanguage] && TRANSLATIONS[currentLanguage][key]) {
+            return TRANSLATIONS[currentLanguage][key];
+        }
+        // Fallback to English
+        if (TRANSLATIONS['en'] && TRANSLATIONS['en'][key]) {
+            return TRANSLATIONS['en'][key];
+        }
+        return key;
     },
     init: () => {
         // Load persisted language
-        const saved = localStorage.getItem('SELECTED_LANGUAGE');
+        const saved = localStorage.getItem(STORAGE_KEYS.LANGUAGE);
         if (saved && (saved === 'en' || saved === 'hi')) {
             currentLanguage = saved;
         }
