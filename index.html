@@ -336,20 +336,18 @@
         }
 
         .nav-logo-mark {
-            width: 36px;
-            height: 36px;
-            background: var(--brand);
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1.5px solid var(--line)
         }
-
-        .nav-logo-mark svg {
-            width: 22px;
-            height: 22px;
-            fill: #fff
+        .nav-logo-mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block
         }
 
         .nav-brand-text {
@@ -4073,6 +4071,415 @@
         .sec-alt {
             background: var(--bg)
         }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   WHATSAPP FLOATING BUTTON
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        .wa-float {
+            position: fixed;
+            left: 24px;
+            bottom: 24px;
+            z-index: 802;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px
+        }
+        .wa-float-bubble {
+            background: var(--ink);
+            color: #fff;
+            font-size: .72rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 50px;
+            white-space: nowrap;
+            animation: waPop 3s ease-in-out infinite;
+            box-shadow: 0 4px 14px rgba(0,0,0,.2);
+            pointer-events: none
+        }
+        @keyframes waPop {
+            0%,100%{opacity:1;transform:translateY(0)}
+            50%{opacity:.85;transform:translateY(-3px)}
+        }
+        .wa-float-btn {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #25D366;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 24px rgba(37,211,102,.45);
+            transition: transform .2s var(--ease);
+            animation: waPulse 2.5s ease-in-out infinite
+        }
+        .wa-float-btn:hover { transform: scale(1.1) }
+        @keyframes waPulse {
+            0%{box-shadow:0 6px 24px rgba(37,211,102,.45),0 0 0 0 rgba(37,211,102,.4)}
+            70%{box-shadow:0 6px 24px rgba(37,211,102,.45),0 0 0 16px rgba(37,211,102,0)}
+            100%{box-shadow:0 6px 24px rgba(37,211,102,.45),0 0 0 0 rgba(37,211,102,0)}
+        }
+        @media(max-width:1024px){.wa-float{bottom:80px}}
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LIGHTBOX
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        .lb-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.92);
+            z-index: 9990;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all .25s var(--ease)
+        }
+        .lb-overlay.open { opacity: 1; visibility: visible }
+        .lb-img {
+            max-width: min(920px, 90vw);
+            max-height: 86vh;
+            object-fit: contain;
+            border-radius: var(--r-lg);
+            box-shadow: 0 40px 100px rgba(0,0,0,.5)
+        }
+        .lb-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.12);
+            border: 1.5px solid rgba(255,255,255,.25);
+            color: #fff;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s
+        }
+        .lb-close:hover { background: var(--brand) }
+        .lb-caption {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,.65);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            font-size: .8rem;
+            font-weight: 600;
+            padding: 7px 18px;
+            border-radius: 50px;
+            white-space: nowrap
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FACTORY GALLERY
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        .gallery-sec {
+            background: var(--ink);
+            padding: clamp(56px,8vw,100px) 0
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1.65fr 1fr 1fr;
+            grid-template-rows: 255px 255px;
+            gap: 12px;
+            margin-top: 40px
+        }
+        .gallery-item {
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer
+        }
+        .gallery-item:first-child { grid-row: 1 / 3 }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .5s var(--ease)
+        }
+        .gallery-item:hover img { transform: scale(1.07) }
+        .gallery-item-ov {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(28,16,9,.72) 0%, transparent 55%);
+            opacity: 0;
+            transition: opacity .3s
+        }
+        .gallery-item:hover .gallery-item-ov { opacity: 1 }
+        .gallery-zoom {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%) scale(0);
+            width: 52px;
+            height: 52px;
+            background: rgba(255,255,255,.14);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #fff;
+            transition: transform .3s var(--ease)
+        }
+        .gallery-item:hover .gallery-zoom { transform: translate(-50%,-50%) scale(1) }
+        .gallery-lbl {
+            position: absolute;
+            bottom: 12px;
+            left: 14px;
+            color: #fff;
+            font-size: .74rem;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all .3s
+        }
+        .gallery-item:hover .gallery-lbl { opacity: 1; transform: translateY(0) }
+        @media(max-width:768px){
+            .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:200px 200px;gap:8px}
+            .gallery-item:first-child{grid-row:auto;grid-column:1/3}
+        }
+        @media(max-width:480px){
+            .gallery-grid{grid-template-columns:1fr;grid-template-rows:unset}
+            .gallery-item:first-child{grid-column:auto}
+            .gallery-item{height:210px}
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PRICE COMPARISON TABLE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        .price-sec { background: var(--bg-subtle) }
+        .price-table-wrap {
+            margin-top: 44px;
+            overflow-x: auto;
+            border-radius: var(--r-xl);
+            box-shadow: var(--sh-card);
+            border: 1px solid var(--line)
+        }
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            min-width: 640px
+        }
+        .price-table thead tr {
+            background: linear-gradient(135deg,var(--brand),var(--brand-dark))
+        }
+        .price-table thead th {
+            padding: 17px 18px;
+            text-align: left;
+            color: #fff;
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase
+        }
+        .price-table thead th:last-child { text-align: center }
+        .price-table tbody tr {
+            border-bottom: 1px solid var(--line);
+            transition: background var(--t)
+        }
+        .price-table tbody tr:hover { background: var(--bg-subtle) }
+        .price-table tbody tr:last-child { border-bottom: none }
+        .price-table tbody tr.pt-highlight {
+            background: rgba(200,70,10,.04);
+            border-left: 3px solid var(--brand)
+        }
+        .price-table td {
+            padding: 15px 18px;
+            font-size: .86rem;
+            color: var(--ink-2);
+            vertical-align: middle
+        }
+        .price-table td:last-child { text-align: center }
+        .pt-name { font-weight: 700; color: var(--ink); font-size: .9rem }
+        .pt-sub { font-size: .74rem; color: var(--ink-3); margin-top: 3px }
+        .pt-badge {
+            display: inline-block;
+            font-size: .6rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 50px;
+            margin-left: 6px;
+            background: var(--brand);
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            vertical-align: middle
+        }
+        .pt-badge.amber { background: var(--brand-amber); color: var(--ink) }
+        .pt-price {
+            font-family: var(--display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--brand)
+        }
+        .pt-price small { font-family:var(--body);font-size:.7rem;color:var(--ink-3);font-weight:400 }
+        .pt-check { color: #16a34a }
+        .pt-cross { color: var(--ink-3) }
+        .pt-wa {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #25D366;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: var(--r-sm);
+            font-size: .75rem;
+            font-weight: 700;
+            transition: all var(--t);
+            white-space: nowrap
+        }
+        .pt-wa:hover { background: #1aa354; transform: translateY(-1px) }
+        .price-table tfoot td {
+            padding: 18px;
+            background: var(--bg-subtle);
+            font-size: .8rem;
+            color: var(--ink-3);
+            text-align: center
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   QUALITY / PROCESS SECTION
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        .quality-sec { background: var(--bg) }
+        .quality-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 22px;
+            margin-top: 44px
+        }
+        .quality-card {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: var(--r-xl);
+            overflow: hidden;
+            transition: all var(--t) var(--ease)
+        }
+        .quality-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--sh-hover);
+            border-color: var(--line-mid)
+        }
+        .quality-card-img {
+            height: 195px;
+            overflow: hidden;
+            position: relative
+        }
+        .quality-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .5s var(--ease)
+        }
+        .quality-card:hover .quality-card-img img { transform: scale(1.05) }
+        .quality-step {
+            position: absolute;
+            top: 13px;
+            left: 13px;
+            width: 34px;
+            height: 34px;
+            background: var(--brand);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .76rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(200,70,10,.4)
+        }
+        .quality-card-body { padding: 22px }
+        .quality-card-icon { font-size: 1.5rem; margin-bottom: 10px }
+        .quality-card-title {
+            font-family: var(--display);
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px
+        }
+        .quality-card-desc { font-size: .82rem; color: var(--ink-3); line-height: 1.65 }
+        .quality-cert-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 44px;
+            padding: 28px 32px;
+            background: linear-gradient(135deg,var(--brand),var(--brand-dark));
+            border-radius: var(--r-xl)
+        }
+        .quality-cert-item { text-align: center; color: #fff }
+        .quality-cert-icon { font-size: 2rem; margin-bottom: 6px }
+        .quality-cert-title { font-size: .8rem; font-weight: 700; margin-bottom: 2px }
+        .quality-cert-sub { font-size: .7rem; opacity: .7 }
+        .quality-cert-divider { width:1px; height:50px; background:rgba(255,255,255,.2) }
+        @media(max-width:900px){
+            .quality-grid{grid-template-columns:1fr 1fr}
+            .quality-cert-divider{display:none}
+        }
+        @media(max-width:560px){.quality-grid{grid-template-columns:1fr}}
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DELIVERY PHOTO GRID
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        .delivery-photos {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 14px;
+            margin-top: 36px;
+            margin-bottom: 36px
+        }
+        .delivery-photo {
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            position: relative;
+            height: 180px;
+            cursor: pointer;
+            transition: all var(--t) var(--ease)
+        }
+        .delivery-photo:hover { transform: translateY(-4px); box-shadow: var(--sh-hover) }
+        .delivery-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .4s var(--ease)
+        }
+        .delivery-photo:hover img { transform: scale(1.08) }
+        .delivery-photo-ov {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(28,16,9,.78) 0%, rgba(28,16,9,0) 55%)
+        }
+        .delivery-photo-lbl {
+            position: absolute;
+            bottom: 11px;
+            left: 12px;
+            right: 12px;
+            color: #fff;
+            font-size: .76rem;
+            font-weight: 700
+        }
+        .delivery-photo-lbl small {
+            display: block;
+            font-size: .65rem;
+            opacity: .75;
+            font-weight: 400;
+            margin-top: 1px
+        }
+        @media(max-width:900px){.delivery-photos{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:480px){.delivery-photos{grid-template-columns:repeat(2,1fr);gap:8px}.delivery-photo{height:140px}}
     </style>
 </head>
 
@@ -4089,6 +4496,24 @@
 
     <!-- Toast Container -->
     <div id="toast-container"></div>
+
+
+    <!-- ━━━━━━━━━━━━━━━━━ WHATSAPP FLOAT ━━━━━━━━━━━━━━━━━ -->
+    <div class="wa-float">
+        <div class="wa-float-bubble">📦 Order on WhatsApp</div>
+        <a class="wa-float-btn" href="https://wa.me/919198923230?text=Namaste!%20I%20want%20to%20order%20bricks.%20Please%20share%20availability%20and%20pricing." target="_blank" rel="noopener" aria-label="Order on WhatsApp">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lb-overlay" id="lb" onclick="lbClose(event)">
+        <img class="lb-img" id="lbImg" src="" alt="">
+        <button class="lb-close" onclick="lbClose()">✕</button>
+        <div class="lb-caption" id="lbCap"></div>
+    </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ TOPBAR ━━━━━━━━━━━━━━━━━ -->
     <div class="topbar">
@@ -4114,10 +4539,7 @@
                 <!-- Brand -->
                 <a href="#home" class="nav-brand" onclick="scrollToSection('home')">
                     <div class="nav-logo-mark">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="2" y="10" width="20" height="10" rx="2" />
-                            <rect x="2" y="4" width="20" height="5" rx="1" opacity=".7" />
-                        </svg>
+                        <img src="src/assets/images/gurukripaLogo.jpg" alt="Gurukripa Bricks Logo">
                     </div>
                     <div class="nav-brand-text">
                         गुरुकृपा ईंट उद्योग
@@ -4140,8 +4562,9 @@
                 <nav class="nav-links" role="navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)">Home</a>
                     <a href="#categories" class="nav-link" onclick="setActiveNav(this)">Products</a>
+                    <a href="#pricing" class="nav-link" onclick="setActiveNav(this)">Pricing</a>
+                    <a href="#gallery" class="nav-link" onclick="setActiveNav(this)">Gallery</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)">About</a>
-                    <a href="#calculator" class="nav-link" onclick="setActiveNav(this)">Calculator</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)">Contact</a>
                 </nav>
 
@@ -4225,10 +4648,7 @@
         <div class="drawer-head">
             <div class="nav-brand">
                 <div class="nav-logo-mark">
-                    <svg viewBox="0 0 24 24" fill="white">
-                        <rect x="2" y="10" width="20" height="10" rx="2" />
-                        <rect x="2" y="4" width="20" height="5" rx="1" opacity=".7" />
-                    </svg>
+                    <img src="src/assets/images/gurukripaLogo.jpg" alt="Gurukripa Logo">
                 </div>
                 <div class="nav-brand-text">गुरुकृपा</div>
             </div>
@@ -4291,7 +4711,7 @@
     <section id="home" class="hero">
         <!-- Left: Image Panel -->
         <div class="hero-img">
-            <img src="src/assets/images/brick_product_1.png"
+            <img src="src/assets/images/redbrick1.jpg"
                 alt="Premium Red Clay Bricks — Gurukripa Bricks Industry" loading="eager">
             <div class="hero-img-overlay"></div>
             <!-- Floating cert card -->
@@ -4500,6 +4920,103 @@
         </div>
     </section>
 
+
+    <!-- ━━━━━━━━━━━━━━━━━ PRICE COMPARISON ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec price-sec" id="pricing">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag">Transparent Pricing</span>
+                <h2 class="sec-title">Compare Our Products</h2>
+                <p class="sec-sub">No hidden costs — honest pricing at every budget level</p>
+            </div>
+            <div class="price-table-wrap">
+                <table class="price-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price / Brick</th>
+                            <th>Strength</th>
+                            <th>Best For</th>
+                            <th>ISI Grade</th>
+                            <th>Bulk Discount</th>
+                            <th>Order</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="pt-highlight">
+                            <td>
+                                <div class="pt-name">Shiv Eent Grade-A <span class="pt-badge">Best Seller</span></div>
+                                <div class="pt-sub">Double-fired · Ultra premium</div>
+                            </td>
+                            <td><span class="pt-price">₹12 <small>/pc</small></span></td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td style="font-size:.82rem">Load-bearing walls, foundations</td>
+                            <td><span class="pt-check">✔ Grade-A</span></td>
+                            <td><span class="pt-check">✔ Up to 15%</span></td>
+                            <td><a href="https://wa.me/919198923230?text=I want to order Shiv Eent Grade-A bricks" target="_blank" rel="noopener" class="pt-wa">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                Order Now
+                            </a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="pt-name">Machine Made Wirecut <span class="pt-badge">New</span></div>
+                                <div class="pt-sub">Zero size variation · Sharp edges</div>
+                            </td>
+                            <td><span class="pt-price">₹11 <small>/pc</small></span></td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td style="font-size:.82rem">Exposed brickwork, modern builds</td>
+                            <td><span class="pt-check">✔ Grade-A</span></td>
+                            <td><span class="pt-check">✔ Up to 10%</span></td>
+                            <td><a href="https://wa.me/919198923230?text=I want to order Machine Made Wirecut bricks" target="_blank" rel="noopener" class="pt-wa"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Order Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="pt-name">Premium Red Bricks <span class="pt-badge amber">Popular</span></div>
+                                <div class="pt-sub">High compressive strength</div>
+                            </td>
+                            <td><span class="pt-price">₹10 <small>/pc</small></span></td>
+                            <td>⭐⭐⭐⭐½</td>
+                            <td style="font-size:.82rem">Structural & residential walls</td>
+                            <td><span class="pt-check">✔ First Class</span></td>
+                            <td><span class="pt-check">✔ Up to 12%</span></td>
+                            <td><a href="https://wa.me/919198923230?text=I want to order Premium Red Bricks" target="_blank" rel="noopener" class="pt-wa"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Order Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="pt-name">Standard Hollow Bricks</div>
+                                <div class="pt-sub">Lightweight · Better insulation</div>
+                            </td>
+                            <td><span class="pt-price">₹9 <small>/pc</small></span></td>
+                            <td>⭐⭐⭐½</td>
+                            <td style="font-size:.82rem">Partition & interior walls</td>
+                            <td><span class="pt-cross">Standard</span></td>
+                            <td><span class="pt-check">✔ Up to 8%</span></td>
+                            <td><a href="https://wa.me/919198923230?text=I want to order Hollow Bricks" target="_blank" rel="noopener" class="pt-wa"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Order Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="pt-name">Standard Bricks <span class="pt-badge amber">Value Pick</span></div>
+                                <div class="pt-sub">Best value · Reliable everyday</div>
+                            </td>
+                            <td><span class="pt-price">₹8 <small>/pc</small></span></td>
+                            <td>⭐⭐⭐⭐</td>
+                            <td style="font-size:.82rem">Boundary & general walls</td>
+                            <td><span class="pt-check">✔ Standard</span></td>
+                            <td><span class="pt-check">✔ Up to 8%</span></td>
+                            <td><a href="https://wa.me/919198923230?text=I want to order Standard Bricks" target="_blank" rel="noopener" class="pt-wa"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Order Now</a></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7">📞 Need a bulk quote? Call <strong>+91 91989 23230</strong> or WhatsApp for the best rates. Min. order 1,000 bricks. Prices exclude transport charges.</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </section>
+
     <!-- ━━━━━━━━━━━━━━━━━ ABOUT ━━━━━━━━━━━━━━━━━ -->
     <section class="sec sec-alt" id="about">
         <div class="container">
@@ -4556,6 +5073,128 @@
                         </div>
                     </div>
                     <a href="tel:+919198923230" class="btn btn-primary">📞 Talk to Us Today</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ━━━━━━━━━━━━━━━━━ FACTORY GALLERY ━━━━━━━━━━━━━━━━━ -->
+    <section class="gallery-sec" id="gallery">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag" style="background:rgba(245,166,35,.15);color:var(--brand-amber)">Our Factory</span>
+                <h2 class="sec-title" style="color:#fff">Inside Gurukripa Bricks</h2>
+                <p class="sec-sub" style="color:rgba(255,255,255,.5)">A look inside our state-of-the-art manufacturing facility in Jaunpur, UP</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item" onclick="lbOpen('src/assets/images/gurukripaEnt.jpg','Gurukripa Bricks — Main Factory View, Jaunpur')">
+                    <img src="src/assets/images/gurukripaEnt.jpg" alt="Gurukripa Factory Main View" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Main Factory — Jaunpur</div>
+                </div>
+                <div class="gallery-item" onclick="lbOpen('src/assets/images/gurukripaEnt1.png','Gurukripa Bricks — Production Area')">
+                    <img src="src/assets/images/gurukripaEnt1.png" alt="Gurukripa Production Area" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Production Area</div>
+                </div>
+                <div class="gallery-item" onclick="lbOpen('src/assets/images/redbrick1.jpg','Premium Grade-A Red Bricks — Ready for Dispatch')">
+                    <img src="src/assets/images/redbrick1.jpg" alt="Premium Red Bricks Ready" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Ready for Dispatch</div>
+                </div>
+                <div class="gallery-item" onclick="lbOpen('src/assets/images/gurukripaEnt2.png','Gurukripa Bricks — Kiln Area')">
+                    <img src="src/assets/images/gurukripaEnt2.png" alt="Gurukripa Kiln Area" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Kiln Area</div>
+                </div>
+                <div class="gallery-item" onclick="lbOpen('src/assets/images/redbricks.jpg','Gurukripa Premium Red Clay Bricks — Grade-A Quality')">
+                    <img src="src/assets/images/redbricks.jpg" alt="Grade-A Red Bricks" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Grade-A Red Bricks</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ━━━━━━━━━━━━━━━━━ QUALITY PROCESS ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec quality-sec" id="quality">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag">Our Process</span>
+                <h2 class="sec-title">Built on Quality. Fired by Passion.</h2>
+                <p class="sec-sub">Every brick passes through a rigorous 3-stage process before leaving our kiln</p>
+            </div>
+            <div class="quality-grid">
+                <div class="quality-card">
+                    <div class="quality-card-img">
+                        <img src="src/assets/images/brick_product_1.png" alt="Clay Selection Process" loading="lazy">
+                        <div class="quality-step">1</div>
+                    </div>
+                    <div class="quality-card-body">
+                        <div class="quality-card-icon">🏺</div>
+                        <div class="quality-card-title">Premium Clay Selection</div>
+                        <div class="quality-card-desc">Only finest alluvial clay from Gomti river banks. Each batch tested for plasticity, shrinkage and mineral composition before moulding.</div>
+                    </div>
+                </div>
+                <div class="quality-card">
+                    <div class="quality-card-img">
+                        <img src="src/assets/images/brick_product_2.png" alt="Kiln Firing Process" loading="lazy">
+                        <div class="quality-step">2</div>
+                    </div>
+                    <div class="quality-card-body">
+                        <div class="quality-card-icon">🔥</div>
+                        <div class="quality-card-title">Double-Fired in Bull's Trench Kiln</div>
+                        <div class="quality-card-desc">Proprietary double-firing at 900–1000°C for maximum density, 10.5 N/mm² compressive strength, and complete weather resistance.</div>
+                    </div>
+                </div>
+                <div class="quality-card">
+                    <div class="quality-card-img">
+                        <img src="src/assets/images/brick_product_3.png" alt="Quality Inspection" loading="lazy">
+                        <div class="quality-step">3</div>
+                    </div>
+                    <div class="quality-card-body">
+                        <div class="quality-card-icon">✅</div>
+                        <div class="quality-card-title">Strict Quality Inspection</div>
+                        <div class="quality-card-desc">Every lot checked for uniform 230×110×70mm sizing (±3mm), colour consistency, crack absence, and water absorption &lt;20%.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="quality-cert-strip">
+                <div class="quality-cert-item">
+                    <div class="quality-cert-icon">🏆</div>
+                    <div class="quality-cert-title">Grade-A ISI</div>
+                    <div class="quality-cert-sub">IS 1077 Standard</div>
+                </div>
+                <div class="quality-cert-divider"></div>
+                <div class="quality-cert-item">
+                    <div class="quality-cert-icon">💪</div>
+                    <div class="quality-cert-title">10.5 N/mm²</div>
+                    <div class="quality-cert-sub">Compressive Strength</div>
+                </div>
+                <div class="quality-cert-divider"></div>
+                <div class="quality-cert-item">
+                    <div class="quality-cert-icon">🌧️</div>
+                    <div class="quality-cert-title">Weather Proof</div>
+                    <div class="quality-cert-sub">&lt;20% Water Absorption</div>
+                </div>
+                <div class="quality-cert-divider"></div>
+                <div class="quality-cert-item">
+                    <div class="quality-cert-icon">📐</div>
+                    <div class="quality-cert-title">Uniform Size</div>
+                    <div class="quality-cert-sub">±3mm Tolerance</div>
+                </div>
+                <div class="quality-cert-divider"></div>
+                <div class="quality-cert-item">
+                    <div class="quality-cert-icon">🔁</div>
+                    <div class="quality-cert-title">100% Guarantee</div>
+                    <div class="quality-cert-sub">Free Replacement</div>
                 </div>
             </div>
         </div>
@@ -4678,7 +5317,30 @@
             <div class="text-center">
                 <span class="sec-tag">Delivery Coverage</span>
                 <h2 class="sec-title">Cities We Serve</h2>
-                <p class="sec-sub">Delivering premium bricks across Jaunpur district and beyond</p>
+                <p class="sec-sub">Delivering premium bricks across Jaunpur, Varanasi & UP — same-day within Jaunpur district</p>
+            </div>
+            <!-- Delivery landmark photos -->
+            <div class="delivery-photos">
+                <div class="delivery-photo" onclick="lbOpen('src/assets/images/jalalpur.jpg','Jalalpur — Same-Day Delivery Available')">
+                    <img src="src/assets/images/jalalpur.jpg" alt="Jalalpur delivery area" loading="lazy">
+                    <div class="delivery-photo-ov"></div>
+                    <div class="delivery-photo-lbl">📍 Jalalpur<small>Same-day delivery</small></div>
+                </div>
+                <div class="delivery-photo" onclick="lbOpen('src/assets/images/trilochan.jpg','Trilochan — Fast Delivery Available')">
+                    <img src="src/assets/images/trilochan.jpg" alt="Trilochan delivery area" loading="lazy">
+                    <div class="delivery-photo-ov"></div>
+                    <div class="delivery-photo-lbl">📍 Trilochan<small>Express delivery</small></div>
+                </div>
+                <div class="delivery-photo" onclick="lbOpen('src/assets/images/jaunpurPul.jpg','Jaunpur — Our Home City &amp; HQ')">
+                    <img src="src/assets/images/jaunpurPul.jpg" alt="Jaunpur city" loading="lazy">
+                    <div class="delivery-photo-ov"></div>
+                    <div class="delivery-photo-lbl">📍 Jaunpur<small>HQ · Same-day guaranteed</small></div>
+                </div>
+                <div class="delivery-photo" onclick="lbOpen('src/assets/images/Varanasi.png','Varanasi — Next-Day Delivery Available')">
+                    <img src="src/assets/images/Varanasi.png" alt="Varanasi" loading="lazy">
+                    <div class="delivery-photo-ov"></div>
+                    <div class="delivery-photo-lbl">📍 Varanasi<small>Next-day delivery</small></div>
+                </div>
             </div>
             <div class="cities-grid">
                 <div class="city-chip"><span class="city-chip-dot"></span>Jaunpur</div>
@@ -4806,7 +5468,7 @@
                 </div>
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="src/assets/images/brick_product_2.png"
+                        <img src="src/assets/images/redbrick1.jpg"
                             alt="Brick Maintenance" loading="lazy">
                     </div>
                     <div class="blog-card-body">
@@ -6236,6 +6898,24 @@
             const match = PRODUCTS.find(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
             if (match) showToast('🔍 Found: ' + match.name + ' — ₹' + match.price + '/' + match.unit);
         });
+
+        // ══════════════════════════════════════════
+        // LIGHTBOX
+        // ══════════════════════════════════════════
+        function lbOpen(src, caption) {
+            const lb = document.getElementById('lb');
+            document.getElementById('lbImg').src = src;
+            document.getElementById('lbImg').alt = caption;
+            document.getElementById('lbCap').textContent = caption;
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function lbClose(e) {
+            if (e && e.target && e.target.id !== 'lb' && !e.target.classList.contains('lb-close')) return;
+            document.getElementById('lb').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('lb').classList.remove('open'); document.body.style.overflow = ''; } });
 
     </script>
 </body>
