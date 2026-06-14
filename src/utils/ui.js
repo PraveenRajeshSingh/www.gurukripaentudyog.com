@@ -107,13 +107,13 @@ function safeExecute(fn, fallback = null, errorMessage = 'Something went wrong')
  */
 const Validation = {
     showError(input, message) {
-        const group = input.closest('.form-group');
+        const group = input.closest('.form-group') || input.closest('.auth-input-group');
         if (!group) return;
 
         group.classList.add('has-error');
         group.classList.remove('has-success');
 
-        let errorSpan = group.querySelector('.error-message');
+        let errorSpan = group.querySelector('.error-message') || group.querySelector('.auth-error');
         if (!errorSpan) {
             errorSpan = document.createElement('span');
             errorSpan.className = 'error-message';
@@ -122,26 +122,33 @@ const Validation = {
             group.appendChild(errorSpan);
         }
         errorSpan.textContent = message;
+        errorSpan.classList.add('visible');
     },
 
     showSuccess(input) {
-        const group = input.closest('.form-group');
+        const group = input.closest('.form-group') || input.closest('.auth-input-group');
         if (!group) return;
 
         group.classList.remove('has-error');
         group.classList.add('has-success');
 
-        const errorSpan = group.querySelector('.error-message');
-        if (errorSpan) errorSpan.textContent = '';
+        const errorSpan = group.querySelector('.error-message') || group.querySelector('.auth-error');
+        if (errorSpan) {
+            errorSpan.textContent = '';
+            errorSpan.classList.remove('visible');
+        }
     },
 
     clear(input) {
-        const group = input.closest('.form-group');
+        const group = input.closest('.form-group') || input.closest('.auth-input-group');
         if (!group) return;
         group.classList.remove('has-error');
         group.classList.remove('has-success');
-        const errorSpan = group.querySelector('.error-message');
-        if (errorSpan) errorSpan.textContent = '';
+        const errorSpan = group.querySelector('.error-message') || group.querySelector('.auth-error');
+        if (errorSpan) {
+            errorSpan.textContent = '';
+            errorSpan.classList.remove('visible');
+        }
     },
 
     isEmail(email) {

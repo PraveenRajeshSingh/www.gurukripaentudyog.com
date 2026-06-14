@@ -1,18 +1,18 @@
 User-agent: *
 Disallow: /dist/
-Disallow: /src/
 Disallow: /assets/vendors/
 Disallow: /*.json$
 Disallow: /*.md$
 Disallow: /404.html
 Disallow: /500.html
+Disallow: /checkout.html
 
 User-agent: Googlebot
 Disallow: /dist/
-Disallow: /src/
 Disallow: /assets/vendors/
 Disallow: /*.json$
 Disallow: /*.md$
+Disallow: /checkout.html
 
 Sitemap: https://www.gurukripaentudyog.com/sitemap.xml
 Host: www.gurukripaentudyog.com

@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        // SPA redirect hack for static hosting (GitHub Pages & Custom Domain robust)
+        (function() {
+            var path = window.location.pathname;
+            var search = window.location.search;
+            var hash = window.location.hash;
+            
+            var repoName = '/www.gurukripaentudyog.com';
+            var isGitHubPages = path.startsWith(repoName);
+            
+            var rootPath = isGitHubPages ? repoName + '/' : '/';
+            var indexPath = isGitHubPages ? repoName + '/index.html' : '/index.html';
+            
+            // If the path is not root, store it and redirect
+            if (path && path !== rootPath && path !== indexPath) {
+                localStorage.setItem('spa_redirect', JSON.stringify({
+                    path: path,
+                    search: search,
+                    hash: hash
+                }));
+                window.location.href = rootPath;
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found - Gurukripa Bricks</title>
     <meta name="description" content="The page you're looking for doesn't exist. Return to our homepage or contact us.">
     
-    <!-- Favicon -->
+    <!-- Favicon & Icons for All Devices -->
+    <link rel="icon" type="image/svg+xml" href="src/assets/images/logo-new.svg">
     <link rel="icon" type="image/x-icon" href="src/assets/images/favicon.ico">
+    <link rel="shortcut icon" href="src/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="src/assets/images/gurukripaLogo.jpg">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +50,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%);
+            background: linear-gradient(135deg, #b83a14 0%, #8c2409 100%);
             padding: 20px;
             text-align: center;
             color: white;
@@ -42,14 +69,15 @@
         .error-icon {
             font-size: 5rem;
             margin-bottom: 20px;
-            color: #8B0000;
+            color: #b83a14;
+            animation: pulse 2s infinite;
         }
         
         .error-code {
             font-size: 6rem;
             font-weight: 800;
             margin: 0;
-            color: #8B0000;
+            color: #b83a14;
             line-height: 1;
         }
         
@@ -90,26 +118,32 @@
         }
         
         .btn-home {
-            background: linear-gradient(135deg, #8B0000, #6B0000);
+            background: linear-gradient(135deg, #b83a14, #8c2409);
             color: white;
-            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(184, 58, 20, 0.3);
         }
         
         .btn-home:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(184, 58, 20, 0.4);
         }
         
         .btn-contact {
             background: white;
-            color: #8B0000;
-            border: 2px solid #8B0000;
+            color: #b83a14;
+            border: 2px solid #b83a14;
         }
         
         .btn-contact:hover {
-            background: #8B0000;
+            background: #b83a14;
             color: white;
             transform: translateY(-3px);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         
         .btn-products {
@@ -194,23 +228,6 @@
     </div>
     
     <script>
-        // SPA redirect hack for static hosting (GitHub Pages)
-        (function() {
-            var path = window.location.pathname;
-            var search = window.location.search;
-            var hash = window.location.hash;
-            
-            // If the path is not root, store it and redirect
-            if (path && path !== '/www.gurukripaentudyog.com/' && path !== '/www.gurukripaentudyog.com/index.html') {
-                localStorage.setItem('spa_redirect', JSON.stringify({
-                    path: path,
-                    search: search,
-                    hash: hash
-                }));
-                window.location.href = '/www.gurukripaentudyog.com/';
-            }
-        })();
-        
         // Track 404 errors for analytics
         if ('gtag' in window) {
             gtag('event', '404_error', {

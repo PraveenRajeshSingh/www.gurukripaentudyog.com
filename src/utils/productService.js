@@ -95,7 +95,7 @@ var ProductService = {
         currentView = view;
         const grid = document.getElementById('productsGrid');
         if (grid) {
-            grid.classList.remove('view-grid', 'view-list');
+            grid.classList.remove('view-grid', 'view-grid-2', 'view-list');
             grid.classList.add(`view-${view}`, 'animate-fade-in');
         }
         // Update active view buttons
@@ -108,16 +108,36 @@ var ProductService = {
         const grid = document.getElementById('productsGrid');
         if (!grid) return;
 
+        // Set ARIA live region for screen readers
+        grid.setAttribute('role', 'list');
+        grid.setAttribute('aria-live', 'polite');
+        grid.setAttribute('aria-label', 'Product listing');
+
+        // Guard: ensure PRODUCTS array is available before filtering
+        if (typeof PRODUCTS === 'undefined' || !Array.isArray(PRODUCTS)) {
+            grid.innerHTML = '<div class="no-products"><i class="ion-ios-alert-outline"></i><p>Unable to load products. Please refresh the page.</p></div>';
+            return;
+        }
+
         const filtered = ProductService.getProducts();
 
-        // Always show skeletons briefly for smooth transition
+        // Brief skeleton for transition feedback, then render with error guard
         ProductService.renderSkeletons();
-        setTimeout(() => ProductService.renderFiltered(filtered), 350);
+        setTimeout(() => {
+            try {
+                ProductService.renderFiltered(filtered);
+            } catch (err) {
+                console.error('[ProductService] Render failed:', err);
+                grid.setAttribute('aria-busy', 'false');
+                grid.innerHTML = '<div class="no-products"><i class="ion-ios-alert-outline"></i><p>Failed to render products. <button onclick="ProductService.renderGrid()" class="btn-buy-modern" style="margin-left:8px">Retry</button></p></div>';
+            }
+        }, 200);
     },
 
     renderFiltered: (filtered) => {
         const grid = document.getElementById('productsGrid');
         if (!grid) return;
+        grid.setAttribute('aria-busy', 'false');
         const isHindi = typeof TranslationService !== 'undefined' && TranslationService.getLanguage() === 'hi';
 
         if (filtered.length === 0) {
@@ -132,9 +152,10 @@ var ProductService = {
         const grid = document.getElementById('productsGrid');
         if (!grid) return;
 
-        const skeletonCount = 12;
+        grid.setAttribute('aria-busy', 'true');
+        const skeletonCount = 6;
         const skeletonHTML = Array(skeletonCount).fill(0).map(() => `
-            <div class="product-skeleton">
+            <div class="product-skeleton" aria-hidden="true">
                 <div class="skeleton-img skeleton"></div>
                 <div class="skeleton-line title skeleton"></div>
                 <div class="skeleton-line text skeleton"></div>
@@ -206,7 +227,7 @@ var ProductService = {
         const rightHtml = rightBadges.slice(0, 2).join('');
 
         return `
-            <div class="product-card-modern ${product.isNew ? 'is-new' : ''}" data-aos="fade-up" data-product-id="${product.id}">
+            <article class="product-card-modern ${product.isNew ? 'is-new' : ''}" data-aos="fade-up" data-product-id="${product.id}" role="listitem" aria-label="${name}, ₹${product.price} per piece">
                 <div class="product-badges-left">
                     ${leftHtml}
                 </div>
@@ -216,15 +237,15 @@ var ProductService = {
                 
                 <!-- Wishlist Heart -->
                 <button class="${heartClass}" data-product-id="${product.id}"
-                    onclick="event.stopPropagation(); WishlistService.toggle(${product.id})" aria-label="Toggle wishlist">
+                    onclick="event.stopPropagation(); if(window.WishlistService) WishlistService.toggle(${product.id}); else showToast('\u2764\ufe0f Wishlist not available')" aria-label="Toggle wishlist for ${name}">
                     ♥
                 </button>
 
-                <div class="product-image-wrapper" onclick="viewProductDetails(${product.id})">
-                    <img src="${product.image}" alt="${name}" loading="lazy" class="product-image"
+                <div class="product-image-wrapper" onclick="viewProductDetails(${product.id})" role="button" tabindex="0" aria-label="View details for ${name}" onkeydown="if(event.key==='Enter')viewProductDetails(${product.id})">
+                    <img src="${product.image}" alt="${name} - ${product.specs ? product.specs.size : 'brick'}" loading="lazy" class="product-image" width="400" height="300"
                          onerror="this.src='src/assets/images/logo-new.svg'">
-                    <div class="image-overlay">
-                        <span class="overlay-btn" onclick="event.stopPropagation(); viewProductDetails(${product.id})">
+                    <div class="image-overlay" aria-hidden="true">
+                        <span class="overlay-btn">
                             <i class="ion-ios-search"></i> ${detailsLabel}
                         </span>
                     </div>
@@ -239,27 +260,23 @@ var ProductService = {
                     </div>
 
                     <div class="product-info-row">
-                        <div class="product-rating-stars">
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star-half"></i>
-                            <span class="rating-value">${product.rating || '4.8'}</span>
+                        <div class="product-rating-stars" role="img" aria-label="Rating ${product.rating || 4.8} out of 5 stars">
+                            ${ProductService.renderRatingStars(product.rating || 4.8)}
+                            <span class="rating-value" aria-hidden="true">${product.rating || '4.8'}</span>
                         </div>
                     </div>
                     
                     <div class="product-footer">
                         <div class="price-block">
-                            <span class="product-price">₹${product.price}</span>
-                            ${product.oldPrice ? `<span class="product-old-price">₹${product.oldPrice}</span>` : ''}
+                            <span class="product-price" aria-label="Price ${product.price} rupees per piece">₹${product.price}</span>
+                            ${product.oldPrice ? `<span class="product-old-price" aria-label="Original price ${product.oldPrice} rupees">₹${product.oldPrice}</span>` : ''}
                         </div>
-                        <button class="btn-buy-modern btn-add-cart" onclick="addToCart(${product.id})">
-                            ${buyLabel}
+                        <button class="btn-buy-modern btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id})" aria-label="Add ${name} to cart">
+                            <i class="ion-ios-cart" aria-hidden="true"></i> ${buyLabel}
                         </button>
                     </div>
                 </div>
-            </div>
+            </article>
         `;
     },
 
@@ -335,16 +352,16 @@ var ProductService = {
         ProductService.renderGrid();
         ProductService.updateActiveTabs();
 
-        // Expose globally for legacy HTML
+        // Expose globally for legacy HTML onclick handlers
         window.setCategory = ProductService.setCategory;
         window.setSort = ProductService.setSort;
         window.setSearch = ProductService.setSearch;
         window.setProductView = ProductService.setView;
         window.viewProductDetails = ProductService.viewProductDetails;
         window.setPriceFilter = (val) => {
-            maxPrice = parseFloat(val);
+            maxPrice = parseFloat(val) || 15;
             const label = document.getElementById('priceRangeValue');
-            if (label) label.textContent = `₹0 - ₹${maxPrice}`;
+            if (label) label.textContent = `\u20b90 - \u20b9${maxPrice}`;
             ProductService.renderGrid();
         };
 
@@ -354,11 +371,33 @@ var ProductService = {
             sortSelect.addEventListener('change', (e) => ProductService.setSort(e.target.value));
         }
 
-        // View toggle listeners
+        // View toggle listeners — bind click on each button
         document.querySelectorAll('.view-btn-icon').forEach(btn => {
-            btn.addEventListener('click', () => ProductService.setView(btn.dataset.view));
+            btn.addEventListener('click', () => {
+                const view = btn.dataset.view || 'grid';
+                ProductService.setView(view);
+            });
+        });
+
+        // Skeleton on filter/sort to give feedback
+        const filterInputs = document.querySelectorAll('.filter-tab-pill, #productSort, .price-range-input');
+        filterInputs.forEach(el => {
+            el.addEventListener('change', () => ProductService.renderSkeletons());
         });
     }
+};
+
+// ── Immediate global exposure (before App.init, for onclick in HTML) ──
+window.setCategory = ProductService.setCategory;
+window.setSearch = ProductService.setSearch;
+window.setSort = ProductService.setSort;
+window.setProductView = ProductService.setView;
+window.viewProductDetails = ProductService.viewProductDetails;
+window.setPriceFilter = (val) => {
+    maxPrice = parseFloat(val) || 15;
+    const label = document.getElementById('priceRangeValue');
+    if (label) label.textContent = `\u20b90 - \u20b9${maxPrice}`;
+    ProductService.renderGrid();
 };
 
 // Initialized by App.init

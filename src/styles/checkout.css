@@ -15,16 +15,16 @@
   --bg-glass-strong: rgba(255, 255, 255, 0.06);
 
   /* Warm Accents (Brand Palette) */
-  --accent-primary: #d4732e;
-  --accent-secondary: #f39027;
-  --accent-warm: #e8a84c;
+  --accent-primary: var(--primary-light);
+  --accent-secondary: var(--secondary);
+  --accent-warm: var(--secondary);
   --accent-success: #5cb85c;
   --accent-deep: #a65c2d;
   --accent-gold: #c8892e;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #d4732e 0%, #f39027 50%, #e8a84c 100%);
-  --gradient-button: linear-gradient(135deg, #a65c2d 0%, #d4732e 50%, #f39027 100%);
+  --gradient-primary: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 50%, var(--secondary) 100%);
+  --gradient-button: linear-gradient(135deg, #a65c2d 0%, var(--primary-light) 50%, var(--secondary) 100%);
   --gradient-success: linear-gradient(135deg, #5cb85c 0%, #4CAF50 100%);
   --gradient-card: linear-gradient(145deg, rgba(212,115,46,0.08) 0%, rgba(243,144,39,0.04) 100%);
   --gradient-border: linear-gradient(135deg, rgba(212,115,46,0.5), rgba(243,144,39,0.3), rgba(166,92,45,0.2));
@@ -33,7 +33,7 @@
   --text-primary: #f5f0ea;
   --text-secondary: rgba(245, 240, 234, 0.6);
   --text-tertiary: rgba(245, 240, 234, 0.35);
-  --text-accent: #d4732e;
+  --text-accent: var(--primary-light);
 
   /* Borders */
   --border-subtle: rgba(255, 255, 255, 0.06);

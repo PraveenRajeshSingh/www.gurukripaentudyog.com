@@ -78,9 +78,13 @@ var CartService = {
         if (!appliedCoupon) return 0;
         const coupon = VALID_COUPONS[appliedCoupon];
         if (!coupon) return 0;
-        if (coupon.type === 'percent') return subtotal * (coupon.value / 100);
+        if (coupon.type === 'percent') return Math.round(subtotal * (coupon.value / 100) * 100) / 100;
         if (coupon.type === 'flat' && subtotal >= (coupon.minOrder || 0)) return coupon.value;
-        if (coupon.type === 'shipping') return CartService.getShippingCost();
+        if (coupon.type === 'flat' && subtotal < (coupon.minOrder || 0)) return 0; // minOrder not met
+        if (coupon.type === 'shipping') {
+            const ship = CartService.getShippingCost();
+            return ship; // Deduct actual shipping cost
+        }
         return 0;
     },
 
@@ -121,9 +125,18 @@ var CartService = {
         const couponRow = document.getElementById('couponDiscountRow');
         const couponEl = document.getElementById('couponDiscount');
         if (couponRow && couponEl) {
-            if (discount > 0) {
+            const couponData = appliedCoupon ? VALID_COUPONS[appliedCoupon] : null;
+            if (discount > 0 || (couponData && couponData.type === 'shipping' && discount === 0 && CartService.getCount() === 0)) {
                 couponRow.style.display = 'flex';
-                couponEl.textContent = `-₹${discount.toFixed(2)}`;
+                couponEl.textContent = couponData && couponData.type === 'shipping'
+                    ? 'FREE SHIPPING'
+                    : `-\u20b9${discount.toFixed(2)}`;
+            } else if (couponData && couponData.type === 'shipping' && discount > 0) {
+                couponRow.style.display = 'flex';
+                couponEl.textContent = `-\u20b9${discount.toFixed(2)} (Shipping)`;
+            } else if (discount > 0) {
+                couponRow.style.display = 'flex';
+                couponEl.textContent = `-\u20b9${discount.toFixed(2)}`;
             } else {
                 couponRow.style.display = 'none';
             }
@@ -267,5 +280,29 @@ var CartService = {
     }
 };
 
-// Initialized by App.init
+// ── Immediate global exposure (available before App.init) ──
+window.addToCart = CartService.addToCart;
+window.removeFromCart = CartService.removeFromCart;
+window.updateQuantity = CartService.updateQuantity;
 
+window.applyCoupon = () => {
+    const input = document.getElementById('couponInput');
+    const msg = document.getElementById('couponMessage');
+    if (!input || !msg) return;
+    const code = input.value.trim().toUpperCase();
+    if (!code) {
+        msg.innerHTML = '<span style="color:#dc2626;">Please enter a coupon code</span>';
+        return;
+    }
+    if (VALID_COUPONS[code]) {
+        appliedCoupon = code;
+        msg.innerHTML = `<span style="color:#16a34a;">✅ ${VALID_COUPONS[code].label} applied!</span>`;
+        CartService.updateUI();
+    } else {
+        appliedCoupon = null;
+        msg.innerHTML = '<span style="color:#dc2626;">❌ Invalid coupon code. Try: BRICK10, FIRST50, WELCOME5, FREESHIP</span>';
+        CartService.updateUI();
+    }
+};
+
+// Initialized by App.init

@@ -3,20 +3,25 @@
   "short_name": "Gurukripa Bricks",
   "description": "Premium Quality Brick Manufacturer Since 1995. Best Bricks in Jaunpur & Varanasi.",
   "start_url": "./index.html",
+  "id": "/",
+  "scope": "/",
+  "lang": "en",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#8B0000",
+  "theme_color": "#b83a14",
   "orientation": "portrait",
   "icons": [
     {
       "src": "src/assets/images/gurukripaLogo.jpg",
       "sizes": "192x192",
-      "type": "image/jpeg"
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     },
     {
       "src": "src/assets/images/gurukripaLogo.jpg",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [

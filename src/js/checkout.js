@@ -763,7 +763,7 @@
   }
 
   function createConfetti() {
-    const colors = ['#d4732e', '#f39027', '#e8a84c', '#a65c2d', '#c8892e', '#5cb85c'];
+    const colors = ['#b83a14', '#d9582b', '#e28743', '#8c2409', '#c8892e', '#5cb85c'];
     const container = document.getElementById('successOverlay');
     if (!container) return;
 

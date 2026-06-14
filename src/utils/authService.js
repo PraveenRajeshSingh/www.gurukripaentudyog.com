@@ -374,25 +374,30 @@ var AuthService = {
                                     const statusClass = order.status.toLowerCase();
                                     const statusLabel = isHindi ? (statusClass === 'delivered' ? 'डिलिवर हो गया' : statusClass === 'shipped' ? 'रास्ते में है' : 'प्रगति पर है') : order.status;
                                     
+                                    const isOrdered = true;
+                                    const isConfirmed = ['confirmed', 'processing', 'shipped', 'delivered'].includes(statusClass);
+                                    const isShipped = ['shipped', 'delivered'].includes(statusClass);
+                                    const isDelivered = statusClass === 'delivered';
+                                    
                                     return `
                                         <div class="order-modern-card">
                                             <div class="order-main-info">
                                                 <div class="order-id-tag">#${order.id}</div>
                                                 <div class="order-meta">${isHindi ? 'ऑर्डर किया गया:' : 'Ordered on'} ${dateStr} • ${qty} ${isHindi ? 'ईंटें' : 'Bricks'}</div>
                                                 <div class="order-tracking-timeline">
-                                                    <div class="tracking-step ${['ordered','confirmed','shipped','delivered'].indexOf(order.status.toLowerCase()) >= 0 ? 'done' : ''}">
+                                                    <div class="tracking-step ${isOrdered ? 'done' : ''}">
                                                         <span class="tracking-dot"></span><span class="tracking-label">Ordered</span>
                                                     </div>
-                                                    <div class="tracking-line ${['confirmed','shipped','delivered'].indexOf(order.status.toLowerCase()) >= 0 ? 'done' : ''}"></div>
-                                                    <div class="tracking-step ${['confirmed','shipped','delivered'].indexOf(order.status.toLowerCase()) >= 0 ? 'done' : ''}">
+                                                    <div class="tracking-line ${isConfirmed ? 'done' : ''}"></div>
+                                                    <div class="tracking-step ${isConfirmed ? 'done' : ''}">
                                                         <span class="tracking-dot"></span><span class="tracking-label">Confirmed</span>
                                                     </div>
-                                                    <div class="tracking-line ${['shipped','delivered'].indexOf(order.status.toLowerCase()) >= 0 ? 'done' : ''}"></div>
-                                                    <div class="tracking-step ${['shipped','delivered'].indexOf(order.status.toLowerCase()) >= 0 ? 'done' : ''}">
+                                                    <div class="tracking-line ${isShipped ? 'done' : ''}"></div>
+                                                    <div class="tracking-step ${isShipped ? 'done' : ''}">
                                                         <span class="tracking-dot"></span><span class="tracking-label">Shipped</span>
                                                     </div>
-                                                    <div class="tracking-line ${order.status.toLowerCase() === 'delivered' ? 'done' : ''}"></div>
-                                                    <div class="tracking-step ${order.status.toLowerCase() === 'delivered' ? 'done' : ''}">
+                                                    <div class="tracking-line ${isDelivered ? 'done' : ''}"></div>
+                                                    <div class="tracking-step ${isDelivered ? 'done' : ''}">
                                                         <span class="tracking-dot"></span><span class="tracking-label">Delivered</span>
                                                     </div>
                                                 </div>
@@ -602,7 +607,15 @@ var AuthService = {
         window.closeLoginModal = () => Modals.close('loginModal');
         window.openRegisterModal = () => Modals.open('registerModal');
         window.closeRegisterModal = () => Modals.close('registerModal');
-        window.logoutUser = AuthService.logout;
+        window.logoutUser = () => Modals.open('logoutModal');
+        window.confirmLogout = () => {
+            AuthService.logout();
+            if (typeof App !== 'undefined' && typeof App.updateMobileNavProfileState === 'function') {
+                App.updateMobileNavProfileState();
+            }
+            Modals.close('logoutModal');
+            window.location.hash = '#home';
+        };
         window.renderDashboard = AuthService.renderDashboard;
 
         // Expose editing functions

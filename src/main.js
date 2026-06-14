@@ -17,7 +17,12 @@ function debounce(func, wait) {
 }
 
 const App = {
+    _initialized: false,
+
     init: () => {
+        if (App._initialized) { console.log('⚡ App already initialized, skipping.'); return; }
+        App._initialized = true;
+
         console.log('🚀 Gurukripa Bricks Initializing...');
 
         try {
@@ -26,7 +31,12 @@ const App = {
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js').catch(err => {
+                    const path = window.location.pathname;
+                    const repoName = '/www.gurukripaentudyog.com';
+                    const isGitHubPages = path.startsWith(repoName);
+                    const swPath = isGitHubPages ? repoName + '/sw.js' : '/sw.js';
+                    
+                    navigator.serviceWorker.register(swPath).catch(err => {
                         console.error('❌ Service Worker failed:', err);
                     });
                 });
@@ -34,13 +44,12 @@ const App = {
 
             App.initValidation();
 
-            safeExecute(() => {
-                TranslationService.init();
-                AuthService.init();
-                CartService.init();
-                ProductService.init();
-                if (window.WishlistService) WishlistService.init();
-            });
+            // Isolate each service init so one failure doesn't block others
+            safeExecute(() => TranslationService.init(), null, 'Translation service failed to load');
+            safeExecute(() => AuthService.init(), null, 'Auth service failed to load');
+            safeExecute(() => CartService.init(), null, 'Cart service failed to load');
+            safeExecute(() => ProductService.init(), null, 'Product catalog failed to load');
+            if (window.WishlistService) safeExecute(() => WishlistService.init(), null, 'Wishlist service failed to load');
 
             App.handleRouting();
             App.bindGlobalEvents();
@@ -59,6 +68,8 @@ const App = {
             }
 
             App.initFabMenu();
+            App.initCounters();
+            App.initPageTransitions();
 
             console.log('✅ Gurukripa Bricks Ready.');
         } catch (error) {
@@ -66,6 +77,7 @@ const App = {
         } finally {
             if (window.AOS) {
                 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                document.documentElement.classList.add('aos-enabled');
                 AOS.init({ 
                     duration: prefersReducedMotion ? 0 : 500, 
                     easing: 'ease-out-cubic', 
@@ -111,7 +123,7 @@ const App = {
         }
 
         const sectionId = hash.substring(1);
-        const protectedRoutes = ['dashboard', 'profile', 'orders', 'settings'];
+        const protectedRoutes = ['dashboard', 'profile', 'orders', 'settings', 'wishlist'];
         
         if (protectedRoutes.includes(sectionId) && !AuthService.getUser()) {
             window.location.hash = '#home';
@@ -121,6 +133,16 @@ const App = {
 
         if (sectionId === 'dashboard' || protectedRoutes.includes(sectionId)) {
             App.renderDashboard();
+            if (sectionId === 'orders') {
+                window.switchDashboardTab('orders');
+            } else if (sectionId === 'settings' || sectionId === 'profile') {
+                window.switchDashboardTab('main');
+                window.openEditProfileModal();
+            } else if (sectionId === 'wishlist') {
+                window.switchDashboardTab('wishlist');
+            } else {
+                window.switchDashboardTab('main');
+            }
         } else {
             App.renderSection(sectionId);
         }
@@ -188,10 +210,21 @@ const App = {
 
     updateActiveStates: () => {
         const hash = window.location.hash || '#home';
-        document.querySelectorAll('.nav-link, .drawer-menu a, .mobile-bottom-nav a').forEach(link => {
+        const sectionId = hash.substring(1);
+        
+        document.querySelectorAll('.nav-link, .drawer-menu a, .mobile-bottom-nav-modern a, .bottom-nav-item').forEach(link => {
             const href = link.getAttribute('href');
-            link.classList.toggle('active', href === hash || (hash === '#home' && (href === '#' || href === '#home')));
+            if (href) {
+                link.classList.toggle('active', href === hash || (hash === '#home' && (href === '#' || href === '#home')));
+            }
         });
+
+        // Activate profile icon on bottom nav for dashboard/profile subpages
+        const mobileProfileBtn = document.getElementById('mobileNavProfileBtn');
+        if (mobileProfileBtn) {
+            const isProfileActive = ['dashboard', 'profile', 'orders', 'settings', 'wishlist'].includes(sectionId);
+            mobileProfileBtn.classList.toggle('active', isProfileActive);
+        }
     },
 
     bindGlobalEvents: () => {
@@ -251,6 +284,75 @@ const App = {
                 contactForm.reset();
             });
         }
+    },
+
+    initCounters: () => {
+        const animateCounter = (el) => {
+            if (el._counterDone) return;
+            el._counterDone = true;
+            const raw = el.dataset.target || el.textContent.replace(/[^0-9]/g, '');
+            const target = parseInt(raw, 10);
+            if (!target || isNaN(target)) return;
+            const duration = 2000;
+            const step = Math.ceil(target / (duration / 16));
+            let current = 0;
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = current.toLocaleString('en-IN');
+            }, 16);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Direct counter elements
+                    if (entry.target.classList.contains('counter')) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    } else {
+                        // Container: find nested counters
+                        entry.target.querySelectorAll('.counter[data-target]').forEach(animateCounter);
+                        observer.unobserve(entry.target);
+                    }
+                }
+            });
+        }, { threshold: 0.3 });
+
+        // Observe direct counter elements
+        document.querySelectorAll('.counter[data-target]').forEach(el => observer.observe(el));
+        // Observe city-card containers too
+        document.querySelectorAll('.city-card, .section-cities, .cities-grid').forEach(el => observer.observe(el));
+    },
+
+    initPageTransitions: () => {
+        // Fade-in on load — use class instead of inline style to avoid race
+        // with product rendering (inline opacity:0 hides dynamically rendered cards)
+        if (!document.body.classList.contains('page-transition-ready')) {
+            document.body.classList.add('page-transition-ready');
+            requestAnimationFrame(() => {
+                document.body.classList.add('page-transition-visible');
+            });
+        }
+
+        // Intercept internal anchor navigation for smooth section reveal
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href^="#"]');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            if (!href || href === '#' || href === '#!') return;
+            // Let normal hash-change routing handle it — just add a brief fade
+            const sectionId = href.substring(1);
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.style.transition = 'opacity 0.3s ease';
+                target.style.opacity = '0.6';
+                setTimeout(() => { target.style.opacity = '1'; }, 300);
+            }
+        });
     },
 
     initScrollReveal: () => {
@@ -462,8 +564,13 @@ window.openProfileModal = () => {
 };
 
 window.logoutUser = () => {
+    Modals.open('logoutModal');
+};
+
+window.confirmLogout = () => {
     AuthService.logout();
     App.updateMobileNavProfileState();
+    Modals.close('logoutModal');
     window.location.hash = '#home';
 };
 
@@ -479,10 +586,10 @@ window.closeUserDropdown = () => {
 };
 
 window.toggleFaq = (btn) => {
-    const item = btn.parentElement;
-    const active = item.classList.contains('active');
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
-    if (!active) item.classList.add('active');
+    const item = btn.closest('.faq-item') || btn.parentElement;
+    const isActive = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isActive) item.classList.add('open');
 };
 
 window.handleLogin = async (e) => {
@@ -502,6 +609,11 @@ window.handleLogin = async (e) => {
         await AuthService.login(email, pass, rememberMe);
         Modals.close('loginModal');
         e.target.reset();
+        if (window.postLoginAction) {
+            const action = window.postLoginAction;
+            window.postLoginAction = null;
+            action();
+        }
     } catch (err) { 
         showToast('❌ ' + err); 
     } finally {
@@ -518,17 +630,23 @@ window.proceedToCheckout = () => {
         showToast('⚠️ Your cart is empty. Please add products before checking out.');
         return;
     }
-    
-    // Ensure user is logged in
     const user = AuthService.getUser();
     if (!user) {
-        showToast('🔐 Please login or register to proceed to checkout.');
+        showToast('🔐 Please log in to proceed to checkout.');
         Modals.close('cartModal');
         Modals.open('loginModal');
         return;
     }
-
+    // Save cart data for checkout page
+    const cartData = {
+        items: CartService.getCart(),
+        total: CartService.getTotal(),
+        subtotal: CartService.getSubtotal(),
+        user: { name: user.name, email: user.email, mobile: user.mobile, address: user.address || '' }
+    };
+    localStorage.setItem('checkout_cart_data', JSON.stringify(cartData));
     Modals.close('cartModal');
+    // Navigate to checkout.html
     window.location.href = 'checkout.html';
 };
 
@@ -546,6 +664,7 @@ window.showToast = showToast;
 window.openCart = () => Modals.open('cartModal');
 window.openLoginModal = () => Modals.open('loginModal');
 window.openRegisterModal = () => Modals.open('registerModal');
+window.closeRegisterModal = () => Modals.close('registerModal');
 window.toggleTheme = () => App.toggleTheme();
 window.handleProfileClick = () => window.openProfileModal();
 window.setLanguage = (lang) => TranslationService.setLanguage(lang);
@@ -592,6 +711,11 @@ window.handleRegister = async (e) => {
         await AuthService.register({ name, email, mobile, password: pass, address });
         Modals.close('registerModal');
         e.target.reset();
+        if (window.postLoginAction) {
+            const action = window.postLoginAction;
+            window.postLoginAction = null;
+            action();
+        }
     } catch (err) {
         showToast('❌ ' + err);
     } finally {
@@ -654,17 +778,21 @@ window.switchProfileTab = (tabId) => {
     if (pane) pane.classList.add('active');
 };
 
-// Dashboard Tab Switcher (wishlist, addresses, main)
+// Dashboard Tab Switcher (wishlist, addresses, main, orders)
 window.switchDashboardTab = (tab) => {
     const mainContent = document.querySelector('.dashboard-grid');
     const wishlist = document.getElementById('dashWishlistSection');
     const addresses = document.getElementById('dashAddressesSection');
+    const ordersSection = document.querySelector('.recent-orders-outer');
     
+    // Cleanup temporary back button if exists
+    const oldBackBtn = document.getElementById('ordersTabBackBtn');
+    if (oldBackBtn) oldBackBtn.remove();
+
     if (tab === 'wishlist') {
         if (mainContent) mainContent.querySelectorAll('.dash-links-section, .recent-orders-outer, .dash-stats-grid').forEach(el => el.style.display = 'none');
-        if (wishlist) { wishlist.style.display = 'block'; AuthService.renderDashboard(); }
+        if (wishlist) { wishlist.style.display = 'block'; }
         if (addresses) addresses.style.display = 'none';
-        // Re-show wishlist after render
         setTimeout(() => {
             const w = document.getElementById('dashWishlistSection');
             if (w) w.style.display = 'block';
@@ -672,11 +800,30 @@ window.switchDashboardTab = (tab) => {
     } else if (tab === 'addresses') {
         if (mainContent) mainContent.querySelectorAll('.dash-links-section, .recent-orders-outer, .dash-stats-grid').forEach(el => el.style.display = 'none');
         if (wishlist) wishlist.style.display = 'none';
-        if (addresses) { addresses.style.display = 'block'; AuthService.renderDashboard(); }
+        if (addresses) { addresses.style.display = 'block'; }
         setTimeout(() => {
             const a = document.getElementById('dashAddressesSection');
             if (a) a.style.display = 'block';
         }, 50);
+    } else if (tab === 'orders') {
+        if (mainContent) mainContent.querySelectorAll('.dash-links-section, .dash-stats-grid').forEach(el => el.style.display = 'none');
+        if (wishlist) wishlist.style.display = 'none';
+        if (addresses) addresses.style.display = 'none';
+        if (ordersSection) {
+            ordersSection.style.display = 'block';
+            
+            // Insert a Back button dynamically at the top of the orders section
+            const header = ordersSection.querySelector('.section-flex-header');
+            if (header) {
+                const backBtn = document.createElement('button');
+                backBtn.id = 'ordersTabBackBtn';
+                backBtn.className = 'btn-sm-outline';
+                backBtn.style.marginRight = '10px';
+                backBtn.innerHTML = '← Back';
+                backBtn.onclick = () => { window.location.hash = '#dashboard'; };
+                header.insertBefore(backBtn, header.firstChild);
+            }
+        }
     } else {
         if (mainContent) mainContent.querySelectorAll('.dash-links-section, .recent-orders-outer, .dash-stats-grid').forEach(el => el.style.display = '');
         if (wishlist) wishlist.style.display = 'none';
@@ -702,10 +849,6 @@ window.handleNewsletterSubmit = (e) => {
     showToast('🎉 Thank you for subscribing to our newsletter!', 4000);
     e.target.reset();
 };
-
-// ── Backward Compatibility Aliases ──
-window.closeRegisterModal = () => Modals.close('registerModal');
-window.openCart = () => Modals.open('cartModal');
 
 // ── Auth Form Interactive Effects ──
 (function initAuthEffects() {
@@ -773,63 +916,6 @@ window.openCart = () => Modals.open('cartModal');
         });
     });
 })();
-
-// ── Counter Animation (for city sections) ──
-function animateCounter(el) {
-    const target = parseInt(el.dataset.target, 10);
-    if (!target || isNaN(target)) return;
-    
-    const duration = 2000;
-    const step = Math.ceil(target / (duration / 16));
-    let current = 0;
-    
-    const timer = setInterval(() => {
-        current += step;
-        if (current >= target) {
-            current = target;
-            clearInterval(timer);
-        }
-        el.textContent = current.toLocaleString('en-IN');
-    }, 16);
-}
-
-// Trigger counters when visible
-(function initCounters() {
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const counters = entry.target.querySelectorAll('.counter[data-target]');
-                counters.forEach(animateCounter);
-                counterObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.3 });
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.section-cities, .cities-grid').forEach(el => {
-            counterObserver.observe(el);
-        });
-        document.querySelectorAll('.city-card').forEach(el => {
-            counterObserver.observe(el);
-        });
-    });
-})();
-
-// ── Improved FAQ Toggle (CSS max-height approach) ──
-window.toggleFaq = (btn) => {
-    const item = btn.closest('.faq-item') || btn.parentElement;
-    const isActive = item.classList.contains('active');
-    
-    // Close all
-    document.querySelectorAll('.faq-item.active').forEach(i => {
-        i.classList.remove('active');
-    });
-    
-    // Toggle clicked
-    if (!isActive) {
-        item.classList.add('active');
-    }
-};
 
 window.downloadInvoicePDF = () => {
     const element = document.getElementById('invoiceArea');
