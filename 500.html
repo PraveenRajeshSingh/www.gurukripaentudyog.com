@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server Error - Gurukripa Bricks</title>
-    <meta name="description" content="We're experiencing technical difficulties. Please try again later or contact our support team.">
-    
+    <meta name="description"
+        content="We're experiencing technical difficulties. Please try again later or contact our support team.">
+
     <!-- Favicon & Icons for All Devices -->
     <link rel="icon" type="image/svg+xml" href="src/assets/images/logo-new.svg">
     <link rel="icon" type="image/x-icon" href="src/assets/images/favicon.ico">
     <link rel="shortcut icon" href="src/assets/images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="src/assets/images/gurukripaLogo.jpg">
-    
+
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-    
+
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="src/styles/main.css">
-    
+
     <style>
         .error-page {
             min-height: 100vh;
@@ -31,7 +34,7 @@
             text-align: center;
             color: white;
         }
-        
+
         .error-container {
             max-width: 600px;
             background: rgba(255, 255, 255, 0.95);
@@ -41,14 +44,14 @@
             backdrop-filter: blur(10px);
             color: #333;
         }
-        
+
         .error-icon {
             font-size: 5rem;
             margin-bottom: 20px;
             color: #b83a14;
             animation: pulse 2s infinite;
         }
-        
+
         .error-code {
             font-size: 6rem;
             font-weight: 800;
@@ -56,21 +59,21 @@
             color: #b83a14;
             line-height: 1;
         }
-        
+
         .error-title {
             font-size: 2.5rem;
             font-weight: 700;
             margin: 20px 0;
             color: #2C3E50;
         }
-        
+
         .error-message {
             font-size: 1.2rem;
             margin: 20px 0 30px;
             color: #666;
             line-height: 1.6;
         }
-        
+
         .error-actions {
             display: flex;
             gap: 15px;
@@ -78,7 +81,7 @@
             flex-wrap: wrap;
             margin-top: 30px;
         }
-        
+
         .error-btn {
             padding: 15px 30px;
             border-radius: 50px;
@@ -92,41 +95,41 @@
             border: none;
             cursor: pointer;
         }
-        
+
         .btn-retry {
             background: linear-gradient(135deg, #b83a14, #8c2409);
             color: white;
             box-shadow: 0 4px 15px rgba(184, 58, 20, 0.3);
         }
-        
+
         .btn-retry:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(184, 58, 20, 0.4);
         }
-        
+
         .btn-home {
             background: white;
             color: #b83a14;
             border: 2px solid #b83a14;
         }
-        
+
         .btn-home:hover {
             background: #b83a14;
             color: white;
             transform: translateY(-3px);
         }
-        
+
         .btn-contact {
             background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
             box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
-        
+
         .btn-contact:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
         }
-        
+
         .error-footer {
             margin-top: 40px;
             padding-top: 20px;
@@ -134,37 +137,45 @@
             font-size: 0.9rem;
             color: #999;
         }
-        
+
         .error-timer {
             margin: 20px 0;
             font-size: 0.9rem;
             color: #888;
         }
-        
+
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
-        
+
         @media (max-width: 768px) {
             .error-container {
                 padding: 30px 20px;
             }
-            
+
             .error-code {
                 font-size: 4rem;
             }
-            
+
             .error-title {
                 font-size: 2rem;
             }
-            
+
             .error-actions {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .error-btn {
                 width: 100%;
                 max-width: 300px;
@@ -173,24 +184,26 @@
         }
     </style>
 </head>
+
 <body>
     <div class="error-page">
         <div class="error-container">
             <div class="error-icon">
                 <i class="ion-wrench"></i>
             </div>
-            
+
             <h1 class="error-code">500</h1>
             <h2 class="error-title">Server Error</h2>
             <p class="error-message">
-                We're experiencing technical difficulties. Our team has been notified and is working to resolve the issue. 
+                We're experiencing technical difficulties. Our team has been notified and is working to resolve the
+                issue.
                 Please try again in a few moments.
             </p>
-            
+
             <div class="error-timer" id="retryTimer">
                 Automatically retrying in <span id="countdown">30</span> seconds...
             </div>
-            
+
             <div class="error-actions">
                 <button onclick="retryPage()" class="error-btn btn-retry">
                     <i class="ion-refresh"></i>
@@ -205,24 +218,24 @@
                     Contact Support
                 </a>
             </div>
-            
+
             <div class="error-footer">
                 <p>Gurukripa Bricks - Premium Quality Construction Materials</p>
                 <p>© 2024 All Rights Reserved</p>
             </div>
         </div>
     </div>
-    
+
     <script>
         // Auto-retry functionality
         let countdown = 30;
         const countdownElement = document.getElementById('countdown');
         const timerElement = document.getElementById('retryTimer');
-        
+
         const countdownInterval = setInterval(() => {
             countdown--;
             countdownElement.textContent = countdown;
-            
+
             if (countdown <= 0) {
                 clearInterval(countdownInterval);
                 timerElement.textContent = 'Retrying now...';
@@ -231,22 +244,22 @@
                 }, 1000);
             }
         }, 1000);
-        
+
         function retryPage() {
             // Clear interval
             clearInterval(countdownInterval);
-            
+
             // Show loading state
             const retryBtn = document.querySelector('.btn-retry');
             const originalText = retryBtn.innerHTML;
             retryBtn.innerHTML = '<i class="ion-load-c"></i> Retrying...';
             retryBtn.disabled = true;
-            
+
             // Attempt to reload the original page
             const referrer = document.referrer || 'index.html';
             window.location.href = referrer;
         }
-        
+
         // Track 500 errors for analytics
         if ('gtag' in window) {
             gtag('event', '500_error', {
@@ -254,14 +267,15 @@
                 'page_title': '500 Server Error'
             });
         }
-        
+
         // Add smooth transition
         document.body.style.opacity = '0';
         document.body.style.transition = 'opacity 0.5s ease';
-        
-        window.addEventListener('load', function() {
+
+        window.addEventListener('load', function () {
             document.body.style.opacity = '1';
         });
     </script>
 </body>
+
 </html>

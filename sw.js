@@ -50,7 +50,7 @@ self.addEventListener('activate', (event) => {
 // Fetch Event - Stale-while-revalidate for assets, Network-first for pages
 self.addEventListener('fetch', (event) => {
     const requestUrl = new URL(event.request.url);
-    
+
     // Stale-while-revalidate for static assets under /src/
     if (requestUrl.pathname.includes('/src/')) {
         event.respondWith(
@@ -69,7 +69,7 @@ self.addEventListener('fetch', (event) => {
                 return cachedResponse || fetchPromise;
             })
         );
-    } 
+    }
     // Network-first for HTML pages
     else if (event.request.mode === 'navigate' || requestUrl.pathname.endsWith('.html') || requestUrl.pathname === '/') {
         event.respondWith(
@@ -82,7 +82,7 @@ self.addEventListener('fetch', (event) => {
                 return caches.match(event.request);
             })
         );
-    } 
+    }
     // Fallback
     else {
         event.respondWith(

@@ -28,13 +28,26 @@
     {
       "name": "Products",
       "url": "/#products",
-      "icons": [{ "src": "src/assets/images/gurukripaLogo.jpg", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "src/assets/images/gurukripaLogo.jpg",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Contact",
       "url": "/#contact",
-      "icons": [{ "src": "src/assets/images/gurukripaLogo.jpg", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "src/assets/images/gurukripaLogo.jpg",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
-  "categories": ["business", "home-improvement"]
+  "categories": [
+    "business",
+    "home-improvement"
+  ]
 }
