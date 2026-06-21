@@ -1,94 +1,113 @@
-const VERSION = '3.5.2';
-const CACHE_NAME = 'gurukripa-cache-v4';
-const ASSETS_TO_CACHE = [
+const VERSION = '4.0.0';
+const CACHE_NAME = `gurukripa-cache-v${VERSION}`;
+
+// Only cache files that actually exist in this SPA
+const ASSETS_TO_PRECACHE = [
     './',
-    'index.html',
-    'checkout.html',
-    'manifest.json',
-    `src/main.js?v=${VERSION}`,
-    `src/styles/main.css?v=${VERSION}`,
-    `src/styles/modern-ui.css?v=${VERSION}`,
-    `src/styles/modern-ui-improvements.css?v=${VERSION}`,
-    `src/styles/chatbot.css?v=${VERSION}`,
-    `src/utils/ui.js?v=${VERSION}`,
-    `src/utils/authService.js?v=${VERSION}`,
-    `src/utils/cartService.js?v=${VERSION}`,
-    `src/utils/productService.js?v=${VERSION}`,
-    `src/utils/translationService.js?v=${VERSION}`,
-    `src/utils/chatbot.js?v=${VERSION}`,
-    `src/utils/calculator.js?v=${VERSION}`,
-    `src/utils/wishlistService.js?v=${VERSION}`,
-    'src/js/checkout.js',
-    `src/constants/config.js?v=${VERSION}`,
-    `src/constants/translations.js?v=${VERSION}`,
-    `src/constants/products.js?v=${VERSION}`,
-    'src/assets/images/logo-new.svg',
-    'src/assets/images/favicon.ico'
+    './index.html',
+    './manifest.json',
+    './sw.js',
+    './robots.txt',
+    './sitemap.xml',
+    './404.html',
+    './500.html',
 ];
 
-// Install Event
+// ── Install: precache critical assets ─────────────────────────────────
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            console.log('✅ Caching assets...');
-            return cache.addAll(ASSETS_TO_CACHE);
-        }).then(() => self.skipWaiting())
+        caches.open(CACHE_NAME)
+            .then((cache) => {
+                console.log('[SW] Precaching core assets');
+                // addAll fails silently if one asset 404s — use individual puts instead
+                return Promise.allSettled(
+                    ASSETS_TO_PRECACHE.map(url =>
+                        fetch(url, { cache: 'reload' })
+                            .then(resp => {
+                                if (resp && resp.status === 200) {
+                                    return cache.put(url, resp);
+                                }
+                            })
+                            .catch(() => { /* Skip unavailable assets */ })
+                    )
+                );
+            })
+            .then(() => self.skipWaiting())
     );
 });
 
-// Activate Event
+// ── Activate: clear old caches ─────────────────────────────────────────
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((keys) => {
-            return Promise.all(
-                keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
-            );
-        }).then(() => self.clients.claim())
+        caches.keys()
+            .then((keys) => Promise.all(
+                keys
+                    .filter(key => key !== CACHE_NAME)
+                    .map(key => {
+                        console.log('[SW] Deleting old cache:', key);
+                        return caches.delete(key);
+                    })
+            ))
+            .then(() => self.clients.claim())
     );
 });
 
-// Fetch Event - Stale-while-revalidate for assets, Network-first for pages
+// ── Fetch: smart caching strategies ───────────────────────────────────
 self.addEventListener('fetch', (event) => {
-    const requestUrl = new URL(event.request.url);
+    const req = event.request;
+    const url = new URL(req.url);
 
-    // Stale-while-revalidate for static assets under /src/
-    if (requestUrl.pathname.includes('/src/')) {
+    // Skip non-GET and cross-origin requests
+    if (req.method !== 'GET') return;
+    if (url.origin !== self.location.origin) return;
+
+    // HTML pages: Network-first → fallback to cache → fallback to index.html
+    if (req.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/') {
         event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                const fetchPromise = fetch(event.request).then((response) => {
-                    if (response && response.status === 200) {
-                        return caches.open(CACHE_NAME).then((cache) => {
-                            cache.put(event.request, response.clone());
-                            return response;
-                        });
+            fetch(req)
+                .then(resp => {
+                    if (resp && resp.status === 200) {
+                        const clone = resp.clone();
+                        caches.open(CACHE_NAME).then(c => c.put(req, clone));
                     }
-                    return response;
-                }).catch((err) => {
-                    console.log("Background fetch failed for static asset:", event.request.url, err);
-                });
-                return cachedResponse || fetchPromise;
-            })
+                    return resp;
+                })
+                .catch(() =>
+                    caches.match(req)
+                        .then(cached => cached || caches.match('./index.html'))
+                )
         );
+        return;
     }
-    // Network-first for HTML pages
-    else if (event.request.mode === 'navigate' || requestUrl.pathname.endsWith('.html') || requestUrl.pathname === '/') {
+
+    // Images: Stale-while-revalidate (serve cached immediately, update in background)
+    if (url.pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico)$/i)) {
         event.respondWith(
-            fetch(event.request).then((response) => {
-                return caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, response.clone());
-                    return response;
-                });
-            }).catch(() => {
-                return caches.match(event.request);
-            })
+            caches.open(CACHE_NAME).then(cache =>
+                cache.match(req).then(cached => {
+                    const fetchPromise = fetch(req)
+                        .then(resp => {
+                            if (resp && resp.status === 200) cache.put(req, resp.clone());
+                            return resp;
+                        })
+                        .catch(() => null);
+                    return cached || fetchPromise;
+                })
+            )
         );
+        return;
     }
-    // Fallback
-    else {
-        event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                return cachedResponse || fetch(event.request);
-            })
-        );
-    }
+
+    // Everything else (fonts, JSON, etc.): Cache-first → network fallback
+    event.respondWith(
+        caches.match(req).then(cached => {
+            if (cached) return cached;
+            return fetch(req).then(resp => {
+                if (resp && resp.status === 200) {
+                    caches.open(CACHE_NAME).then(c => c.put(req, resp.clone()));
+                }
+                return resp;
+            }).catch(() => new Response('Offline', { status: 503 }));
+        })
+    );
 });

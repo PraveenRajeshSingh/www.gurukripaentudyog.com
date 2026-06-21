@@ -1,18 +1,19 @@
 User-agent: *
-Disallow: /dist/
-Disallow: /assets/vendors/
-Disallow: /*.json$
+Allow: /
+Disallow: /src/assets/vendors/
 Disallow: /*.md$
-Disallow: /404.html
-Disallow: /500.html
-Disallow: /checkout.html
 
+# Specific bot rules
 User-agent: Googlebot
-Disallow: /dist/
-Disallow: /assets/vendors/
-Disallow: /*.json$
-Disallow: /*.md$
-Disallow: /checkout.html
+Allow: /
+Disallow: /src/assets/vendors/
+
+User-agent: Bingbot
+Allow: /
+
+# Crawl-delay for courtesy
+User-agent: *
+Crawl-delay: 1
 
 Sitemap: https://www.gurukripaentudyog.com/sitemap.xml
 Host: www.gurukripaentudyog.com

@@ -1,33 +1,53 @@
 {
   "name": "Gurukripa Bricks Industry",
   "short_name": "Gurukripa Bricks",
-  "description": "Premium Quality Brick Manufacturer Since 1995. Best Bricks in Jaunpur & Varanasi.",
+  "description": "Premium Quality Red Clay Brick Manufacturer since 1998. Grade-A, ISI certified bricks — Jaunpur & Varanasi, UP.",
   "start_url": "./index.html",
   "id": "/",
   "scope": "/",
   "lang": "en",
+  "dir": "ltr",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#b83a14",
-  "orientation": "portrait",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "background_color": "#FAFAF9",
+  "theme_color": "#C8460A",
+  "orientation": "any",
+  "categories": ["business", "shopping", "home-improvement"],
   "icons": [
     {
       "src": "src/assets/images/gurukripaLogo.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "src/assets/images/gurukripaLogo.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "src/assets/images/gurukripaLogo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "src/assets/images/redbrick1.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Gurukripa Bricks Industry Homepage"
     }
   ],
   "shortcuts": [
     {
-      "name": "Products",
-      "url": "/#products",
+      "name": "Browse Products",
+      "short_name": "Products",
+      "description": "View our range of premium bricks",
+      "url": "/#categories",
       "icons": [
         {
           "src": "src/assets/images/gurukripaLogo.jpg",
@@ -36,7 +56,9 @@
       ]
     },
     {
-      "name": "Contact",
+      "name": "Contact Us",
+      "short_name": "Contact",
+      "description": "Get in touch with us",
       "url": "/#contact",
       "icons": [
         {
@@ -44,10 +66,20 @@
           "sizes": "96x96"
         }
       ]
+    },
+    {
+      "name": "Brick Calculator",
+      "short_name": "Calculator",
+      "description": "Calculate bricks needed for your project",
+      "url": "/#calculator",
+      "icons": [
+        {
+          "src": "src/assets/images/gurukripaLogo.jpg",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
-  "categories": [
-    "business",
-    "home-improvement"
-  ]
+  "related_applications": [],
+  "prefer_related_applications": false
 }
