@@ -1,0 +1,300 @@
+<!-- ━━━━━━━━━━━━━━━━━ BRICK QUALITY SPECIFICATIONS & SOUND TESTER ━━━━━━━━━━━━━━━━━ -->
+<section class="sec quality-matrix-sec" id="quality-spec">
+    <div class="container">
+        <div class="text-center">
+            <span class="sec-tag" data-i18n="qualitySpec.tag">Quality Verification</span>
+            <h2 class="sec-title" data-i18n="qualitySpec.title">Brick Quality Spec &amp; Metallic Ringing Sound Test</h2>
+            <p class="sec-sub" data-i18n="qualitySpec.sub">Compare technical specifications &amp; test the authentic metallic ringing sound (खनक) of Grade-A bricks before buying</p>
+        </div>
+
+        <div class="quality-table-wrap">
+            <table class="quality-table">
+                <thead>
+                    <tr>
+                        <th>Brick Grade / Category</th>
+                        <th>Compressive Strength</th>
+                        <th>Water Absorption</th>
+                        <th>Efflorescence (Salt)</th>
+                        <th>Ring Sound Test (खनक)</th>
+                        <th>Recommended Application</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Shiv Eent Grade-A (शिव ईंट)</strong></td>
+                        <td><strong style="color:var(--brand)">≥ 12.5 N/mm²</strong></td>
+                        <td>&lt; 10% (Low)</td>
+                        <td>Nil / Negligible</td>
+                        <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem" onclick="playBrickSound('gradeA')">🔔 Ringing Bell Sound (खनक)</button></td>
+                        <td>Load-bearing pillars, multi-story structural walls</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Awwal Bricks (आव्वल ईंट)</strong></td>
+                        <td><strong>≥ 10.0 N/mm²</strong></td>
+                        <td>&lt; 12% (Optimal)</td>
+                        <td>Slight</td>
+                        <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem" onclick="playBrickSound('awwal')">🔔 Sharp Ringing</button></td>
+                        <td>Heavy residential, commercial foundations &amp; exterior walls</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Laal Peti Bricks (लाल पेटी)</strong></td>
+                        <td><strong>≥ 7.5 N/mm²</strong></td>
+                        <td>&lt; 15% (Standard)</td>
+                        <td>Slight to Moderate</td>
+                        <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem;background:var(--ink-3)" onclick="playBrickSound('laalPeti')">🔉 Clear Tone</button></td>
+                        <td>Partition walls, boundary walls, single-story homes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Machine Wirecut</strong></td>
+                        <td><strong>≥ 11.0 N/mm²</strong></td>
+                        <td>&lt; 10% (Low)</td>
+                        <td>Nil</td>
+                        <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem" onclick="playBrickSound('gradeA')">🔔 Crisp Metallic</button></td>
+                        <td>Exposed brick elevation &amp; architectural designs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Standard Hollow Bricks</strong></td>
+                        <td><strong>≥ 5.0 N/mm²</strong></td>
+                        <td>&lt; 8%</td>
+                        <td>Nil</td>
+                        <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem;background:var(--ink-3)" onclick="playBrickSound('standard')">🔈 Dull Thud</button></td>
+                        <td>Lightweight interior non-load partition walls</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sound Tester Interactive Banner -->
+        <div class="sound-test-card">
+            <div>
+                <h3 style="font-family:var(--display);font-size:1.3rem;margin-bottom:6px">🔊 Real-Life Quality Test: Listen to the "Metallic Ringing Sound" (खनक)</h3>
+                <p style="font-size:.85rem;color:rgba(255,255,255,0.8);max-width:550px">In Indian real-life brick testing, striking two well-burnt Grade-A bricks together produces a clear metallic ringing sound (खनक). Poorly baked bricks make a dull thud. Tap below to simulate!</p>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <button class="sound-test-btn" onclick="playBrickSound('gradeA')">
+                    🔔 Test Grade-A Metallic Sound (खनक)
+                </button>
+                <button class="sound-test-btn" style="background:rgba(255,255,255,0.15);box-shadow:none" onclick="playBrickSound('standard')">
+                    🔈 Test Low-Grade Brick Sound
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━ BRICK DETAIL CARDS ━━━━━━━━━━━━━━━━━ -->
+<section class="sec brick-detail-sec" id="brick-details">
+    <div class="container">
+        <div class="text-center">
+            <span class="sec-tag">Know Your Bricks</span>
+            <h2 class="sec-title">Laal Peti &amp; Awwal — Compared</h2>
+            <p class="sec-sub">Understand which brick suits your project best before you buy</p>
+        </div>
+        <div class="brick-detail-grid">
+            <!-- Laal Peti -->
+            <div class="brick-detail-card">
+                <span class="bdc-badge amber">Value Pick</span>
+                <div class="bdc-name">Laal Peti Bricks</div>
+                <div class="bdc-hindi">लाल पेटी ईंट</div>
+                <div class="bdc-price-row">
+                    <div class="bdc-price">₹25,000</div>
+                    <div class="bdc-price-sub">for 4,000 bricks &nbsp;·&nbsp; ₹6.25 per brick</div>
+                </div>
+                <p class="bdc-desc">Commonly used for general construction — homes, boundary walls, and commercial buildings. Made using natural clay, these bricks strike the perfect balance between cost and performance.</p>
+                <div class="bdc-list-title">✅ Benefits</div>
+                <div class="bdc-list">
+                    <div class="bdc-item pro"><span class="bdc-dot">✓</span> Affordable &amp; widely available</div>
+                    <div class="bdc-item pro"><span class="bdc-dot">✓</span> Suitable for most building projects</div>
+                    <div class="bdc-item pro"><span class="bdc-dot">✓</span> Easy to work with — mason-friendly</div>
+                </div>
+                <div class="bdc-list-title">⚠️ Drawbacks</div>
+                <div class="bdc-list">
+                    <div class="bdc-item con"><span class="bdc-dot">✗</span> Not as durable as Awwal bricks</div>
+                    <div class="bdc-item con"><span class="bdc-dot">✗</span> Less ideal in high-moisture areas</div>
+                </div>
+                <a href="https://wa.me/919198923230?text=I want to order Laal Peti Bricks (लाल पेटी ईंट) — ₹25,000 for 4,000" target="_blank" rel="noopener" class="btn btn-primary btn-full" style="margin-top:18px">🛒 Order Laal Peti Now</a>
+            </div>
+            <!-- Awwal -->
+            <div class="brick-detail-card featured">
+                <span class="bdc-badge">Heavy Duty</span>
+                <div class="bdc-name">Awwal Bricks</div>
+                <div class="bdc-hindi">आव्वल ईंट</div>
+                <div class="bdc-price-row">
+                    <div class="bdc-price">₹28,200</div>
+                    <div class="bdc-price-sub">for 4,000 bricks &nbsp;·&nbsp; ₹7.05 per brick</div>
+                </div>
+                <p class="bdc-desc">High-quality bricks known for strength and durability. Used in heavy-duty construction like large building walls or factories. The #1 choice for builders who need long-lasting results.</p>
+                <div class="bdc-list-title">✅ Benefits</div>
+                <div class="bdc-list">
+                    <div class="bdc-item pro"><span class="bdc-dot">✓</span> Strong, durable &amp; long-lasting</div>
+                    <div class="bdc-item pro"><span class="bdc-dot">✓</span> Ideal for heavy structures &amp; factories</div>
+                    <div class="bdc-item pro"><span class="bdc-dot">✓</span> Superior weather resistance</div>
+                </div>
+                <div class="bdc-list-title">⚠️ Drawbacks</div>
+                <div class="bdc-list">
+                    <div class="bdc-item con"><span class="bdc-dot">✗</span> Higher price than Laal Peti</div>
+                    <div class="bdc-item con"><span class="bdc-dot">✗</span> Not necessary for lighter projects</div>
+                </div>
+                <a href="https://wa.me/919198923230?text=I want to order Awwal Bricks (आव्वल ईंट) — ₹28,200 for 4,000" target="_blank" rel="noopener" class="btn btn-primary btn-full" style="margin-top:18px">🛒 Order Awwal Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━ WHY BRL / DIRECT FROM BHATTA ━━━━━━━━━━━━━━━━━ -->
+<section class="sec brl-sec" id="why-brl">
+    <div class="container brl-inner">
+        <div class="brl-top">
+            <div>
+                <span class="sec-tag" style="background:rgba(245,166,35,.15);color:var(--brand-amber)">Direct from Bhatta</span>
+                <h2 class="brl-headline">No Middlemen.<br>No Markup.<br><em>Just Honest Prices.</em></h2>
+                <p class="brl-lead">Lucknow's only direct-to-customer brand that offers all brick material at the bhatta rate. No aggressive selling from dukandars — you buy exactly what you need, at factory price.</p>
+                <div class="brl-trust-pills">
+                    <span class="brl-pill">🏆 #1 in Quality</span>
+                    <span class="brl-pill">💰 Cheapest Bhatta Rate</span>
+                    <span class="brl-pill">📦 No Min. Quantity</span>
+                    <span class="brl-pill">✅ Trust &amp; Quality First</span>
+                </div>
+            </div>
+            <div class="brl-usp-grid">
+                <div class="brl-usp-card">
+                    <div class="brl-usp-icon">🏭</div>
+                    <div class="brl-usp-title">Bhatta Direct</div>
+                    <div class="brl-usp-desc">We ship straight from the kiln — no warehouse markups, no dealer cuts</div>
+                </div>
+                <div class="brl-usp-card">
+                    <div class="brl-usp-icon">💸</div>
+                    <div class="brl-usp-title">Lowest Price</div>
+                    <div class="brl-usp-desc">Factory rate saves you ₹2,000–₹5,000 per trolley vs market price</div>
+                </div>
+                <div class="brl-usp-card">
+                    <div class="brl-usp-icon">📏</div>
+                    <div class="brl-usp-title">Buy Any Qty</div>
+                    <div class="brl-usp-desc">अधिक बिक्री के लिए कोई बड़ी न्यूनतम मात्रा नहीं — केवल वही खरीदें जो चाहिए</div>
+                </div>
+                <div class="brl-usp-card">
+                    <div class="brl-usp-icon">🤝</div>
+                    <div class="brl-usp-title">Trust First</div>
+                    <div class="brl-usp-desc">विश्वास और गुणवत्ता — यही हमें #1 बनाता है</div>
+                </div>
+                <div class="brl-usp-card">
+                    <div class="brl-usp-icon">⭐</div>
+                    <div class="brl-usp-title">Grade-A Only</div>
+                    <div class="brl-usp-desc">Every brick meets ISI standards — no seconds, no compromises</div>
+                </div>
+                <div class="brl-usp-card">
+                    <div class="brl-usp-icon">🚛</div>
+                    <div class="brl-usp-title">Fast Delivery</div>
+                    <div class="brl-usp-desc">Same-day delivery across Lucknow &amp; surrounding districts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trolley Pricing Guide -->
+        <div class="trolley-wrap">
+            <h3 class="trolley-title">🚚 Trolley Price Guide</h3>
+            <p class="trolley-sub">Price for one trolley = 4,000 bricks. All prices at direct bhatta rate — no middlemen.</p>
+            <div class="trolley-grid">
+                <div class="trolley-card highlight">
+                    <div class="trolley-type">Awwal Bricks</div>
+                    <div class="trolley-hindi">आव्वल ईंट</div>
+                    <div class="trolley-price">₹27,200</div>
+                    <div class="trolley-qty">Per trolley (4,000 bricks)</div>
+                </div>
+                <div class="trolley-card">
+                    <div class="trolley-type">Laal Peti</div>
+                    <div class="trolley-hindi">लाल पेटी ईंट</div>
+                    <div class="trolley-price">₹24,000</div>
+                    <div class="trolley-qty">Per trolley (4,000 bricks)</div>
+                </div>
+                <div class="trolley-card">
+                    <div class="trolley-type">Peela Brick</div>
+                    <div class="trolley-hindi">पीला ईंट</div>
+                    <div class="trolley-price">₹15,200</div>
+                    <div class="trolley-qty">Per trolley (4,000 bricks)</div>
+                </div>
+                <div class="trolley-card">
+                    <div class="trolley-type">Seedha</div>
+                    <div class="trolley-hindi">सीधा ईंट</div>
+                    <div class="trolley-price">₹23,600</div>
+                    <div class="trolley-qty">Per trolley (4,000 bricks)</div>
+                </div>
+                <div class="trolley-card">
+                    <div class="trolley-type">Teda</div>
+                    <div class="trolley-hindi">टेढ़ा ईंट</div>
+                    <div class="trolley-price">₹19,600</div>
+                    <div class="trolley-qty">Per trolley (4,000 bricks)</div>
+                </div>
+            </div>
+            <div style="margin-top:32px;text-align:center">
+                <a href="https://wa.me/919198923230?text=Namaste!%20Mujhe%20ek%20trolley%20bricks%20chahiye.%20Price%20aur%20availability%20batayein." target="_blank" rel="noopener" class="btn btn-primary" style="background:var(--brand-amber);color:var(--ink);font-size:1rem;padding:14px 32px;border-radius:var(--r-lg)">
+                    📲 WhatsApp पर Order करें
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━ WHERE TO USE WHICH BRICK ━━━━━━━━━━━━━━━━━ -->
+<section class="sec where-sec" id="brick-guide">
+    <div class="container">
+        <div class="text-center">
+            <span class="sec-tag">Buying Guide</span>
+            <h2 class="sec-title">Where to Use Which Brick?</h2>
+            <p class="sec-sub">कहाँ कौन सी ईंट उपयोग करें — expert guidance for every project type</p>
+        </div>
+        <div class="where-grid">
+            <div class="where-card">
+                <div class="where-card-header">
+                    <div class="where-card-icon-wrap">🏠</div>
+                    <div class="where-card-title">Normal House Building</div>
+                    <div class="where-card-hindi">मकान बनाने के लिए</div>
+                </div>
+                <div class="where-card-body">
+                    <div class="where-brick-tag">🧱 Red Clay Bricks (Laal Peti)</div>
+                    <div class="where-reason-list">
+                        <div class="where-reason"><span class="where-reason-check">✓</span> Strong and long-lasting for residential use</div>
+                        <div class="where-reason"><span class="where-reason-check">✓</span> Easy to work with — mason-friendly</div>
+                        <div class="where-reason"><span class="where-reason-check">✓</span> Most affordable option for home builds</div>
+                    </div>
+                    <div class="where-quote">"यह सबसे अच्छी और सस्ती ईंट है घर बनाने के लिए"</div>
+                </div>
+            </div>
+            <div class="where-card">
+                <div class="where-card-header">
+                    <div class="where-card-icon-wrap">🏢</div>
+                    <div class="where-card-title">Big Buildings</div>
+                    <div class="where-card-hindi">बड़ी बिल्डिंग के लिए</div>
+                </div>
+                <div class="where-card-body">
+                    <div class="where-brick-tag">🧱 Awwal / Fly Ash / AAC Blocks</div>
+                    <div class="where-reason-list">
+                        <div class="where-reason"><span class="where-reason-check">✓</span> Lighter weight — better for tall structures</div>
+                        <div class="where-reason"><span class="where-reason-check">✓</span> High compressive strength for load bearing</div>
+                        <div class="where-reason"><span class="where-reason-check">✓</span> Better load distribution on foundations</div>
+                    </div>
+                    <div class="where-quote">"बड़ी बिल्डिंग के लिए हल्की ईंट बेहतर रहती है"</div>
+                </div>
+            </div>
+            <div class="where-card">
+                <div class="where-card-header">
+                    <div class="where-card-icon-wrap">🌧️</div>
+                    <div class="where-card-title">Outer Walls</div>
+                    <div class="where-card-hindi">बाहरी दीवार के लिए</div>
+                </div>
+                <div class="where-card-body">
+                    <div class="where-brick-tag">🧱 Wire Cut Bricks (Machine Made)</div>
+                    <div class="where-reason-list">
+                        <div class="where-reason"><span class="where-reason-check">✓</span> Premium look from outside</div>
+                        <div class="where-reason"><span class="where-reason-check">✓</span> Strong against rain &amp; weather conditions</div>
+                        <div class="where-reason"><span class="where-reason-check">✓</span> Zero size variation — clean sharp finish</div>
+                    </div>
+                    <div class="where-quote">"बाहरी दीवार के लिए वायर कट ईंट सबसे अच्छी रहती है"</div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top:36px;text-align:center">
+            <a href="tel:+919198923230" class="btn btn-outline" style="font-size:.92rem;padding:13px 30px">📞 Confused? Call our expert for free advice</a>
+        </div>
+    </div>
+</section>

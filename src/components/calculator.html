@@ -1,0 +1,120 @@
+<!-- ━━━━━━━━━━━━━━━━━ CALCULATOR 2.0 ━━━━━━━━━━━━━━━━━ -->
+<section class="sec" id="calculator">
+    <div class="container">
+        <div class="text-center">
+            <span class="sec-tag" data-i18n="calculator.tag">Smart Construction Studio</span>
+            <h2 class="sec-title" data-i18n="calculator.title">3-in-1 Building Material &amp; Cost Estimator</h2>
+            <p class="sec-sub">Calculate complete construction material needs — Bricks, Cement bags, Sand volume &amp; total budget estimate</p>
+        </div>
+
+        <!-- Estimator Tab Header -->
+        <div class="calc-tabs" style="justify-content:center;margin-top:20px">
+            <div class="calc-tab active" id="cTabWallBtn" onclick="switchCalcTab('wall')">🧱 Single/Multi-Wall Estimator</div>
+            <div class="calc-tab" id="cTabHouseBtn" onclick="switchCalcTab('house')">🏠 Full House Material Estimator</div>
+            <div class="calc-tab" id="cTabBoundaryBtn" onclick="switchCalcTab('boundary')">🧱 Boundary Wall &amp; Pillars</div>
+        </div>
+
+        <div class="calc-wrap">
+            <!-- Left Form Panel -->
+            <div class="calc-form">
+                <!-- Tab 1: Wall Estimator -->
+                <div class="calc-tab-panel active" id="calcTabWall">
+                    <div class="calc-form-head">
+                        <h3>Wall Dimensions</h3>
+                        <p>Calculate exact brick &amp; mortar needs for walls</p>
+                    </div>
+                    <div class="calc-form-body">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                            <div class="calc-field">
+                                <label class="calc-label">Length (feet)</label>
+                                <input type="number" class="calc-input" id="calcLength" placeholder="e.g. 20" min="1" value="20" oninput="calculateBricks()">
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Height (feet)</label>
+                                <input type="number" class="calc-input" id="calcHeight" placeholder="e.g. 10" min="1" value="10" oninput="calculateBricks()">
+                            </div>
+                        </div>
+                        <div class="calc-field">
+                            <label class="calc-label">Wall Thickness</label>
+                            <select class="calc-input" id="calcThickness" onchange="calculateBricks()">
+                                <option value="4.5">4.5 inch (Single Partition Wall)</option>
+                                <option value="9" selected>9 inch (Main Load-bearing Wall)</option>
+                                <option value="13.5">13.5 inch (Triple Foundation Wall)</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label class="calc-label">Brick Grade &amp; Unit Rate</label>
+                            <select class="calc-input" id="calcBrickType" onchange="calculateBricks()">
+                                <option value="7.05">Awwal Bricks (आव्वल) — ₹7.05/pc (₹28,200/trolley)</option>
+                                <option value="6.25">Laal Peti (लाल पेटी) — ₹6.25/pc (₹25,000/trolley)</option>
+                                <option value="12" selected>Shiv Eent Grade-A — ₹12/pc</option>
+                                <option value="10">Premium Red Bricks — ₹10/pc</option>
+                                <option value="8">Standard Bricks — ₹8/pc</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Full House Estimator -->
+                <div class="calc-tab-panel" id="calcTabHouse">
+                    <div class="calc-form-head">
+                        <h3>Full House Construction Specs</h3>
+                        <p>Estimate entire building material budget (Ground + Floors)</p>
+                    </div>
+                    <div class="calc-form-body">
+                        <div class="calc-field">
+                            <label class="calc-label">Plot / Built-up Area (Sq. Ft)</label>
+                            <input type="number" class="calc-input" id="houseArea" placeholder="e.g. 1000" min="100" value="1000" oninput="calculateHouseMaterial()">
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                            <div class="calc-field">
+                                <label class="calc-label">Number of Floors</label>
+                                <select class="calc-input" id="houseFloors" onchange="calculateHouseMaterial()">
+                                    <option value="1">Ground Floor Only (G)</option>
+                                    <option value="2" selected>Ground + 1st Floor (G+1)</option>
+                                    <option value="3">Ground + 2 Floors (G+2)</option>
+                                </select>
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Brick Grade</label>
+                                <select class="calc-input" id="houseBrickRate" onchange="calculateHouseMaterial()">
+                                    <option value="12">Shiv Eent Grade-A (₹12)</option>
+                                    <option value="7.05" selected>Awwal Bricks (₹7.05)</option>
+                                    <option value="6.25">Laal Peti (₹6.25)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Boundary Wall Estimator -->
+                <div class="calc-tab-panel" id="calcTabBoundary">
+                    <div class="calc-form-head">
+                        <h3>Boundary Wall &amp; Pillars</h3>
+                        <p>Perimeter boundary fencing material calculator</p>
+                    </div>
+                    <div class="calc-form-body">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                            <div class="calc-field">
+                                <label class="calc-label">Perimeter Length (ft)</label>
+                                <input type="number" class="calc-input" id="boundaryLength" placeholder="e.g. 150" value="150" oninput="calculateBoundaryMaterial()">
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Wall Height (ft)</label>
+                                <input type="number" class="calc-input" id="boundaryHeight" placeholder="e.g. 6" value="6" oninput="calculateBoundaryMaterial()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Results Panel -->
+            <div class="calc-result" id="calcResult">
+                <div class="calc-result-title">📊 Complete Material Estimate</div>
+                <div id="calcResultsBody">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

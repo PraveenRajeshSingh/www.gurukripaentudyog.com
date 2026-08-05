@@ -1,0 +1,168 @@
+<!-- ━━━━━━━━━━━━━━━━━ CATEGORIES ━━━━━━━━━━━━━━━━━ -->
+<section class="sec" id="categories">
+    <div class="container">
+        <div class="text-center">
+            <span class="sec-tag" data-i18n="categories.tag">Premium Categories</span>
+            <h2 class="sec-title" data-i18n="categories.title">Explore Our Range</h2>
+            <p class="sec-sub" data-i18n="categories.desc">Choose from our wide range of premium quality bricks engineered for strength</p>
+        </div>
+        <div class="categories-grid">
+            <div class="cat-card" onclick="filterProducts('shiv-eent')">
+                <img class="cat-card-img" src="src/assets/images/brick_product_3.png" alt="Shiv Eent Grade-A Bricks" loading="lazy">
+                <div class="cat-card-overlay"></div>
+                <div class="cat-card-body">
+                    <div class="cat-card-icon">⭐</div>
+                    <div class="cat-card-title">Shiv Eent <small style="font-family:var(--body);font-size:.75rem;opacity:.8">(Grade-A)</small></div>
+                    <div class="cat-card-sub">Ultra-Premium Quality</div>
+                </div>
+                <div class="cat-card-arrow">→</div>
+            </div>
+            <div class="cat-card" onclick="filterProducts('premium')">
+                <img class="cat-card-img" src="src/assets/images/brick_product_2.png" alt="Premium Red Clay Bricks" loading="lazy">
+                <div class="cat-card-overlay"></div>
+                <div class="cat-card-body">
+                    <div class="cat-card-icon">🔥</div>
+                    <div class="cat-card-title">Premium Red Bricks</div>
+                    <div class="cat-card-sub">Double-Fired Durability</div>
+                </div>
+                <div class="cat-card-arrow">→</div>
+            </div>
+            <div class="cat-card" onclick="filterProducts('standard')">
+                <img class="cat-card-img" src="src/assets/images/redbrick1.jpg" alt="Standard Bricks" loading="lazy">
+                <div class="cat-card-overlay"></div>
+                <div class="cat-card-body">
+                    <div class="cat-card-icon">🏗️</div>
+                    <div class="cat-card-title">Standard Bricks</div>
+                    <div class="cat-card-sub">Best Value Choice</div>
+                </div>
+                <div class="cat-card-arrow">→</div>
+            </div>
+            <div class="cat-card" onclick="filterProducts('machine-made')">
+                <img class="cat-card-img" src="src/assets/images/brick_product_1.png" alt="Machine Made Bricks" loading="lazy">
+                <div class="cat-card-overlay"></div>
+                <div class="cat-card-body">
+                    <div class="cat-card-icon">⚙️</div>
+                    <div class="cat-card-title">Machine Made</div>
+                    <div class="cat-card-sub">Precision Shape & Size</div>
+                </div>
+                <div class="cat-card-arrow">→</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━ PRODUCTS ━━━━━━━━━━━━━━━━━ -->
+<section class="sec products-sec" id="products">
+    <div class="container">
+        <div class="text-center">
+            <span class="sec-tag" data-i18n="products.tag">Verified Quality</span>
+            <h2 class="sec-title" data-i18n="products.title">Our Products</h2>
+            <p class="sec-sub" data-i18n="products.desc">Grade-A bricks tested for strength, uniformity and weather resistance</p>
+        </div>
+        <div class="products-filters">
+            <button class="filter-btn active" onclick="filterProducts('all',this)">All Products</button>
+            <button class="filter-btn" onclick="filterProducts('shiv-eent',this)">Shiv Eent</button>
+            <button class="filter-btn" onclick="filterProducts('awwal',this)">Awwal ईंट</button>
+            <button class="filter-btn" onclick="filterProducts('laal-peti',this)">Laal Peti</button>
+            <button class="filter-btn" onclick="filterProducts('premium',this)">Premium</button>
+            <button class="filter-btn" onclick="filterProducts('standard',this)">Standard</button>
+            <button class="filter-btn" onclick="filterProducts('machine-made',this)">Machine Made</button>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━ PRICE COMPARISON ━━━━━━━━━━━━━━━━━ -->
+<section class="sec price-sec" id="pricing">
+    <div class="container">
+        <div class="text-center">
+            <span class="sec-tag" data-i18n="pricing.tag">Transparent Pricing</span>
+            <h2 class="sec-title" data-i18n="pricing.title">Compare Our Products</h2>
+            <p class="sec-sub" data-i18n="pricing.desc">No hidden costs — honest pricing at every budget level</p>
+        </div>
+        <div class="price-table-wrap">
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price / Brick</th>
+                        <th>Strength</th>
+                        <th>Best For</th>
+                        <th>ISI Grade</th>
+                        <th>Bulk Discount</th>
+                        <th>Order</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="pt-highlight">
+                        <td>
+                            <div class="pt-name">Awwal Bricks <span class="pt-badge">Heavy Duty</span></div>
+                            <div class="pt-sub">आव्वल ईंट · High-strength natural clay</div>
+                        </td>
+                        <td><span class="pt-price">₹7.05 <small>/pc</small></span></td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td style="font-size:.82rem">Big buildings, factories, heavy walls</td>
+                        <td><span class="pt-check">✔ Grade-A</span></td>
+                        <td><span class="pt-check">✔ Up to 12%</span></td>
+                        <td><a href="https://wa.me/919198923230?text=I want to order Awwal Bricks (आव्वल ईंट) — ₹28,200 for 4,000" target="_blank" rel="noopener" class="pt-wa">Order Now</a></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="pt-name">Laal Peti Bricks <span class="pt-badge amber">Popular</span></div>
+                            <div class="pt-sub">लाल पेटी ईंट · Natural clay, general use</div>
+                        </td>
+                        <td><span class="pt-price">₹6.25 <small>/pc</small></span></td>
+                        <td>⭐⭐⭐⭐</td>
+                        <td style="font-size:.82rem">Homes, boundary walls, commercial builds</td>
+                        <td><span class="pt-check">✔ Standard</span></td>
+                        <td><span class="pt-check">✔ Up to 10%</span></td>
+                        <td><a href="https://wa.me/919198923230?text=I want to order Laal Peti Bricks (लाल पेटी ईंट) — ₹25,000 for 4,000" target="_blank" rel="noopener" class="pt-wa">Order Now</a></td>
+                    </tr>
+                    <tr class="pt-highlight">
+                        <td>
+                            <div class="pt-name">Shiv Eent Grade-A <span class="pt-badge">Best Seller</span></div>
+                            <div class="pt-sub">Double-fired · Ultra premium</div>
+                        </td>
+                        <td><span class="pt-price">₹12 <small>/pc</small></span></td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td style="font-size:.82rem">Load-bearing walls, foundations</td>
+                        <td><span class="pt-check">✔ Grade-A</span></td>
+                        <td><span class="pt-check">✔ Up to 15%</span></td>
+                        <td><a href="https://wa.me/919198923230?text=I want to order Shiv Eent Grade-A bricks" target="_blank" rel="noopener" class="pt-wa">Order Now</a></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="pt-name">Machine Made Wirecut <span class="pt-badge">New</span></div>
+                            <div class="pt-sub">Zero size variation · Sharp edges</div>
+                        </td>
+                        <td><span class="pt-price">₹11 <small>/pc</small></span></td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td style="font-size:.82rem">Exposed brickwork, modern builds</td>
+                        <td><span class="pt-check">✔ Grade-A</span></td>
+                        <td><span class="pt-check">✔ Up to 10%</span></td>
+                        <td><a href="https://wa.me/919198923230?text=I want to order Machine Made Wirecut bricks" target="_blank" rel="noopener" class="pt-wa">Order Now</a></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="pt-name">Premium Red Bricks <span class="pt-badge amber">Popular</span></div>
+                            <div class="pt-sub">High compressive strength</div>
+                        </td>
+                        <td><span class="pt-price">₹10 <small>/pc</small></span></td>
+                        <td>⭐⭐⭐⭐½</td>
+                        <td style="font-size:.82rem">Structural & residential walls</td>
+                        <td><span class="pt-check">✔ First Class</span></td>
+                        <td><span class="pt-check">✔ Up to 12%</span></td>
+                        <td><a href="https://wa.me/919198923230?text=I want to order Premium Red Bricks" target="_blank" rel="noopener" class="pt-wa">Order Now</a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7">📞 Need a bulk quote? Call <strong>+91 91989 23230</strong> or WhatsApp for the best rates. Min. order 1,000 bricks. Prices exclude transport charges.</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>
