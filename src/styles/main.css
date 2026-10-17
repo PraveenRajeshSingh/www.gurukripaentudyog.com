@@ -8022,3 +8022,165 @@ section, .container, header, footer {
             }
         }
 
+
+/* -------------------------------------------------------------------
+   APP-FIRST DESIGN OVERHAUL — v3.0
+   Premium fixes for TWA/PWA Android + iOS App + Web
+   Tested: 326px, 360px, 390px, 414px, 768px, 1024px
+   ------------------------------------------------------------------- */
+
+/* -- A. Scroll Progress Bar glow dot fix ----------------------------- */
+#spbar { overflow: visible !important; }
+#spbar::after {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 10px !important;
+    height: 10px !important;
+    pointer-events: none !important;
+    box-shadow: 0 0 14px 3px var(--brand-amber), 0 0 6px var(--brand) !important;
+    background: radial-gradient(circle, #fff 20%, var(--brand-amber) 70%) !important;
+}
+
+/* -- B. iOS overscroll rubber-band suppression ----------------------- */
+body { overscroll-behavior-y: contain; }
+
+/* -- C. WhatsApp FAB – fully hidden on mobile (quick bar handles it) - */
+@media (max-width: 768px) { .wa-float { display: none !important; } }
+@media (min-width: 769px) { .wa-float { display: flex !important; } }
+
+/* -- D. Navbar brand – icon-only on 326px screens ------------------- */
+@media (max-width: 340px) {
+    .nav-brand-text { display: none !important; }
+    .nav-logo-mark { width: 36px !important; height: 36px !important; }
+    .nav-inner { gap: 8px !important; padding: 0 10px !important; }
+    .nav-toggle { width: 34px !important; height: 34px !important; }
+}
+
+/* -- E. Product grid – legible at 326px ----------------------------- */
+@media (max-width: 360px) {
+    .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
+    .product-card-body { padding: 8px 8px 10px !important; }
+    .product-card-name { font-size: .76rem !important; }
+    .product-card-desc { font-size: .7rem !important; -webkit-line-clamp: 2 !important; display: -webkit-box !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+    .product-price-current { font-size: 1rem !important; }
+    .product-add-btn { font-size: .7rem !important; padding: 7px 6px !important; min-height: 40px !important; }
+    .products-filters { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; -webkit-overflow-scrolling: touch; gap: 5px !important; }
+    .filter-btn { white-space: nowrap; flex-shrink: 0; padding: 5px 10px !important; font-size: .72rem !important; }
+}
+
+/* -- F. Hero – extra compact at 326px ------------------------------- */
+@media (max-width: 340px) {
+    .hero-copy { padding: 18px 12px 10px !important; }
+    .hero-h1 { font-size: 1.55rem !important; }
+    .hero-lead { font-size: .82rem !important; }
+    .hero-cta .btn { font-size: .78rem !important; padding: 9px 10px !important; }
+    .hero-stat { padding: 10px 6px !important; }
+    .hero-stat-num { font-size: 1.1rem !important; }
+}
+
+/* -- G. Bottom nav active indicator – icon background pill ---------- */
+@media (max-width: 1024px) {
+    .mn-item:not(.mn-cart-fab)::after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        width: 40px; height: 26px;
+        border-radius: 13px;
+        background: var(--active-pill);
+        transition: transform .22s var(--ease), opacity .22s var(--ease);
+        opacity: 0; z-index: -1;
+    }
+    .mn-item.active:not(.mn-cart-fab)::after { transform: translateX(-50%) scale(1); opacity: 1; }
+    .mn-cart-fab::after { display: none !important; }
+    .mn-item.active svg { color: var(--brand); transform: translateY(-1px); }
+    @keyframes cartFabBounce {
+        0%,100% { transform: translateY(-18px) scale(1) }
+        30%      { transform: translateY(-22px) scale(1.08) }
+        60%      { transform: translateY(-16px) scale(0.95) }
+    }
+    .mn-cart-fab.bounce-add { animation: cartFabBounce .5s var(--ease); }
+}
+
+/* -- H. Enhanced App Splash / Loader -------------------------------- */
+#page-loader {
+    background: linear-gradient(160deg, #FAFAF9 0%, #F5F0EC 100%) !important;
+    gap: 12px !important;
+}
+.loader-icon { font-size: 2.8rem; animation: loaderIconPop .5s var(--ease) both; line-height: 1; }
+@keyframes loaderIconPop {
+    from { transform: scale(.4) rotate(-8deg); opacity: 0 }
+    to   { transform: scale(1) rotate(0deg);   opacity: 1 }
+}
+.loader-logo {
+    font-size: clamp(2.4rem, 10vw, 3.2rem) !important;
+    text-shadow: 0 2px 20px rgba(200, 70, 10, .15) !important;
+    animation: loaderReveal .6s var(--ease) both, loaderPulse 2s ease-in-out .6s infinite !important;
+}
+@keyframes loaderReveal {
+    from { opacity: 0; transform: translateY(14px) scale(.95) }
+    to   { opacity: 1; transform: translateY(0) scale(1) }
+}
+.loader-brand-sub { letter-spacing: .28em !important; animation: loaderReveal .6s .1s var(--ease) both !important; }
+.loader-tagline {
+    opacity: 0 !important;
+    animation: loaderFadeUp .5s .4s var(--ease) forwards !important;
+    font-size: .8rem !important; letter-spacing: .03em !important;
+}
+@keyframes loaderFadeUp {
+    from { opacity: 0; transform: translateY(6px) }
+    to   { opacity: 1; transform: translateY(0) }
+}
+.loader-progress { width: min(200px,58vw) !important; background: rgba(200,70,10,.1) !important; }
+.loader-progress-fill {
+    background: linear-gradient(90deg, var(--brand) 0%, var(--brand-amber) 60%, var(--brand) 100%) !important;
+    background-size: 200% 100% !important;
+    animation: loaderFill 1.8s var(--ease) forwards, loaderShimmer 1.5s linear infinite !important;
+}
+@keyframes loaderShimmer { 0% { background-position: 100% 0 } 100% { background-position: -100% 0 } }
+.loader-spinner { width: 36px !important; height: 36px !important; box-shadow: 0 0 0 4px rgba(200,70,10,.06) !important; }
+
+/* -- I. Standalone / TWA / iOS app mode polish ---------------------- */
+@media (display-mode: standalone) {
+    .topbar { display: none !important; }
+    .nav { background: var(--nav-glass) !important; backdrop-filter: blur(24px) saturate(200%) !important; -webkit-backdrop-filter: blur(24px) saturate(200%) !important; }
+    .hero { min-height: auto !important; }
+    .mobile-nav { box-shadow: 0 -2px 32px rgba(28,16,9,.14) !important; }
+}
+
+/* -- J. Full-bleed sections, no horizontal overflow on mobile -------- */
+@media (max-width: 640px) {
+    section, .sec { overflow-x: hidden; }
+    .trust-strip, .gallery-sec, .cta-banner { margin-left: 0 !important; margin-right: 0 !important; }
+}
+
+/* -- K. Category grid – 326px --------------------------------------- */
+@media (max-width: 360px) {
+    .categories-grid { gap: 8px !important; }
+    .cat-card-title { font-size: .8rem !important; }
+}
+
+/* -- L. Scroll-to-top correct position override ---------------------- */
+@media (max-width: 640px) {
+    .scroll-top { bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom),4px) + 62px) !important; right: 16px !important; }
+}
+
+/* -- M. Body padding – correct stacking with quick-bar -------------- */
+@media (max-width: 768px) {
+    body { padding-bottom: calc(var(--bottom-nav-h) + var(--quick-bar-h) + max(var(--safe-bottom),4px)) !important; }
+}
+
+/* -- N. Small-screen fluid type ------------------------------------- */
+@media (max-width: 360px) {
+    .sec-title { font-size: clamp(1.35rem,7vw,1.75rem) !important; }
+    .sec-sub { font-size: .8rem !important; }
+    .container { padding: 0 12px !important; }
+}
+
+/* -- O. Landscape loader compact ------------------------------------ */
+@media (max-height: 420px) and (orientation: landscape) {
+    .loader-icon, .loader-tagline { display: none !important; }
+    .loader-logo { font-size: 1.8rem !important; }
+    #page-loader { gap: 8px !important; }
+}

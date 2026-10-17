@@ -48,7 +48,7 @@ function handleLogin(e) {
     e.preventDefault();
     if (failedLoginAttempts >= 3) {
         triggerFormShake('loginForm');
-        showToast('🔒 Account locked due to repeated failed attempts.', 'error');
+        showToast(t('auth.locked'), 'error');
         return;
     }
 
@@ -81,7 +81,7 @@ function handleLogin(e) {
             if (failedLoginAttempts >= 3) {
                 startLockoutTimer();
             } else {
-                showToast(`❌ Invalid login. ${3 - failedLoginAttempts} attempt(s) remaining.`, 'error');
+                showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
             }
         }
     }, 1000);
@@ -119,7 +119,7 @@ function loginSuccess(userData) {
     setSafeStorage('gb_user', user);
     updateAuthUI();
     closeAuth();
-    showToast(`👋 Welcome back, ${user.name}!`, 'success');
+    showToast(t('auth.welcome', { name: user.name }), 'success');
     prefillUserInCheckout();
 }
 
@@ -161,7 +161,7 @@ function handleRegister(e) {
 
         loginSuccess({ name, mobile, email });
         setButtonLoading('registerSubmitBtn', false, 'Create Free Account →');
-        showToast('🎉 Account created successfully!', 'success');
+        showToast(t('auth.created'), 'success');
     }, 1000);
 }
 
@@ -170,7 +170,7 @@ function logoutUser() {
     localStorage.removeItem('gb_user');
     updateAuthUI();
     closeUserDropdown();
-    showToast('👋 Signed out successfully.');
+    showToast(t('auth.signedOut'));
 }
 
 function updateAuthUI() {
@@ -256,7 +256,7 @@ function checkPwStrength(pw) {
 
 function handleForgotPw(e) {
     e.preventDefault();
-    showToast('📧 Password reset link sent to your registered email!', 'info');
+    showToast(t('auth.resetSent'), 'info');
 }
 
 // OTP Panel Logic
@@ -318,11 +318,11 @@ function closeOtpPanel() {
 function verifyOtp() {
     const digits = Array.from(document.querySelectorAll('.otp-digit')).map(d => d.value).join('');
     if (digits.length < 6) {
-        showToast('❌ Please enter all 6 digits of your OTP.', 'error');
+        showToast(t('auth.otpIncomplete'), 'error');
         return;
     }
     loginSuccess({ name: 'Verified Customer', email: 'user@gurukripa.in', mobile: '9198923230' });
-    showToast('✅ OTP Verified!', 'success');
+    showToast(t('auth.otpVerified'), 'success');
 }
 
 // PROFILE MODAL
@@ -422,8 +422,8 @@ function saveProfile(e) {
     const mobile = document.getElementById('editMobile')?.value.trim();
     const address = document.getElementById('editAddress')?.value.trim();
 
-    if (!name || name.length < 2) { showToast('Please enter a valid name', 'error'); return; }
-    if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast('Please enter a valid email', 'error'); return; }
+    if (!name || name.length < 2) { showToast(t('auth.nameInvalid'), 'error'); return; }
+    if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast(t('auth.emailInvalid'), 'error'); return; }
 
     user.name = name;
     user.email = email;
@@ -457,7 +457,7 @@ function saveProfile(e) {
     if (avatar) avatar.style.background = getAvatarBg(name);
 
     cancelEditProfile();
-    showToast('✅ Profile updated successfully!', 'success');
+    showToast(t('auth.profileSaved'), 'success');
 }
 
 function renderWishlistInProfile() {
@@ -465,7 +465,7 @@ function renderWishlistInProfile() {
     if (!container) return;
     const items = PRODUCTS.filter(p => wishlist.includes(p.id));
     if (!items.length) {
-        container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--ink-3);font-size:.85rem">No saved wishlist items.</div>';
+        container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--ink-3);font-size:.85rem">${t('wishlist.empty')}</div>`;
         return;
     }
     container.innerHTML = items.map(item => `
@@ -475,7 +475,7 @@ function renderWishlistInProfile() {
                 <div class="wishlist-item-name line-clamp-1">${sanitizeHTML(item.name)}</div>
                 <div class="wishlist-item-price">₹${item.price}/${item.unit}</div>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="addToCart(${item.id});showToast('Added to cart!')" style="padding:4px 8px;font-size:.72rem">Add</button>
+            <button class="btn btn-primary btn-sm" onclick="addToCart(${item.id})" style="padding:4px 8px;font-size:.72rem">${t('product.add')}</button>
         </div>
     `).join('');
 }

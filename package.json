@@ -1,0 +1,17 @@
+{
+  "name": "gurukripa-bricks-industry",
+  "version": "4.1.0",
+  "private": true,
+  "description": "Gurukripa Bricks Industry — PWA with Trusted Web Activity (TWA) Android/APK packaging via Bubblewrap.",
+  "scripts": {
+    "serve": "http-server . -p 8080 -c-1",
+    "doctor": "bubblewrap doctor",
+    "apk:init": "bubblewrap init --manifest http://localhost:8080/manifest.json",
+    "apk:build": "bubblewrap build --skipTwaValidation --skipPlayStorage",
+    "apk:build:prod": "bubblewrap build"
+  },
+  "devDependencies": {
+    "@bubblewrap/cli": "^1.27.0",
+    "http-server": "^14.1.1"
+  }
+}

@@ -21,12 +21,12 @@ function closeTrackerModal() {
 function demoTrackerOrder() {
     document.getElementById('trackerSearchInput').value = 'GBI-20260728-4912';
     renderTrackerDetails('GBI-20260728-4912');
-    showToast('🚚 Loaded live demo order tracking!', 'info');
+    showToast(t('tracker.demoLoaded'), 'info');
 }
 
 function trackOrderSubmit() {
     const id = document.getElementById('trackerSearchInput').value.trim();
-    if (!id) { showToast('Please enter an Order ID or Mobile', 'error'); return; }
+    if (!id) { showToast(t('tracker.enterId'), 'error'); return; }
     renderTrackerDetails(id);
 }
 

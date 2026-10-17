@@ -114,7 +114,7 @@ function toggleWishlist(id, btn) {
     } else {
         wishlist.push(id);
         if (btn) { btn.innerHTML = '❤️'; btn.classList.add('active'); }
-        showToast('❤️ Added to wishlist!');
+        showToast(t('wishlist.added'));
     }
     setSafeStorage('gb_wishlist', wishlist);
     const stat = document.getElementById('profileStatWishlist');

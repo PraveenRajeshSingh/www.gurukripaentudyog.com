@@ -2,7 +2,7 @@
 // CHECKOUT & PAYMENT WIZARD
 // ══════════════════════════════════════════
 function openCheckout() {
-    if (!cart.length) { showToast('🛒 Your cart is empty!'); return; }
+    if (!cart.length) { showToast(t('checkout.emptyCart')); return; }
     closeCart();
     resetCheckout();
     buildCheckoutSummary();
@@ -61,7 +61,7 @@ function goToPayment(e) {
     const address = document.getElementById('coAddress')?.value.trim();
 
     if (!name || !phone || !address) {
-        showToast('❌ Please fill all required delivery fields.', 'error');
+        showToast(t('checkout.fillFields'), 'error');
         return;
     }
 
@@ -92,7 +92,7 @@ function copyUpiId() {
     if (!input) return;
     input.select();
     navigator.clipboard?.writeText(input.value);
-    showToast('📋 UPI ID "gurukripa@upi" copied!', 'success');
+    showToast(t('checkout.upiCopied'), 'success');
 }
 
 function syncCardVisual() {
@@ -159,7 +159,7 @@ function placeOrder() {
 
         showCheckoutStep(3);
         triggerConfetti();
-        showToast('🎉 Order placed successfully!', 'success');
+        showToast(t('checkout.orderPlaced'), 'success');
     }, 1800);
 }
 

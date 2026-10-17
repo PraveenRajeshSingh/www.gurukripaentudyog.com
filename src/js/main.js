@@ -31,12 +31,12 @@ function handleContactSubmit(e) {
     const btn = document.getElementById('contactSubmitBtn');
     if (!btn) return;
     btn.disabled = true;
-    btn.textContent = '⏳ Sending...';
+    btn.textContent = t('contact.sending');
     setTimeout(() => {
         btn.disabled = false;
-        btn.textContent = '📨 Send Message';
+        btn.textContent = t('contact.sendBtn');
         e.target.reset();
-        showToast('✅ Message sent! We\'ll call you back soon.', 'success');
+        showToast(t('toast.msgSent'), 'success');
     }, 1200);
 }
 
@@ -46,9 +46,9 @@ function handleNewsletter(e) {
     const input = e.target.querySelector('input');
     if (!input) return;
     const email = input.value.trim();
-    if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast('❌ Enter a valid email', 'error'); return; }
+    if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast(t('toast.invalidEmail'), 'error'); return; }
     input.value = '';
-    showToast('🎉 Subscribed! Welcome to our updates.', 'success');
+    showToast(t('toast.subscribed'), 'success');
 }
 
 // Nav Search Handler
@@ -57,6 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const q = this.value.toLowerCase().trim();
         if (q.length < 2) return;
         const match = PRODUCTS.find(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
-        if (match) showToast('🔍 Found: ' + sanitizeHTML(match.name) + ' — ₹' + match.price + '/' + match.unit);
+        if (match) showToast(t('toast.searchFound', { name: sanitizeHTML(match.name), price: match.price, unit: match.unit }));
     });
 });

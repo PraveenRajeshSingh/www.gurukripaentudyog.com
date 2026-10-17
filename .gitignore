@@ -1,0 +1,5 @@
+node_modules/
+*twa/
+*.keystore
+.env
+.DS_Store

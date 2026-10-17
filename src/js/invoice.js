@@ -79,7 +79,7 @@ function reorderTrolley(orderId) {
     saveCart();
     updateCartUI();
     openCart();
-    showToast('🔄 Trolley re-order added to cart!', 'success');
+    showToast(t('invoice.trolleyAdded'), 'success');
 }
 
 function renderOrderHistory() {

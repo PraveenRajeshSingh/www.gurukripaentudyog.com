@@ -136,7 +136,7 @@ function addCalcToCart(name, qty, unitPrice) {
     saveCart();
     updateCartUI();
     openCart();
-    showToast(`🛒 Added ${qty.toLocaleString('en-IN')} ${name} to cart!`, 'success');
+    showToast(t('calc.addedToCart', { qty: qty.toLocaleString('en-IN'), name }), 'success');
 }
 
 // ══════════════════════════════════════════
@@ -167,24 +167,24 @@ function playBrickSound(type) {
             gain2.gain.setValueAtTime(0.3, now);
             gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
             osc2.start(now); osc2.stop(now + 0.5);
-            showToast('🔔 Grade-A Metallic Ringing Sound (खनक)', 'success');
+            showToast(t('calc.soundGradeA'), 'success');
         } else if (type === 'laalPeti') {
             osc.type = 'sine';
             osc.frequency.setValueAtTime(900, now);
             gain.gain.setValueAtTime(0.4, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
             osc.start(now); osc.stop(now + 0.4);
-            showToast('🔉 Clear Brick Ring', 'info');
+            showToast(t('calc.soundClear'), 'info');
         } else {
             osc.type = 'square';
             osc.frequency.setValueAtTime(180, now);
             gain.gain.setValueAtTime(0.3, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
             osc.start(now); osc.stop(now + 0.15);
-            showToast('Dull Low-Grade Sound (Unbaked)', 'warning');
+            showToast(t('calc.soundDull'), 'warning');
         }
     } catch (e) {
         console.warn('Web Audio error:', e);
-        showToast('🔔 Brick sound test played!');
+        showToast(t('calc.soundPlayed'));
     }
 }

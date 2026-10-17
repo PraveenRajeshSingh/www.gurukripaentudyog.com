@@ -45,7 +45,7 @@ let couponDiscount   = 0;
 let appliedCoupon    = '';
 let currentFilter    = 'all';
 let selectedPayMethod = 'upi';
-let currentLang      = localStorage.getItem('gb_lang') || 'en';
+let currentLang      = localStorage.getItem('gb_lang') || 'hi'; // Hindi default; English fallback
 
 // AUTH RATE LIMITING STATE
 let failedLoginAttempts = 0;

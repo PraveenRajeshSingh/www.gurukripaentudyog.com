@@ -10,7 +10,7 @@ function addToCart(id, qty = 1) {
     saveCart();
     updateCartUI();
     bounceCartBadges();
-    showToast(`✅ ${sanitizeHTML(p.name)} added to cart!`, 'success');
+    showToast(t('toast.addedToCart', { name: sanitizeHTML(p.name) }), 'success');
 }
 
 // Bounce animation on cart badges (nav + bottom nav) after adding items

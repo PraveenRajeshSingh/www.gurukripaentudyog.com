@@ -158,6 +158,20 @@ function toggleFab() {
 // ══════════════════════════════════════════
 // LANGUAGE TRANSLATION SYSTEM (Comprehensive)
 // ══════════════════════════════════════════
+// Translation helper — use for all dynamic strings (toasts, buttons, errors).
+// Falls back to English when a key is missing in the active language.
+function t(key, vars) {
+    let val = ((typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang]) || {})[key];
+    if (val === undefined) val = ((typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS.en) || {})[key];
+    if (val === undefined) return key;
+    if (vars) {
+        Object.keys(vars).forEach(k => {
+            val = val.split('{' + k + '}').join(vars[k]);
+        });
+    }
+    return val;
+}
+
 function setLang(lang) {
     // Guard: only 'en' or 'hi'
     if (lang !== 'en' && lang !== 'hi') lang = 'en';
@@ -170,6 +184,10 @@ function setLang(lang) {
 
     // Update html lang attribute for accessibility
     document.documentElement.setAttribute('lang', lang === 'hi' ? 'hi' : 'en');
+
+    // Localize document title (used by browser tab, Android TWA & iOS home-screen context)
+    const docTitle = (TRANSLATIONS[lang] || {})['doc.title'] || (TRANSLATIONS.en || {})['doc.title'];
+    if (docTitle) document.title = docTitle;
 
     const dict = TRANSLATIONS[lang] || {};
 
