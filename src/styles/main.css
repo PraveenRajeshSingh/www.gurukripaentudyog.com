@@ -5199,6 +5199,7 @@
     /* App-specific spacing */
     --nav-h: 56px;          /* compact app nav height */
     --bottom-nav-h: 68px;   /* taller bottom nav for comfortable thumb tap */
+    --quick-bar-h: 52px;    /* stacked quick-contact strip (≤768px) */
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-left: env(safe-area-inset-left, 0px);
@@ -5346,7 +5347,7 @@ html {
     }
 
     .mobile-nav-inner {
-        height: 60px;
+        height: var(--bottom-nav-h);
         align-items: center;
     }
 
@@ -5354,7 +5355,7 @@ html {
         flex: 1;
         padding: 6px 4px;
         gap: 3px;
-        font-size: .6rem;
+        font-size: .62rem;
         font-weight: 700;
         letter-spacing: .02em;
         text-transform: none;
@@ -5400,7 +5401,7 @@ html {
     /* Cart FAB — Elevated center button */
     .mn-cart-fab {
         position: relative;
-        top: -14px;
+        top: -18px;
         width: 54px;
         height: 54px;
         border-radius: 50%;
@@ -5430,16 +5431,30 @@ html {
     }
 
     body {
-        padding-bottom: calc(60px + max(var(--safe-bottom), 4px));
+        padding-bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px));
+    }
+
+    /* Cart badge bounce on add-to-cart */
+    .mn-badge.bounce,
+    .nav-badge.bounce {
+        animation: badgePop .45s var(--ease);
     }
 }
 
+@keyframes badgePop {
+    0%   { transform: scale(1) }
+    35%  { transform: scale(1.55) }
+    70%  { transform: scale(0.9) }
+    100% { transform: scale(1) }
+}
+
 @media (max-width: 480px) {
-    .mobile-nav-inner {
-        height: 58px;
+    /* Slightly shorter nav on small phones, still app-comfy */
+    :root {
+        --bottom-nav-h: 64px;
     }
     .mn-item {
-        font-size: .58rem;
+        font-size: .6rem;
     }
     .mn-item svg {
         width: 20px;
@@ -5448,7 +5463,7 @@ html {
     .mn-cart-fab {
         width: 50px;
         height: 50px;
-        top: -12px;
+        top: -15px;
         border-width: 2.5px;
     }
     .mn-cart-fab svg {
@@ -5458,11 +5473,11 @@ html {
 }
 
 @media (max-width: 360px) {
-    .mobile-nav-inner {
-        height: 56px;
+    :root {
+        --bottom-nav-h: 60px;
     }
     .mn-item {
-        font-size: .54rem;
+        font-size: .58rem;
         padding: 5px 2px;
     }
     .mn-item svg {
@@ -5472,7 +5487,7 @@ html {
     .mn-cart-fab {
         width: 46px;
         height: 46px;
-        top: -10px;
+        top: -13px;
     }
     .mn-cart-fab svg {
         width: 18px;
@@ -5488,7 +5503,7 @@ html {
 /* ── 4. WhatsApp FAB — Above Bottom Nav, Never Overlap ────────────── */
 @media (max-width: 1024px) {
     .wa-float {
-        bottom: calc(60px + max(var(--safe-bottom), 4px) + 14px);
+        bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 14px);
         left: 16px;
         gap: 6px;
     }
@@ -5504,7 +5519,7 @@ html {
 
 @media (max-width: 480px) {
     .wa-float {
-        bottom: calc(58px + max(var(--safe-bottom), 4px) + 12px);
+        bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 12px);
         left: 12px;
     }
     .wa-float-btn {
@@ -5523,18 +5538,18 @@ html {
 /* ── 5. FAB Help Button & Scroll-to-Top ──────────────────────────── */
 @media (max-width: 1024px) {
     .fab-wrap {
-        bottom: calc(60px + max(var(--safe-bottom), 4px) + 14px);
+        bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 14px);
         right: 16px;
     }
     .scroll-top {
-        bottom: calc(60px + max(var(--safe-bottom), 4px) + 62px);
+        bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 62px);
         right: 20px;
     }
 }
 
 @media (max-width: 480px) {
     .fab-wrap {
-        bottom: calc(58px + max(var(--safe-bottom), 4px) + 12px);
+        bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 12px);
         right: 12px;
     }
     .fab-main-btn {
@@ -5543,7 +5558,7 @@ html {
         font-size: .95rem;
     }
     .scroll-top {
-        bottom: calc(58px + max(var(--safe-bottom), 4px) + 58px);
+        bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 58px);
         right: 18px;
         width: 34px;
         height: 34px;
@@ -5698,7 +5713,7 @@ html {
         padding: 9px 10px;
         font-size: .76rem;
         border-radius: 50px;
-        min-height: 38px;
+        min-height: 44px; /* thumb-friendly tap target */
     }
     .products-filters {
         gap: 7px;
@@ -5726,6 +5741,7 @@ html {
     .product-add-btn {
         font-size: .72rem;
         padding: 8px 8px;
+        min-height: 44px;
     }
 }
 
@@ -5787,27 +5803,59 @@ html {
 
 /* ── 10. Scroll Progress Bar — Thicker with glow ─────────────────── */
 #spbar {
-    height: 3px;
+    height: 4px;
 }
 #spbar::after {
     content: '';
     position: absolute;
     right: 0;
     top: -2px;
-    width: 8px;
-    height: 7px;
+    width: 9px;
+    height: 8px;
     border-radius: 50%;
     background: var(--brand-amber);
-    box-shadow: 0 0 8px var(--brand-amber);
+    box-shadow: 0 0 10px var(--brand-amber), 0 0 4px var(--brand);
 }
 
 /* ── 11. Page Loader — Native App Splash ─────────────────────────── */
+.loader-brand-sub {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-top: -8px;
+}
+
+.loader-progress {
+    width: min(220px, 62vw);
+    height: 4px;
+    border-radius: 50px;
+    background: var(--line-mid);
+    overflow: hidden;
+    margin-top: -6px;
+}
+
+.loader-progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 50px;
+    background: linear-gradient(90deg, var(--brand), var(--brand-amber));
+    animation: loaderFill 1.6s var(--ease) forwards;
+}
+
+@keyframes loaderFill {
+    0%   { width: 0% }
+    60%  { width: 78% }
+    100% { width: 100% }
+}
+
 @media (max-width: 768px) {
     #page-loader {
         padding-top: var(--safe-top);
     }
     .loader-logo {
-        font-size: clamp(2rem, 10vw, 3rem);
+        font-size: clamp(2.2rem, 11vw, 3.2rem);
     }
 }
 
@@ -6007,7 +6055,7 @@ html {
 @media (max-width: 768px) {
     #toast-container {
         top: auto;
-        bottom: calc(60px + max(var(--safe-bottom), 4px) + 12px);
+        bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 12px);
         left: 12px;
         right: 12px;
         align-items: center;
@@ -6056,17 +6104,17 @@ html {
     }
     /* App-style hero — fill viewport nicely */
     .hero {
-        min-height: calc(100svh - 56px - 68px);
+        min-height: calc(100svh - var(--nav-h) - var(--bottom-nav-h));
     }
     /* Bottom toast above app nav */
     #toast-container {
-        bottom: calc(68px + env(safe-area-inset-bottom, 0px) + 12px);
+        bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px) + 12px);
     }
     .wa-float {
-        bottom: calc(68px + env(safe-area-inset-bottom, 0px) + 14px);
+        bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px) + 14px);
     }
     .fab-wrap {
-        bottom: calc(68px + env(safe-area-inset-bottom, 0px) + 14px);
+        bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px) + 14px);
     }
 }
 
@@ -7280,7 +7328,7 @@ section, .container, header, footer {
         }
         @supports(padding-bottom: env(safe-area-inset-bottom)) {
             .mobile-nav { padding-bottom: calc(env(safe-area-inset-bottom) + 2px) }
-            body { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)) }
+            body { padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px)) }
         }
 
         /* Cart drawer — full height on all screens */
@@ -7455,18 +7503,20 @@ section, .container, header, footer {
                 right: 0 !important;
                 width: 100vw !important;
                 max-width: 100% !important;
-                background: var(--bg-card) !important;
-                border-top: 1px solid var(--line) !important;
+                background: var(--bottom-nav-glass) !important;
+                backdrop-filter: blur(24px) saturate(200%) !important;
+                -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+                border-top: 1px solid rgba(200, 70, 10, 0.1) !important;
                 z-index: 990 !important;
                 padding-bottom: env(safe-area-inset-bottom, 0) !important;
-                box-shadow: 0 -4px 20px rgba(28, 16, 9, 0.08) !important;
+                box-shadow: 0 -4px 24px rgba(28, 16, 9, 0.1) !important;
             }
             .mobile-nav-inner {
                 display: flex !important;
                 align-items: center !important;
                 justify-content: space-between !important;
                 width: 100% !important;
-                height: 60px !important;
+                height: var(--bottom-nav-h) !important;
                 margin: 0 !important;
                 padding: 0 !important;
             }
@@ -7480,44 +7530,44 @@ section, .container, header, footer {
                 justify-content: center !important;
                 gap: 3px !important;
                 color: var(--ink-3) !important;
-                font-size: .6rem !important;
+                font-size: .62rem !important;
                 font-weight: 700 !important;
-                text-transform: uppercase !important;
+                text-transform: none !important;
                 letter-spacing: .02em !important;
                 text-decoration: none !important;
                 margin: 0 !important;
                 padding: 4px 0 !important;
-                min-height: 52px !important;
+                min-height: 56px !important;
             }
             .mn-item.active {
                 color: var(--brand) !important;
             }
             .mn-item svg {
-                width: 20px !important;
-                height: 20px !important;
+                width: 22px !important;
+                height: 22px !important;
             }
             .mn-cart-fab {
                 position: relative !important;
-                top: -12px !important;
-                width: 48px !important;
-                height: 48px !important;
+                top: -18px !important;
+                width: 54px !important;
+                height: 54px !important;
                 border-radius: 50% !important;
-                background: var(--brand) !important;
+                background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%) !important;
                 color: #fff !important;
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
                 justify-content: center !important;
-                box-shadow: 0 6px 20px rgba(200, 70, 10, 0.4) !important;
+                box-shadow: 0 6px 20px rgba(200, 70, 10, 0.45), 0 2px 8px rgba(200, 70, 10, 0.25) !important;
                 margin: 0 auto !important;
-                border: 3px solid var(--bg-card) !important;
+                border: 3px solid #fff !important;
             }
             .mn-cart-fab svg {
                 width: 22px !important;
                 height: 22px !important;
             }
             body {
-                padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+                padding-bottom: calc(var(--bottom-nav-h) + max(env(safe-area-inset-bottom, 0px), 4px)) !important;
             }
         }
 
@@ -7562,7 +7612,7 @@ section, .container, header, footer {
             .hero-img {
                 order: 2 !important;
                 width: 100% !important;
-                height: min(65vw, 260px) !important;
+                height: min(65vw, 320px) !important;
                 border-radius: var(--r-xl) !important;
                 margin: 12px 0 0 !important;
                 box-shadow: 0 12px 32px rgba(28,16,9,0.12) !important;
@@ -7838,13 +7888,13 @@ section, .container, header, footer {
 
         /* ── Fix FAB & Scroll-to-Top on Mobile ── */
         @media(max-width:1024px) {
-            .fab-wrap { bottom: 80px; right: 16px }
-            .scroll-top { bottom: 88px; right: 72px }
+            .fab-wrap { bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 14px); right: 16px }
+            .scroll-top { bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 62px); right: 20px }
         }
         @media(max-width:480px) {
-            .fab-wrap { bottom: 78px; right: 12px }
+            .fab-wrap { bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 12px); right: 12px }
             .fab-main-btn { width: 46px; height: 46px; font-size: 1rem }
-            .scroll-top { bottom: 80px; right: 64px; width: 36px; height: 36px; font-size: .85rem }
+            .scroll-top { bottom: calc(var(--bottom-nav-h) + max(var(--safe-bottom), 4px) + 58px); right: 18px; width: 36px; height: 36px; font-size: .85rem }
         }
 
         /* ── Touch Tap Targets ── */
@@ -7937,8 +7987,38 @@ section, .container, header, footer {
         .mq-item.highlight { color: var(--brand); font-weight: 700 }
 
         @media(max-width: 768px) {
-            .mobile-quick-bar { display: block }
-            body { padding-bottom: 56px }
-            .wa-float { bottom: 68px }
+            /* Stack quick-contact bar directly above the bottom nav — no overlap */
+            .mobile-quick-bar {
+                display: block;
+                bottom: calc(var(--bottom-nav-h) + max(env(safe-area-inset-bottom, 0px), 4px));
+                border-top: none;
+                border-bottom: 1px solid var(--line);
+                border-radius: 14px 14px 0 0;
+                padding: 4px 10px;
+                box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+            }
+            .mq-item { font-size: .62rem; padding: 4px 6px }
+            /* WhatsApp + Call already live in the quick bar — drop the floating FAB to end overlap issues */
+            .wa-float { display: none }
+            /* Chatbot panel sits above the stacked bars, full-width sheet */
+            .chatbot-wrap {
+                bottom: calc(var(--bottom-nav-h) + var(--quick-bar-h) + max(env(safe-area-inset-bottom, 0px), 4px) + 10px);
+                right: 12px;
+                left: 12px;
+            }
+            .chatbot-box { width: 100%; max-height: 58vh; display: flex; flex-direction: column }
+            /* Keep help FAB, scroll-top and toasts clear of both stacked bars */
+            .fab-wrap {
+                bottom: calc(var(--bottom-nav-h) + var(--quick-bar-h) + max(env(safe-area-inset-bottom, 0px), 4px) + 10px);
+            }
+            .scroll-top {
+                bottom: calc(var(--bottom-nav-h) + var(--quick-bar-h) + max(env(safe-area-inset-bottom, 0px), 4px) + 56px);
+            }
+            #toast-container {
+                bottom: calc(var(--bottom-nav-h) + var(--quick-bar-h) + max(env(safe-area-inset-bottom, 0px), 4px) + 10px);
+            }
+            body {
+                padding-bottom: calc(var(--bottom-nav-h) + var(--quick-bar-h) + max(env(safe-area-inset-bottom, 0px), 4px)) !important;
+            }
         }
 

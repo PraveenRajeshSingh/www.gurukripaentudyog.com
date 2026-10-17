@@ -9,7 +9,19 @@ function addToCart(id, qty = 1) {
     else { cart.push({ ...p, qty }); }
     saveCart();
     updateCartUI();
+    bounceCartBadges();
     showToast(`✅ ${sanitizeHTML(p.name)} added to cart!`, 'success');
+}
+
+// Bounce animation on cart badges (nav + bottom nav) after adding items
+function bounceCartBadges() {
+    ['cartBadgeNav', 'mobileCartBadge'].forEach(id => {
+        const badge = document.getElementById(id);
+        if (!badge) return;
+        badge.classList.remove('bounce');
+        void badge.offsetWidth; // restart animation
+        badge.classList.add('bounce');
+    });
 }
 
 function removeFromCart(id) {
