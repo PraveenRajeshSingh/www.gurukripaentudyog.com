@@ -1,4 +1,4 @@
-const VERSION = '4.1.0';
+const VERSION = '4.2.1';
 const CACHE_NAME = `gurukripa-cache-v${VERSION}`;
 
 // Only cache files that actually exist in this SPA

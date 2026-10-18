@@ -51,6 +51,15 @@ let currentLang      = localStorage.getItem('gb_lang') || 'hi'; // Hindi default
 let failedLoginAttempts = 0;
 let lockoutTimerId      = null;
 
+// ══════════════════════════════════════════
+// PLATFORM / OAUTH CONFIGURATION
+// Configured via <meta> tags in index.html so deployers never edit JS.
+// Google OAuth Client ID: leave empty to keep Google Sign-In dormant.
+// ══════════════════════════════════════════
+const APP_CONFIG = {
+    googleClientId: (document.querySelector('meta[name="google-client-id"]') || {}).content || ''
+};
+
 // Security: Remove plaintext passwords from stored user objects
 (function sanitizeStoredUser() {
     if (user && user.password) {

@@ -1,29 +1,7 @@
 'use strict';
 // ══════════════════════════════════════════
-// LOADER & UI SYSTEM
+// UI SYSTEM
 // ══════════════════════════════════════════
-function initLoader() {
-    const loader = document.getElementById('page-loader');
-    if (!loader) return;
-    let hidden = false;
-    function hideLoader() {
-        if (hidden) return;
-        hidden = true;
-        loader.style.transition = 'opacity 0.45s ease';
-        loader.style.opacity = '0';
-        setTimeout(() => {
-            loader.style.display = 'none';
-            loader.setAttribute('aria-hidden', 'true');
-        }, 460);
-    }
-    if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        setTimeout(hideLoader, 300);
-    } else {
-        document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 300), { once: true });
-    }
-    window.addEventListener('load', () => setTimeout(hideLoader, 150), { once: true });
-    setTimeout(hideLoader, 2000);
-}
 
 // ══════════════════════════════════════════
 // TOAST NOTIFICATIONS
@@ -212,9 +190,42 @@ function setLang(lang) {
     // Re-render dynamic vendors section if present
     if (typeof renderVendors === 'function') renderVendors();
 
+    // Refresh dynamic cart labels (item count, delivery progress) in new language
+    if (typeof updateCartUI === 'function') updateCartUI();
+
     // Toast language notification
     showToast(lang === 'hi' ? '🇮🇳 हिंदी भाषा चुनी गई' : '🇬🇧 English selected');
 }
+
+// ══════════════════════════════════════════
+// OVERLAY KEYBOARD SYSTEM — ESC closes topmost;
+// Tab keeps focus inside the active modal/drawer.
+// ══════════════════════════════════════════
+const OVERLAY_STACK = [
+    // [element-id, closer] — checked top-most first (reverse paint order)
+    ['profileModal',    () => typeof closeProfile    === 'function' && closeProfile()],
+    ['authModal',       () => typeof closeAuth       === 'function' && closeAuth()],
+    ['trackerModal',    () => typeof closeTrackerModal === 'function' && closeTrackerModal()],
+    ['gstInvoiceModal', () => typeof closeGstInvoice === 'function' && closeGstInvoice()],
+    ['cartDrawer',      () => typeof closeCart       === 'function' && closeCart()],
+    ['mobileDrawer',    () => typeof toggleDrawer    === 'function' && toggleDrawer()]
+];
+
+function activeOverlay() {
+    for (const pair of OVERLAY_STACK) {
+        const el = document.getElementById(pair[0]);
+        if (el && el.classList.contains('open')) return pair;
+    }
+    return null;
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const pair = activeOverlay();
+    if (pair) { pair[1](); return; }
+    // Lightbox fallback (uses its own visibility mechanism)
+    if (typeof lbClose === 'function') lbClose();
+});
 
 // ══════════════════════════════════════════
 // LIGHTBOX

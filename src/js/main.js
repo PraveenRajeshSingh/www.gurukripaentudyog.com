@@ -2,7 +2,6 @@
 // MAIN BOOTSTRAP & APPLICATION INITIALIZATION
 // ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-    initLoader();
     renderProducts('all');
     updateCartUI();
     updateAuthUI();
@@ -14,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     prefillUserInCheckout();
     setupOtpInputs();
     setLang(currentLang);
+    initGoogleSignIn();
 });
 
 // FAQ Accordion

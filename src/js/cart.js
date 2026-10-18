@@ -47,7 +47,7 @@ function updateCartUI() {
     const mb = document.getElementById('mobileCartBadge');
     if (mb) mb.textContent = total;
     const headCount = document.getElementById('cartHeadCount');
-    if (headCount) headCount.textContent = total + ' item' + (total !== 1 ? 's' : '');
+    if (headCount) headCount.textContent = total + ' ' + (total !== 1 ? t('cart.itemPlural') : t('cart.itemSingular'));
 
     // Delivery Progress Bar Logic (Free delivery above ₹5,000)
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
@@ -58,10 +58,10 @@ function updateCartUI() {
     if (fill) fill.style.width = pct + '%';
     if (label) {
         if (subtotal >= freeThreshold) {
-            label.textContent = '🎉 You unlocked FREE Delivery!';
+            label.textContent = t('cart.unlocked');
             label.className = 'free-label';
         } else {
-            label.textContent = `Add ₹${(freeThreshold - subtotal).toLocaleString('en-IN')} more`;
+            label.textContent = t('cart.addMore', { amt: (freeThreshold - subtotal).toLocaleString('en-IN') });
             label.className = '';
         }
     }
@@ -114,7 +114,7 @@ function renderCartItems() {
                   <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
                 </div>
               </div>
-              <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="Remove">🗑️</button>
+              <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="${t('cart.remove')}">🗑️</button>
             </div>
         `).join('');
     }
@@ -141,7 +141,7 @@ function applyCoupon() {
     if (!c) {
         if (msg) {
             msg.className = 'cart-coupon-msg error';
-            msg.textContent = '❌ Invalid coupon code. Try GURU10';
+            msg.textContent = t('cart.couponInvalid');
         }
         return;
     }
