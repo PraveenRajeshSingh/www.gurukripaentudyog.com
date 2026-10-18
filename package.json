@@ -4,6 +4,8 @@
   "private": true,
   "description": "Gurukripa Bricks Industry — static PWA that is the single source of truth for Web (GitHub Pages), Android and iOS (native shells via Capacitor) targeting Google Play and the Apple App Store.",
   "scripts": {
+    "test": "node --test tests/",
+    "check": "npm run test && npm run www",
     "build": "node scripts/build.js",
     "www": "npm run build && node scripts/prepare-www.js",
     "serve": "npm run build && http-server . -p 8080 -c-1",
@@ -18,15 +20,16 @@
     "twa:build": "bubblewrap build --skipTwaValidation --skipPlayStorage"
   },
   "dependencies": {
+    "@capacitor/app": "^6.0.0",
     "@capacitor/core": "^6.1.2"
   },
   "devDependencies": {
+    "@bubblewrap/cli": "^1.27.0",
     "@capacitor/android": "^6.1.2",
     "@capacitor/cli": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
     "@capacitor/splash-screen": "^6.0.2",
     "@capacitor/status-bar": "^6.0.2",
-    "@bubblewrap/cli": "^1.27.0",
     "http-server": "^14.1.1"
   }
 }

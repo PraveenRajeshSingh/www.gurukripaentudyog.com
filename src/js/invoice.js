@@ -8,8 +8,9 @@ function openGstInvoice(orderId) {
 
     const matched  = orders.find(o => o.id === orderId) || { id: orderId || 'GBI-20260728-4912', date: '28/07/2026', total: 28200, itemsCount: 4000 };
     const baseVal  = Math.round(matched.total / 1.05);
-    const cgst     = Math.round((matched.total - baseVal) / 2);
-    const sgst     = cgst;
+    const taxTotal = matched.total - baseVal;
+    const cgst     = Math.round(taxTotal / 2);
+    const sgst     = taxTotal - cgst;
 
     paper.innerHTML = `
         <div class="gst-header">

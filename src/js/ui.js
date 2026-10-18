@@ -203,6 +203,8 @@ function setLang(lang) {
 // ══════════════════════════════════════════
 const OVERLAY_STACK = [
     // [element-id, closer] — checked top-most first (reverse paint order)
+    ['checkoutModal',   () => typeof closeCheckout   === 'function' && closeCheckout()],
+    ['productModal',    () => typeof closeProductModal === 'function' && closeProductModal()],
     ['profileModal',    () => typeof closeProfile    === 'function' && closeProfile()],
     ['authModal',       () => typeof closeAuth       === 'function' && closeAuth()],
     ['trackerModal',    () => typeof closeTrackerModal === 'function' && closeTrackerModal()],

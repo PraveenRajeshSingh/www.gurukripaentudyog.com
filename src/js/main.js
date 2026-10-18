@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setupOtpInputs();
     setLang(currentLang);
     initGoogleSignIn();
+    if (window.Platform && typeof window.Platform.init === 'function') {
+        window.Platform.init();
+    }
 });
 
 // FAQ Accordion

@@ -924,4 +924,28 @@ section, .container, header, footer {
     }
 }
 
+/* ─── Theme Toggle Button ─── */
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform var(--t-fast) var(--ease), background var(--t) var(--ease);
+}
+.theme-toggle-btn:hover {
+    transform: scale(1.05);
+}
+.nav-icon-btn.theme-toggle-btn {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+@media (max-width: 600px) {
+    .topbar .theme-toggle-btn .theme-label {
+        display: none;
+    }
+}
+
 /* All interactive elements 鈥� comfortable touch target */

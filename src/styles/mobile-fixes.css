@@ -88,6 +88,52 @@
     }
 }
 
+html[data-theme="dark"] .modal-box {
+    background: linear-gradient(145deg, #1C1009 0%, #241509 100%);
+    border-color: rgba(200, 70, 10, 0.2);
+}
+html[data-theme="dark"] .nav {
+    background: var(--nav-glass);
+    border-bottom-color: rgba(200, 70, 10, 0.12);
+}
+html[data-theme="dark"] .mobile-nav {
+    background: var(--bottom-nav-glass);
+    border-top-color: rgba(200, 70, 10, 0.15);
+}
+html[data-theme="dark"] .drawer,
+html[data-theme="dark"] .cart-drawer {
+    background: var(--bg-card);
+}
+html[data-theme="dark"] .hero-cert,
+html[data-theme="dark"] .hero-img-badge {
+    background: rgba(28, 16, 9, 0.85);
+    border-color: rgba(200, 70, 10, 0.25);
+}
+html[data-theme="dark"] .product-card,
+html[data-theme="dark"] .review-card,
+html[data-theme="dark"] .contact-form-wrap,
+html[data-theme="dark"] .faq-item,
+html[data-theme="dark"] .calc-form,
+html[data-theme="dark"] .calc-result {
+    background: var(--bg-card);
+    border-color: rgba(200, 70, 10, 0.12);
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+    background: var(--bg-subtle);
+    color: var(--ink);
+    border-color: var(--line-mid);
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+    color: var(--ink-3);
+}
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .trust-strip {
+    background: #0D0703;
+}
+
         /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
    WHY BRL / DIRECT FROM BHATTA SECTION
    鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */

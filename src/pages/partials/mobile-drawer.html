@@ -67,6 +67,10 @@
                 Contact
             </a>
         </div>
+        <div class="drawer-settings" style="display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:10px 0;">
+            <button class="theme-toggle-btn btn btn-outline btn-sm" style="flex:1" onclick="Platform.toggleTheme()">🌙 <span class="theme-label">Dark</span></button>
+            <button class="btn btn-outline btn-sm" style="flex:1" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')">🌐 <span id="drawerLangLabel">हिंदी / EN</span></button>
+        </div>
         <div class="drawer-contact">
             <a href="tel:+919198923230" class="drawer-call">📞 Call Us</a>
             <a href="https://wa.me/919198923230" target="_blank" class="drawer-wa">💬 WhatsApp</a>
