@@ -164,31 +164,44 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ TOPBAR ━━━━━━━━━━━━━━━━━ -->
-    <div class="topbar">
+    <div class="topbar" role="complementary" aria-label="Quick Contacts and Operational Status">
         <div class="container">
             <div class="topbar-inner">
                 <div class="topbar-left">
-                    <span>📞 <a href="tel:+919198923230">+91 91989 23230</a></span>
-                    <span>✉️ <a href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></span>
+                    <span class="topbar-status-pill">
+                        <span class="live-pulse" aria-hidden="true"></span>
+                        Kiln Active · Same-Day Dispatch
+                    </span>
+                    <span class="topbar-divider-dot" aria-hidden="true">•</span>
+                    <span>📞 <a href="tel:+919198923230" aria-label="Call Gurukripa Kiln at +91 91989 23230">+91 91989 23230</a></span>
+                    <span class="topbar-divider-dot" aria-hidden="true">•</span>
+                    <span>✉️ <a href="mailto:info@gurukripaentudyog.com" aria-label="Email info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></span>
                 </div>
                 <div class="topbar-right">
-                    <span style="color:rgba(255,255,255,.5)" data-i18n="topbar.hours">Mon–Sat | 8AM–6PM</span>
-                    <button class="lang-btn active" onclick="setLang('en')" id="langEn">🇬🇧 EN</button>
-                    <button class="lang-btn" onclick="setLang('hi')" id="langHi">🇮🇳 HI</button>
-                    <button class="theme-toggle-btn lang-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Theme" title="Toggle Theme">🌙 <span class="theme-label">Dark</span></button>
+                    <span class="topbar-hours" data-i18n="topbar.hours">Mon–Sat | 8:00 AM – 6:00 PM</span>
+                    <div class="topbar-controls">
+                        <button class="lang-btn active" onclick="setLang('en')" id="langEn" aria-label="Switch language to English">🇬🇧 EN</button>
+                        <button class="lang-btn" onclick="setLang('hi')" id="langHi" aria-label="हिंदी भाषा चुनें">🇮🇳 HI</button>
+                        <button class="theme-toggle-btn lang-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Dark or Light Theme" title="Toggle Theme">
+                            🌙 <span class="theme-label">Dark</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ NAVBAR ━━━━━━━━━━━━━━━━━ -->
-    <header class="nav">
+    <!-- ━━━━━━━━━━━━━━━━━ ACCESSIBILITY SKIP LINK ━━━━━━━━━━━━━━━━━ -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- ━━━━━━━━━━━━━━━━━ GLOBAL WEB HEADER & NAVBAR ━━━━━━━━━━━━━━━━━ -->
+    <header class="nav" role="banner">
         <div class="container">
             <div class="nav-inner">
-                <!-- Brand -->
-                <a href="#home" class="nav-brand" onclick="scrollToSection('home')">
+                <!-- Brand Identity -->
+                <a href="#home" class="nav-brand" onclick="scrollToSection('home')" aria-label="Gurukripa Bricks Industry Home">
                     <div class="nav-logo-mark">
-                        <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks Logo">
+                        <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks Logo" width="40" height="40">
                     </div>
                     <div class="nav-brand-text">
                         गुरुकृपा ईंट उद्योग
@@ -196,41 +209,43 @@
                     </div>
                 </a>
 
-                <!-- Search (desktop) -->
-                <div class="nav-search">
+                <!-- Desktop Search -->
+                <div class="nav-search" role="search">
                     <svg class="nav-search-icon" width="16" height="16" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24">
+                        stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <circle cx="11" cy="11" r="8" />
                         <path d="M21 21l-4.35-4.35" />
                     </svg>
-                    <input type="search" class="nav-search-input" placeholder="Search bricks, prices..." id="navSearch"
-                        autocomplete="off" data-i18n="search.placeholder">
+                    <input type="search" class="nav-search-input" placeholder="Search bricks, prices... (Ctrl+K)" id="navSearch"
+                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices">
                 </div>
 
-                <!-- Desktop Nav -->
-                <nav class="nav-links" role="navigation">
+                <!-- Primary Desktop Navigation -->
+                <nav class="nav-links" role="navigation" aria-label="Primary Navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
                     <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
                     <a href="#pricing" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.pricing">Pricing</a>
-                    <a href="#quality-spec" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.qualitySpec">Quality Spec</a>
                     <a href="#calculator" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.calculator">Estimator</a>
-                    <a href="#gallery" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.gallery">Gallery</a>
+                    <a href="#quality-spec" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.qualitySpec">Quality Spec</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
-                    <button class="nav-link" style="color:var(--brand);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px" onclick="openTrackerModal()" data-i18n="nav.trackOrder">🚛 Track Delivery</button>
+                    <button class="nav-link nav-track-btn" onclick="openTrackerModal()" data-i18n="nav.trackOrder" aria-label="Track live trolley delivery">
+                        <span class="live-dot" aria-hidden="true"></span>
+                        🚛 Track Delivery
+                    </button>
                 </nav>
 
-                <!-- Actions -->
+                <!-- Actions: Theme Toggle, Cart, Auth, Mobile Toggle -->
                 <div class="nav-actions">
                     <!-- Theme Toggle -->
-                    <button class="nav-icon-btn theme-toggle-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+                    <button class="nav-icon-btn theme-toggle-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
                         🌙
                     </button>
 
-                    <!-- Cart -->
-                    <button class="nav-icon-btn" onclick="openCart()" aria-label="Cart" title="Shopping Cart">
+                    <!-- Shopping Cart -->
+                    <button class="nav-icon-btn" onclick="openCart()" aria-label="Shopping Cart" title="Shopping Cart">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
+                            viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                             <line x1="3" y1="6" x2="21" y2="6" />
                             <path d="M16 10a4 4 0 01-8 0" />
@@ -238,50 +253,60 @@
                         <span class="nav-badge" id="cartBadgeNav">0</span>
                     </button>
 
-                    <!-- Auth (logged out) -->
+                    <!-- Auth State: Logged Out -->
                     <div class="nav-auth" id="navAuthBtns">
                         <button class="btn btn-outline btn-sm" onclick="openAuth('login')" data-i18n="auth.signIn">Sign In</button>
                         <button class="btn btn-primary btn-sm" onclick="openAuth('register')" data-i18n="auth.signUp">Sign Up</button>
                     </div>
 
-                    <!-- User menu (logged in) -->
+                    <!-- Auth State: Logged In User Dropdown -->
                     <div class="user-menu hidden" id="navUserMenu">
-                        <button class="user-btn" onclick="toggleUserDropdown()" id="userMenuBtn">
+                        <button class="user-btn" onclick="toggleUserDropdown()" id="userMenuBtn" aria-haspopup="true" aria-expanded="false" aria-label="Account Menu">
                             <div class="user-avatar-sm" id="navAvatar"><span id="navAvatarInitial">P</span></div>
                             <span class="user-btn-name" id="navUserName">User</span>
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
+                                viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M6 9l6 6 6-6" />
                             </svg>
                         </button>
-                        <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown" id="userDropdown" role="menu">
                             <div class="ud-header">
                                 <div class="ud-name" id="udName">User</div>
                                 <div class="ud-email" id="udEmail">user@email.com</div>
                             </div>
                             <div class="ud-body">
-                                <button class="ud-item" onclick="openProfile()">
+                                <button class="ud-item" onclick="openProfile()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
                                         <circle cx="12" cy="7" r="4" />
                                     </svg>
                                     <span data-i18n="auth.myProfile">My Profile</span>
                                 </button>
-                                <button class="ud-item" onclick="openCart();closeUserDropdown()">
+                                <button class="ud-item" onclick="openCart();closeUserDropdown()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                                         <line x1="3" y1="6" x2="21" y2="6" />
                                     </svg>
                                     <span data-i18n="auth.myCart">My Cart</span>
                                 </button>
+                                <button class="ud-item" onclick="openTrackerModal();closeUserDropdown()" role="menuitem">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="1" y="3" width="15" height="13" />
+                                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                                        <circle cx="5.5" cy="18.5" r="2.5" />
+                                        <circle cx="18.5" cy="18.5" r="2.5" />
+                                    </svg>
+                                    <span>Track My Orders</span>
+                                </button>
                             </div>
                             <div class="ud-divider"></div>
                             <div class="ud-body">
-                                <button class="ud-item ud-logout" onclick="logoutUser()">
+                                <button class="ud-item ud-logout" onclick="logoutUser()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
                                     </svg>
                                     Sign Out
@@ -290,8 +315,8 @@
                         </div>
                     </div>
 
-                    <!-- Hamburger -->
-                    <button class="nav-toggle" onclick="toggleDrawer()" id="navToggle" aria-label="Menu">
+                    <!-- Mobile Navigation Hamburger -->
+                    <button class="nav-toggle" onclick="toggleDrawer()" id="navToggle" aria-label="Open Navigation Menu" aria-expanded="false">
                         <span></span><span></span><span></span>
                     </button>
                 </div>
@@ -300,89 +325,124 @@
     </header>
 
     <!-- ━━━━━━━━━━━━━━━━━ MOBILE DRAWER ━━━━━━━━━━━━━━━━━ -->
-    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-    <div class="drawer" id="mobileDrawer">
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()" aria-hidden="true"></div>
+    <aside class="drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
         <div class="drawer-head">
             <div class="nav-brand">
                 <div class="nav-logo-mark">
-                    <img src="src/assets/images/logo-new.svg" alt="Gurukripa Logo">
+                    <img src="src/assets/images/logo-new.svg" alt="Gurukripa Logo" width="36" height="36">
                 </div>
-                <div class="nav-brand-text">गुरुकृपा</div>
+                <div class="nav-brand-text">
+                    गुरुकृपा
+                    <small>Bricks Industry</small>
+                </div>
             </div>
-            <button class="drawer-close" onclick="toggleDrawer()">✕</button>
+            <button class="drawer-close" onclick="toggleDrawer()" aria-label="Close Navigation Menu">✕</button>
         </div>
-        <div class="drawer-links">
+
+        <!-- Quick Preferences: Theme & Language -->
+        <div class="drawer-settings">
+            <button class="theme-toggle-btn btn btn-outline btn-sm" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Mode">
+                🌙 <span class="theme-label">Dark</span>
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch Language">
+                🌐 <span id="drawerLangLabel">हिंदी / EN</span>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="drawer-links" role="navigation" aria-label="Drawer Navigation">
             <a href="#home" class="drawer-link active" onclick="toggleDrawer();setActiveNav(this)">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                Home
+                <span>Home</span>
             </a>
             <a href="#categories" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="3" y="3" width="7" height="7" />
                     <rect x="14" y="3" width="7" height="7" />
                     <rect x="14" y="14" width="7" height="7" />
                     <rect x="3" y="14" width="7" height="7" />
                 </svg>
-                Products
+                <span>Products &amp; Categories</span>
             </a>
-            <a href="javascript:void(0)" class="drawer-link" style="color:var(--brand);font-weight:700" onclick="toggleDrawer();openTrackerModal()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="1" y="3" width="15" height="13" />
-                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                    <circle cx="5.5" cy="18.5" r="2.5" />
-                    <circle cx="18.5" cy="18.5" r="2.5" />
+            <a href="#pricing" class="drawer-link" onclick="toggleDrawer()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
-                Track Delivery 🚛
-            </a>
-            <a href="#quality-spec" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                Quality Specs & Tester
+                <span>Price Comparison</span>
             </a>
             <a href="#calculator" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="4" y="2" width="16" height="20" rx="2" />
                     <line x1="8" y1="6" x2="16" y2="6" />
                     <line x1="8" y1="10" x2="16" y2="10" />
                     <line x1="8" y1="14" x2="12" y2="14" />
                 </svg>
-                Material Estimator
+                <span>3-in-1 Estimator Studio</span>
+            </a>
+            <a href="javascript:void(0)" class="drawer-link drawer-track-link" onclick="toggleDrawer();openTrackerModal()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="1" y="3" width="15" height="13" />
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 8" />
+                    <circle cx="5.5" cy="18.5" r="2.5" />
+                    <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
+                <span>Live Trolley Tracker 🚛</span>
+            </a>
+            <a href="#quality-spec" class="drawer-link" onclick="toggleDrawer()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span>Quality Specs &amp; Sound Tester</span>
+            </a>
+            <a href="#gallery" class="drawer-link" onclick="toggleDrawer()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <span>Kiln Factory Gallery</span>
             </a>
             <a href="#about" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="12" />
                     <line x1="12" y1="16" x2="12.01" y2="16" />
                 </svg>
-                About Us
+                <span>About Us</span>
             </a>
             <a href="#contact" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path
-                        d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z" />
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z" />
                 </svg>
-                Contact
+                <span>Contact Kiln Yard</span>
             </a>
-        </div>
-        <div class="drawer-settings" style="display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:10px 0;">
-            <button class="theme-toggle-btn btn btn-outline btn-sm" style="flex:1" onclick="Platform.toggleTheme()">🌙 <span class="theme-label">Dark</span></button>
-            <button class="btn btn-outline btn-sm" style="flex:1" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')">🌐 <span id="drawerLangLabel">हिंदी / EN</span></button>
-        </div>
+        </nav>
+
+        <!-- Direct Contact Actions -->
         <div class="drawer-contact">
-            <a href="tel:+919198923230" class="drawer-call">📞 Call Us</a>
-            <a href="https://wa.me/919198923230" target="_blank" class="drawer-wa">💬 WhatsApp</a>
+            <a href="tel:+919198923230" class="drawer-call" aria-label="Call Kiln directly">📞 Call Kiln Direct</a>
+            <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="drawer-wa" aria-label="Chat on WhatsApp">💬 WhatsApp</a>
         </div>
+
+        <!-- Account Controls -->
         <div class="drawer-auth" id="drawerAuthBtns">
-            <button class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up —
-                Free</button>
+            <button class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up — Free</button>
             <button class="btn btn-outline btn-full" onclick="openAuth('login');toggleDrawer()">Sign In</button>
         </div>
-    </div>
 
+        <!-- Legal Link in Drawer -->
+        <div style="text-align:center;padding:12px 16px 20px;font-size:.76rem;color:var(--ink-3)">
+            <button class="footer-legal-link" onclick="toggleDrawer();openLegalModal('privacy')">Terms &amp; Privacy Policies</button>
+        </div>
+    </aside>
+
+
+<main id="main-content" role="main">
     <!-- ━━━━━━━━━━━━━━━━━ HERO ━━━━━━━━━━━━━━━━━ -->
     <section id="home" class="hero">
         <!-- Left: Image Panel -->
@@ -1705,92 +1765,120 @@
         </div>
     </section>
 
+</main>
+
     <!-- ━━━━━━━━━━━━━━━━━ FOOTER ━━━━━━━━━━━━━━━━━ -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-grid">
-                <!-- Brand -->
-                <div>
-                    <div class="footer-brand-name">गुरुकृपा ईंट उद्योग</div>
-                    <div class="footer-brand-desc">Best Brick Manufacturer in Jaunpur & Varanasi since 1998. 25+ years
-                        of Grade-A quality, strength, and trust you can build on.</div>
-                    <div class="footer-contact-row"><span class="footer-contact-icon">📞</span><a
-                            href="tel:+919198923230">+91 91989 23230</a></div>
-                    <div class="footer-contact-row"><span class="footer-contact-icon">✉️</span><a
-                            href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></div>
-                    <div class="footer-contact-row"><span class="footer-contact-icon">📍</span><span>Jaunpur, Uttar
-                            Pradesh — 222001</span></div>
-                    <div class="footer-contact-row"><span class="footer-contact-icon">🕐</span><span>Mon–Sat
-                            8AM–6PM</span></div>
+                <!-- Column 1: Brand & Kiln Details -->
+                <div class="footer-col footer-col-brand">
+                    <div class="footer-brand-title">
+                        <span class="footer-logo-badge">GBI</span>
+                        गुरुकृपा ईंट उद्योग
+                    </div>
+                    <p class="footer-brand-desc">
+                        Jaunpur's premier brick manufacturer since 1998. 25+ years of double-fired Grade-A quality, compressive strength, and trust you can build your home on.
+                    </p>
+                    <div class="footer-compliance-badges">
+                        <span class="compliance-badge">GSTIN: 09AAACG7481M1Z2</span>
+                        <span class="compliance-badge">Kiln: GBI/JNP/1998/412</span>
+                    </div>
+                    <div class="footer-contacts">
+                        <div class="footer-contact-row">
+                            <span class="footer-contact-icon">📞</span>
+                            <a href="tel:+919198923230">+91 91989 23230</a>
+                        </div>
+                        <div class="footer-contact-row">
+                            <span class="footer-contact-icon">✉️</span>
+                            <a href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a>
+                        </div>
+                        <div class="footer-contact-row">
+                            <span class="footer-contact-icon">📍</span>
+                            <span>Bhatta Yard, Jaunpur – Varanasi Highway, UP — 222001</span>
+                        </div>
+                        <div class="footer-contact-row">
+                            <span class="footer-contact-icon">🕐</span>
+                            <span>Mon–Sat | 8:00 AM – 6:00 PM (Sunday Closed)</span>
+                        </div>
+                    </div>
                 </div>
-                <!-- Quick Links -->
-                <div>
-                    <div class="footer-col-title">Quick Links</div>
+
+                <!-- Column 2: Quick Links -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Quick Navigation</h4>
                     <ul class="footer-links">
                         <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#products">Our Products</a></li>
-                        <li><a href="#calculator">Calculator</a></li>
-                        <li><a href="#blog">Blog</a></li>
-                        <li><a href="#faq">FAQ</a></li>
-                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#products">All Products</a></li>
+                        <li><a href="#pricing">Price Comparison</a></li>
+                        <li><a href="#calculator">3-in-1 Estimator</a></li>
+                        <li><a href="#quality-spec">Quality Specs &amp; Sound</a></li>
+                        <li><a href="javascript:void(0)" onclick="openTrackerModal()">Live Track Delivery 🚛</a></li>
+                        <li><a href="#gallery">Kiln Gallery</a></li>
+                        <li><a href="#contact">Contact &amp; Location</a></li>
                     </ul>
                 </div>
-                <!-- Products -->
-                <div>
-                    <div class="footer-col-title">Our Products</div>
+
+                <!-- Column 3: Products & Standard Trolleys -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Brick Grades</h4>
                     <ul class="footer-links">
                         <li><a href="#products">Shiv Eent (Grade-A)</a></li>
+                        <li><a href="#products">Awwal Bricks (₹28,200/trolley)</a></li>
+                        <li><a href="#products">Laal Peti (₹25,000/trolley)</a></li>
                         <li><a href="#products">Premium Red Bricks</a></li>
-                        <li><a href="#products">Standard Bricks</a></li>
-                        <li><a href="#products">Machine Made Bricks</a></li>
+                        <li><a href="#products">Machine Made Wirecut</a></li>
                         <li><a href="#products">First Class Bricks</a></li>
-                        <li><a href="#products">Hollow Bricks</a></li>
+                        <li><a href="#products">Lightweight Hollow Bricks</a></li>
                     </ul>
                 </div>
-                <!-- Social + Newsletter -->
-                <div>
-                    <div class="footer-col-title">Connect With Us</div>
+
+                <!-- Column 4: Newsletter, Social & Deliveries -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Connect &amp; Updates</h4>
                     <div class="footer-social">
-                        <a href="https://www.facebook.com/profile.php?id=100080293837397" target="_blank" rel="noopener"
-                            class="social-btn" aria-label="Facebook">f</a>
-                        <a href="https://www.instagram.com/prem_narayan_singh" target="_blank" rel="noopener"
-                            class="social-btn" aria-label="Instagram">ig</a>
-                        <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="social-btn"
-                            aria-label="WhatsApp" style="font-size:.7rem">wa</a>
-                        <a href="https://youtube.com" target="_blank" rel="noopener" class="social-btn"
-                            aria-label="YouTube">yt</a>
+                        <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="social-btn" aria-label="WhatsApp" title="WhatsApp">💬</a>
+                        <a href="https://www.facebook.com/profile.php?id=100080293837397" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook" title="Facebook">f</a>
+                        <a href="https://www.instagram.com/prem_narayan_singh" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram" title="Instagram">ig</a>
+                        <a href="tel:+919198923230" class="social-btn" aria-label="Call Kiln Direct" title="Call Kiln">📞</a>
                     </div>
                     <div class="newsletter-wrap">
-                        <div class="footer-col-title" style="margin-top:0">Newsletter</div>
-                        <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:12px">Get offers & updates
-                        </p>
-                        <form onsubmit="handleNewsletter(event)">
-                            <input type="email" class="newsletter-input" placeholder="your@email.com" required>
+                        <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:10px">Receive wholesale brick rate alerts &amp; seasonal offers:</p>
+                        <form onsubmit="handleNewsletter(event)" class="newsletter-form">
+                            <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Your email address">
                             <button type="submit" class="newsletter-submit">Subscribe</button>
                         </form>
                     </div>
+                    <div style="margin-top:16px;font-size:.78rem;color:var(--ink-3)">
+                        🚚 <strong>Same-Day Delivery:</strong> Jaunpur, Varanasi, Jalalpur, Trilochan, Shahganj, Mariahu &amp; surrounding sites.
+                    </div>
                 </div>
             </div>
 
+            <!-- Accepted Payments -->
             <div class="footer-payments">
-                <span>We Accept:</span>
-                <span class="pay-pill">💳 UPI</span>
-                <span class="pay-pill">🟢 GPay</span>
+                <span class="pay-title">Verified Payments Accepted:</span>
+                <span class="pay-pill">💳 UPI / QR</span>
+                <span class="pay-pill">🟢 Google Pay</span>
                 <span class="pay-pill">📱 PhonePe</span>
                 <span class="pay-pill">🟠 Paytm</span>
-                <span class="pay-pill">💵 Cash</span>
-                <span class="pay-pill">🏦 Cheque</span>
+                <span class="pay-pill">🏦 NEFT / RTGS</span>
+                <span class="pay-pill">💵 Cash at Site</span>
             </div>
 
             <hr class="footer-divider">
+
+            <!-- Bottom Credits & Legal Links -->
             <div class="footer-bottom">
-                <p>© 2026 Gurukripa Eent Udyog. All rights reserved. | Crafted with ❤️ in Jaunpur</p>
+                <p class="footer-copy">© 2026 Gurukripa Bricks Industry (गुरुकृपा ईंट उद्योग). All rights reserved. | Handcrafted in Jaunpur, UP</p>
                 <div class="footer-bottom-links">
-                    <a href="#" onclick="showToast('Privacy Policy coming soon')">Privacy Policy</a>
-                    <a href="#" onclick="showToast('Terms coming soon')">Terms</a>
-                    <a href="#" onclick="showToast('Shipping Policy coming soon')">Shipping</a>
-                    <a href="#" onclick="showToast('Return Policy coming soon')">Returns</a>
+                    <button class="footer-legal-link" onclick="openLegalModal('privacy')">Privacy Policy</button>
+                    <span class="footer-legal-dot">•</span>
+                    <button class="footer-legal-link" onclick="openLegalModal('terms')">Terms of Sale</button>
+                    <span class="footer-legal-dot">•</span>
+                    <button class="footer-legal-link" onclick="openLegalModal('shipping')">Shipping &amp; Delivery</button>
+                    <span class="footer-legal-dot">•</span>
+                    <button class="footer-legal-link" onclick="openLegalModal('quality')">Quality Standards</button>
                 </div>
             </div>
         </div>
@@ -2487,6 +2575,75 @@
         </div>
     </div>
 
+    <!-- ━━━━━━━━━━━━━━━━━ LEGAL & POLICIES MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="legalModal" onclick="if(event.target.id==='legalModal')closeLegalModal()">
+        <div class="modal-box legal-modal-box">
+            <div class="modal-head">
+                <div>
+                    <span class="sec-tag" style="margin-bottom:6px">Official Compliance</span>
+                    <h3 class="modal-title" id="legalModalTitle">Terms &amp; Policies</h3>
+                </div>
+                <button class="modal-close" onclick="closeLegalModal()" aria-label="Close modal">✕</button>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="legal-tabs" role="tablist">
+                <button class="legal-tab active" id="legalTabPrivacy" onclick="switchLegalTab('privacy')">🔒 Privacy Policy</button>
+                <button class="legal-tab" id="legalTabTerms" onclick="switchLegalTab('terms')">⚖️ Terms of Sale</button>
+                <button class="legal-tab" id="legalTabShipping" onclick="switchLegalTab('shipping')">🚚 Shipping &amp; Delivery</button>
+                <button class="legal-tab" id="legalTabQuality" onclick="switchLegalTab('quality')">🏆 Quality Standards</button>
+            </div>
+
+            <div class="modal-body legal-modal-body">
+                <!-- Privacy Section -->
+                <div class="legal-content active" id="legalContentPrivacy">
+                    <h4>1. Client-Side Data Privacy</h4>
+                    <p>Gurukripa Bricks Industry is committed to complete data privacy. Our application operates as a privacy-first Progressive Web App. All personal profile details, cart selections, and local order logs are stored locally on your device within your browser or native app storage.</p>
+                    <h4>2. Information Collected</h4>
+                    <p>When placing an order or requesting delivery tracking, you provide your Name, Mobile Number, and Delivery Site Address solely to coordinate trolley loading, driver dispatch, and WhatsApp order confirmation.</p>
+                    <h4>3. Zero Third-Party Monetization</h4>
+                    <p>We do not sell, rent, or trade your contact information with external marketing brokers. Your information is accessed exclusively by our kiln logistics team in Jaunpur, UP.</p>
+                </div>
+
+                <!-- Terms Section -->
+                <div class="legal-content" id="legalContentTerms">
+                    <h4>1. Sale &amp; Supply Terms</h4>
+                    <p>All brick sales from Gurukripa Bhatta Yard are subject to physical verification at the delivery site prior to tractor/trolley unloading.</p>
+                    <h4>2. Transit Breakage Margin</h4>
+                    <p>Per Indian brick manufacturing norms (IS:1077), a standard transit margin of 3% to 5% for red clay masonry bricks is expected due to road transit on tractor trolleys.</p>
+                    <h4>3. Payment Terms</h4>
+                    <p>Orders are dispatched upon token confirmation via UPI, Bank Transfer, or verified Cash on Delivery at site. Computer-generated GST invoices reflect 5% GST (CGST 2.5% + SGST 2.5%).</p>
+                    <h4>4. Jurisdiction</h4>
+                    <p>Any disputes arising out of contracts of sale are strictly subject to Jaunpur (Uttar Pradesh) jurisdiction.</p>
+                </div>
+
+                <!-- Shipping Section -->
+                <div class="legal-content" id="legalContentShipping">
+                    <h4>1. Dispatch Kiln Yard</h4>
+                    <p>All dispatches originate from Gurukripa Brick Kiln Yard-1, located on the Jaunpur – Varanasi Highway, Uttar Pradesh.</p>
+                    <h4>2. Delivery Fleet &amp; Capacity</h4>
+                    <p>We operate our own dedicated fleet of 12 power tractor-trolleys with a standardized payload of 4,000 bricks per trolley.</p>
+                    <h4>3. Delivery Timelines &amp; Radius</h4>
+                    <p>Same-day delivery is guaranteed for orders confirmed before 12:00 PM within Jaunpur district (including Jalalpur, Trilochan, Shahganj, and Mariahu). Deliveries to Varanasi, Azamgarh, and Sultanpur are dispatched within 24 hours.</p>
+                </div>
+
+                <!-- Quality Section -->
+                <div class="legal-content" id="legalContentQuality">
+                    <h4>1. IS Standard Compliance</h4>
+                    <p>Our Grade-A Shiv Eent and Awwal bricks are fired using a double-kiln cycle compliant with Bureau of Indian Standards (BIS) IS:1077-1992 specifications for common burnt clay building bricks.</p>
+                    <h4>2. Compressive Strength &amp; Water Absorption</h4>
+                    <p>Grade-A bricks achieve an average compressive strength exceeding 10.5 N/mm² with water absorption strictly below 15% by weight after 24 hours of cold immersion.</p>
+                    <h4>3. Sound &amp; Ring Verification</h4>
+                    <p>Every batch of Grade-A bricks produces a clear metallic ringing sound when struck together, confirming uniform density and absence of internal voids.</p>
+                </div>
+            </div>
+
+            <div class="modal-foot" style="display:flex;justify-content:flex-end">
+                <button class="btn btn-primary btn-sm" onclick="closeLegalModal()">Understood &amp; Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ━━━━━━━━━━━━━━━━━ MOBILE FLOATING QUICK ACTION BAR ━━━━━━━━━━━━━━━━━ -->
     <div class="mobile-quick-bar" id="mobileQuickBar">
         <div class="mobile-quick-inner">
@@ -2562,55 +2719,63 @@
     <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
         aria-label="Back to top" title="Back to top">↑</button>
 
-    <!-- ━━━━━━━━━━━━━━━━━ MOBILE BOTTOM NAV ━━━━━━━━━━━━━━━━━ -->
-    <nav class="mobile-nav">
+    <!-- ━━━━━━━━━━━━━━━━━ MOBILE BOTTOM NAVIGATION BAR ━━━━━━━━━━━━━━━━━ -->
+    <nav class="mobile-nav" role="navigation" aria-label="Mobile Navigation Bar">
         <div class="mobile-nav-inner">
-            <a href="#home" class="mn-item active" onclick="setMNActive(this)">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <!-- 1. Home -->
+            <a href="#home" class="mn-item active" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light')" aria-label="Home">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                Home
+                <span class="mn-label">Home</span>
             </a>
-            <a href="#products" class="mn-item" onclick="setMNActive(this)">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
+
+            <!-- 2. Products Catalog -->
+            <a href="#products" class="mn-item" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light')" aria-label="Products">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 </svg>
-                Products
+                <span class="mn-label">Products</span>
             </a>
-            <a href="javascript:void(0)" class="mn-item" onclick="openCart()">
+
+            <!-- 3. Elevated Floating Cart FAB -->
+            <a href="javascript:void(0)" class="mn-item mn-item-cart" onclick="openCart();if(window.Platform)Platform.haptic('light')" aria-label="Shopping Cart">
                 <div class="mn-cart-fab">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                         <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
                     </svg>
                     <span class="mn-badge" id="mobileCartBadge">0</span>
                 </div>
-                Cart
+                <span class="mn-label">Cart</span>
             </a>
-            <a href="#calculator" class="mn-item" onclick="setMNActive(this)">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="4" y="2" width="16" height="20" rx="2" />
+
+            <!-- 4. 3-in-1 Estimator -->
+            <a href="#calculator" class="mn-item" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light')" aria-label="Estimator">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="4" y="2" width="16" height="20" rx="3" />
                     <line x1="8" y1="6" x2="16" y2="6" />
                     <line x1="8" y1="10" x2="16" y2="10" />
                     <line x1="8" y1="14" x2="12" y2="14" />
                 </svg>
-                Calc
+                <span class="mn-label">Estimator</span>
             </a>
-            <a href="javascript:void(0)" class="mn-item" onclick="handleMobileProfile()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+
+            <!-- 5. Account / Profile -->
+            <a href="javascript:void(0)" class="mn-item" onclick="handleMobileProfile();if(window.Platform)Platform.haptic('light')" aria-label="Account">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                 </svg>
-                <span id="mnProfileLabel">Profile</span>
+                <span class="mn-label" id="mnProfileLabel">Profile</span>
             </a>
         </div>
     </nav>
-
-    
     <!-- ━━━━━━━━━━━━━━━━━ JAVASCRIPT MODULES ━━━━━━━━━━━━━━━━━ -->
     <script src="src/js/utils.js" defer></script>
     <script src="src/js/data.js" defer></script>
@@ -2633,4 +2798,3 @@
 </body>
 
 </html>
-

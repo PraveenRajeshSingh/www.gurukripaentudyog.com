@@ -203,6 +203,7 @@ function setLang(lang) {
 // ══════════════════════════════════════════
 const OVERLAY_STACK = [
     // [element-id, closer] — checked top-most first (reverse paint order)
+    ['legalModal',      () => typeof closeLegalModal === 'function' && closeLegalModal()],
     ['checkoutModal',   () => typeof closeCheckout   === 'function' && closeCheckout()],
     ['productModal',    () => typeof closeProductModal === 'function' && closeProductModal()],
     ['profileModal',    () => typeof closeProfile    === 'function' && closeProfile()],
@@ -221,13 +222,52 @@ function activeOverlay() {
     return null;
 }
 
+// Global Key Listeners: ESC for modals, Ctrl+K for Search
 document.addEventListener('keydown', e => {
-    if (e.key !== 'Escape') return;
-    const pair = activeOverlay();
-    if (pair) { pair[1](); return; }
-    // Lightbox fallback (uses its own visibility mechanism)
-    if (typeof lbClose === 'function') lbClose();
+    if (e.key === 'Escape') {
+        const pair = activeOverlay();
+        if (pair) { pair[1](); return; }
+        if (typeof lbClose === 'function') lbClose();
+    } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        const searchInput = document.getElementById('navSearch');
+        if (searchInput) {
+            e.preventDefault();
+            searchInput.focus();
+            searchInput.select();
+        }
+    }
 });
+
+// ══════════════════════════════════════════
+// LEGAL & POLICIES MODAL SYSTEM
+// ══════════════════════════════════════════
+function openLegalModal(tab = 'privacy') {
+    switchLegalTab(tab);
+    const modal = document.getElementById('legalModal');
+    if (modal) {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeLegalModal() {
+    const modal = document.getElementById('legalModal');
+    if (modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+}
+
+function switchLegalTab(tab) {
+    const tabs = ['privacy', 'terms', 'shipping', 'quality'];
+    tabs.forEach(t => {
+        const cap = t.charAt(0).toUpperCase() + t.slice(1);
+        const tabBtn = document.getElementById('legalTab' + cap);
+        const content = document.getElementById('legalContent' + cap);
+        if (tabBtn) tabBtn.classList.toggle('active', t === tab);
+        if (content) content.classList.toggle('active', t === tab);
+    });
+}
 
 // ══════════════════════════════════════════
 // LIGHTBOX

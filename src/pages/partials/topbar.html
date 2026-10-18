@@ -1,16 +1,26 @@
     <!-- ━━━━━━━━━━━━━━━━━ TOPBAR ━━━━━━━━━━━━━━━━━ -->
-    <div class="topbar">
+    <div class="topbar" role="complementary" aria-label="Quick Contacts and Operational Status">
         <div class="container">
             <div class="topbar-inner">
                 <div class="topbar-left">
-                    <span>📞 <a href="tel:+919198923230">+91 91989 23230</a></span>
-                    <span>✉️ <a href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></span>
+                    <span class="topbar-status-pill">
+                        <span class="live-pulse" aria-hidden="true"></span>
+                        Kiln Active · Same-Day Dispatch
+                    </span>
+                    <span class="topbar-divider-dot" aria-hidden="true">•</span>
+                    <span>📞 <a href="tel:+919198923230" aria-label="Call Gurukripa Kiln at +91 91989 23230">+91 91989 23230</a></span>
+                    <span class="topbar-divider-dot" aria-hidden="true">•</span>
+                    <span>✉️ <a href="mailto:info@gurukripaentudyog.com" aria-label="Email info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></span>
                 </div>
                 <div class="topbar-right">
-                    <span style="color:rgba(255,255,255,.5)" data-i18n="topbar.hours">Mon–Sat | 8AM–6PM</span>
-                    <button class="lang-btn active" onclick="setLang('en')" id="langEn">🇬🇧 EN</button>
-                    <button class="lang-btn" onclick="setLang('hi')" id="langHi">🇮🇳 HI</button>
-                    <button class="theme-toggle-btn lang-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Theme" title="Toggle Theme">🌙 <span class="theme-label">Dark</span></button>
+                    <span class="topbar-hours" data-i18n="topbar.hours">Mon–Sat | 8:00 AM – 6:00 PM</span>
+                    <div class="topbar-controls">
+                        <button class="lang-btn active" onclick="setLang('en')" id="langEn" aria-label="Switch language to English">🇬🇧 EN</button>
+                        <button class="lang-btn" onclick="setLang('hi')" id="langHi" aria-label="हिंदी भाषा चुनें">🇮🇳 HI</button>
+                        <button class="theme-toggle-btn lang-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Dark or Light Theme" title="Toggle Theme">
+                            🌙 <span class="theme-label">Dark</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

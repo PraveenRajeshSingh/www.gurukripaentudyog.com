@@ -1,83 +1,116 @@
     <!-- ━━━━━━━━━━━━━━━━━ MOBILE DRAWER ━━━━━━━━━━━━━━━━━ -->
-    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-    <div class="drawer" id="mobileDrawer">
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()" aria-hidden="true"></div>
+    <aside class="drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
         <div class="drawer-head">
             <div class="nav-brand">
                 <div class="nav-logo-mark">
-                    <img src="src/assets/images/logo-new.svg" alt="Gurukripa Logo">
+                    <img src="src/assets/images/logo-new.svg" alt="Gurukripa Logo" width="36" height="36">
                 </div>
-                <div class="nav-brand-text">गुरुकृपा</div>
+                <div class="nav-brand-text">
+                    गुरुकृपा
+                    <small>Bricks Industry</small>
+                </div>
             </div>
-            <button class="drawer-close" onclick="toggleDrawer()">✕</button>
+            <button class="drawer-close" onclick="toggleDrawer()" aria-label="Close Navigation Menu">✕</button>
         </div>
-        <div class="drawer-links">
+
+        <!-- Quick Preferences: Theme & Language -->
+        <div class="drawer-settings">
+            <button class="theme-toggle-btn btn btn-outline btn-sm" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Mode">
+                🌙 <span class="theme-label">Dark</span>
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch Language">
+                🌐 <span id="drawerLangLabel">हिंदी / EN</span>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="drawer-links" role="navigation" aria-label="Drawer Navigation">
             <a href="#home" class="drawer-link active" onclick="toggleDrawer();setActiveNav(this)">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                Home
+                <span>Home</span>
             </a>
             <a href="#categories" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="3" y="3" width="7" height="7" />
                     <rect x="14" y="3" width="7" height="7" />
                     <rect x="14" y="14" width="7" height="7" />
                     <rect x="3" y="14" width="7" height="7" />
                 </svg>
-                Products
+                <span>Products &amp; Categories</span>
             </a>
-            <a href="javascript:void(0)" class="drawer-link" style="color:var(--brand);font-weight:700" onclick="toggleDrawer();openTrackerModal()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="1" y="3" width="15" height="13" />
-                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                    <circle cx="5.5" cy="18.5" r="2.5" />
-                    <circle cx="18.5" cy="18.5" r="2.5" />
+            <a href="#pricing" class="drawer-link" onclick="toggleDrawer()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
-                Track Delivery 🚛
-            </a>
-            <a href="#quality-spec" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                Quality Specs & Tester
+                <span>Price Comparison</span>
             </a>
             <a href="#calculator" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="4" y="2" width="16" height="20" rx="2" />
                     <line x1="8" y1="6" x2="16" y2="6" />
                     <line x1="8" y1="10" x2="16" y2="10" />
                     <line x1="8" y1="14" x2="12" y2="14" />
                 </svg>
-                Material Estimator
+                <span>3-in-1 Estimator Studio</span>
+            </a>
+            <a href="javascript:void(0)" class="drawer-link drawer-track-link" onclick="toggleDrawer();openTrackerModal()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="1" y="3" width="15" height="13" />
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 8" />
+                    <circle cx="5.5" cy="18.5" r="2.5" />
+                    <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
+                <span>Live Trolley Tracker 🚛</span>
+            </a>
+            <a href="#quality-spec" class="drawer-link" onclick="toggleDrawer()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span>Quality Specs &amp; Sound Tester</span>
+            </a>
+            <a href="#gallery" class="drawer-link" onclick="toggleDrawer()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <span>Kiln Factory Gallery</span>
             </a>
             <a href="#about" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="12" />
                     <line x1="12" y1="16" x2="12.01" y2="16" />
                 </svg>
-                About Us
+                <span>About Us</span>
             </a>
             <a href="#contact" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path
-                        d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z" />
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z" />
                 </svg>
-                Contact
+                <span>Contact Kiln Yard</span>
             </a>
-        </div>
-        <div class="drawer-settings" style="display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:10px 0;">
-            <button class="theme-toggle-btn btn btn-outline btn-sm" style="flex:1" onclick="Platform.toggleTheme()">🌙 <span class="theme-label">Dark</span></button>
-            <button class="btn btn-outline btn-sm" style="flex:1" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')">🌐 <span id="drawerLangLabel">हिंदी / EN</span></button>
-        </div>
+        </nav>
+
+        <!-- Direct Contact Actions -->
         <div class="drawer-contact">
-            <a href="tel:+919198923230" class="drawer-call">📞 Call Us</a>
-            <a href="https://wa.me/919198923230" target="_blank" class="drawer-wa">💬 WhatsApp</a>
+            <a href="tel:+919198923230" class="drawer-call" aria-label="Call Kiln directly">📞 Call Kiln Direct</a>
+            <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="drawer-wa" aria-label="Chat on WhatsApp">💬 WhatsApp</a>
         </div>
+
+        <!-- Account Controls -->
         <div class="drawer-auth" id="drawerAuthBtns">
-            <button class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up —
-                Free</button>
+            <button class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up — Free</button>
             <button class="btn btn-outline btn-full" onclick="openAuth('login');toggleDrawer()">Sign In</button>
         </div>
-    </div>
+
+        <!-- Legal Link in Drawer -->
+        <div style="text-align:center;padding:12px 16px 20px;font-size:.76rem;color:var(--ink-3)">
+            <button class="footer-legal-link" onclick="toggleDrawer();openLegalModal('privacy')">Terms &amp; Privacy Policies</button>
+        </div>
+    </aside>

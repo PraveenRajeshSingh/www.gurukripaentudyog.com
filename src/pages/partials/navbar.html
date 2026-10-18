@@ -1,11 +1,14 @@
-    <!-- ━━━━━━━━━━━━━━━━━ NAVBAR ━━━━━━━━━━━━━━━━━ -->
-    <header class="nav">
+    <!-- ━━━━━━━━━━━━━━━━━ ACCESSIBILITY SKIP LINK ━━━━━━━━━━━━━━━━━ -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- ━━━━━━━━━━━━━━━━━ GLOBAL WEB HEADER & NAVBAR ━━━━━━━━━━━━━━━━━ -->
+    <header class="nav" role="banner">
         <div class="container">
             <div class="nav-inner">
-                <!-- Brand -->
-                <a href="#home" class="nav-brand" onclick="scrollToSection('home')">
+                <!-- Brand Identity -->
+                <a href="#home" class="nav-brand" onclick="scrollToSection('home')" aria-label="Gurukripa Bricks Industry Home">
                     <div class="nav-logo-mark">
-                        <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks Logo">
+                        <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks Logo" width="40" height="40">
                     </div>
                     <div class="nav-brand-text">
                         गुरुकृपा ईंट उद्योग
@@ -13,41 +16,43 @@
                     </div>
                 </a>
 
-                <!-- Search (desktop) -->
-                <div class="nav-search">
+                <!-- Desktop Search -->
+                <div class="nav-search" role="search">
                     <svg class="nav-search-icon" width="16" height="16" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24">
+                        stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <circle cx="11" cy="11" r="8" />
                         <path d="M21 21l-4.35-4.35" />
                     </svg>
-                    <input type="search" class="nav-search-input" placeholder="Search bricks, prices..." id="navSearch"
-                        autocomplete="off" data-i18n="search.placeholder">
+                    <input type="search" class="nav-search-input" placeholder="Search bricks, prices... (Ctrl+K)" id="navSearch"
+                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices">
                 </div>
 
-                <!-- Desktop Nav -->
-                <nav class="nav-links" role="navigation">
+                <!-- Primary Desktop Navigation -->
+                <nav class="nav-links" role="navigation" aria-label="Primary Navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
                     <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
                     <a href="#pricing" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.pricing">Pricing</a>
-                    <a href="#quality-spec" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.qualitySpec">Quality Spec</a>
                     <a href="#calculator" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.calculator">Estimator</a>
-                    <a href="#gallery" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.gallery">Gallery</a>
+                    <a href="#quality-spec" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.qualitySpec">Quality Spec</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
-                    <button class="nav-link" style="color:var(--brand);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px" onclick="openTrackerModal()" data-i18n="nav.trackOrder">🚛 Track Delivery</button>
+                    <button class="nav-link nav-track-btn" onclick="openTrackerModal()" data-i18n="nav.trackOrder" aria-label="Track live trolley delivery">
+                        <span class="live-dot" aria-hidden="true"></span>
+                        🚛 Track Delivery
+                    </button>
                 </nav>
 
-                <!-- Actions -->
+                <!-- Actions: Theme Toggle, Cart, Auth, Mobile Toggle -->
                 <div class="nav-actions">
                     <!-- Theme Toggle -->
-                    <button class="nav-icon-btn theme-toggle-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+                    <button class="nav-icon-btn theme-toggle-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
                         🌙
                     </button>
 
-                    <!-- Cart -->
-                    <button class="nav-icon-btn" onclick="openCart()" aria-label="Cart" title="Shopping Cart">
+                    <!-- Shopping Cart -->
+                    <button class="nav-icon-btn" onclick="openCart()" aria-label="Shopping Cart" title="Shopping Cart">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
+                            viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                             <line x1="3" y1="6" x2="21" y2="6" />
                             <path d="M16 10a4 4 0 01-8 0" />
@@ -55,50 +60,60 @@
                         <span class="nav-badge" id="cartBadgeNav">0</span>
                     </button>
 
-                    <!-- Auth (logged out) -->
+                    <!-- Auth State: Logged Out -->
                     <div class="nav-auth" id="navAuthBtns">
                         <button class="btn btn-outline btn-sm" onclick="openAuth('login')" data-i18n="auth.signIn">Sign In</button>
                         <button class="btn btn-primary btn-sm" onclick="openAuth('register')" data-i18n="auth.signUp">Sign Up</button>
                     </div>
 
-                    <!-- User menu (logged in) -->
+                    <!-- Auth State: Logged In User Dropdown -->
                     <div class="user-menu hidden" id="navUserMenu">
-                        <button class="user-btn" onclick="toggleUserDropdown()" id="userMenuBtn">
+                        <button class="user-btn" onclick="toggleUserDropdown()" id="userMenuBtn" aria-haspopup="true" aria-expanded="false" aria-label="Account Menu">
                             <div class="user-avatar-sm" id="navAvatar"><span id="navAvatarInitial">P</span></div>
                             <span class="user-btn-name" id="navUserName">User</span>
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
+                                viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M6 9l6 6 6-6" />
                             </svg>
                         </button>
-                        <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown" id="userDropdown" role="menu">
                             <div class="ud-header">
                                 <div class="ud-name" id="udName">User</div>
                                 <div class="ud-email" id="udEmail">user@email.com</div>
                             </div>
                             <div class="ud-body">
-                                <button class="ud-item" onclick="openProfile()">
+                                <button class="ud-item" onclick="openProfile()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
                                         <circle cx="12" cy="7" r="4" />
                                     </svg>
                                     <span data-i18n="auth.myProfile">My Profile</span>
                                 </button>
-                                <button class="ud-item" onclick="openCart();closeUserDropdown()">
+                                <button class="ud-item" onclick="openCart();closeUserDropdown()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                                         <line x1="3" y1="6" x2="21" y2="6" />
                                     </svg>
                                     <span data-i18n="auth.myCart">My Cart</span>
                                 </button>
+                                <button class="ud-item" onclick="openTrackerModal();closeUserDropdown()" role="menuitem">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="1" y="3" width="15" height="13" />
+                                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                                        <circle cx="5.5" cy="18.5" r="2.5" />
+                                        <circle cx="18.5" cy="18.5" r="2.5" />
+                                    </svg>
+                                    <span>Track My Orders</span>
+                                </button>
                             </div>
                             <div class="ud-divider"></div>
                             <div class="ud-body">
-                                <button class="ud-item ud-logout" onclick="logoutUser()">
+                                <button class="ud-item ud-logout" onclick="logoutUser()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
                                     </svg>
                                     Sign Out
@@ -107,8 +122,8 @@
                         </div>
                     </div>
 
-                    <!-- Hamburger -->
-                    <button class="nav-toggle" onclick="toggleDrawer()" id="navToggle" aria-label="Menu">
+                    <!-- Mobile Navigation Hamburger -->
+                    <button class="nav-toggle" onclick="toggleDrawer()" id="navToggle" aria-label="Open Navigation Menu" aria-expanded="false">
                         <span></span><span></span><span></span>
                     </button>
                 </div>

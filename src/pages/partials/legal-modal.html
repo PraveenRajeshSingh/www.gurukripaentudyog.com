@@ -1,0 +1,68 @@
+    <!-- ━━━━━━━━━━━━━━━━━ LEGAL & POLICIES MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="legalModal" onclick="if(event.target.id==='legalModal')closeLegalModal()">
+        <div class="modal-box legal-modal-box">
+            <div class="modal-head">
+                <div>
+                    <span class="sec-tag" style="margin-bottom:6px">Official Compliance</span>
+                    <h3 class="modal-title" id="legalModalTitle">Terms &amp; Policies</h3>
+                </div>
+                <button class="modal-close" onclick="closeLegalModal()" aria-label="Close modal">✕</button>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="legal-tabs" role="tablist">
+                <button class="legal-tab active" id="legalTabPrivacy" onclick="switchLegalTab('privacy')">🔒 Privacy Policy</button>
+                <button class="legal-tab" id="legalTabTerms" onclick="switchLegalTab('terms')">⚖️ Terms of Sale</button>
+                <button class="legal-tab" id="legalTabShipping" onclick="switchLegalTab('shipping')">🚚 Shipping &amp; Delivery</button>
+                <button class="legal-tab" id="legalTabQuality" onclick="switchLegalTab('quality')">🏆 Quality Standards</button>
+            </div>
+
+            <div class="modal-body legal-modal-body">
+                <!-- Privacy Section -->
+                <div class="legal-content active" id="legalContentPrivacy">
+                    <h4>1. Client-Side Data Privacy</h4>
+                    <p>Gurukripa Bricks Industry is committed to complete data privacy. Our application operates as a privacy-first Progressive Web App. All personal profile details, cart selections, and local order logs are stored locally on your device within your browser or native app storage.</p>
+                    <h4>2. Information Collected</h4>
+                    <p>When placing an order or requesting delivery tracking, you provide your Name, Mobile Number, and Delivery Site Address solely to coordinate trolley loading, driver dispatch, and WhatsApp order confirmation.</p>
+                    <h4>3. Zero Third-Party Monetization</h4>
+                    <p>We do not sell, rent, or trade your contact information with external marketing brokers. Your information is accessed exclusively by our kiln logistics team in Jaunpur, UP.</p>
+                </div>
+
+                <!-- Terms Section -->
+                <div class="legal-content" id="legalContentTerms">
+                    <h4>1. Sale &amp; Supply Terms</h4>
+                    <p>All brick sales from Gurukripa Bhatta Yard are subject to physical verification at the delivery site prior to tractor/trolley unloading.</p>
+                    <h4>2. Transit Breakage Margin</h4>
+                    <p>Per Indian brick manufacturing norms (IS:1077), a standard transit margin of 3% to 5% for red clay masonry bricks is expected due to road transit on tractor trolleys.</p>
+                    <h4>3. Payment Terms</h4>
+                    <p>Orders are dispatched upon token confirmation via UPI, Bank Transfer, or verified Cash on Delivery at site. Computer-generated GST invoices reflect 5% GST (CGST 2.5% + SGST 2.5%).</p>
+                    <h4>4. Jurisdiction</h4>
+                    <p>Any disputes arising out of contracts of sale are strictly subject to Jaunpur (Uttar Pradesh) jurisdiction.</p>
+                </div>
+
+                <!-- Shipping Section -->
+                <div class="legal-content" id="legalContentShipping">
+                    <h4>1. Dispatch Kiln Yard</h4>
+                    <p>All dispatches originate from Gurukripa Brick Kiln Yard-1, located on the Jaunpur – Varanasi Highway, Uttar Pradesh.</p>
+                    <h4>2. Delivery Fleet &amp; Capacity</h4>
+                    <p>We operate our own dedicated fleet of 12 power tractor-trolleys with a standardized payload of 4,000 bricks per trolley.</p>
+                    <h4>3. Delivery Timelines &amp; Radius</h4>
+                    <p>Same-day delivery is guaranteed for orders confirmed before 12:00 PM within Jaunpur district (including Jalalpur, Trilochan, Shahganj, and Mariahu). Deliveries to Varanasi, Azamgarh, and Sultanpur are dispatched within 24 hours.</p>
+                </div>
+
+                <!-- Quality Section -->
+                <div class="legal-content" id="legalContentQuality">
+                    <h4>1. IS Standard Compliance</h4>
+                    <p>Our Grade-A Shiv Eent and Awwal bricks are fired using a double-kiln cycle compliant with Bureau of Indian Standards (BIS) IS:1077-1992 specifications for common burnt clay building bricks.</p>
+                    <h4>2. Compressive Strength &amp; Water Absorption</h4>
+                    <p>Grade-A bricks achieve an average compressive strength exceeding 10.5 N/mm² with water absorption strictly below 15% by weight after 24 hours of cold immersion.</p>
+                    <h4>3. Sound &amp; Ring Verification</h4>
+                    <p>Every batch of Grade-A bricks produces a clear metallic ringing sound when struck together, confirming uniform density and absence of internal voids.</p>
+                </div>
+            </div>
+
+            <div class="modal-foot" style="display:flex;justify-content:flex-end">
+                <button class="btn btn-primary btn-sm" onclick="closeLegalModal()">Understood &amp; Close</button>
+            </div>
+        </div>
+    </div>
