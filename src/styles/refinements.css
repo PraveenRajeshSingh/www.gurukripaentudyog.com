@@ -1,0 +1,217 @@
+/* ==========================================================================
+   DESIGN REFINEMENT v3.0 (R1-R8)
+   File: refinements.css (part 7 of 7)
+   Loaded via <link> in index.html / 404.html / 500.html in the exact order
+   defined by the original src/styles/main.css.
+   ========================================================================== */
+
+   DESIGN REFINEMENT — v3.0
+   Unified premium layer: auth modals, modal/drawer system, cart,
+   toasts, header/hero/product/footer polish. Terracotta · brick red
+   · cream · white · charcoal. Additive only — no feature changes.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── R1. Shared modal/drawer surfaces ─────────────────────────── */
+.modal-overlay {
+    background: rgba(28, 16, 9, .58);
+    backdrop-filter: blur(6px) saturate(140%);
+    -webkit-backdrop-filter: blur(6px) saturate(140%);
+}
+.modal-box {
+    box-shadow: 0 24px 64px -12px rgba(28, 16, 9, .35), 0 0 0 1px rgba(200, 70, 10, .08);
+    animation: modalIn .34s cubic-bezier(.22, 1, .36, 1);
+}
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(18px) scale(.97) }
+    to   { opacity: 1; transform: translateY(0) scale(1) }
+}
+.modal-close-btn {
+    min-width: 40px; min-height: 40px;
+    border-radius: 50%;
+    transition: background .2s var(--ease), transform .2s var(--ease);
+}
+.modal-close-btn:hover { background: rgba(200, 70, 10, .1); transform: rotate(90deg) }
+.modal-close-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px }
+
+/* ── R2. Auth modal — premium sign-in / sign-up ────────────────── */
+#authModal .modal-box { max-width: 460px; overflow-x: hidden } /* keep base overflow-y:auto for short viewports */
+.auth-modal-brand {
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    padding: 18px 0 46px;
+    margin: 0 0 -34px;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    position: relative;
+}
+#authModal .modal-head { padding-top: 34px !important; position: relative; z-index: 1 }
+#authModal .modal-badge { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; background: var(--bg-subtle); border-radius: 50%; font-size: 1.2rem }
+.auth-brand-icon {
+    width: 64px; height: 64px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.9rem;
+    background: #fffdf9;
+    border: 3px solid rgba(255, 255, 255, .65);
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(28, 16, 9, .3);
+}
+.auth-tabs { gap: 6px; background: var(--bg-subtle); border-radius: var(--radius-pill); padding: 5px }
+.auth-tab {
+    flex: 1; min-height: 44px;
+    border-radius: var(--radius-pill);
+    font-weight: 700; font-size: .88rem;
+    color: var(--ink-2);
+    transition: background .22s var(--ease), color .22s var(--ease), box-shadow .22s var(--ease);
+}
+.auth-tab.active {
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    color: #fff;
+    box-shadow: 0 6px 16px -4px rgba(200, 70, 10, .45);
+}
+.auth-input {
+    min-height: 48px;
+    border-radius: var(--r-md);
+    border: 1.5px solid var(--line-mid);
+    background: #fffdfb;
+    transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.auth-input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 4px rgba(200, 70, 10, .12);
+    outline: none;
+}
+.auth-input.error { border-color: #e53e3e; box-shadow: 0 0 0 4px rgba(229, 62, 62, .12) }
+.auth-error-msg { font-size: .74rem; color: #e53e3e; font-weight: 600 }
+.auth-submit {
+    min-height: 50px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    color: #fff; font-weight: 800; letter-spacing: .01em;
+    box-shadow: 0 10px 24px -8px rgba(200, 70, 10, .55);
+    transition: transform .18s var(--ease), box-shadow .18s var(--ease), filter .18s var(--ease);
+}
+.auth-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -8px rgba(200, 70, 10, .6); filter: brightness(1.05) }
+.auth-submit:active { transform: translateY(0) scale(.99) }
+.auth-submit:disabled { opacity: .75; cursor: progress; transform: none }
+.auth-social-btn {
+    min-height: 46px;
+    border: 1.5px solid var(--line-mid);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-weight: 700; font-size: .86rem;
+    transition: border-color .2s var(--ease), background .2s var(--ease), transform .15s var(--ease);
+}
+.auth-social-btn:hover { border-color: var(--brand); background: #fff7f2; transform: translateY(-1px) }
+.google-gsi-mount { min-height: 44px }
+.auth-divider { color: var(--ink-3); font-size: .76rem; font-weight: 600 }
+.auth-divider::before, .auth-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line-mid), transparent);
+}
+.auth-terms-check {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: .8rem; color: var(--ink-2);
+    margin: 2px 0 8px; line-height: 1.45;
+}
+.auth-terms-check input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px;
+    accent-color: var(--brand);
+    cursor: pointer; flex-shrink: 0;
+}
+.auth-terms-check a { color: var(--brand); font-weight: 700; text-decoration: underline; text-underline-offset: 2px }
+.auth-terms-err { display: block; margin: -4px 0 8px; min-height: 1em }
+
+/* ── R3. Cart drawer — refined side/full sheet ──────────────────── */
+.cart-drawer {
+    box-shadow: -16px 0 60px -12px rgba(28, 16, 9, .3);
+}
+.cart-head {
+    position: sticky; top: 0; z-index: 5;
+    background: linear-gradient(180deg, var(--bg-card) 82%, transparent);
+}
+.cart-close { min-width: 40px; min-height: 40px; border-radius: 50%; transition: background .2s var(--ease) }
+.cart-close:hover { background: rgba(200, 70, 10, .1) }
+.cart-item {
+    border-radius: var(--r-md);
+    transition: background .18s var(--ease), transform .18s var(--ease);
+}
+.cart-item:hover { background: var(--bg-subtle) }
+.cart-bill {
+    border-radius: var(--r-md);
+    background: linear-gradient(160deg, #fffdf9, var(--bg-subtle));
+}
+.cart-footer {
+    border-top: 1px solid var(--line-mid);
+    background: rgba(255, 253, 249, .92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+.cart-empty h3 { font-family: var(--display); font-weight: 700; color: var(--ink) }
+.cart-empty-anim {
+    width: 84px; height: 84px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.3rem;
+    background: radial-gradient(circle at 35% 30%, #fff, var(--bg-subtle));
+    border: 1px solid var(--line-mid);
+    border-radius: 50%;
+    box-shadow: inset 0 2px 10px rgba(200, 70, 10, .07);
+}
+
+/* ── R4. Toast notifications — glass, tappable, accessible ─────────── */
+.toast {
+    border-radius: var(--radius-pill);
+    box-shadow: 0 12px 32px -8px rgba(28, 16, 9, .35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    max-width: min(92vw, 420px);
+}
+
+/* ── R5. Header / topbar / hero refinement ──────────────────────── */
+.topbar {
+    background: linear-gradient(90deg, var(--brand-dark) 0%, var(--brand) 55%, var(--brand-dark) 100%);
+    letter-spacing: .015em;
+}
+.nav .btn-primary, .hero-cta .btn-primary {
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    box-shadow: 0 8px 20px -6px rgba(200, 70, 10, .5);
+}
+.hero h1, .hero-title { text-wrap: balance }
+.hero-copy .sec-sub { text-wrap: pretty }
+
+/* ── R6. Section rhythm + product cards ────────────────────────── */
+.sec-title { text-wrap: balance }
+.sec-title::after {
+    content: '';
+    display: block;
+    width: 56px; height: 4px;
+    margin: 12px auto 0;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--brand), var(--brand-amber));
+}
+.product-card {
+    transition: transform .28s var(--ease), box-shadow .28s var(--ease), border-color .28s var(--ease);
+}
+.product-card:hover {
+    border-color: rgba(200, 70, 10, .35);
+    box-shadow: 0 22px 44px -14px rgba(28, 16, 9, .28);
+}
+.product-add-btn {
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    color: #fff;
+    box-shadow: 0 6px 16px -6px rgba(200, 70, 10, .55);
+    transition: transform .16s var(--ease), filter .16s var(--ease);
+}
+.product-add-btn:hover { transform: translateY(-1px); filter: brightness(1.06) }
+
+/* ── R7. Footer refinement ──────────────────────────────────────── */
+footer a { transition: color .18s var(--ease) }
+footer a:hover { color: var(--brand-amber) }
+
+/* ── R8. Global micro-interactions & a11y ──────────────────────── */
+::selection { background: rgba(200, 70, 10, .18); color: var(--ink) }
+button, a, input, select, textarea { touch-action: manipulation }
+@media (prefers-reduced-motion: reduce) {
+    .modal-box, .toast, .mn-badge.bounce, .nav-badge.bounce { animation: none !important }
+    .product-card, .auth-submit, .auth-social-btn { transition: none !important }
+}
+
+
+

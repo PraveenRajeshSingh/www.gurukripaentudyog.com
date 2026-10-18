@@ -36,10 +36,10 @@ function openGstInvoice(orderId) {
                 <td>Awwal / Grade-A Red Clay Building Bricks</td>
                 <td>${matched.itemsCount || 4000} pcs</td>
                 <td>₹${((matched.total / (matched.itemsCount || 4000))).toFixed(2)}</td>
-                <td>₹${baseVal.toLocaleString('en-IN')}</td>
-                <td>₹${cgst.toLocaleString('en-IN')}</td>
-                <td>₹${sgst.toLocaleString('en-IN')}</td>
-                <td><strong>₹${matched.total.toLocaleString('en-IN')}</strong></td>
+                <td>${formatINR(baseVal)}</td>
+                <td>${formatINR(cgst)}</td>
+                <td>${formatINR(sgst)}</td>
+                <td><strong>${formatINR(matched.total)}</strong></td>
             </tr></tbody>
         </table>
         <div style="display:flex;justify-content:space-between;margin-top:20px;align-items:flex-end">
@@ -50,7 +50,7 @@ function openGstInvoice(orderId) {
                 3. Computer generated tax memo — no signature required.
             </div>
             <div style="text-align:right">
-                <div style="font-size:.82rem">Grand Total: <strong style="font-size:1.2rem;color:var(--brand)">₹${matched.total.toLocaleString('en-IN')}</strong></div>
+                <div style="font-size:.82rem">Grand Total: <strong style="font-size:1.2rem;color:var(--brand)">${formatINR(matched.total)}</strong></div>
                 <div style="font-size:.72rem;color:#16a34a;font-weight:700">✓ PAID IN FULL</div>
             </div>
         </div>`;
@@ -102,7 +102,7 @@ function renderOrderHistory() {
                 <div class="order-date">${sanitizeHTML(o.date)} · ${o.itemsCount || 1} item(s)</div>
             </div>
             <span class="order-status ${o.status === 'Delivered' ? 'delivered' : 'processing'}">${sanitizeHTML(o.status || 'Processing')}</span>
-            <div class="order-amount">₹${o.total.toLocaleString('en-IN')}</div>
+            <div class="order-amount">${formatINR(o.total)}</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
                 <button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openTrackerModal('${o.id}')">🚛 Track Delivery</button>
                 <button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openGstInvoice('${o.id}')">📄 GST Invoice</button>

@@ -44,14 +44,14 @@ function calculateBricks() {
 
     resBody.innerHTML = `
         <div class="estimator-results-grid">
-            <div class="estimator-card"><div class="estimator-val">${bricks.toLocaleString('en-IN')}</div><div class="estimator-label">Bricks Needed</div></div>
+            <div class="estimator-card"><div class="estimator-val">${formatNum(bricks)}</div><div class="estimator-label">Bricks Needed</div></div>
             <div class="estimator-card"><div class="estimator-val">${trolleys}</div><div class="estimator-label">Trolleys (4k/tr)</div></div>
             <div class="estimator-card"><div class="estimator-val">${cementBags}</div><div class="estimator-label">Cement Bags</div></div>
             <div class="estimator-card"><div class="estimator-val">${sandCuFt} cu.ft</div><div class="estimator-label">Sand Volume</div></div>
         </div>
         <div style="background:var(--brand-glow);border:1px solid var(--line-mid);border-radius:var(--r-md);padding:14px;margin-bottom:14px;text-align:center">
             <div style="font-size:.75rem;color:var(--ink-3);font-weight:700">ESTIMATED TOTAL BUDGET</div>
-            <div style="font-size:1.6rem;font-weight:800;color:var(--brand)">₹${totalCost.toLocaleString('en-IN')}</div>
+            <div style="font-size:1.6rem;font-weight:800;color:var(--brand)">${formatINR(totalCost)}</div>
             <div style="font-size:.72rem;color:var(--ink-2)">Includes 5% construction breakage margin</div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -78,14 +78,14 @@ function calculateHouseMaterial() {
 
     resBody.innerHTML = `
         <div class="estimator-results-grid">
-            <div class="estimator-card"><div class="estimator-val">${bricks.toLocaleString('en-IN')}</div><div class="estimator-label">Total Bricks</div></div>
+            <div class="estimator-card"><div class="estimator-val">${formatNum(bricks)}</div><div class="estimator-label">Total Bricks</div></div>
             <div class="estimator-card"><div class="estimator-val">${trolleys}</div><div class="estimator-label">Trolley Load</div></div>
             <div class="estimator-card"><div class="estimator-val">${cementBags} bags</div><div class="estimator-label">Cement Est.</div></div>
             <div class="estimator-card"><div class="estimator-val">${sandCuFt} cu.ft</div><div class="estimator-label">Sand Volume</div></div>
         </div>
         <div style="background:var(--brand-glow);border:1px solid var(--line-mid);border-radius:var(--r-md);padding:14px;margin-bottom:14px;text-align:center">
             <div style="font-size:.75rem;color:var(--ink-3);font-weight:700">TOTAL HOUSE BRICK BUDGET</div>
-            <div style="font-size:1.6rem;font-weight:800;color:var(--brand)">₹${totalCost.toLocaleString('en-IN')}</div>
+            <div style="font-size:1.6rem;font-weight:800;color:var(--brand)">${formatINR(totalCost)}</div>
             <div style="font-size:.72rem;color:var(--ink-2)">Built-up: ${sqft} sq.ft × ${floors} floors</div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -110,12 +110,12 @@ function calculateBoundaryMaterial() {
 
     resBody.innerHTML = `
         <div class="estimator-results-grid">
-            <div class="estimator-card"><div class="estimator-val">${bricks.toLocaleString('en-IN')}</div><div class="estimator-label">Bricks Needed</div></div>
+            <div class="estimator-card"><div class="estimator-val">${formatNum(bricks)}</div><div class="estimator-label">Bricks Needed</div></div>
             <div class="estimator-card"><div class="estimator-val">${trolleys}</div><div class="estimator-label">Trolley Count</div></div>
         </div>
         <div style="background:var(--brand-glow);border:1px solid var(--line-mid);border-radius:var(--r-md);padding:14px;margin-bottom:14px;text-align:center">
             <div style="font-size:.75rem;color:var(--ink-3);font-weight:700">BOUNDARY WALL ESTIMATED COST</div>
-            <div style="font-size:1.6rem;font-weight:800;color:var(--brand)">₹${totalCost.toLocaleString('en-IN')}</div>
+            <div style="font-size:1.6rem;font-weight:800;color:var(--brand)">${formatINR(totalCost)}</div>
             <div style="font-size:.72rem;color:var(--ink-2)">Perimeter: ${len}ft × ${ht}ft height</div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -125,7 +125,7 @@ function calculateBoundaryMaterial() {
 }
 
 function sendWhatsAppQuote(projName, brickCount, totalCost) {
-    const text = encodeURIComponent(`Namaste Gurukripa Bricks Industry!\nI need a quotation for my project:\n• Project: ${projName}\n• Bricks Estimate: ${brickCount.toLocaleString('en-IN')} units\n• Estimated Budget: ₹${totalCost.toLocaleString('en-IN')}\n\nPlease confirm availability and delivery slot.`);
+    const text = encodeURIComponent(`Namaste Gurukripa Bricks Industry!\nI need a quotation for my project:\n• Project: ${projName}\n• Bricks Estimate: ${formatNum(brickCount)} units\n• Estimated Budget: ${formatINR(totalCost)}\n\nPlease confirm availability and delivery slot.`);
     window.open(`https://wa.me/919198923230?text=${text}`, '_blank');
 }
 
@@ -136,7 +136,7 @@ function addCalcToCart(name, qty, unitPrice) {
     saveCart();
     updateCartUI();
     openCart();
-    showToast(t('calc.addedToCart', { qty: qty.toLocaleString('en-IN'), name }), 'success');
+    showToast(t('calc.addedToCart', { qty: formatNum(qty), name }), 'success');
 }
 
 // ══════════════════════════════════════════

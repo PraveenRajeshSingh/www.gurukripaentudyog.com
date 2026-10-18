@@ -1,0 +1,236 @@
+    <!-- ━━━━━━━━━━━━━━━━━ CHECKOUT MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay checkout-modal" id="checkoutModal" onclick="handleCheckoutOverlayClick(event)">
+        <div class="modal-box" id="checkoutBox">
+            <div class="modal-head">
+                <div>
+                    <div class="modal-badge">🛍️</div>
+                    <div class="modal-title">Checkout & Order</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeCheckout()">✕</button>
+            </div>
+
+            <!-- Numbered Step Bar -->
+            <div class="checkout-steps-bar">
+                <div class="co-step-item">
+                    <div class="co-step-wrap active" id="cStepWrap1">
+                        <div class="co-step-num">1</div>
+                        <div class="co-step-label">Details</div>
+                    </div>
+                    <div class="co-step-line"></div>
+                </div>
+                <div class="co-step-item">
+                    <div class="co-step-wrap" id="cStepWrap2">
+                        <div class="co-step-num">2</div>
+                        <div class="co-step-label">Payment</div>
+                    </div>
+                    <div class="co-step-line"></div>
+                </div>
+                <div class="co-step-item">
+                    <div class="co-step-wrap" id="cStepWrap3">
+                        <div class="co-step-num">3</div>
+                        <div class="co-step-label">Confirm</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <!-- Step 1: Delivery Details -->
+                <div class="step-panel active" id="checkoutStep1">
+                    <form id="deliveryForm" onsubmit="goToPayment(event)" novalidate>
+                        <div class="auth-row">
+                            <div class="auth-field">
+                                <label class="co-form-label" for="coName">Full Name <span class="co-required">*</span></label>
+                                <input type="text" id="coName" class="co-input" placeholder="Enter recipient full name" required>
+                            </div>
+                            <div class="auth-field">
+                                <label class="co-form-label" for="coPhone">Phone Number <span class="co-required">*</span></label>
+                                <input type="tel" id="coPhone" class="co-input" placeholder="10-digit mobile number" required pattern="[0-9]{10}">
+                            </div>
+                        </div>
+                        <div class="auth-field" style="margin-top:10px">
+                            <label class="co-form-label" for="coAddress">Delivery Site Address <span class="co-required">*</span></label>
+                            <textarea id="coAddress" class="co-input" style="height:70px;resize:none" placeholder="Village / Area, Landmark, Road, District" required></textarea>
+                        </div>
+                        <div class="auth-row" style="margin-top:10px">
+                            <div class="auth-field">
+                                <label class="co-form-label" for="coCity">City / District <span class="co-required">*</span></label>
+                                <input type="text" id="coCity" class="co-input" value="Jaunpur" required>
+                            </div>
+                            <div class="auth-field">
+                                <label class="co-form-label" for="coPincode">Pincode</label>
+                                <input type="text" id="coPincode" class="co-input" placeholder="222001">
+                            </div>
+                        </div>
+                        <div class="auth-row" style="margin-top:10px">
+                            <div class="auth-field">
+                                <label class="co-form-label" for="coRoadAccess">Road &amp; Site Accessibility</label>
+                                <select id="coRoadAccess" class="co-input">
+                                    <option value="wide">Wide Main Road (Standard Truck / Trolley)</option>
+                                    <option value="narrow">Narrow Village Lane (Mini Trolley Required)</option>
+                                </select>
+                            </div>
+                            <div class="auth-field">
+                                <label class="co-form-label" for="coLaborService">Unloading Laborer Service</label>
+                                <select id="coLaborService" class="co-input" onchange="updateCheckoutTotal()">
+                                    <option value="0">Self-Unloading at Site (₹0)</option>
+                                    <option value="500">Gurukripa Unloader Team (+₹500/trolley)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="checkout-order-summary" id="checkoutSummary" style="margin-top:14px"></div>
+                        <button type="submit" class="auth-submit" style="margin-top:14px">
+                            <span>Continue to Payment</span> →
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Step 2: Payment Options & Panels -->
+                <div class="step-panel" id="checkoutStep2">
+                    <div style="font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:8px">Select Payment Method:</div>
+                    <div class="payment-methods-grid">
+                        <div class="pay-method selected" data-method="upi" onclick="selectPayMethod(this)">
+                            <span class="pay-method-icon">⚡</span>
+                            <span>UPI QR</span>
+                        </div>
+                        <div class="pay-method" data-method="card" onclick="selectPayMethod(this)">
+                            <span class="pay-method-icon">💳</span>
+                            <span>Debit/Credit</span>
+                        </div>
+                        <div class="pay-method" data-method="cod" onclick="selectPayMethod(this)">
+                            <span class="pay-method-icon">💵</span>
+                            <span>Cash on Delivery</span>
+                        </div>
+                    </div>
+
+                    <!-- Panel 1: UPI Sub-Panel -->
+                    <div class="payment-panel visible" id="panelUpi">
+                        <div class="upi-qr-box">
+                            <div style="font-size:.78rem;color:var(--ink-3);margin-bottom:8px">Scan with GPay, PhonePe, Paytm or Any UPI App</div>
+                            <div class="upi-qr-placeholder">
+                                <div class="upi-qr-logo">📱</div>
+                            </div>
+                            <div style="font-size:.76rem;color:var(--ink-2);font-weight:600;margin-bottom:8px">Gurukripa Bricks Industry Official UPI</div>
+                            <div class="upi-id-row">
+                                <input type="text" class="upi-id-input" id="officialUpiId" value="gurukripa@upi" readonly>
+                                <button class="upi-copy-btn" type="button" onclick="copyUpiId()">Copy ID</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 2: Credit/Debit Card Sub-Panel -->
+                    <div class="payment-panel" id="panelCard">
+                        <div class="card-visual">
+                            <span class="card-brand-icon" id="cardBrandLogo">💳</span>
+                            <div class="card-chip"></div>
+                            <div class="card-number-display" id="cardNumDisp">•••• •••• •••• ••••</div>
+                            <div class="card-bottom">
+                                <div>
+                                    <div class="card-holder-display">CARD HOLDER</div>
+                                    <div class="card-holder-name" id="cardNameDisp">YOUR NAME</div>
+                                </div>
+                                <div class="card-expiry-display">
+                                    <div class="card-expiry-label">EXPIRES</div>
+                                    <div class="card-expiry-val" id="cardExpDisp">MM/YY</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <label class="co-form-label">Card Number</label>
+                            <input type="text" class="co-input" id="cardNumInput" placeholder="4532 •••• •••• 8890" maxlength="19" oninput="syncCardVisual()">
+                        </div>
+                        <div class="card-form-row" style="margin-top:10px">
+                            <div class="auth-field">
+                                <label class="co-form-label">Expiration Date</label>
+                                <input type="text" class="co-input" id="cardExpInput" placeholder="MM/YY" maxlength="5" oninput="syncCardVisual()">
+                            </div>
+                            <div class="auth-field">
+                                <label class="co-form-label">CVV / CVC</label>
+                                <input type="password" class="co-input" placeholder="•••" maxlength="4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 3: COD Sub-Panel -->
+                    <div class="payment-panel" id="panelCod">
+                        <div class="cod-box">
+                            <div class="cod-icon-row">
+                                <div class="cod-icon">🚚</div>
+                                <div>
+                                    <div class="cod-title">Cash on Delivery Available</div>
+                                    <div class="cod-sub">Pay in cash directly to truck driver upon inspection.</div>
+                                </div>
+                            </div>
+                            <div class="cod-timeline">
+                                <div class="cod-tl-item">
+                                    <div class="cod-tl-dot">1</div>
+                                    <div class="cod-tl-text">
+                                        <strong>Instant Phone Confirmation</strong>
+                                        <span>Our Bhatta manager calls you within 15 minutes</span>
+                                    </div>
+                                </div>
+                                <div class="cod-tl-item">
+                                    <div class="cod-tl-dot">2</div>
+                                    <div class="cod-tl-text">
+                                        <strong>Dispatch from Jaunpur Bhatta</strong>
+                                        <span>Loaded on tractor-trolley or truck</span>
+                                    </div>
+                                </div>
+                                <div class="cod-tl-item">
+                                    <div class="cod-tl-dot">3</div>
+                                    <div class="cod-tl-text">
+                                        <strong>Unload & Pay at Site</strong>
+                                        <span>Verify brick count & quality before payment</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Processing state placeholder -->
+                    <div id="paymentProcessingState" style="display:none" class="payment-processing">
+                        <div class="processing-dots">
+                            <div class="processing-dot"></div>
+                            <div class="processing-dot"></div>
+                            <div class="processing-dot"></div>
+                        </div>
+                        <div class="processing-title">Verifying Payment...</div>
+                        <div class="processing-sub">Communicating with banking gateway. Please do not close this window.</div>
+                    </div>
+
+                    <div class="checkout-order-summary" id="checkoutSummary2" style="margin-top:14px"></div>
+                    <div style="display:flex;gap:10px;margin-top:14px" id="checkoutPayBtns">
+                        <button class="btn btn-ghost" onclick="backToDetails()" style="flex:1">← Back</button>
+                        <button class="auth-submit" onclick="placeOrder()" id="placeOrderBtn" style="flex:2">Confirm Order 🎉</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Success Confirmation -->
+                <div class="step-panel" id="checkoutStep3" style="position:relative;overflow:hidden">
+                    <div id="confettiContainer"></div>
+                    <div class="success-checkmark">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div style="text-align:center">
+                        <h3 style="font-family:var(--display);font-size:1.4rem;color:var(--ink);margin-bottom:4px">Order Confirmed!</h3>
+                        <p style="font-size:.85rem;color:var(--ink-3);margin-bottom:16px">Your brick order has been logged into Gurukripa system.</p>
+                        
+                        <div class="order-success-box">
+                            <div style="font-size:.74rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em">TRACKING NUMBER</div>
+                            <div class="order-success-id" id="orderIdDisplay">GBI-20260728-4912</div>
+                            <div class="order-success-meta" id="orderSuccessMeta">Estimated Delivery: Within 24-48 Hours</div>
+                        </div>
+
+                        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+                            <a href="https://wa.me/919198923230" id="orderWaBtn" target="_blank" class="btn btn-primary" style="background:#16a34a">
+                                💬 Track on WhatsApp
+                            </a>
+                            <button class="btn btn-outline" onclick="closeCheckout()">Continue Shopping</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,26 @@
+    <!-- ━━━━━━━━━━━━━━━━━ LIVE ORDER & DELIVERY TRACKER MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="trackerModal" onclick="if(event.target.id==='trackerModal')closeTrackerModal()">
+        <div class="modal-box tracker-modal-box">
+            <div class="modal-head">
+                <div>
+                    <div class="modal-badge">🚛</div>
+                    <div class="modal-title">Live Delivery Tracker</div>
+                    <div class="modal-subtitle">Track your brick trolley / truck dispatch status</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeTrackerModal()">✕</button>
+            </div>
+            <div class="modal-body" style="padding-top:12px">
+                <div class="tracker-search-wrap">
+                    <input type="text" class="tracker-input" id="trackerSearchInput" placeholder="Enter Order ID (e.g. GBI-89241) or Mobile..." value="GBI-20260728-4912">
+                    <button class="btn btn-primary" onclick="trackOrderSubmit()">Search</button>
+                </div>
+                <div style="text-align:right;margin-top:-12px;margin-bottom:14px">
+                    <button class="btn btn-ghost btn-sm" style="font-size:.76rem;color:var(--brand)" onclick="demoTrackerOrder()">✨ Test Demo Active Dispatch</button>
+                </div>
+
+                <div id="trackerDisplayContent">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </div>

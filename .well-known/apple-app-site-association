@@ -1,6 +1,16 @@
-[
-  {
-    "appID": "TEAMID.com.gurukripa.bricks",
-    "paths": ["*"]
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["TEAMID.com.gurukripa.bricks"],
+        "components": [
+          { "#": "*" }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["TEAMID.com.gurukripa.bricks"]
   }
-]
+}

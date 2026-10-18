@@ -45,8 +45,8 @@ function buildCheckoutSummary() {
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const total = Math.max(0, subtotal - couponDiscount);
     const html = `
-        ${cart.map(i => `<div class="checkout-item-row" style="display:flex;justify-content:space-between;font-size:.84rem;padding:4px 0;color:var(--ink-2)"><span>${sanitizeHTML(i.name)} ×${i.qty}</span><span style="font-weight:600">₹${(i.price * i.qty).toLocaleString('en-IN')}</span></div>`).join('')}
-        <div class="checkout-total-row" style="display:flex;justify-content:space-between;font-size:.95rem;font-weight:700;padding-top:8px;border-top:1px dashed var(--line-mid);color:var(--brand);margin-top:6px"><span>Grand Total</span><span>₹${total.toLocaleString('en-IN')}</span></div>
+        ${cart.map(i => `<div class="checkout-item-row" style="display:flex;justify-content:space-between;font-size:.84rem;padding:4px 0;color:var(--ink-2)"><span>${sanitizeHTML(i.name)} ×${i.qty}</span><span style="font-weight:600">${formatINR(i.price * i.qty)}</span></div>`).join('')}
+        <div class="checkout-total-row" style="display:flex;justify-content:space-between;font-size:.95rem;font-weight:700;padding-top:8px;border-top:1px dashed var(--line-mid);color:var(--brand);margin-top:6px"><span>Grand Total</span><span>${formatINR(total)}</span></div>
     `;
     const s1 = document.getElementById('checkoutSummary');
     const s2 = document.getElementById('checkoutSummary2');

@@ -1,0 +1,56 @@
+    <!-- ━━━━━━━━━━━━━━━━━ CART DRAWER ━━━━━━━━━━━━━━━━━ -->
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-head">
+            <div style="display:flex;align-items:center;gap:10px">
+                <h2 data-i18n="cart.title">My Cart</h2>
+                <span class="cart-head-count" id="cartHeadCount">0 items</span>
+            </div>
+            <button class="cart-close" onclick="closeCart()" aria-label="Close cart">✕</button>
+        </div>
+        <!-- Free Delivery Progress Bar -->
+        <div class="cart-delivery-progress" id="cartDeliveryProgress">
+            <div class="cart-delivery-text" id="cartDeliveryText">
+                <span data-i18n="cart.freeThreshold">Free delivery threshold:</span>
+                <span class="free-label" id="cartDeliveryLabel">Add ₹5,000 more</span>
+            </div>
+            <div class="cart-progress-track">
+                <div class="cart-progress-fill" id="cartProgressFill" style="width:0%"></div>
+            </div>
+        </div>
+        <div class="cart-body" id="cartBody">
+            <div class="cart-empty" id="cartEmpty">
+                <div class="cart-empty-anim">🧱</div>
+                <h3 data-i18n="cart.emptyTitle">Your Cart is Empty</h3>
+                <p data-i18n="cart.emptyText">Add Grade-A bricks to calculate project cost and delivery.</p>
+                <button class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeCart();scrollToSection('products')" data-i18n="cart.browse">Browse Products →</button>
+            </div>
+            <div id="cartItemsList" style="display:none"></div>
+            <!-- Coupon -->
+            <div id="cartCouponSection" style="display:none;margin-top:16px">
+                <div class="cart-coupon">
+                    <input type="text" class="cart-coupon-input" id="couponInput" data-i18n="cart.couponPh" placeholder="Enter coupon code (e.g. GURU10)">
+                    <button class="cart-coupon-btn" onclick="applyCoupon()" data-i18n="cart.apply">Apply</button>
+                </div>
+                <div id="couponMsg" class="cart-coupon-msg"></div>
+            </div>
+            <!-- Bill -->
+            <div class="cart-bill hidden" id="cartBill">
+                <div class="cart-bill-title" data-i18n="cart.billSummary">Bill Summary</div>
+                <div class="bill-row"><span data-i18n="cart.subtotal">Item Subtotal</span><span id="cartSubtotal">₹0</span></div>
+                <div class="bill-row"><span data-i18n="cart.delivery">Delivery Charge</span><span class="free" id="cartDeliveryFee">FREE</span></div>
+                <div class="bill-row" id="discountRow" style="display:none"><span data-i18n="cart.savings">Coupon Savings</span><span id="discountAmt" style="color:var(--success)">-₹0</span></div>
+                <div class="bill-row total"><span data-i18n="cart.grandTotal">Grand Total</span><span id="cartTotal">₹0</span></div>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display:none">
+            <button class="cart-checkout-btn" onclick="openCheckout()" id="checkoutBtn">
+                <span data-i18n="cart.checkout">Proceed to Checkout</span> →
+            </button>
+            <div class="cart-secure-note">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span data-i18n="cart.secure">100% Encrypted &amp; Safe Checkout</span>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,31 @@
+{
+  "appId": "com.gurukripa.bricks",
+  "appName": "Gurukripa Bricks",
+  "webDir": "www",
+  "backgroundColor": "#FAFAF9",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": false,
+    "backgroundColor": "#FAFAF9"
+  },
+  "ios": {
+    "contentInset": "never",
+    "scheme": "GurukripaBricks",
+    "backgroundColor": "#FAFAF9"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "backgroundColor": "#FAFAF9",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#C8460A"
+    }
+  }
+}

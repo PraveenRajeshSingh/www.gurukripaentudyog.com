@@ -1,0 +1,90 @@
+    <!-- ━━━━━━━━━━━━━━━━━ CONTACT ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec" id="contact">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag">Get In Touch</span>
+                <h2 class="sec-title">Contact Us</h2>
+                <p class="sec-sub">We respond within the hour — or just call us directly</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-item-icon">📞</div>
+                        <div>
+                            <div class="contact-item-label">Phone</div>
+                            <div class="contact-item-value"><a href="tel:+919198923230">+91 91989 23230</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">✉️</div>
+                        <div>
+                            <div class="contact-item-label">Email</div>
+                            <div class="contact-item-value"><a
+                                    href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">📍</div>
+                        <div>
+                            <div class="contact-item-label">Address</div>
+                            <div class="contact-item-value">Nevada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) —
+                                222001</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">🕐</div>
+                        <div>
+                            <div class="contact-item-label">Working Hours</div>
+                            <div class="contact-item-value">Mon – Sat &nbsp;|&nbsp; 8:00 AM – 6:00 PM</div>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/919198923230" target="_blank" class="btn btn-primary btn-full"
+                        style="gap:8px">
+                        💬 Chat on WhatsApp
+                    </a>
+                </div>
+                <div class="contact-form-wrap">
+                    <form id="contactForm" onsubmit="handleContactSubmit(event)" novalidate>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="cName">Full Name *</label>
+                                <input type="text" id="cName" name="name" class="form-input"
+                                    placeholder="Your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cEmail">Email *</label>
+                                <input type="email" id="cEmail" name="email" class="form-input"
+                                    placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="cPhone">Phone *</label>
+                                <input type="tel" id="cPhone" name="phone" class="form-input"
+                                    placeholder="+91 98765 43210" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cSubject">Subject *</label>
+                                <select id="cSubject" name="subject" class="form-select" required>
+                                    <option value="">Select subject</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="products">Product Information</option>
+                                    <option value="orders">Order & Delivery</option>
+                                    <option value="quote">Get a Quote</option>
+                                    <option value="complaint">Complaint</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cMessage">Message *</label>
+                            <textarea id="cMessage" name="message" class="form-textarea"
+                                placeholder="Describe your inquiry in detail..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full" id="contactSubmitBtn">
+                            📨 Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>

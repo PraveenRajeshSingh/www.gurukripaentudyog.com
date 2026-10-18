@@ -25,14 +25,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Assemble site (index.html from partials + stage clean web bundle)
+        # build.js / prepare-www.js are dependency-free Node — no npm install needed.
+        run: node scripts/build.js && node scripts/prepare-www.js
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload the entire repo root as the site
-          path: "."
+          # Deploy only the clean web bundle (no android/, ios/, docs/, scripts/,
+          # or build-time src/pages partials). www/ is a proper site root.
+          path: "www"
 
       - name: Deploy to GitHub Pages
         id: deployment

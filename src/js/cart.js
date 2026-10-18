@@ -61,7 +61,7 @@ function updateCartUI() {
             label.textContent = t('cart.unlocked');
             label.className = 'free-label';
         } else {
-            label.textContent = t('cart.addMore', { amt: (freeThreshold - subtotal).toLocaleString('en-IN') });
+            label.textContent = t('cart.addMore', { amt: formatNum(freeThreshold - subtotal) });
             label.className = '';
         }
     }
@@ -107,7 +107,7 @@ function renderCartItems() {
               <div class="cart-item-img"><img src="${item.img}" alt="${sanitizeHTML(item.name)}"></div>
               <div class="cart-item-info">
                 <div class="cart-item-name">${sanitizeHTML(item.name)}</div>
-                <div class="cart-item-price">₹${(item.price * item.qty).toLocaleString('en-IN')} <span style="font-size:.72rem;color:var(--ink-3)">(₹${item.price}/${item.unit || 'pc'})</span></div>
+                <div class="cart-item-price">${formatINR(item.price * item.qty)} <span style="font-size:.72rem;color:var(--ink-3)">(₹${item.price}/${item.unit || 'pc'})</span></div>
                 <div class="cart-item-qty">
                   <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
                   <span class="qty-val">${item.qty}</span>
@@ -122,15 +122,15 @@ function renderCartItems() {
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const total = Math.max(0, subtotal - couponDiscount);
     const subtotalEl = document.getElementById('cartSubtotal');
-    if (subtotalEl) subtotalEl.textContent = '₹' + subtotal.toLocaleString('en-IN');
+    if (subtotalEl) subtotalEl.textContent = formatINR(subtotal);
     const totalEl = document.getElementById('cartTotal');
-    if (totalEl) totalEl.textContent = '₹' + total.toLocaleString('en-IN');
+    if (totalEl) totalEl.textContent = formatINR(total);
 
     const dRow = document.getElementById('discountRow');
     if (couponDiscount > 0 && dRow) {
         dRow.style.display = 'flex';
         const dAmt = document.getElementById('discountAmt');
-        if (dAmt) dAmt.textContent = '-₹' + couponDiscount.toLocaleString('en-IN');
+        if (dAmt) dAmt.textContent = '-' + formatINR(couponDiscount);
     } else if (dRow) { dRow.style.display = 'none'; }
 }
 

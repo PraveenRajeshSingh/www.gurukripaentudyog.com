@@ -1,0 +1,84 @@
+    <!-- ━━━━━━━━━━━━━━━━━ BRICK QUALITY SPECIFICATIONS & SOUND TESTER ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec quality-matrix-sec" id="quality-spec">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag" data-i18n="qualitySpec.tag">Quality Verification</span>
+                <h2 class="sec-title" data-i18n="qualitySpec.title">Brick Quality Spec &amp; Metallic Ringing Sound Test</h2>
+                <p class="sec-sub" data-i18n="qualitySpec.sub">Compare technical specifications &amp; test the authentic metallic ringing sound (खनक) of Grade-A bricks before buying</p>
+            </div>
+
+            <div class="quality-table-wrap">
+                <table class="quality-table">
+                    <thead>
+                        <tr>
+                            <th>Brick Grade / Category</th>
+                            <th>Compressive Strength</th>
+                            <th>Water Absorption</th>
+                            <th>Efflorescence (Salt)</th>
+                            <th>Ring Sound Test (खनक)</th>
+                            <th>Recommended Application</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Shiv Eent Grade-A (शिव ईंट)</strong></td>
+                            <td><strong style="color:var(--brand)">≥ 12.5 N/mm²</strong></td>
+                            <td>&lt; 10% (Low)</td>
+                            <td>Nil / Negligible</td>
+                            <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem" onclick="playBrickSound('gradeA')">🔔 Ringing Bell Sound (खनक)</button></td>
+                            <td>Load-bearing pillars, multi-story structural walls</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Awwal Bricks (आव्वल ईंट)</strong></td>
+                            <td><strong>≥ 10.0 N/mm²</strong></td>
+                            <td>&lt; 12% (Optimal)</td>
+                            <td>Slight</td>
+                            <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem" onclick="playBrickSound('awwal')">🔔 Sharp Ringing</button></td>
+                            <td>Heavy residential, commercial foundations &amp; exterior walls</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Laal Peti Bricks (लाल पेटी)</strong></td>
+                            <td><strong>≥ 7.5 N/mm²</strong></td>
+                            <td>&lt; 15% (Standard)</td>
+                            <td>Slight to Moderate</td>
+                            <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem;background:var(--ink-3)" onclick="playBrickSound('laalPeti')">🔉 Clear Tone</button></td>
+                            <td>Partition walls, boundary walls, single-story homes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Machine Wirecut</strong></td>
+                            <td><strong>≥ 11.0 N/mm²</strong></td>
+                            <td>&lt; 10% (Low)</td>
+                            <td>Nil</td>
+                            <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem" onclick="playBrickSound('gradeA')">🔔 Crisp Metallic</button></td>
+                            <td>Exposed brick elevation &amp; architectural designs</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Standard Hollow Bricks</strong></td>
+                            <td><strong>≥ 5.0 N/mm²</strong></td>
+                            <td>&lt; 8%</td>
+                            <td>Nil</td>
+                            <td><button class="sound-test-btn" style="padding:6px 12px;font-size:.78rem;background:var(--ink-3)" onclick="playBrickSound('standard')">🔈 Dull Thud</button></td>
+                            <td>Lightweight interior non-load partition walls</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sound Tester Interactive Banner -->
+            <div class="sound-test-card">
+                <div>
+                    <h3 style="font-family:var(--display);font-size:1.3rem;margin-bottom:6px">🔊 Real-Life Quality Test: Listen to the "Metallic Ringing Sound" (खनक)</h3>
+                    <p style="font-size:.85rem;color:rgba(255,255,255,0.8);max-width:550px">In Indian real-life brick testing, striking two well-burnt Grade-A bricks together produces a clear metallic ringing sound (खनक). Poorly baked bricks make a dull thud. Tap below to simulate!</p>
+                </div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap">
+                    <button class="sound-test-btn" onclick="playBrickSound('gradeA')">
+                        🔔 Test Grade-A Metallic Sound (खनक)
+                    </button>
+                    <button class="sound-test-btn" style="background:rgba(255,255,255,0.15);box-shadow:none" onclick="playBrickSound('standard')">
+                        🔈 Test Low-Grade Brick Sound
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+

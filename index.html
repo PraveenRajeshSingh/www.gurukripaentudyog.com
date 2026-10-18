@@ -110,7 +110,14 @@
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="src/styles/main.css">
+    <!-- Stylesheets (split from the original main.css; load order preserves cascade) -->
+    <link rel="stylesheet" href="src/styles/base.css">
+    <link rel="stylesheet" href="src/styles/sections.css">
+    <link rel="stylesheet" href="src/styles/overlays.css">
+    <link rel="stylesheet" href="src/styles/extras.css">
+    <link rel="stylesheet" href="src/styles/app.css">
+    <link rel="stylesheet" href="src/styles/mobile-fixes.css">
+    <link rel="stylesheet" href="src/styles/refinements.css">
 </head>
 
 <body>
@@ -2580,18 +2587,22 @@
 
     
     <!-- ━━━━━━━━━━━━━━━━━ JAVASCRIPT MODULES ━━━━━━━━━━━━━━━━━ -->
+    <script src="src/js/utils.js" defer></script>
     <script src="src/js/data.js" defer></script>
+    <script src="src/js/i18n.js" defer></script>
     <script src="src/js/state.js" defer></script>
     <script src="src/js/ui.js" defer></script>
     <script src="src/js/products.js" defer></script>
     <script src="src/js/cart.js" defer></script>
-    <script src="src/js/auth.js" defer></script>
+    <script src="src/js/auth-modal.js" defer></script>
+    <script src="src/js/otp-panel.js" defer></script>
+    <script src="src/js/profile-modal.js" defer></script>
+    <script src="src/js/google-auth.js" defer></script>
     <script src="src/js/checkout.js" defer></script>
     <script src="src/js/calculator.js" defer></script>
     <script src="src/js/tracker.js" defer></script>
     <script src="src/js/chatbot.js" defer></script>
     <script src="src/js/invoice.js" defer></script>
-    <script src="src/js/components-loader.js" defer></script>
     <script src="src/js/main.js" defer></script>
 </body>
 

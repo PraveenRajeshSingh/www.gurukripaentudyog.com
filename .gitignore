@@ -3,3 +3,15 @@ node_modules/
 *.keystore
 .env
 .DS_Store
+
+# Generated web bundle for native packaging (rebuilt by `npm run www`)
+www/
+
+# Capacitor / native build artifacts (keep the android/ and ios/ project source)
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+ios/App/Pods/
+ios/App/build/
+ios/App/DerivedData/

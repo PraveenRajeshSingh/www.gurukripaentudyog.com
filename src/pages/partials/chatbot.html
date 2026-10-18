@@ -1,0 +1,27 @@
+    <!-- ━━━━━━━━━━━━━━━━━ CHATBOT ━━━━━━━━━━━━━━━━━ -->
+    <div class="chatbot-wrap" id="chatbotWrap">
+        <div class="chatbot-box">
+            <div class="chatbot-head">
+                <div class="chatbot-avatar">🤖</div>
+                <div class="chatbot-info">
+                    <h4>Gurukripa Assistant</h4>
+                    <p><span class="chatbot-online-dot"></span> Online · Instant replies</p>
+                </div>
+                <button class="chatbot-head-close" onclick="toggleChatbot()">✕</button>
+            </div>
+            <div class="chatbot-messages" id="chatMessages">
+                <div class="chat-msg bot">Namaste! 🙏 I'm here to help you find the perfect bricks. What can I assist
+                    you with today?</div>
+            </div>
+            <div class="chatbot-chips">
+                <button class="chat-chip" onclick="sendChatChip('Brick Prices')">Brick Prices</button>
+                <button class="chat-chip" onclick="sendChatChip('Delivery Info')">Delivery Info</button>
+                <button class="chat-chip" onclick="sendChatChip('Place Order')">Place Order</button>
+            </div>
+            <div class="chatbot-input-row">
+                <input type="text" class="chatbot-input" id="chatInput" placeholder="Type a message..."
+                    autocomplete="off" onkeydown="if(event.key==='Enter')sendChat()">
+                <button class="chatbot-send" onclick="sendChat()" aria-label="Send">➤</button>
+            </div>
+        </div>
+    </div>

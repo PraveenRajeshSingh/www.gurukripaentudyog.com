@@ -1,0 +1,21 @@
+    <!-- ━━━━━━━━━━━━━━━━━ GST TAX INVOICE MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="gstInvoiceModal" onclick="if(event.target.id==='gstInvoiceModal')closeGstInvoice()">
+        <div class="modal-box gst-invoice-box">
+            <div class="modal-head" style="padding:16px 20px;border-bottom:1px solid var(--line)">
+                <div>
+                    <div class="modal-title" style="font-size:1.1rem">📄 Tax Invoice / Cash Memo</div>
+                    <div class="modal-subtitle">Gurukripa Bricks Industry Official GST Invoice</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeGstInvoice()">✕</button>
+            </div>
+            <div class="modal-body" style="padding:0;max-height:75vh;overflow-y:auto">
+                <div class="gst-invoice-paper" id="gstInvoicePrintArea">
+                    <!-- Dynamic GST Invoice Content -->
+                </div>
+            </div>
+            <div style="padding:12px 20px;background:var(--bg-subtle);border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px">
+                <button class="btn btn-outline btn-sm" onclick="closeGstInvoice()">Close</button>
+                <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+            </div>
+        </div>
+    </div>

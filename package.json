@@ -1,16 +1,31 @@
 {
   "name": "gurukripa-bricks-industry",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "private": true,
-  "description": "Gurukripa Bricks Industry — PWA with Trusted Web Activity (TWA) Android/APK packaging via Bubblewrap.",
+  "description": "Gurukripa Bricks Industry — static PWA that is the single source of truth for Web (GitHub Pages), Android and iOS (native shells via Capacitor) targeting Google Play and the Apple App Store.",
   "scripts": {
-    "serve": "http-server . -p 8080 -c-1",
-    "doctor": "bubblewrap doctor",
-    "apk:init": "bubblewrap init --manifest http://localhost:8080/manifest.json",
-    "apk:build": "bubblewrap build --skipTwaValidation --skipPlayStorage",
-    "apk:build:prod": "bubblewrap build"
+    "build": "node scripts/build.js",
+    "www": "npm run build && node scripts/prepare-www.js",
+    "serve": "npm run build && http-server . -p 8080 -c-1",
+    "cap:add:android": "cap add android",
+    "cap:add:ios": "cap add ios",
+    "sync": "npm run www && cap sync",
+    "android": "npm run www && cap sync android && cap open android",
+    "ios": "npm run www && cap sync ios && cap open ios",
+    "doctor": "cap doctor",
+    "twa:doctor": "bubblewrap doctor",
+    "twa:init": "bubblewrap init --manifest https://www.gurukripaentudyog.com/manifest.json",
+    "twa:build": "bubblewrap build --skipTwaValidation --skipPlayStorage"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2"
   },
   "devDependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/splash-screen": "^6.0.2",
+    "@capacitor/status-bar": "^6.0.2",
     "@bubblewrap/cli": "^1.27.0",
     "http-server": "^14.1.1"
   }

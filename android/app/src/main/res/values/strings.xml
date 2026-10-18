@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Gurukripa Bricks</string>
+    <string name="title_activity_main">Gurukripa Bricks</string>
+    <string name="package_name">com.gurukripa.bricks</string>
+    <string name="custom_url_scheme">com.gurukripa.bricks</string>
+</resources>
