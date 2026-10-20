@@ -10,6 +10,7 @@ const TRANSLATIONS = {
         'nav.home': 'Home', 'nav.products': 'Products', 'nav.pricing': 'Pricing',
         'nav.qualitySpec': 'Quality Spec', 'nav.calculator': 'Estimator',
         'nav.gallery': 'Gallery', 'nav.about': 'About', 'nav.contact': 'Contact',
+        'nav.categories': 'Categories', 'nav.delivery': 'Delivery', 'nav.getQuote': 'Get a Quote',
         'nav.trackOrder': '\ud83d\ude9b Track Delivery', 'nav.vendors': 'Vendors',
         // Auth
         'auth.signIn': 'Sign In', 'auth.signUp': 'Sign Up', 'auth.signOut': 'Sign Out',
@@ -210,6 +211,7 @@ const TRANSLATIONS = {
         'nav.home': '\u0939\u094b\u092e', 'nav.products': '\u0909\u0924\u094d\u092a\u093e\u0926', 'nav.pricing': '\u092e\u0942\u0932\u094d\u092f',
         'nav.qualitySpec': '\u0917\u0941\u0923 \u0935\u093f\u0936\u0947\u0937', 'nav.calculator': '\u0905\u0928\u0941\u092e\u093e\u0928\u0915',
         'nav.gallery': '\u0917\u0948\u0932\u0930\u0940', 'nav.about': '\u0939\u092e\u093e\u0930\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902', 'nav.contact': '\u0938\u0902\u092a\u0930\u094d\u0915',
+        'nav.categories': '\u0936\u094d\u0930\u0947\u0923\u093f\u092f\u093e\u0901', 'nav.delivery': '\u0921\u093f\u0932\u0940\u0935\u0930\u0940', 'nav.getQuote': '\u0915\u094d\u0935\u094b\u091f \u0932\u0947\u0902',
         'nav.trackOrder': '\ud83d\ude9b \u0921\u093f\u0932\u0940\u0935\u0930\u0940 \u091f\u094d\u0930\u0948\u0915 \u0915\u0930\u0947\u0902', 'nav.vendors': '\u0935\u093f\u0915\u094d\u0930\u0947\u0924\u093e',
         // Auth
         'auth.signIn': '\u0938\u093e\u0907\u0928 \u0907\u0928', 'auth.signUp': '\u0938\u093e\u0907\u0928 \u0905\u092a', 'auth.signOut': '\u0938\u093e\u0907\u0928 \u0906\u0909\u091f',

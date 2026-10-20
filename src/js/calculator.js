@@ -188,3 +188,10 @@ function playBrickSound(type) {
         showToast(t('calc.soundPlayed'));
     }
 }
+
+// ── Auto-initialize the estimator result panel when the section is present ──
+(function initCalculator() {
+    const run = () => { if (document.getElementById('calcLength')) calculateBricks(); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+})();

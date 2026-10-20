@@ -967,6 +967,34 @@ html, body {
     line-height: 1.15 !important;
 }
 
+/* Balanced, compact hero on large screens — caps height so the
+   product/catalog content enters the viewport earlier and the
+   banner no longer dominates the first screen. */
+@media (min-width: 900px) {
+    .hero-compact {
+        min-height: clamp(320px, 42vh, 440px) !important;
+        max-height: 480px !important;
+        align-items: stretch;
+    }
+    .hero-compact .hero-img {
+        aspect-ratio: auto;
+        overflow: hidden;
+    }
+    .hero-compact .hero-img img {
+        object-position: center;
+    }
+    .hero-compact .hero-copy {
+        justify-content: center;
+        padding: clamp(20px, 3vw, 36px) clamp(28px, 4vw, 56px) !important;
+    }
+    .hero-compact .hero-lead {
+        margin-bottom: 16px;
+    }
+    .hero-compact .hero-cta {
+        margin-bottom: 16px !important;
+    }
+}
+
 /* ── Products & Catalog Grid Polish ── */
 .products-grid {
     display: grid;

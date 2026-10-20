@@ -45,6 +45,9 @@
 
     <!-- Google Sign-In: paste your Web OAuth Client ID (ends with .apps.googleusercontent.com) to activate. Leave empty to keep dormant. -->
     <meta name="google-client-id" content="">
+    <!-- Razorpay & Google Maps Integration Meta Tags -->
+    <meta name="razorpay-key-id" content="">
+    <meta name="google-maps-api-key" content="">
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="src/assets/images/gurukripaLogo.jpg">
@@ -225,12 +228,12 @@
                 <!-- Primary Desktop Navigation -->
                 <nav class="nav-links" role="navigation" aria-label="Primary Navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
-                    <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
-                    <a href="#pricing" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.pricing">Pricing</a>
-                    <a href="#calculator" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.calculator">Estimator</a>
-                    <a href="#quality-spec" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.qualitySpec">Quality Spec</a>
+                    <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
+                    <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.categories">Categories</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
+                    <a href="#cities" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.delivery">Delivery</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
+                    <button type="button" class="btn btn-primary btn-sm nav-quote-btn" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
                     <button class="nav-link nav-track-btn" onclick="openTrackerModal()" data-i18n="nav.trackOrder" aria-label="Track live trolley delivery">
                         <span class="live-dot" aria-hidden="true"></span>
                         🚛 Track Delivery
@@ -369,6 +372,14 @@
                 </svg>
                 <span>Home</span>
             </a>
+            <a href="#products" class="drawer-link" onclick="toggleDrawer()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 01-8 0" />
+                </svg>
+                <span>Products</span>
+            </a>
             <a href="#categories" class="drawer-link" onclick="toggleDrawer()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="3" y="3" width="7" height="7" />
@@ -376,14 +387,14 @@
                     <rect x="14" y="14" width="7" height="7" />
                     <rect x="3" y="14" width="7" height="7" />
                 </svg>
-                <span>Products &amp; Categories</span>
+                <span>Categories</span>
             </a>
-            <a href="#pricing" class="drawer-link" onclick="toggleDrawer()">
+            <a href="javascript:void(0)" class="drawer-link" onclick="toggleDrawer();openBulkQuoteModal()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <line x1="12" y1="1" x2="12" y2="23"/>
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
                 </svg>
-                <span>Price Comparison</span>
+                <span>Get a Quote</span>
             </a>
             <a href="javascript:void(0)" class="drawer-link" onclick="toggleDrawer();openWishlistDrawer()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -391,44 +402,14 @@
                 </svg>
                 <span>My Wishlist</span>
             </a>
-            <a href="#calculator" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="4" y="2" width="16" height="20" rx="2" />
-                    <line x1="8" y1="6" x2="16" y2="6" />
-                    <line x1="8" y1="10" x2="16" y2="10" />
-                    <line x1="8" y1="14" x2="12" y2="14" />
-                </svg>
-                <span>3-in-1 Estimator Studio</span>
-            </a>
             <a href="javascript:void(0)" class="drawer-link drawer-track-link" onclick="toggleDrawer();openTrackerModal()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="1" y="3" width="15" height="13" />
-                    <polygon points="16 8 20 8 23 11 23 16 16 16 8" />
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
                     <circle cx="5.5" cy="18.5" r="2.5" />
                     <circle cx="18.5" cy="18.5" r="2.5" />
                 </svg>
                 <span>Live Trolley Tracker 🚛</span>
-            </a>
-            <a href="javascript:void(0)" class="drawer-link" onclick="toggleDrawer();openAdminPortal()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                </svg>
-                <span>Admin &amp; Yard Console</span>
-            </a>
-            <a href="#quality-spec" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                <span>Quality Specs &amp; Sound Tester</span>
-            </a>
-            <a href="#gallery" class="drawer-link" onclick="toggleDrawer()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                    <polyline points="21 15 16 10 5 21"/>
-                </svg>
-                <span>Kiln Factory Gallery</span>
             </a>
             <a href="#about" class="drawer-link" onclick="toggleDrawer()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -437,6 +418,22 @@
                     <line x1="12" y1="16" x2="12.01" y2="16" />
                 </svg>
                 <span>About Us</span>
+            </a>
+            <a href="#cities" class="drawer-link" onclick="toggleDrawer()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="1" y="3" width="15" height="13" />
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                    <circle cx="5.5" cy="18.5" r="2.5" />
+                    <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
+                <span>Delivery Coverage</span>
+            </a>
+            <a href="javascript:void(0)" class="drawer-link" onclick="toggleDrawer();openAdminPortal()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                <span>Admin &amp; Yard Console</span>
             </a>
             <a href="#contact" class="drawer-link" onclick="toggleDrawer()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -470,7 +467,7 @@
     <section id="home" class="hero hero-compact">
         <!-- Left: Image Panel -->
         <div class="hero-img">
-            <img src="src/assets/images/hero-banner.png" alt="Premium Red Clay Bricks — Gurukripa Bricks Industry" loading="eager">
+            <img src="src/assets/images/hero-banner.png" alt="Premium Red Clay Bricks — Gurukripa Bricks Industry" width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async">
             <div class="hero-img-overlay"></div>
             <!-- Verified Quality Badge -->
             <div class="hero-cert">
@@ -530,7 +527,7 @@
                     <span class="hero-chip">
                         <span class="hero-chip-icon" aria-hidden="true">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                                <rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
                             </svg>
                         </span>
                         Same-Day Trolley Delivery
@@ -555,6 +552,37 @@
             </div>
         </div>
     </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━ TRUST MARQUEE ━━━━━━━━━━━━━━━━━ -->
+    <div class="trust-strip">
+        <div class="trust-track" id="trustTrack">
+            <span class="trust-item">🏆 <strong>Grade-A Certified</strong> Bricks</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">🚛 <strong>Same-Day</strong> Delivery Available</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">💳 UPI · GPay · PhonePe · COD Accepted</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">📍 Serving <strong>Jaunpur, Varanasi &amp; UP</strong></span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">⭐ <strong>4.8/5</strong> Customer Rating</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">🔥 <strong>25+ Years</strong> of Excellence</span>
+            <span class="trust-sep">·</span>
+            <!-- Duplicate for seamless loop -->
+            <span class="trust-item">🏆 <strong>Grade-A Certified</strong> Bricks</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">🚛 <strong>Same-Day</strong> Delivery Available</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">💳 UPI · GPay · PhonePe · COD Accepted</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">📍 Serving <strong>Jaunpur, Varanasi &amp; UP</strong></span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">⭐ <strong>4.8/5</strong> Customer Rating</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item">🔥 <strong>25+ Years</strong> of Excellence</span>
+            <span class="trust-sep">·</span>
+        </div>
+    </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ CATEGORIES ━━━━━━━━━━━━━━━━━ -->
     <section class="sec" id="categories">
@@ -739,6 +767,189 @@
         </div>
     </section>
 
+    <!-- ━━━━━━━━━━━━━━━━━ CALCULATOR 2.0 ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec" id="calculator">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag" data-i18n="calculator.tag">Smart Construction Studio</span>
+                <h2 class="sec-title" data-i18n="calculator.title">3-in-1 Building Material &amp; Cost Estimator</h2>
+                <p class="sec-sub">Calculate complete construction material needs — Bricks, Cement bags, Sand volume &amp; total budget estimate</p>
+            </div>
+
+            <!-- Estimator Tab Header -->
+            <div class="calc-tabs" style="justify-content:center;margin-top:20px">
+                <div class="calc-tab active" id="cTabWallBtn" onclick="switchCalcTab('wall')">🧱 Single/Multi-Wall Estimator</div>
+                <div class="calc-tab" id="cTabHouseBtn" onclick="switchCalcTab('house')">🏠 Full House Material Estimator</div>
+                <div class="calc-tab" id="cTabBoundaryBtn" onclick="switchCalcTab('boundary')">🧱 Boundary Wall &amp; Pillars</div>
+            </div>
+
+            <div class="calc-wrap">
+                <!-- Left Form Panel -->
+                <div class="calc-form">
+                    <!-- Tab 1: Wall Estimator -->
+                    <div class="calc-tab-panel active" id="calcTabWall">
+                        <div class="calc-form-head">
+                            <h3>Wall Dimensions</h3>
+                            <p>Calculate exact brick &amp; mortar needs for walls</p>
+                        </div>
+                        <div class="calc-form-body">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                                <div class="calc-field">
+                                    <label class="calc-label">Length (feet)</label>
+                                    <input type="number" class="calc-input" id="calcLength" placeholder="e.g. 20" min="1" value="20" oninput="calculateBricks()">
+                                </div>
+                                <div class="calc-field">
+                                    <label class="calc-label">Height (feet)</label>
+                                    <input type="number" class="calc-input" id="calcHeight" placeholder="e.g. 10" min="1" value="10" oninput="calculateBricks()">
+                                </div>
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Wall Thickness</label>
+                                <select class="calc-input" id="calcThickness" onchange="calculateBricks()">
+                                    <option value="4.5">4.5 inch (Single Partition Wall)</option>
+                                    <option value="9" selected>9 inch (Main Load-bearing Wall)</option>
+                                    <option value="13.5">13.5 inch (Triple Foundation Wall)</option>
+                                </select>
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Brick Grade &amp; Unit Rate</label>
+                                <select class="calc-input" id="calcBrickType" onchange="calculateBricks()">
+                                    <option value="7.05">Awwal Bricks (आव्वल) — ₹7.05/pc (₹28,200/trolley)</option>
+                                    <option value="6.25">Laal Peti (लाल पेटी) — ₹6.25/pc (₹25,000/trolley)</option>
+                                    <option value="12" selected>Shiv Eent Grade-A — ₹12/pc</option>
+                                    <option value="10">Premium Red Bricks — ₹10/pc</option>
+                                    <option value="8">Standard Bricks — ₹8/pc</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Full House Estimator -->
+                    <div class="calc-tab-panel" id="calcTabHouse">
+                        <div class="calc-form-head">
+                            <h3>Full House Construction Specs</h3>
+                            <p>Estimate entire building material budget (Ground + Floors)</p>
+                        </div>
+                        <div class="calc-form-body">
+                            <div class="calc-field">
+                                <label class="calc-label">Plot / Built-up Area (Sq. Ft)</label>
+                                <input type="number" class="calc-input" id="houseArea" placeholder="e.g. 1000" min="100" value="1000" oninput="calculateHouseMaterial()">
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                                <div class="calc-field">
+                                    <label class="calc-label">Number of Floors</label>
+                                    <select class="calc-input" id="houseFloors" onchange="calculateHouseMaterial()">
+                                        <option value="1">Ground Floor Only (G)</option>
+                                        <option value="2" selected>Ground + 1st Floor (G+1)</option>
+                                        <option value="3">Ground + 2 Floors (G+2)</option>
+                                    </select>
+                                </div>
+                                <div class="calc-field">
+                                    <label class="calc-label">Brick Grade</label>
+                                    <select class="calc-input" id="houseBrickRate" onchange="calculateHouseMaterial()">
+                                        <option value="12">Shiv Eent Grade-A (₹12)</option>
+                                        <option value="7.05" selected>Awwal Bricks (₹7.05)</option>
+                                        <option value="6.25">Laal Peti (₹6.25)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Boundary Wall Estimator -->
+                    <div class="calc-tab-panel" id="calcTabBoundary">
+                        <div class="calc-form-head">
+                            <h3>Boundary Wall &amp; Pillars</h3>
+                            <p>Perimeter boundary fencing material calculator</p>
+                        </div>
+                        <div class="calc-form-body">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                                <div class="calc-field">
+                                    <label class="calc-label">Perimeter Length (ft)</label>
+                                    <input type="number" class="calc-input" id="boundaryLength" placeholder="e.g. 150" value="150" oninput="calculateBoundaryMaterial()">
+                                </div>
+                                <div class="calc-field">
+                                    <label class="calc-label">Wall Height (ft)</label>
+                                    <input type="number" class="calc-input" id="boundaryHeight" placeholder="e.g. 6" value="6" oninput="calculateBoundaryMaterial()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Results Panel -->
+                <div class="calc-result" id="calcResult">
+                    <div class="calc-result-title">📊 Complete Material Estimate</div>
+                    <div id="calcResultsBody">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━ ABOUT ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec sec-alt" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-img-wrap">
+                    <img src="src/assets/images/gurukripaEnt.jpg" alt="Gurukripa Bricks Factory — Jaunpur"
+                        loading="lazy">
+                    <div class="about-img-card">
+                        <div class="about-img-card-num">25+</div>
+                        <div class="about-img-card-label">Years of Excellence</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="sec-tag">Our Story</span>
+                    <h2 class="sec-title" style="text-align:left;margin-bottom:16px">Jaunpur's Most<br><em
+                            style="font-family:var(--display);color:var(--brand);font-style:italic">Trusted</em> Brick
+                        Maker</h2>
+                    <p style="color:var(--ink-3);line-height:1.75;margin-bottom:24px">Since 1998, Gurukripa Bricks
+                        Industry has been the backbone of construction across Jaunpur, Varanasi and all of UP. Founded
+                        by Prem Narayan Singh, we've grown from a small kiln to a full-scale premium brick manufacturer
+                        supplying 10,000+ satisfied customers.</p>
+                    <div class="about-features">
+                        <div class="about-feat">
+                            <div class="about-feat-icon">🔥</div>
+                            <div>
+                                <div class="about-feat-title">Double-Fired Process</div>
+                                <div class="about-feat-desc">Every brick kiln-fired twice for maximum density and
+                                    weather resistance</div>
+                            </div>
+                        </div>
+                        <div class="about-feat">
+                            <div class="about-feat-icon">📐</div>
+                            <div>
+                                <div class="about-feat-title">Uniform Dimensions</div>
+                                <div class="about-feat-desc">Machine-calibrated for perfect 230×110×70mm standard sizing
+                                </div>
+                            </div>
+                        </div>
+                        <div class="about-feat">
+                            <div class="about-feat-icon">🚛</div>
+                            <div>
+                                <div class="about-feat-title">Same-Day Delivery</div>
+                                <div class="about-feat-desc">Fleet of trucks ensuring morning order = afternoon delivery
+                                </div>
+                            </div>
+                        </div>
+                        <div class="about-feat">
+                            <div class="about-feat-icon">✅</div>
+                            <div>
+                                <div class="about-feat-title">Quality Guaranteed</div>
+                                <div class="about-feat-desc">100% replacement guarantee on damaged or substandard bricks
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="tel:+919198923230" class="btn btn-primary">📞 Talk to Us Today</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     <!-- ━━━━━━━━━━━━━━━━━ CTA BANNER ━━━━━━━━━━━━━━━━━ -->
     <div class="cta-banner">
         <div class="container">
@@ -804,6 +1015,72 @@
                 <div class="city-chip"><span class="city-chip-dot"></span>Mughalsarai</div>
                 <div class="city-chip"><span class="city-chip-dot"></span>Sultanpur</div>
                 <div class="city-chip"><span class="city-chip-dot"></span>Azamgarh</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━ FAQ ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec" id="faq">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag">FAQ</span>
+                <h2 class="sec-title" data-i18n="faq.title">Frequently Asked Questions</h2>
+                <p class="sec-sub">Everything you need to know about Gurukripa Bricks</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                        <span>ईंट की कीमत क्या है? / What is the price of bricks?</span>
+                        <div class="faq-icon">+</div>
+                    </button>
+                    <div class="faq-a">
+                        <div class="faq-a-inner">Standard bricks start from ₹8/piece. Premium bricks ₹10/piece. Shiv
+                            Eent Grade-A ₹12/piece. Bulk orders get special discounts. Call us for the latest pricing
+                            and deals.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                        <span>डिलीवरी कहां-कहां उपलब्ध है? / Where do you deliver?</span>
+                        <div class="faq-icon">+</div>
+                    </button>
+                    <div class="faq-a">
+                        <div class="faq-a-inner">We deliver across Jaunpur, Varanasi, Jalalpur, Trilochan, Kerakat and
+                            surrounding areas. Same-day delivery available within Jaunpur district for orders placed
+                            before noon.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                        <span>क्या आप छोटे ऑर्डर भी लेते हैं? / Do you accept small orders?</span>
+                        <div class="faq-icon">+</div>
+                    </button>
+                    <div class="faq-a">
+                        <div class="faq-a-inner">Yes, we accept both small and bulk orders. Minimum order of 1,000
+                            bricks. For smaller quantities, please contact us — we'll find a solution for you.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                        <span>पेमेंट के क्या तरीके हैं? / What payment methods do you accept?</span>
+                        <div class="faq-icon">+</div>
+                    </button>
+                    <div class="faq-a">
+                        <div class="faq-a-inner">We accept Cash, UPI (PhonePe, Google Pay, Paytm), Online Transfer
+                            (NEFT/RTGS), and Cheque. Cash on Delivery available for local orders.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                        <span>ईंट की गुणवत्ता की क्या गारंटी है? / What quality guarantee do you offer?</span>
+                        <div class="faq-icon">+</div>
+                    </button>
+                    <div class="faq-a">
+                        <div class="faq-a-inner">All our bricks are well-burnt, uniform in size, and tested for
+                            strength. We offer 100% replacement for damaged or substandard bricks. Our Grade-A bricks
+                            carry ISI quality standards.</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -944,11 +1221,11 @@
                     <ul class="footer-links">
                         <li><a href="#home">Home</a></li>
                         <li><a href="#products">All Products</a></li>
-                        <li><a href="#pricing">Price Comparison</a></li>
                         <li><a href="#calculator">3-in-1 Estimator</a></li>
-                        <li><a href="#quality-spec">Quality Specs &amp; Sound</a></li>
+                        <li><a href="#about">About Our Kiln</a></li>
+                        <li><a href="javascript:void(0)" onclick="openLegalModal('quality')">Quality Standards</a></li>
                         <li><a href="javascript:void(0)" onclick="openTrackerModal()">Live Track Delivery 🚛</a></li>
-                        <li><a href="#gallery">Kiln Gallery</a></li>
+                        <li><a href="#faq">FAQs</a></li>
                         <li><a href="#contact">Contact &amp; Location</a></li>
                     </ul>
                 </div>
@@ -1499,13 +1776,14 @@
                         <div class="auth-row" style="margin-top:10px">
                             <div class="auth-field">
                                 <label class="co-form-label" for="coCity">City / District <span class="co-required">*</span></label>
-                                <input type="text" id="coCity" class="co-input" value="Jaunpur" required>
+                                <input type="text" id="coCity" class="co-input" value="Jaunpur" required oninput="handleCheckoutAddressCheck()">
                             </div>
                             <div class="auth-field">
                                 <label class="co-form-label" for="coPincode">Pincode</label>
-                                <input type="text" id="coPincode" class="co-input" placeholder="222001">
+                                <input type="text" id="coPincode" class="co-input" placeholder="222001" oninput="handleCheckoutAddressCheck()">
                             </div>
                         </div>
+                        <div id="serviceabilityBadge" style="display:none;font-size:0.75rem;padding:6px 10px;border-radius:6px;margin-top:8px"></div>
                         <div class="auth-row" style="margin-top:10px">
                             <div class="auth-field">
                                 <label class="co-form-label" for="coRoadAccess">Road &amp; Site Accessibility</label>
@@ -1845,6 +2123,9 @@
                     <button class="btn btn-ghost btn-sm" style="font-size:.76rem;color:var(--brand)" onclick="demoTrackerOrder()">✨ Test Demo Active Dispatch</button>
                 </div>
 
+                <!-- Google Maps Route Container -->
+                <div id="trackerMapContainer" style="height:190px;width:100%;border-radius:10px;overflow:hidden;margin-bottom:14px"></div>
+
                 <div id="trackerDisplayContent">
                     <!-- Populated dynamically via JS -->
                 </div>
@@ -2088,6 +2369,8 @@
     <script src="src/js/utils.js" defer></script>
     <script src="src/js/data.js" defer></script>
     <script src="src/services/index.js" defer></script>
+    <script src="src/services/maps-service.js" defer></script>
+    <script src="src/services/payment-service.js" defer></script>
     <script src="src/js/i18n.js" defer></script>
     <script src="src/js/state.js" defer></script>
     <script src="src/js/ui.js" defer></script>
