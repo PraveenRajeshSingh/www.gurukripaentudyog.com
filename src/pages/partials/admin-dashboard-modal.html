@@ -1,46 +1,46 @@
     <!-- ━━━━━━━━━━━━━━━━━ ADMIN & OPERATIONS PORTAL MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="adminPortalModal" role="dialog" aria-modal="true" aria-labelledby="adminPortalTitle" onclick="if(event.target===this)closeAdminPortal()">
-        <div class="modal-box" style="max-width:1100px;width:95vw;height:88vh;display:flex;flex-direction:column;padding:0;overflow:hidden">
+        <div class="modal-box admin-modal-box">
             <!-- Admin Header -->
-            <div style="background:var(--color-charcoal,#252724);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.1)">
-                <div style="display:flex;align-items:center;gap:12px">
-                    <span style="background:var(--brand,#B7432E);color:#fff;font-size:0.75rem;font-weight:700;padding:4px 8px;border-radius:4px;letter-spacing:0.05em">GBI OPERATIONS</span>
-                    <h3 id="adminPortalTitle" style="font-family:var(--body);font-size:1.15rem;margin:0;font-weight:700">Admin, Dispatch &amp; Yard Management</h3>
+            <div class="admin-header">
+                <div class="admin-header-left">
+                    <span class="admin-badge">GBI Operations</span>
+                    <h3 id="adminPortalTitle" class="admin-title">Admin, Dispatch &amp; Yard Management</h3>
                 </div>
-                <div style="display:flex;align-items:center;gap:14px">
-                    <span style="font-size:0.8rem;color:#ccc">Kiln Station: Jaunpur Unit 1</span>
-                    <button class="modal-close-btn" onclick="closeAdminPortal()" style="color:#fff;background:rgba(255,255,255,0.1)" aria-label="Close Admin Portal">✕</button>
+                <div class="admin-header-right">
+                    <span class="admin-station">Kiln Station: Jaunpur Unit 1</span>
+                    <button class="modal-close-btn admin-close" onclick="closeAdminPortal()" aria-label="Close Admin Portal">✕</button>
                 </div>
             </div>
 
             <!-- Admin Workspace Grid -->
-            <div style="display:grid;grid-template-columns:220px 1fr;flex:1;overflow:hidden">
+            <div class="admin-workspace">
                 <!-- Sidebar Nav -->
-                <div style="background:var(--bg-subtle,#F5EFE6);border-right:1px solid var(--line,#E7E1DA);padding:18px 12px;display:flex;flex-direction:column;gap:6px">
+                <nav class="admin-sidebar" aria-label="Operations sections">
                     <button class="admin-nav-item active" onclick="switchAdminTab('overview', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                         <span>Dashboard Overview</span>
                     </button>
                     <button class="admin-nav-item" onclick="switchAdminTab('quotations', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         <span>B2B Quotations</span>
                     </button>
                     <button class="admin-nav-item" onclick="switchAdminTab('orders', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         <span>Customer Orders</span>
                     </button>
                     <button class="admin-nav-item" onclick="switchAdminTab('inventory', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                         <span>Yard Stock &amp; Batches</span>
                     </button>
                     <button class="admin-nav-item" onclick="switchAdminTab('dispatch', this)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                         <span>Dispatch &amp; Drivers</span>
                     </button>
-                </div>
+                </nav>
 
                 <!-- Main Content Stage -->
-                <div style="padding:24px;overflow-y:auto;background:var(--bg,#FCFAF7)" id="adminStage">
+                <div class="admin-stage" id="adminStage">
                     <!-- Populated dynamically via JS -->
                 </div>
             </div>

@@ -1,26 +1,62 @@
 // ══════════════════════════════════════════
 // MAIN BOOTSTRAP & APPLICATION INITIALIZATION
 // ══════════════════════════════════════════
+
+// ── Global error resilience ──────────────────────────────
+// One unexpected error should never leave a customer staring at a broken,
+// frozen page. We log the technical detail for developers and show a calm,
+// friendly message to the user (rate-limited so it can never spam).
+(function initGlobalErrorHandling() {
+    let lastNotice = 0;
+    const notify = () => {
+        const now = Date.now();
+        if (now - lastNotice < 8000) return; // max one notice per 8s
+        lastNotice = now;
+        try {
+            if (typeof showToast === 'function') {
+                showToast('Something didn\u2019t load as expected. Please pull down to refresh \u2014 your cart &amp; details are safe.', 'error');
+            }
+        } catch (_) { /* never let the error handler itself throw */ }
+    };
+    window.addEventListener('error', (e) => {
+        console.error('[GBI]', e.error || e.message || e);
+        if (e.error) notify(); // ignore benign resource load failures
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+        console.error('[GBI] Unhandled promise rejection:', e.reason);
+        notify();
+    });
+})();
+
+// Run an init step in isolation so a single failing module cannot abort the
+// rest of the page bootstrap (this is what causes "half-loaded" / laggy pages).
+function safeRun(label, fn) {
+    try {
+        if (typeof fn === 'function') fn();
+    } catch (err) {
+        console.error(`[GBI] init "${label}" failed:`, err);
+    }
+}
+
 // Main Bootstrap & Initialization
 document.addEventListener('DOMContentLoaded', () => {
-    renderProducts('all');
-    updateCartUI();
-    if (typeof updateWishlistBadges === 'function') {
-        updateWishlistBadges();
-    }
-    updateAuthUI();
-    initScrollProgress();
-    initCounters();
-    initNavHighlight();
-    initScrollReveal();
-    initTouchSwipe();
-    prefillUserInCheckout();
-    setupOtpInputs();
-    setLang(currentLang);
-    initGoogleSignIn();
-    if (window.Platform && typeof window.Platform.init === 'function') {
-        window.Platform.init();
-    }
+    const steps = {
+        'renderProducts': () => renderProducts('all'),
+        'updateCartUI': () => updateCartUI(),
+        'updateWishlistBadges': () => { if (typeof updateWishlistBadges === 'function') updateWishlistBadges(); },
+        'updateAuthUI': () => updateAuthUI(),
+        'initScrollProgress': () => initScrollProgress(),
+        'initCounters': () => initCounters(),
+        'initNavHighlight': () => initNavHighlight(),
+        'initScrollReveal': () => initScrollReveal(),
+        'initTouchSwipe': () => initTouchSwipe(),
+        'prefillUserInCheckout': () => prefillUserInCheckout(),
+        'setupOtpInputs': () => setupOtpInputs(),
+        'setLang': () => setLang(currentLang),
+        'initGoogleSignIn': () => initGoogleSignIn(),
+        'Platform.init': () => { if (window.Platform && typeof window.Platform.init === 'function') window.Platform.init(); }
+    };
+    Object.keys(steps).forEach((k) => safeRun(k, steps[k]));
 });
 
 // FAQ Accordion
@@ -101,8 +137,12 @@ function handleBulkQuoteSubmit(e) {
     };
 
     let quote = null;
-    if (window.GurukripaServices && window.GurukripaServices.QuotationService) {
-        quote = window.GurukripaServices.QuotationService.submitRFQ(payload);
+    try {
+        if (window.GurukripaServices && window.GurukripaServices.QuotationService) {
+            quote = window.GurukripaServices.QuotationService.submitRFQ(payload);
+        }
+    } catch (err) {
+        console.error('[GBI] RFQ submit failed:', err); // falls back to manual notice below
     }
 
     setTimeout(() => {
