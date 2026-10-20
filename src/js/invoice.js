@@ -1,6 +1,12 @@
 // ══════════════════════════════════════════
 // GST INVOICE & RE-ORDER
 // ══════════════════════════════════════════
+const _invPackageSVG = `<svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`;
+const _invBrickSVG = `<svg width="22" height="22" fill="none" stroke="var(--brand)" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="17"/><line x1="16" y1="7" x2="16" y2="17"/></svg>`;
+const _invTruckSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
+const _invDocSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+const _invReorderSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>`;
+
 function openGstInvoice(orderId) {
     const modal = document.getElementById('gstInvoiceModal');
     const paper = document.getElementById('gstInvoicePrintArea');
@@ -89,7 +95,7 @@ function renderOrderHistory() {
     if (!orders || !orders.length) {
         container.innerHTML = `
             <div class="order-empty">
-                <div style="font-size:2rem;margin-bottom:8px">📦</div>
+                <div style="margin-bottom:8px;display:flex;justify-content:center">${_invPackageSVG}</div>
                 <p>No past orders found.</p>
                 <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="closeProfile();openCart()">Start Shopping</button>
             </div>`;
@@ -97,7 +103,7 @@ function renderOrderHistory() {
     }
     container.innerHTML = orders.map(o => `
         <div class="order-item">
-            <div class="order-icon">🧱</div>
+            <div class="order-icon">${_invBrickSVG}</div>
             <div class="order-info">
                 <div class="order-id">${sanitizeHTML(o.id)}</div>
                 <div class="order-date">${sanitizeHTML(o.date)} · ${o.itemsCount || 1} item(s)</div>
@@ -105,9 +111,9 @@ function renderOrderHistory() {
             <span class="order-status ${o.status === 'Delivered' ? 'delivered' : 'processing'}">${sanitizeHTML(o.status || 'Processing')}</span>
             <div class="order-amount">${formatINR(o.total)}</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-                <button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openTrackerModal('${o.id}')">🚛 Track Delivery</button>
-                <button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openGstInvoice('${o.id}')">📄 GST Invoice</button>
-                <button class="btn btn-primary btn-sm" style="font-size:.76rem;background:#16a34a" onclick="reorderTrolley('${o.id}')">🔄 Re-Order Trolley</button>
+                <button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openTrackerModal('${o.id}')">${_invTruckSVG} Track Delivery</button>
+                <button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openGstInvoice('${o.id}')">${_invDocSVG} GST Invoice</button>
+                <button class="btn btn-primary btn-sm" style="font-size:.76rem;background:#16a34a" onclick="reorderTrolley('${o.id}')">${_invReorderSVG} Re-Order Trolley</button>
             </div>
         </div>
     `).join('');

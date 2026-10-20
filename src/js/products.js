@@ -15,6 +15,16 @@ const _cartSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" 
 
 const _eyeSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 
+const _waSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>`;
+
+const _phoneSVG = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>`;
+
+const WA_NUMBER = '919198923230';
+function waOrderURL(name, qty) {
+    const msg = `Namaste! I'd like to order ${name}` + (qty ? ` — ${qty} pieces` : '') + `. Please share the best price and delivery time. (Gurukripa Bricks)`;
+    return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+}
+
 // Trolley price data keyed by category
 const TROLLEY_PRICES = { 'awwal': 28200, 'laal-peti': 25000 };
 
@@ -37,6 +47,10 @@ function renderProductCard(p) {
     const starHTML = Array.from({length:5}, (_,i) => _starSVG(i < fullStars)).join('');
     const trolleyPrice = TROLLEY_PRICES[p.category];
     const discountPct = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : null;
+    const unitLabel = (p.unit || 'per piece').replace(/^per\s+/i, '').trim() || 'piece';
+    const per1000 = Math.round(p.price * 1000).toLocaleString('en-IN');
+    const stockCls = p.stock === 'low-stock' ? 'low' : (p.stock === 'out-of-stock' ? 'out' : 'in');
+    const stockTxt = sanitizeHTML(p.stockText || (p.stock === 'in-stock' ? 'In Stock · Ready to Dispatch' : 'Limited Stock'));
 
     return `
     <div class="product-card fade-in industrial-card" data-category="${sanitizeHTML(p.category)}">
@@ -64,12 +78,13 @@ function renderProductCard(p) {
             <span class="product-price-current">₹${p.price}</span>
             ${p.oldPrice ? `<span class="product-price-old">₹${p.oldPrice}</span>` : ''}
           </div>
-          <span class="product-price-unit">/${sanitizeHTML(p.unit || 'piece')}</span>
+          <span class="product-price-unit">/ ${unitLabel}</span>
         </div>
 
-        <div class="product-stock-status">
+        <div class="product-per1000">≈ ₹${per1000} per 1,000 pcs · Min order 100 pcs</div>
+        <div class="product-stock-status ${stockCls}">
           <span class="stock-status-dot"></span>
-          <span>In Stock · Ready to Dispatch</span>
+          <span>${stockTxt}</span>
         </div>
         <div class="product-delivery-meta">Est. Delivery: Same-day / 24 hrs</div>
 
@@ -79,6 +94,7 @@ function renderProductCard(p) {
           <button class="product-add-btn btn-full" onclick="triggerCartBounce(this);addToCart(${p.id})">
             ${_cartSVG} Add to Cart
           </button>
+          <a class="product-wa-btn" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" aria-label="Order on WhatsApp" title="Order on WhatsApp">${_waSVG}</a>
         </div>
       </div>
     </div>`;
@@ -175,13 +191,17 @@ function openProductDetail(id) {
         <div>
           <span class="sec-tag" style="margin-bottom:10px">${sanitizeHTML(p.category.replace('-', ' '))}</span>
           <div style="font-family:var(--display);font-size:1.3rem;font-weight:700;color:var(--ink);margin-bottom:6px">${sanitizeHTML(p.name)}</div>
-          <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px">
-            <span style="color:#F5A623">${'★'.repeat(Math.floor(p.rating))}</span>
-            <span style="font-size:.8rem;color:var(--ink-3)">${p.rating} · ${p.reviews} verified reviews</span>
+          <div style="display:flex;gap:2px;align-items:center;margin-bottom:10px">
+            ${Array.from({length:5},(_,i)=>_starSVG(i < Math.floor(p.rating))).join('')}
+            <span style="font-size:.8rem;color:var(--ink-3);margin-left:6px">${p.rating} · ${p.reviews} verified reviews</span>
           </div>
           <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px">
-            <div style="font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--brand)">₹${p.price} <span style="font-size:.8rem;color:var(--ink-3);font-family:var(--body);font-weight:400">/ ${sanitizeHTML(p.unit)}</span></div>
+            <div style="font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--brand)">₹${p.price} <span style="font-size:.8rem;color:var(--ink-3);font-family:var(--body);font-weight:400">/ ${(p.unit||'piece').replace(/^per\s+/i,'')}</span></div>
             ${p.oldPrice ? `<span style="font-size:.85rem;color:var(--ink-3);text-decoration:line-through">₹${p.oldPrice}</span>` : ''}
+          </div>
+          <div class="pd-meta-row">
+            <span class="product-stock-status ${p.stock === 'low-stock' ? 'low' : (p.stock === 'out-of-stock' ? 'out' : 'in')}" style="margin:0"><span class="stock-status-dot"></span> ${sanitizeHTML(p.stockText || 'In Stock')}</span>
+            <span class="pd-per1000">≈ ₹${Math.round(p.price * 1000).toLocaleString('en-IN')} / 1,000 pcs</span>
           </div>
           <div style="font-size:.86rem;color:var(--ink-2);line-height:1.6;margin-bottom:14px">${sanitizeHTML(p.desc)}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">${p.features.map(f => `<div style="font-size:.78rem;color:var(--ink-2)"><span style="color:var(--success);font-weight:700">✓</span> ${sanitizeHTML(f)}</div>`).join('')}</div>
@@ -193,9 +213,10 @@ function openProductDetail(id) {
               <button class="qty-btn" onclick="changePdQty(1)">+</button>
             </div>
           </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-primary" style="flex:1" onclick="addToCart(${p.id},parseInt(document.getElementById('pdQty').value));closeProductModal()">🛒 Add to Cart</button>
-            <a href="tel:+919198923230" class="btn btn-outline" style="flex:1">📞 Call to Order</a>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" style="flex:2 1 130px;display:inline-flex;align-items:center;justify-content:center;gap:7px" onclick="addToCart(${p.id},parseInt(document.getElementById('pdQty').value)||1000);closeProductModal()">${_cartSVG} Add to Cart</button>
+            <a href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" class="btn pd-wa-btn" style="flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:0 14px" aria-label="Order on WhatsApp">${_waSVG}</a>
+            <a href="tel:+919198923230" class="btn btn-outline" style="flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px">${_phoneSVG} Call</a>
           </div>
         </div>`;
     document.getElementById('productModal').classList.add('open');

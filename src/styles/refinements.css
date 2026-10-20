@@ -998,6 +998,82 @@ button, a, input, select, textarea { touch-action: manipulation }
     margin-bottom: 14px;
 }
 
+/* Wholesale price clarity: derived per-1000 rate + accurate stock status */
+.product-per1000 {
+    font-size: 0.72rem;
+    color: var(--ink-3);
+    margin: 0 0 8px;
+}
+.product-stock-status.low { color: var(--warning); }
+.product-stock-status.low .stock-status-dot { background: var(--warning); }
+.product-stock-status.out { color: var(--danger); }
+.product-stock-status.out .stock-status-dot { background: var(--danger); }
+
+/* WhatsApp quick-order button beside Add-to-Cart */
+.industrial-card .product-card-actions { display: flex; align-items: stretch; gap: 8px; }
+.industrial-card .product-add-btn { flex: 1 1 auto; }
+.product-wa-btn {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    border-radius: 8px;
+    background: #16a34a;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.28);
+    transition: transform .15s var(--ease), filter .18s var(--ease);
+}
+.product-wa-btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
+.product-wa-btn svg { width: 20px; height: 20px; }
+
+/* Product-detail meta row (stock + per-1000) and WhatsApp action */
+.pd-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.78rem;
+    color: var(--ink-3);
+    margin-bottom: 12px;
+}
+.pd-wa-btn { background: #16a34a !important; color: #fff !important; border: none !important; }
+.pd-wa-btn svg { width: 20px; height: 20px; }
+
+/* Bottom nav: action items are real <button>s, so strip UA button chrome */
+button.mn-item {
+    background: none;
+    border: none;
+    padding: 6px 4px;
+    font-family: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+button.mn-item:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: -4px;
+    border-radius: 8px;
+}
+
+/* SVG icon alignment where emoji used to sit */
+.footer-contact-icon { display: inline-flex; align-items: center; justify-content: center; }
+.footer-contact-icon svg { display: block; }
+.cart-item-remove { display: inline-flex; align-items: center; justify-content: center; }
+.auth-icon { display: inline-flex; align-items: center; justify-content: center; }
+.auth-icon svg { display: block; }
+.auth-pw-toggle { display: inline-flex; align-items: center; justify-content: center; }
+.auth-brand-icon svg,
+.modal-badge svg { display: block; }
+.tracker-driver-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.pay-method-icon { display: inline-flex; align-items: center; justify-content: center; color: var(--brand); }
+.pay-method-icon svg { display: block; }
+.upi-qr-logo { display: inline-flex; align-items: center; justify-content: center; color: var(--ink-3); }
+.card-brand-icon { display: inline-flex; align-items: center; justify-content: center; }
+.profile-tab { display: inline-flex; align-items: center; gap: 6px; }
+.pay-pill { display: inline-flex; align-items: center; gap: 5px; }
+.pay-pill svg { display: block; }
+.coupon-tag-remove { display: inline-flex; align-items: center; }
+
 .industrial-card .product-card-actions {
     margin-top: auto;
 }

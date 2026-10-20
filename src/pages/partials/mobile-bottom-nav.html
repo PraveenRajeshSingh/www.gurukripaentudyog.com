@@ -22,7 +22,7 @@
             </a>
 
             <!-- 3. Elevated Floating Cart FAB -->
-            <a href="javascript:void(0)" class="mn-item mn-item-cart" onclick="openCart();if(window.Platform)Platform.haptic('light')" aria-label="Shopping Cart">
+            <button type="button" class="mn-item mn-item-cart" onclick="openCart();if(window.Platform)Platform.haptic('light')" aria-label="Shopping Cart">
                 <div class="mn-cart-fab">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
@@ -32,35 +32,24 @@
                     <span class="mn-badge" id="mobileCartBadge">0</span>
                 </div>
                 <span class="mn-label">Cart</span>
-            </a>
+            </button>
 
             <!-- 4. Wishlist -->
-            <a href="javascript:void(0)" class="mn-item" onclick="openWishlistDrawer();if(window.Platform)Platform.haptic('light')" aria-label="Wishlist">
+            <button type="button" class="mn-item" onclick="openWishlistDrawer();if(window.Platform)Platform.haptic('light')" aria-label="Wishlist">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                 </svg>
                 <span class="mn-label">Wishlist</span>
                 <span class="mn-badge" id="mobileWishlistBadge" style="display:none">0</span>
-            </a>
-
-            <!-- 5. Estimator -->
-            <a href="#calculator" class="mn-item" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light')" aria-label="Estimator">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="4" y="2" width="16" height="20" rx="3" />
-                    <line x1="8" y1="6" x2="16" y2="6" />
-                    <line x1="8" y1="10" x2="16" y2="10" />
-                    <line x1="8" y1="14" x2="12" y2="14" />
-                </svg>
-                <span class="mn-label">Estimator</span>
-            </a>
+            </button>
 
             <!-- 5. Account / Profile -->
-            <a href="javascript:void(0)" class="mn-item" onclick="handleMobileProfile();if(window.Platform)Platform.haptic('light')" aria-label="Account">
+            <button type="button" class="mn-item" onclick="handleMobileProfile();if(window.Platform)Platform.haptic('light')" aria-label="Account">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                 </svg>
                 <span class="mn-label" id="mnProfileLabel">Profile</span>
-            </a>
+            </button>
         </div>
     </nav>

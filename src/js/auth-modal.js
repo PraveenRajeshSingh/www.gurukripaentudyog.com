@@ -7,6 +7,11 @@
 //             closeUserDropdown (ui.js), toggleDrawer (ui.js),
 //             closeOtpPanel (otp-panel.js), openProfile (profile-modal.js).
 // ══════════════════════════════════════════
+const _authEyeSVG = `<svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+const _authEyeOffSVG = `<svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+const _authLockSVG = `<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`;
+const _authStarSVG = `<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg>`;
+
 function openAuth(tab = 'login') {
     switchAuthTab(tab);
     closeOtpPanel();
@@ -38,7 +43,7 @@ function switchAuthTab(tab, btn) {
         tabReg?.classList.remove('active');
         document.getElementById('authTitle').textContent = 'Welcome Back';
         document.getElementById('authSubtitle').textContent = 'Sign in to your account';
-        document.getElementById('authBadge').textContent = '🔐';
+        document.getElementById('authBadge').innerHTML = _authLockSVG;
     } else {
         loginPanel.style.display = 'none';
         regPanel.style.display = 'block';
@@ -46,7 +51,7 @@ function switchAuthTab(tab, btn) {
         tabReg?.classList.add('active');
         document.getElementById('authTitle').textContent = 'Create Account';
         document.getElementById('authSubtitle').textContent = 'Join Gurukripa Bricks today';
-        document.getElementById('authBadge').textContent = '✨';
+        document.getElementById('authBadge').innerHTML = _authStarSVG;
     }
 }
 
@@ -246,8 +251,8 @@ function togglePw(inputId, btnId) {
     const input = document.getElementById(inputId);
     const btn = document.getElementById(btnId);
     if (!input || !btn) return;
-    if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
-    else { input.type = 'password'; btn.textContent = '👁️'; }
+    if (input.type === 'password') { input.type = 'text'; btn.innerHTML = _authEyeOffSVG; }
+    else { input.type = 'password'; btn.innerHTML = _authEyeSVG; }
 }
 
 function checkPwStrength(pw) {
