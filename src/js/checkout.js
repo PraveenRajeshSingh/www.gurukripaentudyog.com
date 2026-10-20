@@ -1,3 +1,24 @@
+function handleCheckoutAddressCheck() {
+    const city = document.getElementById('coCity')?.value || '';
+    const pin = document.getElementById('coPincode')?.value || '';
+    const badge = document.getElementById('serviceabilityBadge');
+    if (!badge) return;
+
+    if (window.GurukripaMaps && typeof window.GurukripaMaps.checkServiceability === 'function') {
+        const res = window.GurukripaMaps.checkServiceability(`${city} ${pin}`);
+        badge.style.display = 'block';
+        if (res.serviceable) {
+            badge.style.background = 'var(--success-bg)';
+            badge.style.color = 'var(--success)';
+            badge.textContent = `✓ Serviceable Delivery Zone: ${res.estimatedDays}`;
+        } else {
+            badge.style.background = 'var(--warning-bg)';
+            badge.style.color = 'var(--warning)';
+            badge.textContent = `⚠️ Extended Delivery Area: ${res.baseZone}`;
+        }
+    }
+}
+
 // ══════════════════════════════════════════
 // CHECKOUT & PAYMENT WIZARD
 // ══════════════════════════════════════════

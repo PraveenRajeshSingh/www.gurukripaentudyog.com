@@ -54,13 +54,14 @@
                         <div class="auth-row" style="margin-top:10px">
                             <div class="auth-field">
                                 <label class="co-form-label" for="coCity">City / District <span class="co-required">*</span></label>
-                                <input type="text" id="coCity" class="co-input" value="Jaunpur" required>
+                                <input type="text" id="coCity" class="co-input" value="Jaunpur" required oninput="handleCheckoutAddressCheck()">
                             </div>
                             <div class="auth-field">
                                 <label class="co-form-label" for="coPincode">Pincode</label>
-                                <input type="text" id="coPincode" class="co-input" placeholder="222001">
+                                <input type="text" id="coPincode" class="co-input" placeholder="222001" oninput="handleCheckoutAddressCheck()">
                             </div>
                         </div>
+                        <div id="serviceabilityBadge" style="display:none;font-size:0.75rem;padding:6px 10px;border-radius:6px;margin-top:8px"></div>
                         <div class="auth-row" style="margin-top:10px">
                             <div class="auth-field">
                                 <label class="co-form-label" for="coRoadAccess">Road &amp; Site Accessibility</label>

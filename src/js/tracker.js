@@ -35,6 +35,13 @@ function renderTrackerDetails(orderId) {
     if (!container) return;
     const matched  = orders.find(o => o.id.toLowerCase() === orderId.toLowerCase());
     const displayId = matched ? matched.id : orderId;
+
+    if (window.GurukripaMaps && typeof window.GurukripaMaps.initMapElement === 'function') {
+        window.GurukripaMaps.initMapElement('trackerMapContainer', { lat: 25.7476, lng: 82.6837 }, {
+            title: 'Trolley UP-62-BT-9412 En Route to Site'
+        });
+    }
+
     container.innerHTML = `
         <div class="tracker-status-card">
             <div class="tracker-order-meta">
