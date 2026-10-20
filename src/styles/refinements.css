@@ -934,9 +934,20 @@ button, a, input, select, textarea { touch-action: manipulation }
     box-sizing: border-box;
 }
 
-html, body {
-    max-width: 100vw;
-    overflow-x: hidden !important;
+/* Prevent sideways page scroll WITHOUT freezing vertical scroll.
+   Using `overflow-x: hidden` on html/body propagates to the viewport and
+   turns the root into a scroll container — the well-known iOS/Android bug
+   that stops the page scrolling and breaks the sticky navbar.
+   `overflow-x: clip` hides horizontal overflow but does NOT create a scroll
+   container, so smooth vertical scrolling works on every device. */
+html {
+    overflow-x: clip;
+    max-width: 100%;
+}
+
+body {
+    overflow-x: clip;
+    max-width: 100%;
 }
 
 .container {
@@ -950,6 +961,25 @@ html, body {
 
 .sec {
     padding: clamp(40px, 6vw, 72px) 0;
+}
+
+/* Anchored scrolling: keep section headings clear of the sticky navbar
+   when jumping via nav/drawer/footer links or the URL hash. */
+html {
+    scroll-padding-top: 78px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+main section[id],
+main [id].cta-banner {
+    scroll-margin-top: 78px;
+}
+
+/* Honour users who prefer reduced motion: jump instantly, no animated scroll. */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
 }
 
 /* ── Hero section compact proportions ── */

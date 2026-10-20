@@ -229,15 +229,9 @@
                 <nav class="nav-links" role="navigation" aria-label="Primary Navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
-                    <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.categories">Categories</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
-                    <a href="#cities" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.delivery">Delivery</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
                     <button type="button" class="btn btn-primary btn-sm nav-quote-btn" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
-                    <button class="nav-link nav-track-btn" onclick="openTrackerModal()" data-i18n="nav.trackOrder" aria-label="Track live trolley delivery">
-                        <span class="live-dot" aria-hidden="true"></span>
-                        🚛 Track Delivery
-                    </button>
                 </nav>
 
                 <!-- Actions: Theme Toggle, Cart, Auth, Mobile Toggle -->
@@ -950,6 +944,111 @@
     </section>
 
 
+    <!-- ━━━━━━━━━━━━━━━━━ FACTORY GALLERY ━━━━━━━━━━━━━━━━━ -->
+    <section class="gallery-sec" id="gallery">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag" style="background:rgba(245,166,35,.15);color:var(--brand-amber)" data-i18n="about.tag">Our
+                    Factory</span>
+                <h2 class="sec-title" style="color:#fff" data-i18n="about.title">Inside Gurukripa Bricks</h2>
+                <p class="sec-sub" style="color:rgba(255,255,255,.5)" data-i18n="about.desc">A look inside our state-of-the-art manufacturing
+                    facility in Jaunpur, UP</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item"
+                    onclick="lbOpen('src/assets/images/gurukripaEnt.jpg','Gurukripa Bricks — Main Factory View, Jaunpur')">
+                    <img src="src/assets/images/gurukripaEnt.jpg" alt="Gurukripa Factory Main View" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Main Factory — Jaunpur</div>
+                </div>
+                <div class="gallery-item"
+                    onclick="lbOpen('src/assets/images/gurukripaEnt1.png','Gurukripa Bricks — Production Area')">
+                    <img src="src/assets/images/gurukripaEnt1.png" alt="Gurukripa Production Area" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Production Area</div>
+                </div>
+                <div class="gallery-item"
+                    onclick="lbOpen('src/assets/images/redbrick1.jpg','Premium Grade-A Red Bricks — Ready for Dispatch')">
+                    <img src="src/assets/images/redbrick1.jpg" alt="Premium Red Bricks Ready" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Ready for Dispatch</div>
+                </div>
+                <div class="gallery-item"
+                    onclick="lbOpen('src/assets/images/gurukripaEnt2.png','Gurukripa Bricks — Kiln Area')">
+                    <img src="src/assets/images/gurukripaEnt2.png" alt="Gurukripa Kiln Area" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Kiln Area</div>
+                </div>
+                <div class="gallery-item"
+                    onclick="lbOpen('src/assets/images/redbricks.jpg','Gurukripa Premium Red Clay Bricks — Grade-A Quality')">
+                    <img src="src/assets/images/redbricks.jpg" alt="Grade-A Red Bricks" loading="lazy">
+                    <div class="gallery-item-ov"></div>
+                    <div class="gallery-zoom">🔍</div>
+                    <div class="gallery-lbl">Grade-A Red Bricks</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ━━━━━━━━━━━━━━━━━ REVIEWS ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec reviews-sec" id="reviews">
+        <div class="container">
+            <div class="text-center">
+                <span class="sec-tag" data-i18n="reviews.tag">Customer Love</span>
+                <h2 class="sec-title" data-i18n="reviews.title">What Our Customers Say</h2>
+                <p class="sec-sub" data-i18n="reviews.desc">10,000+ happy builders across Jaunpur, Varanasi & UP</p>
+            </div>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-quote">"</div>
+                    <div class="review-text">Gurukripa bricks are exceptional — perfectly uniform size, great color, and
+                        they've held up beautifully through monsoon season. My entire house is built with their Grade-A
+                        bricks.</div>
+                    <div class="review-author">
+                        <div class="review-avatar">RS</div>
+                        <div>
+                            <div class="review-name">Ramesh Singh</div>
+                            <div class="review-location">📍 Jaunpur, UP</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-quote">"</div>
+                    <div class="review-text">सबसे अच्छी ईंटें! Same-day delivery मिली, और quality बहुत बढ़िया थी। Prem
+                        Narayan ji का व्यवहार भी बहुत अच्छा है। अगली बार भी यहीं से लेंगे।</div>
+                    <div class="review-author">
+                        <div class="review-avatar">MP</div>
+                        <div>
+                            <div class="review-name">Mahesh Prasad</div>
+                            <div class="review-location">📍 Varanasi, UP</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-quote">"</div>
+                    <div class="review-text">Used their machine-made wirecut bricks for my commercial project. Zero
+                        breakage in transport, perfect dimensions. The construction team was very impressed with the
+                        quality.</div>
+                    <div class="review-author">
+                        <div class="review-avatar">AK</div>
+                        <div>
+                            <div class="review-name">Ajay Kumar</div>
+                            <div class="review-location">📍 Jalalpur, UP</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ━━━━━━━━━━━━━━━━━ CTA BANNER ━━━━━━━━━━━━━━━━━ -->
     <div class="cta-banner">
         <div class="container">
@@ -1223,6 +1322,8 @@
                         <li><a href="#products">All Products</a></li>
                         <li><a href="#calculator">3-in-1 Estimator</a></li>
                         <li><a href="#about">About Our Kiln</a></li>
+                        <li><a href="#gallery">Kiln Factory Gallery</a></li>
+                        <li><a href="#reviews">Customer Reviews</a></li>
                         <li><a href="javascript:void(0)" onclick="openLegalModal('quality')">Quality Standards</a></li>
                         <li><a href="javascript:void(0)" onclick="openTrackerModal()">Live Track Delivery 🚛</a></li>
                         <li><a href="#faq">FAQs</a></li>
