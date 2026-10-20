@@ -1215,6 +1215,14 @@ main [id].cta-banner {
     transform: translateX(0);
 }
 
+/* Drawer backdrops must sit BELOW their panel but ABOVE the sticky header.
+   overlays.css left .cart-overlay at z:1100 while this layer tokenises the
+   panel to --z-drawer (1010), so the dim backdrop covered the open cart and
+   wishlist and swallowed every click (looked "disabled"). */
+.cart-overlay, .wishlist-overlay {
+    z-index: var(--z-overlay, 1000);
+}
+
 /* ── Form Inputs Global Normalization ── */
 .co-input, .calc-input, .newsletter-input, select, textarea {
     width: 100%;
