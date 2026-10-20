@@ -220,6 +220,7 @@ window.GurukripaERP = window.GurukripaERP || {};
         var order = [];
         function key(d) {
             if (granularity === 'day') return d.getFullYear() + '-' + C.pad(d.getMonth() + 1, 2) + '-' + C.pad(d.getDate(), 2);
+            if (granularity === 'quarter') return d.getFullYear() + '-Q' + (Math.floor(d.getMonth() / 3) + 1);
             return d.getFullYear() + '-' + C.pad(d.getMonth() + 1, 2);
         }
         for (var i = 0; i < inv.length; i++) {
@@ -275,11 +276,98 @@ window.GurukripaERP = window.GurukripaERP || {};
         return true;
     }
 
+    // Sales grouped by assigned salesperson (from invoice.salesperson).
+    function salesBySalesperson() {
+        var inv = _salesInvoices(); var by = {};
+        for (var i = 0; i < inv.length; i++) {
+            var sp = inv[i].salesperson || 'unassigned';
+            var b = by[sp] || (by[sp] = { salesperson: sp, orders: 0, amount: 0 });
+            b.orders++; b.amount = C.round2(b.amount + inv[i].totals.grandTotal);
+        }
+        return Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return b.amount - a.amount; });
+    }
+
+    // Quotation → order conversion rate (real documents, no estimation).
+    function quotationConversionRate() {
+        var quotes = _docs('quotation');
+        var orders = _docs('sales_order');
+        var converted = 0;
+        for (var i = 0; i < quotes.length; i++) {
+            if (quotes[i].status === 'cancelled') continue;
+            var linked = quotes[i].status === 'converted' || orders.some(function (o) { return o.refDocId === quotes[i].id; });
+            if (linked) converted++;
+        }
+        var eligible = quotes.filter(function (q) { return q.status !== 'cancelled'; }).length;
+        return { quotations: eligible, converted: converted, rate: eligible ? C.round2(converted / eligible * 100) : 0 };
+    }
+
+    // Order cancellation rate for a status set.
+    function cancellationRate() {
+        var inv = _docs('invoice');
+        var cancelled = inv.filter(function (d) { return d.status === 'cancelled'; }).length;
+        return { total: inv.length, cancelled: cancelled, rate: inv.length ? C.round2(cancelled / inv.length * 100) : 0 };
+    }
+
+    // Refunds/adjustments (credit notes) totalled for a period.
+    function refunds(from, to) {
+        var notes = _docs('credit_note');
+        var total = 0, count = 0;
+        for (var i = 0; i < notes.length; i++) {
+            if (notes[i].status === 'cancelled') continue;
+            var dt = new Date(notes[i].date);
+            if (from && dt < new Date(from)) continue;
+            if (to && dt > new Date(to)) continue;
+            total += notes[i].totals.grandTotal; count++;
+        }
+        return { count: count, total: C.round2(total) };
+    }
+
+    // Slow-moving stock: on-hand qty but no dispatch within the window (days).
+    function slowMovingStock(windowDays) {
+        if (!E.Inventory) return { windowDays: windowDays || 90, items: [], hasData: false };
+        windowDays = windowDays || 90;
+        var cutoff = Date.now() - windowDays * 86400000;
+        var stock = E.Inventory.allStock();
+        var slow = [];
+        for (var i = 0; i < stock.length; i++) {
+            var s = stock[i];
+            if (!(s.onHand > 0)) continue;
+            var moves = E.Inventory.ledgerFor(s.item).filter(function (r) { return r.type === 'dispatch'; });
+            var last = moves.reduce(function (max, r) { var t = new Date(r.ts).getTime(); return t > max ? t : max; }, 0);
+            if (last === 0 || last < cutoff) slow.push({ item: s.item, name: s.name, onHand: s.onHand, lastDispatch: last ? new Date(last).toISOString() : null });
+        }
+        return { windowDays: windowDays, items: slow, hasData: stock.length > 0 };
+    }
+
+    // Collections over time (actual money received), by month or quarter.
+    function collectionTrend(granularity) {
+        granularity = granularity || 'month';
+        var inv = _docs('invoice');
+        var buckets = {}, order = [];
+        function key(dateISO) {
+            var d = new Date(dateISO);
+            if (granularity === 'quarter') return d.getFullYear() + '-Q' + (Math.floor(d.getMonth() / 3) + 1);
+            return d.getFullYear() + '-' + C.pad(d.getMonth() + 1, 2);
+        }
+        for (var i = 0; i < inv.length; i++) {
+            var ps = inv[i].payments || [];
+            for (var j = 0; j < ps.length; j++) {
+                var k = key(ps[j].ts);
+                if (!(k in buckets)) { buckets[k] = { period: k, collected: 0, receipts: 0 }; order.push(k); }
+                buckets[k].collected = C.round2(buckets[k].collected + ps[j].amount);
+                buckets[k].receipts++;
+            }
+        }
+        return order.sort().map(function (k) { return buckets[k]; });
+    }
+
     E.Analytics = {
         periodRange: periodRange, previousRange: previousRange,
         kpi: kpi, statusDistribution: statusDistribution,
         topProducts: topProducts, topCustomers: topCustomers, salesByCategory: salesByCategory, salesBySegment: salesBySegment,
         lowStock: lowStock, pendingPurchaseOrders: pendingPurchaseOrders, pendingDeliveries: pendingDeliveries, deliveryPerformance: deliveryPerformance,
+        salesBySalesperson: salesBySalesperson, quotationConversionRate: quotationConversionRate, cancellationRate: cancellationRate,
+        refunds: refunds, slowMovingStock: slowMovingStock, collectionTrend: collectionTrend,
         grossProfit: grossProfit, netProfit: netProfit, series: series,
         toCSV: toCSV, exportInvoicesCSV: exportInvoicesCSV, exportSalesCSV: exportSalesCSV, exportAgingCSV: exportAgingCSV, download: download
     };

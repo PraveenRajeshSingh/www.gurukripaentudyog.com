@@ -102,10 +102,17 @@ window.GurukripaERP = window.GurukripaERP || {};
         return q; // adjust stores its own signed qty via qtyBase sign
     }
     function appendMovement(mv) {
-        // mv: { item, warehouse, type, qty, unit, ref, cost, note, signed }
+        // mv: { item, warehouse, bin?, batch?, quality?, type, qty, unit, ref, cost, note, signed, idem? }
         var item = getItem(mv.item);
         if (!item) throw new Error('Unknown item: ' + mv.item);
         if (!mv.warehouse) throw new Error('Movement requires a warehouse');
+        // Idempotent replay guard: a retried movement with the same idem key
+        // (e.g. offline dispatch resent) is applied only once and returns the
+        // original movement row instead of re-executing.
+        if (mv.idem && C.seenKey('mv:' + mv.idem)) {
+            var prev = C.read(C.key('idem'), {})['mv:' + mv.idem];
+            return prev ? prev.result : null;
+        }
         var base = C.toBase(mv.qty != null ? mv.qty : mv.qtyBase, mv.unit || item.baseUnit);
         var signed = mv.type === 'adjust' ? C.round2(mv.signed != null ? mv.signed : base) : _signed(mv.type, base);
 
@@ -125,11 +132,15 @@ window.GurukripaERP = window.GurukripaERP || {};
             ts: new Date().toISOString(),
             item: String(mv.item),
             warehouse: mv.warehouse,
+            bin: mv.bin || null,               // storage location within the yard
+            batch: mv.batch || null,           // kiln batch for quality traceability
+            quality: mv.quality || null,       // e.g. 'grade-a', 'rejected', 'damaged'
             type: mv.type,
             qtyBase: signed,                 // always stored in base units, signed
             unit: mv.unit || item.baseUnit,
             qtyRequested: mv.qty,
             ref: mv.ref || null,             // document number / PO / challan
+            idem: mv.idem || null,
             unitCost: mv.cost != null ? C.round2(mv.cost) : (item.hasCost ? item.unitCost : null),
             note: mv.note || '',
             user: (C.currentActor() || {}).name || 'system'
@@ -137,6 +148,7 @@ window.GurukripaERP = window.GurukripaERP || {};
         ledger.push(row);
         C.write(LED, ledger);
         C.logAudit('inventory.movement', 'item', String(mv.item), { after: row });
+        if (mv.idem) C.markOnce('mv:' + mv.idem, row); // record outcome for future replays
         return row;
     }
 
@@ -194,6 +206,37 @@ window.GurukripaERP = window.GurukripaERP || {};
         return allStock().filter(function(s) { return s.belowReorder; });
     }
 
+    // Filter balances by storage bin and/or batch (quality traceability).
+    function stockBy(itemId, filter) {
+        filter = filter || {};
+        var rows = C.read(LED, []);
+        var q = 0;
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            if (r.item !== String(itemId)) continue;
+            if (filter.warehouse && r.warehouse !== filter.warehouse) continue;
+            if (filter.bin && r.bin !== filter.bin) continue;
+            if (filter.batch && r.batch !== filter.batch) continue;
+            if (filter.quality && r.quality !== filter.quality) continue;
+            if (PLUS[r.type] || r.type === 'adjust' || MINUS[r.type]) q += r.qtyBase; // qtyBase signed
+        }
+        return C.round2(q);
+    }
+
+    // Physical count reconciliation: posts a signed adjustment to match the
+    // counted quantity, with a uniquely-referenced movement (idempotent).
+    function reconcile(itemId, warehouse, countedQty, opts) {
+        opts = opts || {};
+        C.assertCan(C.currentActor(), 'stock.adjust');
+        var sys = onHand(itemId, warehouse);
+        var diff = C.round2((Number(countedQty) || 0) - sys);
+        if (diff === 0) return { adjusted: false, system: sys, counted: countedQty, diff: 0 };
+        var idem = opts.idem || ('recon:' + itemId + ':' + warehouse + ':' + (opts.ref || Date.now()));
+        var mv = appendMovement({ item: itemId, warehouse: warehouse, type: 'adjust', signed: diff, unit: 'piece', ref: opts.ref || 'RECON', idem: idem, note: opts.note || ('Reconciliation counted ' + countedQty) });
+        C.logAudit('inventory.reconcile', 'item', String(itemId), { before: sys, after: countedQty, note: mv.id });
+        return { adjusted: true, system: sys, counted: countedQty, diff: diff, movement: mv };
+    }
+
     // ── High-level operations ────────────────────────────────────
     function receive(o)    { return appendMovement(Object.assign({ type: 'receipt' }, o)); }
     function dispatch(o)   { return appendMovement(Object.assign({ type: 'dispatch' }, o)); }
@@ -248,6 +291,7 @@ window.GurukripaERP = window.GurukripaERP || {};
         listItems: listItems, getItem: getItem, upsertItem: upsertItem, bootstrapFromProducts: bootstrapFromProducts,
         appendMovement: appendMovement, ledgerFor: ledgerFor,
         onHand: onHand, reserved: reserved, available: available, allStock: allStock, lowStock: lowStock,
+        stockBy: stockBy, reconcile: reconcile,
         receive: receive, dispatch: dispatch, reserve: reserve, release: release, damage: damage, adjust: adjust, transfer: transfer,
         valuation: valuation
     };

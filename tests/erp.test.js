@@ -6,7 +6,7 @@ const path = require('node:path');
 // Load the ERP modules into one isolated scope that shares a single
 // mock window.GurukripaERP object and a Map-backed localStorage stub —
 // the same harness style as tests/services.test.js.
-const files = ['erp-core.js', 'erp-inventory.js', 'erp-documents.js', 'erp-crm.js', 'erp-analytics.js'];
+const files = ['erp-core.js', 'erp-inventory.js', 'erp-documents.js', 'erp-crm.js', 'erp-analytics.js', 'erp-calculators.js', 'erp-logistics.js', 'erp-notify.js'];
 const src = files.map(f => fs.readFileSync(path.resolve(__dirname, '../src/js/' + f), 'utf8'));
 
 let mockStorage;
@@ -281,5 +281,246 @@ describe('ERP CRM + Analytics — aging, statements, real dashboards, CSV', () =
         assert.equal(k.hasData, false);
         assert.equal(k.sales.month, 0);
         assert.equal(k.orders.count, 0);
+    });
+});
+
+describe('ERP Documents — landed cost, debit notes, tax & cash registers', () => {
+    beforeEach(() => loadERP());
+
+    test('landed cost allocates charges and the last line absorbs the residual', () => {
+        const lines = [{ item: 1, qty: 100, unitCost: 10 }, { item: 2, qty: 200, unitCost: 5 }];
+        const r = ERP.Documents.computeLandedCost(lines, [{ amount: 200, basis: 'value' }], { method: 'value' });
+        assert.equal(r.totalPurchase, 2000);
+        assert.equal(r.totalCharges, 200);
+        assert.equal(r.landedValue, 2200);
+        // exact allocation: shares of allocated == totalCharges, no double count
+        const alloc = r.lines.reduce((s, l) => s + l.allocated, 0);
+        assert.equal(alloc, 200);
+        assert.equal(r.lines[0].landedUnitCost, 11);   // (1000+100)/100
+        assert.equal(r.lines[1].landedUnitCost, 5.5);  // (1000+100)/200
+    });
+
+    test('quantity and equal bases also reconcile to the full charge total', () => {
+        const lines = [{ item: 1, qty: 100, unitCost: 10 }, { item: 2, qty: 300, unitCost: 10 }];
+        ['quantity', 'equal'].forEach(method => {
+            const r = ERP.Documents.computeLandedCost(lines, [{ amount: 100 }], { method });
+            const alloc = Math.round(r.lines.reduce((s, l) => s + l.allocated, 0) * 100) / 100;
+            assert.equal(alloc, 100, method + ' residual exactness');
+        });
+    });
+
+    test('debit note raises the receivable without touching the invoice lines', () => {
+        const inv = ERP.Documents.createDocument('invoice', { customerId: 'c1', lines: [{ item: 1, qty: 1000, unitPrice: 10, taxRate: 0, hsn: 'x' }], tax: {} });
+        ERP.Documents.finalize(inv.id);
+        ERP.Documents.recordPayment(inv.id, { amount: 10000, method: 'cash', txnId: 'TX-1' });
+        let d = ERP.Documents.getDoc(inv.id);
+        assert.equal(d.status, 'paid');
+        assert.equal(d.balance, 0);
+        const dn = ERP.Documents.issueDebitNote(inv.id, { amount: 2000, reason: 'interest' });
+        assert.equal(dn.totals.grandTotal, 2000);
+        d = ERP.Documents.getDoc(inv.id);
+        assert.equal(ERP.Documents.debitedAmount(d), 2000);
+        assert.equal(d.balance, 2000);          // 10000 - 0 + 2000 - 10000
+        assert.equal(d.status, 'partially_paid');
+        assert.equal(ERP.Documents.listDocs('debit_note').length, 1);
+    });
+
+    test('tax summary nets invoices, credit and debit notes by rate', () => {
+        const inv = ERP.Documents.createDocument('invoice', { lines: [{ item: 1, qty: 1000, unitPrice: 1, taxRate: 5, hsn: '6904' }], tax: { place: 'intra' } });
+        ERP.Documents.finalize(inv.id); // taxable 1000 -> cgst 25 + sgst 25
+        const ts = ERP.Documents.taxSummary();
+        assert.equal(ts.taxableValue, 1000);
+        assert.equal(ts.cgst, 25);
+        assert.equal(ts.sgst, 25);
+        assert.equal(ts.igst, 0);
+        assert.equal(ts.taxTotal, 50);
+    });
+
+    test('cash/bank register nets inflows against expenses', () => {
+        const inv = ERP.Documents.createDocument('invoice', { lines: [{ item: 1, qty: 1000, unitPrice: 10, taxRate: 0, hsn: 'x' }], tax: {} });
+        ERP.Documents.finalize(inv.id);
+        ERP.Documents.recordPayment(inv.id, { amount: 5000, method: 'upi', txnId: 'TX-9' });
+        ERP.CRM.addExpense({ amount: 1000, category: 'fuel' });
+        const reg = ERP.Documents.cashBankRegister();
+        assert.equal(reg.totalIn, 5000);
+        assert.equal(reg.totalOut, 1000);
+        assert.equal(reg.net, 4000);
+    });
+});
+
+describe('ERP Inventory — idempotent movements & reconciliation', () => {
+    beforeEach(() => loadERP());
+
+    test('a retried movement with the same idem key is applied only once', () => {
+        ERP.Inventory.upsertItem({ id: 1, name: 'X' });
+        const first = ERP.Inventory.receive({ item: 1, warehouse: 'main', qty: 100, idem: 'OFFLINE-1' });
+        const replay = ERP.Inventory.receive({ item: 1, warehouse: 'main', qty: 100, idem: 'OFFLINE-1' });
+        assert.equal(replay.id, first.id);         // returns the original row
+        assert.equal(ERP.Inventory.onHand(1), 100); // never double-counted
+    });
+
+    test('reconciliation posts a signed adjust for the counted difference', () => {
+        ERP.Inventory.upsertItem({ id: 2, name: 'Y' });
+        ERP.Inventory.receive({ item: 2, warehouse: 'main', qty: 100 });
+        const r = ERP.Inventory.reconcile(2, 'main', 90, { ref: 'COUNT-1' });
+        assert.equal(r.adjusted, true);
+        assert.equal(r.diff, -10);
+        assert.equal(ERP.Inventory.onHand(2), 90);
+        const same = ERP.Inventory.reconcile(2, 'main', 90, { ref: 'COUNT-2' });
+        assert.equal(same.adjusted, false); // no drift -> no movement
+    });
+});
+
+describe('ERP CRM — price resolution & lead pipeline', () => {
+    beforeEach(() => loadERP());
+
+    test('price resolution honours deal price, list item, tier then segment default', () => {
+        const pl = ERP.CRM.upsertPriceList({ name: 'Dealer', items: [{ item: 1, price: 8 }], tiers: [{ minQty: 5000, price: 7 }] });
+        ERP.CRM.upsertCustomer({ id: 'pd', name: 'Dealer Co', segment: 'builder', priceList: pl.id });
+        assert.equal(ERP.CRM.priceFor('pd', 1, 100), 8);       // list item price
+        assert.equal(ERP.CRM.priceFor('pd', 999, 6000), 7);     // falls to bulk tier
+        ERP.CRM.setDealPrice('pd', 1, 5);                        // negotiated overrides list
+        assert.equal(ERP.CRM.priceFor('pd', 1, 100), 5);
+    });
+
+    test('segment default list applies when customer has no assigned list', () => {
+        ERP.CRM.upsertPriceList({ name: 'Builder Default', segment: 'builder', items: [{ item: 2, price: 6 }] });
+        ERP.CRM.upsertCustomer({ id: 'pb', name: 'B', segment: 'builder' });
+        assert.equal(ERP.CRM.priceFor('pb', 2, 1), 6);
+        assert.equal(ERP.CRM.priceFor('pb', 77, 1), null);      // no rule -> null
+    });
+
+    test('leads advance, surface due follow-ups and convert to customers', () => {
+        const lead = ERP.CRM.upsertLead({ name: 'Acme', phone: '99', segment: 'builder', stage: 'new', nextFollowUp: new Date(Date.now() - 86400000).toISOString() });
+        assert.ok(ERP.CRM.dueFollowups().some(l => l.id === lead.id));
+        ERP.CRM.advanceLeadStage(lead.id, 'qualified');
+        const cu = ERP.CRM.convertLeadToCustomer(lead.id);
+        assert.equal(cu.name, 'Acme');
+        assert.equal(cu.segment, 'builder');
+        assert.equal(ERP.CRM.listLeads('won').some(l => l.id === lead.id), true);
+    });
+});
+
+describe('ERP Calculators — configurable brick-trade math', () => {
+    beforeEach(() => {
+        loadERP();
+        ERP.Calculators.setProduct(500, { pcsPerTrolley: 2000, unitWeightKg: 3, lengthMm: 230, widthMm: 110, heightMm: 70 });
+        ERP.Calculators.setVehicle('t1', { payloadKg: 10000, bedL: 4, bedW: 2, bedH: 1 });
+        ERP.Calculators.configure({ freight: { baseRatePerKm: 0, perTonKm: 5, minCharge: 500, zoneRates: { north: 1200 } } });
+    });
+
+    test('quantity conversion uses the PER-PRODUCT trolley size', () => {
+        const r = ERP.Calculators.convertQty(2, 'trolley', 'piece', 500);
+        assert.equal(r.pieces, 4000);      // 2 * 2000 (not a universal 4000/1000)
+        const back = ERP.Calculators.convertQty(4000, 'piece', 'trolley', 500);
+        assert.equal(back.value, 2);
+    });
+
+    test('load estimate is capped by the declared per-product trolley capacity', () => {
+        const r = ERP.Calculators.loadEstimate({ itemId: 500, vehicleId: 't1', totalPieces: 5000 });
+        assert.equal(r.pcsPerTrip, 2000);
+        assert.equal(r.limitingFactor, 'declared_capacity');
+        assert.equal(r.tripsNeeded, 3);
+        assert.match(r.warning, /Estimate/);
+    });
+
+    test('transport charge prefers negotiated, then zone, then per-ton-km with a minimum', () => {
+        assert.equal(ERP.Calculators.transportCharge({ negotiatedRate: 999 }).basis, 'negotiated');
+        assert.equal(ERP.Calculators.transportCharge({ zone: 'north' }).charge, 1200);
+        const ttk = ERP.Calculators.transportCharge({ distanceKm: 100, tons: 5 });
+        assert.equal(ttk.basis, 'per_ton_km');
+        assert.equal(ttk.charge, 2500); // 5 * 5 * 100
+        assert.equal(ERP.Calculators.transportCharge({ distanceKm: 1, tons: 0 }).charge, 500); // minCharge floor
+    });
+
+    test('breakage, margin and tier price reflect configured inputs', () => {
+        const b = ERP.Calculators.breakage({ produced: 1000, good: 960 });
+        assert.equal(b.broken, 40);
+        assert.equal(b.acceptable, false); // 4% > default 2%
+        const m = ERP.Calculators.orderMargin({ qty: 1000, unitPrice: 10, unitCost: 6, freightTotal: 1000 });
+        assert.equal(m.grossProfit, 3000);
+        assert.equal(m.marginPct, 30);
+        assert.equal(m.costPerUnitLanded, 7);
+        assert.equal(ERP.Calculators.tierPrice(6000, [{ minQty: 1000, unitPrice: 9 }, { minQty: 5000, unitPrice: 7 }]).unitPrice, 7);
+    });
+});
+
+describe('ERP Logistics — vehicles, challans, POD, returns', () => {
+    beforeEach(() => loadERP());
+
+    test('vehicle capacity is never exceeded (payload guard)', () => {
+        ERP.Logistics.upsertVehicle({ id: 't1', name: 'Tata', payloadKg: 10000, bedL: 4, bedW: 2, bedH: 1 });
+        const over = ERP.Logistics.validateLoad('t1', { weightKg: 12000 });
+        assert.equal(over.withinLimits, false);
+        assert.equal(over.overPayload, true);
+        const ok = ERP.Logistics.validateLoad('t1', { weightKg: 5000 });
+        assert.equal(ok.withinLimits, true);
+        assert.equal(ok.utilizationPct, 50);
+    });
+
+    test('challan consumes stock and is idempotent by external reference', () => {
+        ERP.Inventory.upsertItem({ id: 100, name: 'Brick' });
+        ERP.Inventory.receive({ item: 100, warehouse: 'main', qty: 5000 });
+        const c1 = ERP.Logistics.createChallan({ customerId: 'cu1', warehouse: 'main', lines: [{ item: 100, qty: 1000, unit: 'piece' }], idem: 'DRIVER-1' });
+        assert.equal(c1.status, 'scheduled');
+        assert.equal(ERP.Inventory.onHand(100), 4000);
+        const replay = ERP.Logistics.createChallan({ customerId: 'cu1', warehouse: 'main', lines: [{ item: 100, qty: 1000, unit: 'piece' }], idem: 'DRIVER-1' });
+        assert.equal(replay.id, c1.id);                     // no second challan
+        assert.equal(ERP.Inventory.onHand(100), 4000);      // stock moved once
+    });
+
+    test('POD marks delivered and retried POD is not duplicated', () => {
+        ERP.Inventory.upsertItem({ id: 101, name: 'B' });
+        ERP.Inventory.receive({ item: 101, warehouse: 'main', qty: 2000 });
+        const ch = ERP.Logistics.createChallan({ warehouse: 'main', lines: [{ item: 101, qty: 500, unit: 'piece' }] });
+        ERP.Logistics.dispatchChallan(ch.id, { driverId: 'd1' });
+        const pod = ERP.Logistics.recordPOD(ch.id, { recipient: 'Site Eng', idem: 'POD-1' });
+        assert.equal(pod.status, 'delivered');
+        const podReplay = ERP.Logistics.recordPOD(ch.id, { recipient: 'Site Eng', idem: 'POD-1' });
+        assert.equal(podReplay.id, pod.id);
+        assert.equal(ERP.Logistics.deliveryCostReport().delivered, 1);
+    });
+
+    test('failed delivery returns stock to the warehouse', () => {
+        ERP.Inventory.upsertItem({ id: 102, name: 'C' });
+        ERP.Inventory.receive({ item: 102, warehouse: 'main', qty: 1000 });
+        const ch = ERP.Logistics.createChallan({ warehouse: 'main', lines: [{ item: 102, qty: 1000, unit: 'piece' }] });
+        ERP.Logistics.recordFailedDelivery(ch.id, { reason: 'customer unavailable' });
+        assert.equal(ERP.Inventory.onHand(102), 0);
+        ERP.Logistics.recordReturn(ch.id, {});
+        assert.equal(ERP.Inventory.onHand(102), 1000);
+        assert.equal(ERP.Logistics.getChallan(ch.id).status, 'returned');
+    });
+});
+
+describe('ERP Notify — rules emit idempotent pending alerts', () => {
+    beforeEach(() => loadERP());
+
+    test('low-stock rule raises an alert and never duplicates within the period', () => {
+        ERP.Inventory.upsertItem({ id: 3, name: 'Z', reorderLevel: 500 });
+        ERP.Inventory.receive({ item: 3, warehouse: 'main', qty: 100 });
+        const created = ERP.Notify.evaluate('low_stock');
+        assert.equal(created.length, 1);
+        assert.equal(created[0].rule, 'low_stock');
+        const again = ERP.Notify.evaluate('low_stock');
+        assert.equal(again.length, 0); // idempotent per day per entity
+        assert.equal(ERP.Notify.pendingCount(), 1);
+    });
+
+    test('overdue-invoice rule fires and acknowledge clears pending state', () => {
+        const inv = ERP.Documents.createDocument('invoice', { customerId: 'c1', lines: [{ item: 1, qty: 1000, unitPrice: 10, taxRate: 0, hsn: 'x' }], tax: {}, dueDate: new Date(Date.now() - 10 * 86400000).toISOString() });
+        ERP.Documents.finalize(inv.id);
+        const created = ERP.Notify.evaluate('overdue_invoice');
+        assert.equal(created.length, 1);
+        assert.equal(created[0].rule, 'overdue_invoice');
+        ERP.Notify.acknowledge(created[0].id);
+        assert.equal(ERP.Notify.pendingCount(), 0);
+    });
+
+    test('maintenance rule surfaces due vehicle service', () => {
+        ERP.Logistics.upsertVehicle({ id: 'v1', name: 'Truck', payloadKg: 8000 });
+        ERP.Logistics.scheduleMaintenance('v1', { type: 'brake', dueDate: new Date(Date.now() - 86400000).toISOString() });
+        const created = ERP.Notify.evaluate('maintenance_due');
+        assert.ok(created.some(a => a.rule === 'maintenance_due'));
     });
 });

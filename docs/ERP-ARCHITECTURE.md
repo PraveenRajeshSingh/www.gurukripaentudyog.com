@@ -60,6 +60,60 @@ Verification: `npm test` → **53/53 pass** (27 pre-existing + 26 new
 `tests/erp.test.js`); `node --check` clean on every new/edited JS file;
 `npm run build` and `prepare-www.js` succeed.
 
+### Phase 2 additions (advanced upgrade — still local-first, tested)
+Extended the same `window.GurukripaERP` core; **`npm test` → 74/74** (21 new
+ERP tests):
+
+- **`erp-core.js`** — idempotency ledger (`markOnce`/`seenKey`), **approval
+  limits** (refund / discount override / credit sale / stock adjust per role),
+  record **version trail** (`recordVersion`/`getVersions`), `debit_note` (DBN)
+  numbering.
+- **`erp-inventory.js`** — movements now carry **bin / batch / quality** and an
+  optional **`idem`** key (a retried offline movement returns the original row,
+  never double-counts); `stockBy(filter)` and `reconcile()` (signed adjust).
+- **`erp-documents.js`** — **landed-cost allocator** (value / quantity / equal,
+  residual absorbed by the last line so charges never double-count or leak),
+  charged GRN, **debit notes** (raise the receivable), `taxSummary()` (GST by
+  rate, net of credit/debit notes), `cashBankRegister()` (inflows vs
+  bills+expenses), `pricedLines()` via CRM price resolution; docs gained
+  `salesperson` / `branch` / `charges`.
+- **`erp-crm.js`** — **price lists** with resolution order (negotiated deal
+  price → assigned list item → bulk tier → segment default → `null`),
+  `setDealPrice`, and a **lead pipeline** (stages, `dueFollowups`,
+  `convertLeadToCustomer`).
+- **`erp-analytics.js`** — sales by **salesperson**, **quarterly** series,
+  quotation **conversion rate**, **cancellation rate**, **refunds**,
+  **slow-moving stock** and **collection trend** — all read from real,
+  finalized records (no fabrication).
+- **`erp-calculators.js`** *(new)* — **config-driven** brick math: per-product
+  quantity conversion (piece/hundred/thousand/trolley/pallet, **PCS-per-trolley
+  is per product**, not universal), wall estimate, **vehicle load estimate**
+  capped by BOTH payload and bed volume, transport charge
+  (negotiated → zone → per-ton-km, with `minCharge`), breakage, landed cost/unit
+  (delegates to the Documents allocator), order margin, bulk tier price. Every
+  figure is labelled an **estimate to be validated against real constraints**.
+- **`erp-logistics.js`** *(new)* — vehicle master (payload + bed volume, synced
+  to the calculators), `validateLoad` (**never exceeds configured capacity**),
+  maintenance schedule, **delivery challan** (consumes stock through the ledger,
+  **idempotent by external reference**), dispatch/POD/failed/return handling,
+  nearest-neighbour route **estimate**, delivery-cost & vehicle-utilization
+  reports. **Live GPS is an honest empty state** — no telemetry feed exists.
+- **`erp-notify.js`** *(new)* — configurable **rules engine** (low stock,
+  reorder suggestion, overdue invoice, quotation follow-up, delivery delay,
+  vehicle maintenance) evaluating only real records and emitting **idempotent
+  pending alerts** (one per entity per bucket via `markOnce`). Alerts are stored
+  `pending` with channel `backend_required` — **nothing is "sent"**; SMTP/push/
+  SMS and job scheduling are backend work.
+
+> Modules **8 (mobile staff tools)** and **10 (security/governance)** are
+> advanced by these primitives (idempotent offline retries, client approval
+> limits, version trail, audit) but their authoritative halves — server RBAC,
+> real offline sync-conflict resolution across devices, backups/monitoring —
+> remain backend contract items (see §3). Module **11 UI**: the live design
+> tokens in `src/styles/tokens.css` (`--brand #C83E0A`) are reused; the brief's
+> `#B7432E` was **not** adopted to avoid splitting the existing brand.
+
+
 ### Honest limits of the local-first core
 - Numbering and oversell guards are atomic **within one browser tab**
   (synchronous read-modify-write). They are **not** multi-device / multi-user.
