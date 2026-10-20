@@ -58,6 +58,65 @@ function handleNewsletter(e) {
     showToast(t('toast.subscribed'), 'success');
 }
 
+// Bulk RFQ Modal Handlers
+function openBulkQuoteModal() {
+    const modal = document.getElementById('bulkQuoteModal');
+    if (modal) {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeBulkQuoteModal() {
+    const modal = document.getElementById('bulkQuoteModal');
+    if (modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+}
+
+function handleBulkQuoteSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('rfqSubmitBtn');
+    const notice = document.getElementById('rfqResultNotice');
+    if (btn) btn.disabled = true;
+
+    const payload = {
+        name: document.getElementById('rfqName')?.value,
+        phone: document.getElementById('rfqPhone')?.value,
+        company: document.getElementById('rfqCompany')?.value,
+        gstin: document.getElementById('rfqGstin')?.value,
+        product: document.getElementById('rfqProduct')?.value,
+        qty: document.getElementById('rfqQty')?.value,
+        site: document.getElementById('rfqSite')?.value,
+        roadAccess: document.getElementById('rfqRoad')?.value,
+        unloadingReq: document.getElementById('rfqUnload')?.value
+    };
+
+    let quote = null;
+    if (window.GurukripaServices && window.GurukripaServices.QuotationService) {
+        quote = window.GurukripaServices.QuotationService.submitRFQ(payload);
+    }
+
+    setTimeout(() => {
+        if (notice) {
+            notice.style.display = 'block';
+            notice.innerHTML = `✓ RFQ Generated: <strong>${quote ? quote.id : 'QT-2026-SUBMITTED'}</strong>. Our Jaunpur Bhatta Sales Manager will call ${sanitizeHTML(payload.phone)} within 30 minutes with official rate quote.`;
+        }
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'RFQ Successfully Sent ✓';
+        }
+        showToast('Bulk Quotation Request Logged!', 'success');
+        setTimeout(() => {
+            closeBulkQuoteModal();
+            e.target.reset();
+            if (notice) notice.style.display = 'none';
+            if (btn) btn.textContent = 'Submit Bulk RFQ Quotation Request →';
+        }, 3000);
+    }, 600);
+}
+
 // Nav Search Live Filter & Shortcut
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('navSearch');

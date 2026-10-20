@@ -87,4 +87,34 @@ window.GurukripaServices = window.GurukripaServices || {};
             return (typeof getSafeStorage === 'function') ? getSafeStorage('gb_orders', []) : [];
         }
     };
+
+    // 4. Bulk RFQ & Quotation Request Service
+    exports.QuotationService = {
+        submitRFQ: function(formData) {
+            const quotations = (typeof getSafeStorage === 'function') ? getSafeStorage('gb_quotations', []) : [];
+            const rfqNumber = 'QT-2026-' + Math.floor(1000 + Math.random() * 9000);
+            const entry = {
+                id: rfqNumber,
+                name: formData.name,
+                phone: formData.phone,
+                company: formData.company || 'Direct Buyer',
+                gstin: formData.gstin || '',
+                product: formData.product,
+                qty: parseInt(formData.qty, 10),
+                site: formData.site,
+                roadAccess: formData.roadAccess || 'wide',
+                unloadingReq: formData.unloadingReq || 'self',
+                status: 'Under Review by Bhatta Manager',
+                createdAt: new Date().toISOString()
+            };
+            quotations.unshift(entry);
+            if (typeof setSafeStorage === 'function') {
+                setSafeStorage('gb_quotations', quotations);
+            }
+            return entry;
+        },
+        getAllQuotations: function() {
+            return (typeof getSafeStorage === 'function') ? getSafeStorage('gb_quotations', []) : [];
+        }
+    };
 })(window.GurukripaServices);

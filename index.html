@@ -513,16 +513,15 @@
                         </svg>
                         Explore Bricks
                     </a>
-                    <a href="#calculator" class="btn btn-outline" data-i18n="hero.cta2">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="4" y="2" width="16" height="20" rx="3" />
-                            <line x1="8" y1="6" x2="16" y2="6" />
-                            <line x1="8" y1="10" x2="16" y2="10" />
-                            <line x1="8" y1="14" x2="12" y2="14" />
+                    <button type="button" class="btn btn-outline" onclick="openBulkQuoteModal()" style="display:inline-flex;align-items:center;gap:8px">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
                         </svg>
-                        Calculate Your Order
-                    </a>
+                        Request Bulk Quote
+                    </button>
                 </div>
 
                 <!-- Trust chips -->
@@ -2737,6 +2736,89 @@
         </div>
     </div>
 
+
+    <!-- ━━━━━━━━━━━━━━━━━ BULK QUOTATION & B2B RFQ MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="bulkQuoteModal" role="dialog" aria-modal="true" aria-labelledby="rfqTitle" onclick="if(event.target===this)closeBulkQuoteModal()">
+        <div class="modal-box" style="max-width:620px">
+            <div class="modal-head">
+                <div>
+                    <span class="sec-tag" style="margin-bottom:4px">B2B &amp; Wholesale</span>
+                    <h3 class="modal-title" id="rfqTitle">Request Bulk Project Quotation</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeBulkQuoteModal()" aria-label="Close dialog">✕</button>
+            </div>
+            <div class="modal-body" style="padding:20px">
+                <form id="bulkQuoteForm" onsubmit="handleBulkQuoteSubmit(event)">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                        <div>
+                            <label class="co-form-label" for="rfqName">Full Name / Contact Person *</label>
+                            <input type="text" id="rfqName" class="co-input" placeholder="e.g. Rajesh Singh" required>
+                        </div>
+                        <div>
+                            <label class="co-form-label" for="rfqPhone">Phone Number (10 Digits) *</label>
+                            <input type="tel" id="rfqPhone" class="co-input" placeholder="e.g. 9198923230" pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                        <div>
+                            <label class="co-form-label" for="rfqCompany">Company / Project Name</label>
+                            <input type="text" id="rfqCompany" class="co-input" placeholder="e.g. Highway Enclave Site">
+                        </div>
+                        <div>
+                            <label class="co-form-label" for="rfqGstin">GSTIN (Optional for B2B Claim)</label>
+                            <input type="text" id="rfqGstin" class="co-input" placeholder="09AAAAA0000A1Z5" style="text-transform:uppercase">
+                        </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px">
+                        <div>
+                            <label class="co-form-label" for="rfqProduct">Select Brick Grade *</label>
+                            <select id="rfqProduct" class="co-input" required>
+                                <option value="shiv-eent">Shiv Eent (Grade-A Double-Fired)</option>
+                                <option value="awwal" selected>Awwal Bricks (₹28,200 / 4,000 Trolley)</option>
+                                <option value="laal-peti">Laal Peti (₹25,000 / 4,000 Trolley)</option>
+                                <option value="machine-made">Machine-Made Wirecut</option>
+                                <option value="premium">Premium Red Bricks</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="co-form-label" for="rfqQty">Estimated Count *</label>
+                            <input type="number" id="rfqQty" class="co-input" value="8000" min="1000" step="1000" required>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:12px">
+                        <label class="co-form-label" for="rfqSite">Delivery Site Address &amp; District *</label>
+                        <textarea id="rfqSite" class="co-input" style="height:60px;resize:none" placeholder="Site location, Landmark, PIN Code" required></textarea>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
+                        <div>
+                            <label class="co-form-label" for="rfqRoad">Site Road Access</label>
+                            <select id="rfqRoad" class="co-input">
+                                <option value="wide">Wide Main Road (Standard Truck/Trolley)</option>
+                                <option value="narrow">Narrow Village Road (Mini Trolley)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="co-form-label" for="rfqUnload">Unloading Requirement</label>
+                            <select id="rfqUnload" class="co-input">
+                                <option value="driver">Bhatta Unloading Labor Required</option>
+                                <option value="self">Self-Unloading at Site</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="rfqResultNotice" style="display:none;background:var(--success-bg);border:1px solid var(--success-border);border-radius:var(--r-sm);padding:10px;margin-bottom:14px;color:var(--success);font-size:.85rem;font-weight:600"></div>
+
+                    <button type="submit" class="auth-submit btn-full" id="rfqSubmitBtn">
+                        Submit Bulk RFQ Quotation Request →
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ PRODUCT DETAIL MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay product-detail-modal" id="productModal" onclick="handleProductModalClick(event)">
