@@ -36,45 +36,72 @@ function renderProductCard(p) {
     const fullStars = Math.floor(p.rating);
     const starHTML = Array.from({length:5}, (_,i) => _starSVG(i < fullStars)).join('');
     const trolleyPrice = TROLLEY_PRICES[p.category];
+    const discountPct = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : null;
+
     return `
-    <div class="product-card fade-in" data-category="${sanitizeHTML(p.category)}">
+    <div class="product-card fade-in industrial-card" data-category="${sanitizeHTML(p.category)}">
       <div class="product-card-img-wrap">
-        <img class="product-card-img" src="${p.img}" alt="${name}" loading="lazy" style="aspect-ratio:4/3;object-fit:cover;width:100%">
-        ${p.badge ? `<span class="product-card-badge ${p.badgeClass || ''}">${sanitizeHTML(p.badge)}</span>` : ''}
-        <span class="stock-badge ${p.stock || 'in-stock'}">${sanitizeHTML(p.stockText || 'In Stock')}</span>
-        <div class="product-card-hover-actions">
-          <button class="quick-view-btn" onclick="openProductDetail(${p.id})" aria-label="Quick view ${name}">
-            ${_eyeSVG} Quick View
-          </button>
+        <img class="product-card-img" src="${p.img}" alt="${name}" loading="lazy">
+        <div class="card-pill-tags">
+            ${p.badge ? `<span class="product-pill-badge best-seller">${sanitizeHTML(p.badge)}</span>` : ''}
+            ${discountPct ? `<span class="product-pill-badge discount">-${discountPct}%</span>` : ''}
         </div>
         <button class="wishlist-btn ${isWish ? 'active' : ''}" onclick="toggleWishlist(${p.id},this)" aria-label="${isWish ? 'Remove from' : 'Add to'} wishlist">
           ${_heartSVG(isWish)}
         </button>
       </div>
+
       <div class="product-card-body">
-        <div class="product-card-category-tag">${catLabel}</div>
-        <div class="product-card-name">${name}</div>
-        <div class="product-card-desc line-clamp-2">${desc}</div>
         <div class="product-card-rating">
           <span class="product-card-stars" aria-label="${p.rating} out of 5 stars">${starHTML}</span>
-          <span class="product-card-rating-num">${p.rating} (${p.reviews})</span>
+          <span class="product-card-rating-num">(${p.reviews || 45})</span>
         </div>
+
+        <h3 class="product-card-name" onclick="openProductDetail(${p.id})">${name}</h3>
+
         <div class="product-card-price-row">
-          <div>
+          <div class="price-val-group">
             <span class="product-price-current">₹${p.price}</span>
-            <span class="product-price-unit">/${sanitizeHTML(p.unit)}</span>
             ${p.oldPrice ? `<span class="product-price-old">₹${p.oldPrice}</span>` : ''}
           </div>
+          <span class="product-price-unit">/${sanitizeHTML(p.unit || 'piece')}</span>
         </div>
-        ${trolleyPrice ? `<div class="product-trolley-price" style="font-size:.78rem;color:var(--ink-3);margin-top:2px">🧱 ₹${trolleyPrice.toLocaleString('en-IN')}/trolley</div>` : ''}
+
+        <div class="product-stock-status">
+          <span class="stock-status-dot"></span>
+          <span>In Stock · Ready to Dispatch</span>
+        </div>
+        <div class="product-delivery-meta">Est. Delivery: Same-day / 24 hrs</div>
+
+        ${trolleyPrice ? `<div class="product-trolley-badge">Trolley Rate: <strong>₹${trolleyPrice.toLocaleString('en-IN')}</strong> (4k pcs)</div>` : ''}
+
         <div class="product-card-actions">
-          <button class="btn btn-outline btn-sm" onclick="openProductDetail(${p.id})">Details</button>
-          <button class="product-add-btn btn btn-sm" onclick="triggerCartBounce(this);addToCart(${p.id})">
+          <button class="product-add-btn btn-full" onclick="triggerCartBounce(this);addToCart(${p.id})">
             ${_cartSVG} Add to Cart
           </button>
         </div>
       </div>
     </div>`;
+}
+
+function handlePriceRangeFilter(val) {
+    const label = document.getElementById('currentMaxPriceLabel');
+    if (label) label.textContent = `Up to ₹${parseFloat(val).toFixed(2)}`;
+    const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    const max = parseFloat(val);
+    const filtered = PRODUCTS.filter(p => p.price <= max && (currentFilter === 'all' || p.category === currentFilter));
+    grid.innerHTML = filtered.map(p => renderProductCard(p)).join('');
+    const countEl = document.getElementById('productsCount');
+    if (countEl) countEl.textContent = `Showing ${filtered.length} products (under ₹${max.toFixed(2)})`;
+}
+
+function toggleCategoryFilter(cat, checkbox) {
+    if (cat === 'all') {
+        filterProducts('all');
+    } else {
+        filterProducts(cat);
+    }
 }
 
 function filterProducts(cat, btn) {

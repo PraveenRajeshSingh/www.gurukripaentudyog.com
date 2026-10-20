@@ -677,43 +677,130 @@
         </div>
     </section>
 
-    <!-- ━━━━━━━━━━━━━━━━━ PRODUCTS ━━━━━━━━━━━━━━━━━ -->
+    <!-- ━━━━━━━━━━━━━━━━━ PRODUCTS CATALOG SECTION (BUILDMART INDUSTRIAL STYLE) ━━━━━━━━━━━━━━━━━ -->
     <section class="sec products-sec" id="products">
         <div class="container">
-            <div class="text-center">
-                <span class="sec-tag" data-i18n="products.tag">Verified Quality</span>
-                <h2 class="sec-title" data-i18n="products.title">Our Products</h2>
-                <p class="sec-sub" data-i18n="products.desc">Grade-A bricks tested for strength, uniformity and weather resistance</p>
+            <div class="text-center" style="margin-bottom:28px">
+                <span class="sec-tag" data-i18n="products.tag">Verified Kiln Quality</span>
+                <h2 class="sec-title" data-i18n="products.title">Building Materials &amp; Brick Catalog</h2>
+                <p class="sec-sub" data-i18n="products.desc">Direct manufacturer pricing on Grade-A red clay bricks, high-strength blocks, and custom masonry units</p>
             </div>
+
+            <!-- Category Top Pills Navigation -->
             <div class="products-filters">
-                <button class="filter-btn active" onclick="filterProducts('all',this)">All Products</button>
-                <button class="filter-btn" onclick="filterProducts('shiv-eent',this)">Shiv Eent</button>
-                <button class="filter-btn" onclick="filterProducts('awwal',this)">Awwal ईंट</button>
-                <button class="filter-btn" onclick="filterProducts('laal-peti',this)">Laal Peti</button>
-                <button class="filter-btn" onclick="filterProducts('premium',this)">Premium</button>
-                <button class="filter-btn" onclick="filterProducts('standard',this)">Standard</button>
-                <button class="filter-btn" onclick="filterProducts('machine-made',this)">Machine Made</button>
+                <button class="filter-btn active" onclick="filterProducts('all',this)">All Materials</button>
+                <button class="filter-btn" onclick="filterProducts('shiv-eent',this)">Shiv Eent (Grade-A)</button>
+                <button class="filter-btn" onclick="filterProducts('awwal',this)">Awwal ईंट (Heavy Duty)</button>
+                <button class="filter-btn" onclick="filterProducts('laal-peti',this)">Laal Peti (Popular)</button>
+                <button class="filter-btn" onclick="filterProducts('premium',this)">First Class Red</button>
+                <button class="filter-btn" onclick="filterProducts('machine-made',this)">Machine Wirecut</button>
+                <button class="filter-btn" onclick="filterProducts('standard',this)">Standard Bricks</button>
             </div>
-            <div class="products-toolbar">
-                <div class="products-toolbar-left">
-                    <span class="products-count" id="productsCount">7 products</span>
+
+            <!-- Industrial Bento Layout: Left Filter Sidebar + Right 3-Column Catalog -->
+            <div class="catalog-layout-grid">
+                <!-- Left Sidebar Filters (BuildMart Style) -->
+                <aside class="catalog-sidebar">
+                    <!-- Price Range Filter Card -->
+                    <div class="catalog-filter-card">
+                        <div class="filter-card-header">
+                            <span class="filter-card-title">Price Range (per pc)</span>
+                        </div>
+                        <div class="price-range-slider-wrap">
+                            <input type="range" id="filterPriceRange" min="5" max="15" step="0.25" value="15" oninput="handlePriceRangeFilter(this.value)">
+                            <div class="price-range-labels">
+                                <span>₹5.00</span>
+                                <span id="currentMaxPriceLabel" style="color:var(--brand);font-weight:700">Up to ₹15.00</span>
+                                <span>₹15.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Checkboxes -->
+                    <div class="catalog-filter-card">
+                        <div class="filter-card-header">
+                            <span class="filter-card-title">Categories</span>
+                        </div>
+                        <div class="filter-checkbox-list">
+                            <label class="filter-checkbox-item">
+                                <input type="checkbox" checked onchange="toggleCategoryFilter('all', this)">
+                                <span>All Brick Types</span>
+                            </label>
+                            <label class="filter-checkbox-item">
+                                <input type="checkbox" onchange="toggleCategoryFilter('awwal', this)">
+                                <span>Awwal Heavy-Duty Bricks</span>
+                            </label>
+                            <label class="filter-checkbox-item">
+                                <input type="checkbox" onchange="toggleCategoryFilter('shiv-eent', this)">
+                                <span>Shiv Eent Double-Fired</span>
+                            </label>
+                            <label class="filter-checkbox-item">
+                                <input type="checkbox" onchange="toggleCategoryFilter('laal-peti', this)">
+                                <span>Laal Peti Standard Clay</span>
+                            </label>
+                            <label class="filter-checkbox-item">
+                                <input type="checkbox" onchange="toggleCategoryFilter('machine-made', this)">
+                                <span>Machine-Made Wirecut</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Delivery & Verified Badges Filter -->
+                    <div class="catalog-filter-card">
+                        <div class="filter-card-header">
+                            <span class="filter-card-title">Wholesale &amp; Dispatch</span>
+                        </div>
+                        <div class="filter-checkbox-list">
+                            <label class="filter-checkbox-item">
+                                <input type="checkbox" checked>
+                                <span>Same-Day Trolley Delivery</span>
+                            </label>
+                            <label class="filter-checkbox-item">
+                                <input type="checkbox" checked>
+                                <span>ISI Certified Grade-A</span>
+                            </label>
+                            <label class="filter-checkbox-item">
+                                <input type="checkbox">
+                                <span>Bulk Trolley Discount Ready</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Quick RFQ Assistance Card -->
+                    <div class="catalog-assistance-card">
+                        <div style="font-size:1.4rem;margin-bottom:8px">💬</div>
+                        <div style="font-weight:700;font-size:0.92rem;margin-bottom:4px">Need Custom Project Rates?</div>
+                        <p style="font-size:0.8rem;color:var(--ink-3);margin-bottom:12px">Talk directly with our Bhatta Manager for 10,000+ brick requirements.</p>
+                        <button type="button" class="btn btn-primary btn-full btn-sm" onclick="openBulkQuoteModal()">Request Bulk Quote</button>
+                    </div>
+                </aside>
+
+                <!-- Right Main Column: Toolbar + Product Grid -->
+                <div class="catalog-main">
+                    <!-- Top Toolbar -->
+                    <div class="products-toolbar">
+                        <div class="products-toolbar-left">
+                            <span class="products-count" id="productsCount">Showing 7 verified products</span>
+                        </div>
+                        <div class="products-toolbar-right">
+                            <select class="products-sort" id="productsSort" onchange="sortProducts(this.value)" aria-label="Sort products">
+                                <option value="default">Sort by: Best Selling</option>
+                                <option value="price-asc">Price: Low to High</option>
+                                <option value="price-desc">Price: High to Low</option>
+                                <option value="name-asc">Name: A to Z</option>
+                                <option value="rating-desc">Top Rated</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid" id="productsGrid">
+                        <!-- Rendered dynamically by JS -->
+                    </div>
                 </div>
-                <div class="products-toolbar-right">
-                    <select class="products-sort" id="productsSort" onchange="sortProducts(this.value)" aria-label="Sort products">
-                        <option value="default">Sort by: Default</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                        <option value="name-asc">Name: A to Z</option>
-                        <option value="rating-desc">Top Rated</option>
-                    </select>
-                </div>
-            </div>
-            <div class="products-grid" id="productsGrid">
-                <!-- Rendered by JS -->
             </div>
         </div>
     </section>
-
 
     <!-- ━━━━━━━━━━━━━━━━━ PRICE COMPARISON ━━━━━━━━━━━━━━━━━ -->
     <section class="sec price-sec" id="pricing">

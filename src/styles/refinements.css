@@ -645,3 +645,282 @@ button, a, input, select, textarea { touch-action: manipulation }
     .product-card, .auth-submit, .auth-social-btn,
     .wishlist-btn, .btn-primary, .btn-outline { transition: none !important }
 }
+
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BUILDMART INDUSTRIAL CATALOG & BENTO STYLING
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.catalog-layout-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+    align-items: start;
+    margin-top: 24px;
+}
+
+@media (max-width: 960px) {
+    .catalog-layout-grid {
+        grid-template-columns: 1fr;
+    }
+    .catalog-sidebar {
+        display: none; /* Mobile view prioritizes direct catalog grid */
+    }
+}
+
+.catalog-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: sticky;
+    top: 90px;
+}
+
+.catalog-filter-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 20px;
+    box-shadow: var(--sh-card);
+}
+
+.filter-card-header {
+    margin-bottom: 14px;
+}
+
+.filter-card-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-range-slider-wrap input[type="range"] {
+    width: 100%;
+    accent-color: var(--brand);
+    cursor: pointer;
+}
+
+.price-range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--ink-3);
+    margin-top: 8px;
+}
+
+.filter-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.84rem;
+    color: var(--ink-2);
+    cursor: pointer;
+}
+
+.filter-checkbox-item input[type="checkbox"] {
+    accent-color: var(--brand);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.catalog-assistance-card {
+    background: linear-gradient(145deg, var(--bg-subtle), var(--bg-card));
+    border: 1px dashed var(--brand);
+    border-radius: var(--r-md);
+    padding: 18px;
+    text-align: center;
+}
+
+/* ── BuildMart Industrial Product Card ── */
+.industrial-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), border-color 0.22s var(--ease);
+    display: flex;
+    flex-direction: column;
+}
+
+.industrial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(37, 39, 36, 0.12);
+    border-color: rgba(183, 67, 46, 0.4);
+}
+
+.industrial-card .product-card-img-wrap {
+    position: relative;
+    aspect-ratio: 16/11;
+    overflow: hidden;
+    background: #111;
+}
+
+.industrial-card .product-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.industrial-card:hover .product-card-img {
+    transform: scale(1.05);
+}
+
+.card-pill-tags {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+}
+
+.product-pill-badge {
+    padding: 4px 9px;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.product-pill-badge.best-seller {
+    background: #E05A1E;
+    color: #fff;
+}
+
+.product-pill-badge.discount {
+    background: #C62828;
+    color: #fff;
+}
+
+.industrial-card .product-card-body {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.industrial-card .product-card-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.industrial-card .product-card-rating-num {
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    font-weight: 600;
+}
+
+.industrial-card .product-card-name {
+    font-family: var(--body);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.35;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.industrial-card .product-card-name:hover {
+    color: var(--brand);
+}
+
+.industrial-card .product-card-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.price-val-group {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.industrial-card .product-price-current {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--brand);
+}
+
+.industrial-card .product-price-old {
+    font-size: 0.85rem;
+    color: var(--ink-3);
+    text-decoration: line-through;
+}
+
+.industrial-card .product-price-unit {
+    font-size: 0.78rem;
+    color: var(--ink-3);
+}
+
+.product-stock-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--success);
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.stock-status-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--success);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.product-delivery-meta {
+    font-size: 0.72rem;
+    color: var(--ink-3);
+    margin-bottom: 10px;
+}
+
+.product-trolley-badge {
+    background: rgba(183, 67, 46, 0.08);
+    border-left: 3px solid var(--brand);
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 14px;
+}
+
+.industrial-card .product-card-actions {
+    margin-top: auto;
+}
+
+.industrial-card .product-add-btn {
+    background: #C8460A;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(200, 70, 10, 0.3);
+    transition: background 0.18s, transform 0.15s;
+}
+
+.industrial-card .product-add-btn:hover {
+    background: #A83606;
+    transform: translateY(-1px);
+}
