@@ -1,12 +1,91 @@
 // ══════════════════════════════════════════
 // PRODUCTS & RENDER
 // ══════════════════════════════════════════
+
+// SVG helpers for product cards
+const _starSVG = (filled) => filled
+    ? `<svg width="13" height="13" fill="#F5A623" stroke="#F5A623" stroke-width="1" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+    : `<svg width="13" height="13" fill="none" stroke="#ccc" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+
+const _heartSVG = (filled) => filled
+    ? `<svg width="16" height="16" fill="#e53e3e" stroke="#e53e3e" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
+    : `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+
+const _cartSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`;
+
+const _eyeSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+
+// Trolley price data keyed by category
+const TROLLEY_PRICES = { 'awwal': 28200, 'laal-peti': 25000 };
+
+// Category display labels
+const CAT_LABELS = {
+    'shiv-eent': 'Shiv Eent',
+    'awwal': 'Awwal ईंट',
+    'laal-peti': 'Laal Peti',
+    'premium': 'Premium',
+    'standard': 'Standard',
+    'machine-made': 'Machine Made'
+};
+
+function renderProductCard(p) {
+    const isWish = wishlist.includes(p.id);
+    const name = sanitizeHTML(p.name);
+    const desc = sanitizeHTML(p.desc);
+    const catLabel = CAT_LABELS[p.category] || sanitizeHTML(p.category);
+    const fullStars = Math.floor(p.rating);
+    const starHTML = Array.from({length:5}, (_,i) => _starSVG(i < fullStars)).join('');
+    const trolleyPrice = TROLLEY_PRICES[p.category];
+    return `
+    <div class="product-card fade-in" data-category="${sanitizeHTML(p.category)}">
+      <div class="product-card-img-wrap">
+        <img class="product-card-img" src="${p.img}" alt="${name}" loading="lazy" style="aspect-ratio:4/3;object-fit:cover;width:100%">
+        ${p.badge ? `<span class="product-card-badge ${p.badgeClass || ''}">${sanitizeHTML(p.badge)}</span>` : ''}
+        <span class="stock-badge ${p.stock || 'in-stock'}">${sanitizeHTML(p.stockText || 'In Stock')}</span>
+        <div class="product-card-hover-actions">
+          <button class="quick-view-btn" onclick="openProductDetail(${p.id})" aria-label="Quick view ${name}">
+            ${_eyeSVG} Quick View
+          </button>
+        </div>
+        <button class="wishlist-btn ${isWish ? 'active' : ''}" onclick="toggleWishlist(${p.id},this)" aria-label="${isWish ? 'Remove from' : 'Add to'} wishlist">
+          ${_heartSVG(isWish)}
+        </button>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-category-tag">${catLabel}</div>
+        <div class="product-card-name">${name}</div>
+        <div class="product-card-desc line-clamp-2">${desc}</div>
+        <div class="product-card-rating">
+          <span class="product-card-stars" aria-label="${p.rating} out of 5 stars">${starHTML}</span>
+          <span class="product-card-rating-num">${p.rating} (${p.reviews})</span>
+        </div>
+        <div class="product-card-price-row">
+          <div>
+            <span class="product-price-current">₹${p.price}</span>
+            <span class="product-price-unit">/${sanitizeHTML(p.unit)}</span>
+            ${p.oldPrice ? `<span class="product-price-old">₹${p.oldPrice}</span>` : ''}
+          </div>
+        </div>
+        ${trolleyPrice ? `<div class="product-trolley-price" style="font-size:.78rem;color:var(--ink-3);margin-top:2px">🧱 ₹${trolleyPrice.toLocaleString('en-IN')}/trolley</div>` : ''}
+        <div class="product-card-actions">
+          <button class="btn btn-outline btn-sm" onclick="openProductDetail(${p.id})">Details</button>
+          <button class="product-add-btn btn btn-sm" onclick="triggerCartBounce(this);addToCart(${p.id})">
+            ${_cartSVG} Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
 function filterProducts(cat, btn) {
     currentFilter = cat;
     if (btn) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
+    // Reset sort dropdown when filter changes
+    const sortEl = document.getElementById('productsSort');
+    if (sortEl) sortEl.value = 'default';
     renderProducts(cat);
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -15,40 +94,29 @@ function renderProducts(filter) {
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
     const filtered = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
+    const count = document.getElementById('productsCount');
     if (!filtered.length) {
         grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-3)">No products found in this category.</div>';
+        if (count) count.textContent = '0 products';
         return;
     }
-    grid.innerHTML = filtered.map(p => {
-        const isWish = wishlist.includes(p.id);
-        return `
-        <div class="product-card fade-in">
-          <div class="product-card-img-wrap">
-            <img class="product-card-img" src="${p.img}" alt="${sanitizeHTML(p.name)}" loading="lazy">
-            ${p.badge ? `<span class="product-card-badge ${p.badgeClass || ''}">${sanitizeHTML(p.badge)}</span>` : ''}
-            <span class="stock-badge ${p.stock || 'in-stock'}">${sanitizeHTML(p.stockText || 'In Stock')}</span>
-            <div class="quick-view-overlay"><button class="quick-view-btn" onclick="openProductDetail(${p.id})">🔍 Quick View</button></div>
-            <button class="wishlist-btn ${isWish ? 'active' : ''}" onclick="toggleWishlist(${p.id},this)" aria-label="Wishlist">${isWish ? '❤️' : '🤍'}</button>
-          </div>
-          <div class="product-card-body">
-            <div class="product-card-name">${sanitizeHTML(p.name)}</div>
-            <div class="product-card-desc line-clamp-2">${sanitizeHTML(p.desc)}</div>
-            <div class="product-card-rating">
-              <span class="product-card-stars">${'★'.repeat(Math.floor(p.rating))}${'☆'.repeat(5 - Math.floor(p.rating))}</span>
-              <span class="product-card-rating-num">${p.rating} (${p.reviews})</span>
-            </div>
-            <div class="product-card-price">
-              <span class="product-price-current">₹${p.price}</span>
-              <span class="product-price-unit">${sanitizeHTML(p.unit)}</span>
-              ${p.oldPrice ? `<span class="product-price-old">₹${p.oldPrice}</span>` : ''}
-            </div>
-            <div class="product-card-actions">
-              <button class="btn btn-outline btn-sm" onclick="openProductDetail(${p.id})">Details</button>
-              <button class="product-add-btn" onclick="triggerCartBounce(this);addToCart(${p.id})">🛒 Add to Cart</button>
-            </div>
-          </div>
-        </div>`;
-    }).join('');
+    if (count) count.textContent = filtered.length + ' product' + (filtered.length !== 1 ? 's' : '');
+    grid.innerHTML = filtered.map(p => renderProductCard(p)).join('');
+}
+
+function sortProducts(sortBy) {
+    const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    let filtered = currentFilter === 'all' ? [...PRODUCTS] : PRODUCTS.filter(p => p.category === currentFilter);
+    switch(sortBy) {
+        case 'price-asc':    filtered.sort((a,b) => a.price - b.price); break;
+        case 'price-desc':   filtered.sort((a,b) => b.price - a.price); break;
+        case 'name-asc':     filtered.sort((a,b) => a.name.localeCompare(b.name)); break;
+        case 'rating-desc':  filtered.sort((a,b) => b.rating - a.rating); break;
+    }
+    grid.innerHTML = filtered.map(p => renderProductCard(p)).join('');
+    const count = document.getElementById('productsCount');
+    if (count) count.textContent = filtered.length + ' product' + (filtered.length !== 1 ? 's' : '');
 }
 
 function triggerCartBounce(btn) {
@@ -108,15 +176,33 @@ function handleProductModalClick(e) {
 }
 
 function toggleWishlist(id, btn) {
+    let wasAdded = false;
     if (wishlist.includes(id)) {
         wishlist = wishlist.filter(x => x !== id);
-        if (btn) { btn.innerHTML = '🤍'; btn.classList.remove('active'); }
+        if (btn) {
+            btn.classList.remove('active');
+            btn.innerHTML = _heartSVG(false);
+            btn.setAttribute('aria-label', 'Add to wishlist');
+        }
     } else {
         wishlist.push(id);
-        if (btn) { btn.innerHTML = '❤️'; btn.classList.add('active'); }
+        wasAdded = true;
+        if (btn) {
+            btn.classList.add('active');
+            btn.innerHTML = _heartSVG(true);
+            btn.setAttribute('aria-label', 'Remove from wishlist');
+        }
         showToast(t('wishlist.added'));
     }
     setSafeStorage('gb_wishlist', wishlist);
-    const stat = document.getElementById('profileStatWishlist');
-    if (stat) stat.textContent = wishlist.length;
+    if (typeof updateWishlistBadges === 'function') {
+        updateWishlistBadges();
+    } else {
+        const stat = document.getElementById('profileStatWishlist');
+        if (stat) stat.textContent = wishlist.length;
+        const navB = document.getElementById('wishlistBadgeNav');
+        if (navB) navB.textContent = wishlist.length;
+        const mobB = document.getElementById('mobileWishlistBadge');
+        if (mobB) mobB.textContent = wishlist.length;
+    }
 }

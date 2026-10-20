@@ -1,9 +1,13 @@
 // ══════════════════════════════════════════
 // MAIN BOOTSTRAP & APPLICATION INITIALIZATION
 // ══════════════════════════════════════════
+// Main Bootstrap & Initialization
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts('all');
     updateCartUI();
+    if (typeof updateWishlistBadges === 'function') {
+        updateWishlistBadges();
+    }
     updateAuthUI();
     initScrollProgress();
     initCounters();
@@ -54,12 +58,63 @@ function handleNewsletter(e) {
     showToast(t('toast.subscribed'), 'success');
 }
 
-// Nav Search Handler
+// Nav Search Live Filter & Shortcut
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('navSearch')?.addEventListener('input', function () {
-        const q = this.value.toLowerCase().trim();
-        if (q.length < 2) return;
-        const match = PRODUCTS.find(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
-        if (match) showToast(t('toast.searchFound', { name: sanitizeHTML(match.name), price: match.price, unit: match.unit }));
+    const searchInput = document.getElementById('navSearch');
+    if (!searchInput) return;
+
+    // Ctrl+K / Cmd+K focus shortcut
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            searchInput.focus();
+            searchInput.select();
+        }
+        if (e.key === 'Escape') {
+            if (document.activeElement === searchInput) {
+                searchInput.blur();
+                searchInput.value = '';
+                renderProducts(currentFilter || 'all');
+            }
+            if (document.getElementById('mobileDrawer')?.classList.contains('open')) {
+                toggleDrawer();
+            }
+        }
+    });
+
+    let debounceTimer;
+    searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        const q = this.value.trim().toLowerCase();
+        debounceTimer = setTimeout(() => {
+            if (!q) {
+                renderProducts(currentFilter || 'all');
+                return;
+            }
+            const grid = document.getElementById('productsGrid');
+            if (!grid) return;
+            const matches = PRODUCTS.filter(p =>
+                p.name.toLowerCase().includes(q) ||
+                p.desc.toLowerCase().includes(q) ||
+                p.category.toLowerCase().includes(q) ||
+                (p.badge && p.badge.toLowerCase().includes(q))
+            );
+
+            const countEl = document.getElementById('productsCount');
+            if (countEl) countEl.textContent = `${matches.length} product${matches.length !== 1 ? 's' : ''}`;
+
+            if (!matches.length) {
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1;text-align:center;padding:50px 20px;">
+                        <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+                        <h3 style="font-family:var(--display);color:var(--ink);margin-bottom:6px">No bricks matching "${sanitizeHTML(q)}"</h3>
+                        <p style="color:var(--ink-3);font-size:.9rem;margin-bottom:18px">Try searching for "awwal", "shiv", "grade", or "red"</p>
+                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('navSearch').value='';renderProducts('all')">View All Bricks</button>
+                    </div>`;
+                return;
+            }
+            grid.innerHTML = matches.map(p => renderProductCard(p)).join('');
+            document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 220);
     });
 });

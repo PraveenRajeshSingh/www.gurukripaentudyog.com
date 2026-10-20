@@ -34,7 +34,16 @@
                 <span class="mn-label">Cart</span>
             </a>
 
-            <!-- 4. 3-in-1 Estimator -->
+            <!-- 4. Wishlist -->
+            <a href="javascript:void(0)" class="mn-item" onclick="openWishlistDrawer();if(window.Platform)Platform.haptic('light')" aria-label="Wishlist">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <span class="mn-label">Wishlist</span>
+                <span class="mn-badge" id="mobileWishlistBadge" style="display:none">0</span>
+            </a>
+
+            <!-- 5. Estimator -->
             <a href="#calculator" class="mn-item" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light')" aria-label="Estimator">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="4" y="2" width="16" height="20" rx="3" />

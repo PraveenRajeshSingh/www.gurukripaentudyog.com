@@ -2,62 +2,67 @@
    GURUKRIPA BRICKS — UNIFIED DESIGN TOKENS & SYSTEM BASE
    Platform: Web · Android · iOS
    WCAG 2.1 AA Compliant Contrast & Responsive Typography
+   Master Palette v4.0 — Oct 2026
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 :root {
     /* ─── 1. Brand Palette ─── */
-    --brand: #C8460A;                 /* Primary terracotta */
-    --brand-dark: #8B2E05;            /* Dark deep clay */
-    --brand-light: #E05A1E;           /* Light clay accent */
-    --brand-amber: #F5A623;           /* Warm kiln fire accent */
-    --brand-glow: rgba(200, 70, 10, 0.15);
-    --brand-glow-strong: rgba(200, 70, 10, 0.30);
+    --brand: #C83E0A;                   /* Primary terracotta — main CTAs */
+    --brand-dark: #992E08;              /* Hover / active states */
+    --brand-light: #FCE8DF;             /* Soft brand backgrounds */
+    --brand-amber: #D6A34D;             /* Accent Gold — premium highlights */
+    --brand-secondary: #7D3523;         /* Supporting industrial accent */
+    --brand-glow: rgba(200, 62, 10, 0.15);
+    --brand-glow-strong: rgba(200, 62, 10, 0.30);
 
     /* ─── 2. Surface & Backgrounds (Light Default) ─── */
-    --bg: #FAFAF9;                    /* Off-white warm canvas */
-    --bg-card: #FFFFFF;               /* Elevated card surface */
-    --bg-elevated: #FFFFFF;           /* Floating modal / sheet */
-    --bg-subtle: #F5F0EC;             /* Light warm section fill */
-    --bg-muted: #EDE5DF;              /* Input / pill neutral */
-    --nav-glass: rgba(250, 250, 249, 0.94);
-    --bottom-nav-glass: rgba(250, 250, 249, 0.96);
+    --bg: #FCFAF7;                      /* Main page background */
+    --bg-card: #FFFFFF;                 /* Cards, dialogs, forms */
+    --bg-elevated: #FFFFFF;             /* Floating modal / sheet */
+    --bg-subtle: #F5EFE6;               /* Alternating content sections */
+    --bg-muted: #EDE5DF;                /* Input / pill neutral */
+    --nav-glass: rgba(252, 250, 247, 0.94);
+    --bottom-nav-glass: rgba(252, 250, 247, 0.96);
 
     /* ─── 3. Typography & Contrast (WCAG AA >= 4.5:1) ─── */
-    --ink: #1C1009;                   /* Heading / high emphasis */
-    --ink-2: #4A3728;                 /* Primary body text */
-    --ink-3: #6B5545;                 /* Helper / secondary text */
-    --ink-inverse: #FFFFFF;           /* Text on brand/dark */
+    --ink: #202124;                     /* Headlines / high emphasis */
+    --ink-2: #3D3B38;                   /* Primary body text */
+    --ink-3: #64666B;                   /* Helper / secondary text */
+    --ink-inverse: #FFFFFF;             /* Text on brand/dark surfaces */
 
     /* ─── 4. Borders & Dividers ─── */
-    --line: rgba(200, 70, 10, 0.12);
-    --line-mid: rgba(200, 70, 10, 0.22);
-    --line-strong: rgba(200, 70, 10, 0.40);
+    --line: #E7E1DA;                    /* Card borders / dividers */
+    --line-mid: rgba(200, 62, 10, 0.18);
+    --line-strong: rgba(200, 62, 10, 0.35);
 
     /* ─── 5. Semantic Feedback States ─── */
-    --success: #15803d;
-    --success-bg: rgba(21, 128, 61, 0.10);
-    --success-border: rgba(21, 128, 61, 0.25);
+    --success: #218653;
+    --success-bg: rgba(33, 134, 83, 0.10);
+    --success-border: rgba(33, 134, 83, 0.25);
 
-    --warning: #b45309;
-    --warning-bg: rgba(180, 83, 9, 0.10);
-    --warning-border: rgba(180, 83, 9, 0.25);
+    --warning: #B76B08;
+    --warning-bg: rgba(183, 107, 8, 0.10);
+    --warning-border: rgba(183, 107, 8, 0.25);
 
-    --danger: #b91c1c;
-    --danger-bg: rgba(185, 28, 28, 0.10);
-    --danger-border: rgba(185, 28, 28, 0.25);
+    --danger: #C62828;
+    --danger-bg: rgba(198, 40, 40, 0.10);
+    --danger-border: rgba(198, 40, 40, 0.25);
 
     --info: #0369a1;
     --info-bg: rgba(3, 105, 161, 0.10);
     --info-border: rgba(3, 105, 161, 0.25);
 
-    /* ─── 6. Interactive States & Accessibility ─── */
-    --focus-ring: 0 0 0 3px rgba(200, 70, 10, 0.35);
+    /* ─── 6. Footer ─── */
+    --footer-bg: #202428;               /* Footer / dark sections */
+
+    /* ─── 7. Interactive States & Accessibility ─── */
+    --focus-ring: 0 0 0 3px rgba(200, 62, 10, 0.35);
     --focus-ring-offset: 2px;
     --disabled-opacity: 0.55;
-    --btn-primary-hover: #A83606;
-    --btn-primary-active: #8B2E05;
+    --btn-primary-hover: #B03508;
+    --btn-primary-active: #992E08;
 
-    /* ─── 7. Radii Scale ─── */
+    /* ─── 8. Radii Scale ─── */
     --r-xs: 4px;
     --r-sm: 8px;
     --r-md: 14px;
@@ -65,33 +70,33 @@
     --r-xl: 32px;
     --radius-pill: 50px;
 
-    /* ─── 8. Shadows & Elevation ─── */
-    --sh-sm: 0 1px 3px rgba(28, 16, 9, 0.06);
-    --sh-card: 0 2px 16px rgba(28, 16, 9, 0.07);
-    --sh-hover: 0 10px 40px rgba(200, 70, 10, 0.14);
+    /* ─── 9. Shadows & Elevation ─── */
+    --sh-sm: 0 1px 3px rgba(32, 33, 36, 0.06);
+    --sh-card: 0 2px 16px rgba(32, 33, 36, 0.07);
+    --sh-hover: 0 10px 40px rgba(200, 62, 10, 0.14);
     --sh-modal: 0 32px 80px rgba(0, 0, 0, 0.22);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 
-    /* ─── 9. Typography Stacks ─── */
+    /* ─── 10. Typography Stacks ─── */
     --display: 'Fraunces', Georgia, serif;
     --body: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-    /* ─── 10. Motion & Transitions ─── */
+    /* ─── 11. Motion & Transitions ─── */
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
     --t: 0.22s;
     --t-fast: 0.15s;
 
-    /* ─── 11. Glassmorphism Tokens ─── */
+    /* ─── 12. Glassmorphism Tokens ─── */
     --glass-bg: rgba(255, 255, 255, 0.15);
     --glass-border: rgba(255, 255, 255, 0.25);
 
-    /* ─── 12. Safe Area Insets (iOS notch, Android navigation bar) ─── */
+    /* ─── 13. Safe Area Insets (iOS notch, Android navigation bar) ─── */
     --sat: env(safe-area-inset-top, 0px);
     --sab: env(safe-area-inset-bottom, 0px);
     --sal: env(safe-area-inset-left, 0px);
     --sar: env(safe-area-inset-right, 0px);
 
-    /* ─── 13. Z-Index Scale ─── */
+    /* ─── 14. Z-Index Scale ─── */
     --z-negative: -1;
     --z-base: 1;
     --z-sticky: 100;
@@ -110,52 +115,56 @@
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-        --bg: #130B05;
-        --bg-card: #1C1009;
-        --bg-elevated: #241509;
-        --bg-subtle: #241509;
-        --bg-muted: #2E1B0E;
+        --bg: #151210;
+        --bg-card: #1E1915;
+        --bg-elevated: #241D18;
+        --bg-subtle: #241D18;
+        --bg-muted: #2E2419;
 
-        --ink: #F5EEE8;
-        --ink-2: #D4BCA8;
-        --ink-3: #9F826E;
-        --ink-inverse: #1C1009;
+        --ink: #F5EDE6;
+        --ink-2: #CDB49E;
+        --ink-3: #8F7665;
+        --ink-inverse: #1E1915;
 
-        --line: rgba(200, 70, 10, 0.18);
-        --line-mid: rgba(200, 70, 10, 0.30);
-        --line-strong: rgba(200, 70, 10, 0.48);
+        --line: rgba(229, 225, 218, 0.12);
+        --line-mid: rgba(200, 62, 10, 0.30);
+        --line-strong: rgba(200, 62, 10, 0.48);
 
-        --nav-glass: rgba(28, 16, 9, 0.94);
-        --bottom-nav-glass: rgba(20, 12, 6, 0.96);
+        --nav-glass: rgba(30, 25, 21, 0.94);
+        --bottom-nav-glass: rgba(21, 18, 16, 0.96);
+
+        --footer-bg: #0F0D0B;
 
         --sh-card: 0 4px 20px rgba(0, 0, 0, 0.45);
-        --sh-hover: 0 12px 40px rgba(200, 70, 10, 0.22);
-        --focus-ring: 0 0 0 3px rgba(245, 166, 35, 0.45);
+        --sh-hover: 0 12px 40px rgba(200, 62, 10, 0.22);
+        --focus-ring: 0 0 0 3px rgba(214, 163, 77, 0.45);
     }
 }
 
 html[data-theme="dark"] {
-    --bg: #130B05;
-    --bg-card: #1C1009;
-    --bg-elevated: #241509;
-    --bg-subtle: #241509;
-    --bg-muted: #2E1B0E;
+    --bg: #151210;
+    --bg-card: #1E1915;
+    --bg-elevated: #241D18;
+    --bg-subtle: #241D18;
+    --bg-muted: #2E2419;
 
-    --ink: #F5EEE8;
-    --ink-2: #D4BCA8;
-    --ink-3: #9F826E;
-    --ink-inverse: #1C1009;
+    --ink: #F5EDE6;
+    --ink-2: #CDB49E;
+    --ink-3: #8F7665;
+    --ink-inverse: #1E1915;
 
-    --line: rgba(200, 70, 10, 0.18);
-    --line-mid: rgba(200, 70, 10, 0.30);
-    --line-strong: rgba(200, 70, 10, 0.48);
+    --line: rgba(229, 225, 218, 0.12);
+    --line-mid: rgba(200, 62, 10, 0.30);
+    --line-strong: rgba(200, 62, 10, 0.48);
 
-    --nav-glass: rgba(28, 16, 9, 0.94);
-    --bottom-nav-glass: rgba(20, 12, 6, 0.96);
+    --nav-glass: rgba(30, 25, 21, 0.94);
+    --bottom-nav-glass: rgba(21, 18, 16, 0.96);
+
+    --footer-bg: #0F0D0B;
 
     --sh-card: 0 4px 20px rgba(0, 0, 0, 0.45);
-    --sh-hover: 0 12px 40px rgba(200, 70, 10, 0.22);
-    --focus-ring: 0 0 0 3px rgba(245, 166, 35, 0.45);
+    --sh-hover: 0 12px 40px rgba(200, 62, 10, 0.22);
+    --focus-ring: 0 0 0 3px rgba(214, 163, 77, 0.45);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -246,7 +255,7 @@ svg { display: block; }
 
 .sec-tag {
     display: inline-block;
-    background: rgba(200, 70, 10, .10);
+    background: rgba(200, 62, 10, .10);
     color: var(--brand);
     font-size: .7rem;
     font-weight: 700;
