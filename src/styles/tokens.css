@@ -114,39 +114,15 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DARK THEME TOKENS
-   Activated by:
-   - User toggle: html[data-theme="dark"]
-   - System match: @media (prefers-color-scheme: dark) unless explicitly set to light
+   DARK THEME TOKENS — LEGACY / INACTIVE
+   The product now ships a single LIGHT theme: <html> is pinned to
+   data-theme="light" in head.html + platform.js, so the blocks below
+   can no longer activate on their own. The former
+   @media (prefers-color-scheme: dark) activation was removed here —
+   it was leaking dark colors to dark-OS visitors with no way back.
+   Kept only so a future, deliberate opt-in (Platform.setTheme('dark'))
+   would still find its tokens defined.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-        --bg: #151210;
-        --bg-card: #1E1915;
-        --bg-elevated: #241D18;
-        --bg-subtle: #241D18;
-        --bg-muted: #2E2419;
-
-        --ink: #F5EDE6;
-        --ink-2: #CDB49E;
-        --ink-3: #8F7665;
-        --ink-inverse: #1E1915;
-
-        --line: rgba(229, 225, 218, 0.12);
-        --line-mid: rgba(200, 62, 10, 0.30);
-        --line-strong: rgba(200, 62, 10, 0.48);
-
-        --nav-glass: rgba(30, 25, 21, 0.94);
-        --bottom-nav-glass: rgba(21, 18, 16, 0.96);
-
-        --footer-bg: #0F0D0B;
-
-        --sh-card: 0 4px 20px rgba(0, 0, 0, 0.45);
-        --sh-hover: 0 12px 40px rgba(200, 62, 10, 0.22);
-        --focus-ring: 0 0 0 3px rgba(214, 163, 77, 0.45);
-    }
-}
-
 html[data-theme="dark"] {
     --bg: #151210;
     --bg-card: #1E1915;

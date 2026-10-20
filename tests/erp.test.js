@@ -6,7 +6,7 @@ const path = require('node:path');
 // Load the ERP modules into one isolated scope that shares a single
 // mock window.GurukripaERP object and a Map-backed localStorage stub —
 // the same harness style as tests/services.test.js.
-const files = ['erp-core.js', 'erp-inventory.js', 'erp-documents.js', 'erp-crm.js', 'erp-analytics.js', 'erp-calculators.js', 'erp-logistics.js', 'erp-notify.js'];
+const files = ['erp-core.js', 'erp-inventory.js', 'erp-documents.js', 'erp-crm.js', 'erp-analytics.js', 'erp-calculators.js', 'erp-logistics.js', 'erp-notify.js', 'erp-invoice.js'];
 const src = files.map(f => fs.readFileSync(path.resolve(__dirname, '../src/js/' + f), 'utf8'));
 
 let mockStorage;
@@ -522,5 +522,141 @@ describe('ERP Notify — rules emit idempotent pending alerts', () => {
         ERP.Logistics.scheduleMaintenance('v1', { type: 'brake', dueDate: new Date(Date.now() - 86400000).toISOString() });
         const created = ERP.Notify.evaluate('maintenance_due');
         assert.ok(created.some(a => a.rule === 'maintenance_due'));
+    });
+});
+
+// ══════════════════════════════════════════════════════════════════
+describe('ERP Invoices — company profile, amount-in-words, GST PDF model, idempotent delivery→invoice', () => {
+    beforeEach(() => loadERP({ name: 'Owner', role: 'owner' }));
+
+    test('company profile uses real published defaults and merges partial overrides', () => {
+        const IV = ERP.Invoices;
+        const d = IV.getCompanyProfile();
+        assert.equal(d.legalName, 'Gurukripa Bricks Industry');
+        assert.equal(d.registrations.gstin, '09AAACG7481M1Z2');
+        assert.equal(d.address.stateCode, '09');
+        // partial save keeps untouched nested fields
+        IV.saveCompanyProfile({ legalName: 'GBI Pvt Ltd', address: { line1: 'New Yard' } });
+        const p = IV.getCompanyProfile();
+        assert.equal(p.legalName, 'GBI Pvt Ltd');
+        assert.equal(p.address.line1, 'New Yard');
+        assert.equal(p.address.state, 'Uttar Pradesh'); // default retained
+        assert.equal(p.registrations.gstin, '09AAACG7481M1Z2'); // retained
+        IV.resetCompanyProfile();
+        assert.equal(ERP.Invoices.getCompanyProfile().legalName, 'Gurukripa Bricks Industry');
+    });
+
+    test('amount in words follows the Indian numbering system', () => {
+        const IV = ERP.Invoices;
+        assert.equal(IV.amountInWords(0), 'Zero Rupees Only');
+        assert.equal(IV.amountInWords(123456789), 'Twelve Crore Thirty Four Lakh Fifty Six Thousand Seven Hundred Eighty Nine Rupees Only');
+        assert.equal(IV.amountInWords(29610), 'Twenty Nine Thousand Six Hundred Ten Rupees Only');
+        assert.equal(IV.amountInWords(10.55), 'Ten Rupees and Fifty Five Paise Only');
+    });
+
+    test('document title is TAX INVOICE with GST, BILL OF SUPPLY without', () => {
+        const IV = ERP.Invoices, D = ERP.Documents;
+        const taxed = D.createDocument('invoice', { lines: [{ item: 1, name: 'Awwal', qty: 1000, unitPrice: 7, taxRate: 5 }], tax: { place: 'intra' } });
+        const exempt = D.createDocument('invoice', { lines: [{ item: 2, name: 'Sal', qty: 1000, unitPrice: 7, taxRate: 0 }], tax: { place: 'intra' } });
+        assert.equal(IV.documentTitle(taxed, IV.getCompanyProfile(), {}), 'TAX INVOICE');
+        assert.equal(IV.documentTitle(exempt, IV.getCompanyProfile(), {}), 'BILL OF SUPPLY');
+    });
+
+    test('delivery→invoice issues one real invoice and never double-bills on retry', () => {
+        const IV = ERP.Invoices;
+        const order = { id: 'GBI-1001', date: '2026-10-20', paymentMethod: 'UPI',
+            customer: { name: 'Ravi Kumar', phone: '9999999999' },
+            items: [{ id: 100, name: 'Awwal', qty: 4000, unit: 'piece', price: 7.05 }] };
+        const r1 = IV.ensureInvoiceForDelivery(order);
+        assert.equal(r1.ok, true);
+        assert.equal(r1.created, true);
+        assert.equal(r1.finalized, true);
+        assert.match(r1.invoice.number, /^INV\//);
+        // 4000 * 7.05 = 28200 taxable, +5% = 1410 tax (cgst 705 + sgst 705) => 29610
+        assert.equal(r1.invoice.totals.grandTotal, 29610);
+        assert.equal(r1.invoice.totals.place, 'intra');
+        assert.equal(r1.invoice.status, 'paid'); // prepaid UPI mirrored idempotently
+        const r2 = IV.ensureInvoiceForDelivery(order);
+        assert.equal(r2.created, false);
+        assert.equal(r2.duplicate, true);
+        assert.equal(r2.invoice.number, r1.invoice.number); // no new number
+    });
+
+    test('inter-state delivery is billed as IGST using place of supply', () => {
+        const IV = ERP.Invoices;
+        const order = { id: 'GBI-2002', date: '2026-10-20', paymentMethod: 'COD',
+            customer: { name: 'Mahesh', phone: '9888888888' },
+            shipping: { stateCode: '27' },
+            items: [{ id: 100, name: 'Awwal', qty: 1000, unit: 'piece', price: 10 }] };
+        const r = IV.ensureInvoiceForDelivery(order);
+        assert.equal(r.ok, true);
+        assert.equal(r.invoice.totals.place, 'inter');
+        assert.equal(r.invoice.totals.cgst, 0);
+        assert.equal(r.invoice.totals.igst, 500); // 10000 * 5%
+        assert.equal(r.invoice.status, 'finalized', 'credit/COD sale stays outstanding');
+        assert.equal(r.invoice.balance, 10500);
+    });
+
+    test('rendered A4 invoice embeds real company, tax and amount-in-words', () => {
+        const IV = ERP.Invoices;
+        const order = { id: 'GBI-3003', date: '2026-10-20', paymentMethod: 'UPI',
+            customer: { name: 'Anil', phone: '9777777777' },
+            items: [{ id: 100, name: 'Awwal', qty: 4000, unit: 'piece', price: 7.05 }] };
+        const inv = IV.ensureInvoiceForDelivery(order).invoice;
+        const html = IV.renderInvoiceHTML(inv.number);
+        assert.ok(html.indexOf('<!doctype html>') === 0);
+        assert.ok(html.includes('Gurukripa Bricks Industry'));
+        assert.ok(html.includes('09AAACG7481M1Z2'));
+        assert.ok(html.includes('TAX INVOICE'));
+        assert.ok(html.includes('CGST') && html.includes('SGST'));
+        assert.ok(html.includes('Amount in words'));
+        assert.ok(html.includes('Twenty Nine Thousand Six Hundred Ten Rupees Only'));
+        assert.ok(html.includes(inv.number));
+        assert.ok(html.includes('@page{size:A4'));
+    });
+
+    test('customers can only see their own invoices', () => {
+        const IV = ERP.Invoices;
+        IV.ensureInvoiceForDelivery({ id: 'GBI-A', customer: { name: 'A', phone: '9000000001' }, items: [{ id: 1, name: 'x', qty: 1, unitPrice: 100, taxRate: 0 }] });
+        IV.ensureInvoiceForDelivery({ id: 'GBI-B', customer: { name: 'B', phone: '9000000002' }, items: [{ id: 1, name: 'x', qty: 1, unitPrice: 100, taxRate: 0 }] });
+        const a = IV.invoicesForCustomer({ phone: '9000000001' });
+        assert.equal(a.length, 1);
+        assert.equal(a[0].number, IV.invoiceForOrder('GBI-A').number);
+        const b = IV.invoicesForCustomer({ phone: '9000000002' });
+        assert.equal(b.length, 1);
+        assert.notEqual(a[0].id, b[0].id);
+        assert.equal(IV.invoicesForCustomer({ phone: '9123456789' }).length, 0);
+    });
+
+    test('invoice report reconciles invoiced, tax, received and outstanding', () => {
+        const IV = ERP.Invoices;
+        IV.ensureInvoiceForDelivery({ id: 'GBI-R1', paymentMethod: 'UPI', customer: { name: 'R1', phone: '9111111111' }, items: [{ id: 1, name: 'x', qty: 1000, unitPrice: 10, taxRate: 5 }] });
+        IV.ensureInvoiceForDelivery({ id: 'GBI-R2', paymentMethod: 'COD', customer: { name: 'R2', phone: '9222222222' }, items: [{ id: 1, name: 'x', qty: 1000, unitPrice: 10, taxRate: 5 }] });
+        const rep = IV.invoiceReport();
+        assert.equal(rep.count, 2);
+        assert.equal(rep.invoiced, 21000); // 2 * (10000 + 500)
+        assert.equal(rep.tax, 1000);
+        assert.equal(rep.received, 10500); // only the prepaid one
+        assert.equal(rep.outstanding, 10500);
+        assert.equal(rep.paid, 1);
+    });
+
+    test('refuses to fabricate an invoice without real line items', () => {
+        const IV = ERP.Invoices;
+        const r = IV.ensureInvoiceForDelivery({ id: 'GBI-EMPTY', customer: { name: 'No Items', phone: '9333333333' } });
+        assert.equal(r.ok, false);
+        assert.equal(r.error, 'no_line_data');
+        assert.equal(IV.invoiceForOrder('GBI-EMPTY'), null);
+    });
+
+    test('DOM-only actions degrade honestly and resend needs a backend', () => {
+        const IV = ERP.Invoices;
+        const inv = IV.ensureInvoiceForDelivery({ id: 'GBI-D', paymentMethod: 'UPI', customer: { name: 'D', phone: '9444444444' }, items: [{ id: 1, name: 'x', qty: 1, unitPrice: 100, taxRate: 0 }] }).invoice;
+        assert.equal(IV.printInvoice(inv.number).ok, false); // no DOM in harness
+        assert.equal(IV.downloadInvoice(inv.number).ok, false);
+        assert.equal(IV.shareInvoice(inv.number).error, 'share_unsupported');
+        const rs = IV.resendInvoice(inv.number, 'email');
+        assert.equal(rs.sent, false);
+        assert.equal(rs.reason, 'backend_required');
     });
 });

@@ -41,6 +41,8 @@ function openProfile() {
     if (vEmail) vEmail.textContent = email;
     if (vMobile) vMobile.textContent = sanitizeHTML(user.mobile || '—');
     if (vAddr) vAddr.textContent = sanitizeHTML(user.address || '—');
+    const vRef = document.getElementById('profileViewRef');
+    if (vRef) vRef.textContent = getAccountRef(user);
     if (aDisp) aDisp.textContent = sanitizeHTML(user.address || 'No saved address yet.');
 
     cancelEditProfile();
@@ -63,14 +65,29 @@ function handleProfileOverlayClick(e) {
 }
 
 function switchProfileTab(tabName, btn) {
+    const tabs = ['info', 'orders', 'wishlist', 'address'];
+    const buttons = document.querySelectorAll('.profile-tabs .profile-tab');
     if (btn) {
-        document.querySelectorAll('.profile-tab').forEach(b => b.classList.remove('active'));
+        buttons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+    } else {
+        // Programmatic switch (e.g. from the navbar account menu):
+        // keep the tab strip's active state in sync with the panel.
+        const idx = tabs.indexOf(tabName);
+        buttons.forEach((b, i) => b.classList.toggle('active', i === idx));
     }
-    ['info', 'orders', 'wishlist', 'address'].forEach(t => {
+    tabs.forEach(t => {
         const panel = document.getElementById('pTab' + t.charAt(0).toUpperCase() + t.slice(1));
         if (panel) panel.classList.toggle('active', t === tabName);
     });
+}
+
+// Opens the profile modal directly on a given tab — used by the navbar
+// account dropdown ("Saved Addresses", "My Orders & Invoices").
+function openProfileTab(tab) {
+    if (!user) { openAuth('login'); return; }
+    openProfile();
+    switchProfileTab(tab);
 }
 
 function switchToEditProfile() {
@@ -132,6 +149,8 @@ function saveProfile(e) {
     if (vMobile) vMobile.textContent = sanitizeHTML(mobile || '—');
     if (vAddr) vAddr.textContent = sanitizeHTML(address || '—');
     if (aDisp) aDisp.textContent = sanitizeHTML(address || 'No saved address yet.');
+    const rRef = document.getElementById('profileViewRef');
+    if (rRef) rRef.textContent = getAccountRef(user);
 
     const initial = name[0]?.toUpperCase() || 'U';
     const aLetter = document.getElementById('profileAvatarLetter');

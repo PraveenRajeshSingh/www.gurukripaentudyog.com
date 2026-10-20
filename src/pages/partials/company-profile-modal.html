@@ -1,0 +1,109 @@
+    <!-- ━━━━━━━━━━━━━━━━━ COMPANY PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="companyProfileModal" onclick="if(event.target.id==='companyProfileModal')closeCompanyProfile()">
+        <div class="modal-box cp-box">
+            <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
+                <div>
+                    <div class="modal-title" style="font-size:1.05rem">🏢 Company Profile</div>
+                    <div class="modal-subtitle">These details appear on every generated invoice</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body cp-body">
+                <form id="companyProfileForm" onsubmit="return false" autocomplete="off">
+                    <div class="cp-grid">
+                        <fieldset>
+                            <legend>Identity</legend>
+                            <div class="cp-logo-row">
+                                <img id="cpLogoPreview" class="cp-logo" alt="Logo preview" />
+                                <div>
+                                    <label class="cp-file">Upload logo<input type="file" accept="image/*" id="cpLogoInput" /></label>
+                                    <button type="button" class="link-btn" onclick="clearCompanyLogo()">Remove logo</button>
+                                    <p class="cp-hint">Stored locally; a small square PNG/JPG works best.</p>
+                                </div>
+                            </div>
+                            <label>Legal business name<input name="legalName" /></label>
+                            <label>Trade name<input name="tradeName" /></label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Registered office</legend>
+                            <label>Address line 1<input name="addr.line1" /></label>
+                            <label>Address line 2<input name="addr.line2" /></label>
+                            <div class="cp-2col">
+                                <label>State<input name="addr.state" /></label>
+                                <label>State code<input name="addr.stateCode" maxlength="2" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Pincode<input name="addr.pincode" /></label>
+                                <label>Country<input name="addr.country" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Phone<input name="contact.phone" /></label>
+                                <label>Email<input name="contact.email" /></label>
+                            </div>
+                            <label>Website<input name="contact.website" /></label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Registrations &amp; tax</legend>
+                            <div class="cp-2col">
+                                <label>GSTIN<input name="reg.gstin" /></label>
+                                <label>PAN<input name="reg.pan" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Kiln licence<input name="reg.kilnLicense" /></label>
+                                <label>Udyam / CIN<input name="reg.udyam" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Default HSN/SAC<input name="tax.defaultHsn" /></label>
+                                <label>Default GST %<input name="tax.defaultRate" type="number" step="0.01" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Tax scheme<select name="tax.scheme"><option value="exclusive">Exclusive (tax added)</option><option value="inclusive">Inclusive (tax within)</option></select></label>
+                                <label>Default place<select name="tax.defaultPlace"><option value="intra">Intra-state (CGST+SGST)</option><option value="inter">Inter-state (IGST)</option></select></label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Invoice numbering</legend>
+                            <div class="cp-2col">
+                                <label>Prefix<input name="num.prefix" /></label>
+                                <label>Serial width<input name="num.serialWidth" type="number" min="2" max="8" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Copy label<input name="num.copyLabel" /></label>
+                                <label class="cp-check"><input name="num.resetByFinYear" type="checkbox" /> Reset each financial year</label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Bank &amp; payment</legend>
+                            <label>Account name<input name="bank.accountName" /></label>
+                            <div class="cp-2col">
+                                <label>Bank<input name="bank.bank" /></label>
+                                <label>Branch<input name="bank.branch" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Account no.<input name="bank.accountNo" /></label>
+                                <label>IFSC<input name="bank.ifsc" /></label>
+                            </div>
+                            <label>UPI ID<input name="bank.upi" /></label>
+                            <label>Payment instructions<textarea name="bank.instructions" rows="2"></textarea></label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Signatory &amp; terms</legend>
+                            <div class="cp-2col">
+                                <label>Authorised signatory<input name="signatory.name" /></label>
+                                <label>Designation<input name="signatory.designation" /></label>
+                            </div>
+                            <label>Terms &amp; conditions<textarea name="terms" rows="3"></textarea></label>
+                            <label>Declaration<textarea name="declaration" rows="2"></textarea></label>
+                            <label>Footer note<input name="footer" /></label>
+                        </fieldset>
+                    </div>
+                </form>
+            </div>
+            <div class="cp-actions">
+                <button class="btn btn-outline btn-sm" onclick="resetCompanyProfileForm()">Reset to defaults</button>
+                <div style="flex:1"></div>
+                <button class="btn btn-outline btn-sm" onclick="closeCompanyProfile()">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="saveCompanyProfileForm()">Save profile</button>
+            </div>
+        </div>
+    </div>

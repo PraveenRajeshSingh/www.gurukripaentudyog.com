@@ -209,8 +209,15 @@ function updateAuthUI() {
         if (userNameEl) userNameEl.textContent = user.name?.split(' ')[0] || 'User';
         const udNameEl = document.getElementById('udName');
         if (udNameEl) udNameEl.textContent = sanitizeHTML(user.name || 'User');
-        const udEmailEl = document.getElementById('udEmail');
-        if (udEmailEl) udEmailEl.textContent = sanitizeHTML(user.email || '');
+        const udAvatarEl = document.getElementById('udAvatar');
+        if (udAvatarEl) udAvatarEl.style.background = getAvatarBg(user.name);
+        const udInitEl = document.getElementById('udAvatarInitial');
+        if (udInitEl) udInitEl.textContent = initial;
+        const udRefEl = document.getElementById('udRef');
+        if (udRefEl) {
+            udRefEl.textContent = getAccountRef(user);
+            udRefEl.title = user.email || user.mobile || '';
+        }
 
         if (drawerAuth) drawerAuth.innerHTML = `<button class="btn btn-ghost btn-full" onclick="logoutUser();toggleDrawer()">Sign Out (${sanitizeHTML(user.name?.split(' ')[0])})</button>`;
         const mnLabel = document.getElementById('mnProfileLabel');

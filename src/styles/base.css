@@ -65,6 +65,8 @@
 
         html {
             scroll-behavior: smooth;
+            /* Offset anchor jumps so the sticky navbar (64px) never hides section headings */
+            scroll-padding-top: 78px;
             -webkit-text-size-adjust: 100%
         }
 

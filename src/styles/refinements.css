@@ -1466,3 +1466,28 @@ main [id].cta-banner {
     .pd-img { aspect-ratio: 4 / 3; }
     .product-detail-modal .modal-box { max-width: 100%; }
 }
+
+/* ── Navbar account dropdown — identity header + grouped actions ──
+   Styles the rebuilt #userDropdown markup (navbar.html): avatar + name +
+   derived customer reference at the top, section labels, and a viewport
+   clamp so the menu is never clipped on short screens. */
+.user-dropdown { width: 268px; max-height: calc(100vh - 84px); overflow-y: auto; overscroll-behavior: contain; }
+.ud-identity { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ud-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--brand); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .82rem; font-weight: 700; line-height: 1;
+    flex-shrink: 0; overflow: hidden;
+}
+.ud-idtext { min-width: 0; }
+.ud-identity .ud-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ud-ref { font-size: .72rem; color: var(--ink-3); margin-top: 1px; font-variant-numeric: tabular-nums; }
+.ud-grouplabel {
+    padding: 10px 12px 4px;
+    font-size: .64rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--ink-3);
+}
+.ud-body > .ud-grouplabel:first-child { padding-top: 4px; }
+.ud-item:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+

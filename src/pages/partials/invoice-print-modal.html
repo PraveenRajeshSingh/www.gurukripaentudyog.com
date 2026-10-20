@@ -1,0 +1,22 @@
+    <!-- ━━━━━━━━━━━━━━━━━ INVOICE PREVIEW / PDF MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="invoicePdfModal" onclick="if(event.target.id==='invoicePdfModal')closeInvoicePdf()">
+        <div class="modal-box inv-pdf-box">
+            <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
+                <div>
+                    <div class="modal-title" style="font-size:1.05rem">Invoice &amp; PDF</div>
+                    <div class="modal-subtitle" id="invPdfSubtitle">Preview, download or print a GST invoice</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body inv-pdf-body">
+                <iframe id="invPdfFrame" class="inv-pdf-frame" title="Invoice preview"></iframe>
+            </div>
+            <div class="inv-pdf-actions">
+                <button class="btn btn-outline btn-sm" onclick="printCurrentInvoice()">🖨️ Print / Save PDF</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadCurrentInvoice()">⬇️ Download</button>
+                <button class="btn btn-outline btn-sm" onclick="shareCurrentInvoice()">🔗 Share</button>
+                <button class="btn btn-outline btn-sm" onclick="resendCurrentInvoice()">✉️ Resend</button>
+                <button class="btn btn-primary btn-sm" onclick="closeInvoicePdf()">Close</button>
+            </div>
+        </div>
+    </div>

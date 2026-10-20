@@ -109,17 +109,26 @@ function toggleDrawer() {
 // USER DROPDOWN
 // ══════════════════════════════════════════
 function toggleUserDropdown() {
-    document.getElementById('userDropdown')?.classList.toggle('open');
+    const dd = document.getElementById('userDropdown');
+    if (!dd) return;
+    const open = dd.classList.toggle('open');
+    document.getElementById('userMenuBtn')?.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 
 function closeUserDropdown() {
     document.getElementById('userDropdown')?.classList.remove('open');
+    document.getElementById('userMenuBtn')?.setAttribute('aria-expanded', 'false');
 }
 
 document.addEventListener('click', e => {
     const um = document.getElementById('navUserMenu');
     if (um && !um.contains(e.target)) closeUserDropdown();
 });
+
+// Close the account menu on scroll or hash/navigation change so it can never
+// float over (or be clipped by) moving content.
+window.addEventListener('scroll', () => closeUserDropdown(), { passive: true });
+window.addEventListener('hashchange', () => closeUserDropdown());
 
 // ══════════════════════════════════════════
 // FAB (Floating Action Button)
@@ -256,6 +265,14 @@ const OVERLAY_FOCUSABLE = 'a[href],button:not([disabled]),textarea:not([disabled
 // Global keyboard: ESC closes topmost, Tab traps focus inside it, Ctrl/Cmd+K search.
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
+        // Topmost dismissible: the account dropdown (not a locked overlay).
+        const dd = document.getElementById('userDropdown');
+        if (dd && dd.classList.contains('open')) {
+            closeUserDropdown();
+            document.getElementById('userMenuBtn')?.focus();
+            e.preventDefault();
+            return;
+        }
         const pair = activeOverlay();
         if (pair) { pair[1](); e.preventDefault(); }
     } else if (e.key === 'Tab') {

@@ -20,6 +20,20 @@ function getAvatarBg(name) {
     return `linear-gradient(135deg, hsl(${h}, 70%, 45%), hsl(${(h + 40) % 360}, 80%, 35%))`;
 }
 
+// Derived customer reference. The local-first store has no server-assigned
+// customer id yet, so we show a stable short handle built from the
+// registered mobile (last 7 digits), falling back to email / name.
+function getAccountRef(u) {
+    if (!u) return '\u2014';
+    const m = String(u.mobile || '').replace(/\D/g, '');
+    if (m.length >= 7) return 'GC-' + m.slice(-7);
+    const e = String(u.email || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    if (e.length >= 4) return 'GC-' + e.slice(-7);
+    const n = String(u.name || '').trim().replace(/\s+/g, '').toUpperCase();
+    if (n) return 'GC-' + n.slice(0, 7);
+    return '\u2014';
+}
+
 // ══════════════════════════════════════════
 // STATE & LOCAL STORAGE HARDENING
 // ══════════════════════════════════════════

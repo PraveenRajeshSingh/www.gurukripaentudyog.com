@@ -14,11 +14,8 @@
             <button class="drawer-close" onclick="toggleDrawer()" aria-label="Close Navigation Menu">✕</button>
         </div>
 
-        <!-- Quick Preferences: Theme & Language -->
+        <!-- Quick Preference: Language (single light theme — no dark toggle) -->
         <div class="drawer-settings">
-            <button class="theme-toggle-btn btn btn-outline btn-sm" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Mode">
-                🌙 <span class="theme-label">Dark</span>
-            </button>
             <button class="btn btn-outline btn-sm" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch Language">
                 🌐 <span id="drawerLangLabel">हिंदी / EN</span>
             </button>

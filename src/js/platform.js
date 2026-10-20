@@ -218,28 +218,13 @@ const Platform = (function () {
             hideSplashScreen();
         }
 
-        // Apply saved theme or system preference
-        const savedTheme = localStorage.getItem('gb_theme');
-        if (savedTheme) {
-            setTheme(savedTheme);
-        } else {
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-            syncStatusBar(prefersDark ? 'dark' : 'light');
-        }
+        // Apply the single, consistent LIGHT theme. Dark mode was retired
+        // product-wide; any stored legacy preference is ignored and cleared
+        // so the UI never flips to an unavailable theme.
+        try { localStorage.removeItem('gb_theme'); } catch (e) {}
+        document.documentElement.setAttribute('data-theme', 'light');
+        syncStatusBar('light');
         updateThemeToggleUI();
-
-        // Listen for OS color scheme changes if no explicit user override
-        if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                if (!localStorage.getItem('gb_theme')) {
-                    const active = e.matches ? 'dark' : 'light';
-                    document.documentElement.setAttribute('data-theme', active);
-                    syncStatusBar(active);
-                    updateThemeToggleUI();
-                }
-            });
-        }
 
         initNetworkObserver();
     }

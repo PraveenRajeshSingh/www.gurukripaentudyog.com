@@ -172,14 +172,117 @@ function renderAdminTab(tab) {
             </div>
         `;
     } else if (tab === 'orders') {
+        const list = (window.GurukripaServices && GurukripaServices.OrderService)
+            ? GurukripaServices.OrderService.getAllOrders() : (orders || []);
+        const IV = _erpInv();
+        const money = n => '₹' + Number(n || 0).toLocaleString('en-IN');
+        const link = (typeof getSafeStorage === 'function') ? getSafeStorage('gb_erp_inv_link', {}) : {};
+        const rows = list.length ? list.map(o => {
+            const inv = link[o.id] && IV ? IV.invoiceForOrder(o.id) : null;
+            const delivered = /deliver/i.test(o.status || '');
+            const action = inv
+                ? `<button class="btn btn-outline btn-sm" onclick="openInvoicePdf('${sanitizeHTML(inv.number)}','Order ${sanitizeHTML(o.id)}')">📄 Invoice PDF</button>`
+                : (delivered
+                    ? `<button class="btn btn-primary btn-sm" onclick="markOrderDelivered('${sanitizeHTML(o.id)}')">Issue invoice</button>`
+                    : `<button class="btn btn-outline btn-sm" onclick="markOrderDelivered('${sanitizeHTML(o.id)}')">✓ Mark delivered</button>`);
+            return `<tr style="border-bottom:1px solid var(--line)">
+                <td style="padding:10px 8px"><strong style="color:var(--brand)">${sanitizeHTML(o.id)}</strong><br><small style="color:var(--ink-3)">${sanitizeHTML(o.date || '')}</small></td>
+                <td style="padding:10px 8px">${sanitizeHTML((o.customer && o.customer.name) || '—')}</td>
+                <td style="padding:10px 8px;text-align:right">${money(o.total)}</td>
+                <td style="padding:10px 8px"><span style="background:${delivered ? 'var(--success-bg,rgba(22,163,74,.12))' : 'var(--warning-bg)'};color:${delivered ? 'var(--success)' : 'var(--warning)'};padding:3px 8px;border-radius:12px;font-size:.75rem;font-weight:700">${sanitizeHTML(o.status || 'Processing')}</span></td>
+                <td style="padding:10px 8px;text-align:right">${inv ? '<span style="color:var(--success);font-size:.75rem;font-weight:700">Invoiced</span>' : '<span style="color:var(--ink-3);font-size:.75rem">Not billed</span>'}</td>
+                <td style="padding:10px 8px;text-align:right">${action}</td>
+            </tr>`;
+        }).join('') : `<tr><td colspan="6" style="padding:22px;text-align:center;color:var(--ink-3)">No orders yet.</td></tr>`;
         stage.innerHTML = `
-            <h4 style="font-family:var(--display);font-size:1.3rem;color:var(--ink);margin-bottom:4px">Customer &amp; Dealer Orders</h4>
-            <p style="font-size:0.85rem;color:var(--ink-3);margin-bottom:16px">Active trolley dispatch bookings and completed site deliveries.</p>
-            <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:20px;text-align:center">
-                <div style="font-size:2.5rem;margin-bottom:10px">🚛</div>
-                <div style="font-weight:700;color:var(--ink);margin-bottom:6px">Trolley Fleet Active</div>
-                <p style="font-size:0.85rem;color:var(--ink-3);max-width:400px;margin:0 auto 16px">All customer orders placed via the checkout modal are synced with the live delivery tracking system.</p>
-                <button class="btn btn-primary btn-sm" onclick="closeAdminPortal();openTrackerModal()">Open Live Delivery Tracker</button>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+                <div><h4 style="font-family:var(--display);font-size:1.3rem;color:var(--ink);margin:0">Customer &amp; Dealer Orders</h4>
+                <p style="font-size:.82rem;color:var(--ink-3);margin-top:2px">Real orders from checkout &amp; B2B. Marking an order delivered issues its GST invoice (idempotent — retried events never double-bill).</p></div>
+                <button class="btn btn-outline btn-sm" onclick="switchAdminTab('invoices')">Open Invoice Manager</button>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:12px;overflow-x:auto">
+                <table style="width:100%;border-collapse:collapse;font-size:.84rem;text-align:left">
+                    <thead><tr style="border-bottom:1.5px solid var(--line);color:var(--ink-3)"><th style="padding:10px 8px">Order</th><th style="padding:10px 8px">Customer</th><th style="padding:10px 8px;text-align:right">Total</th><th style="padding:10px 8px">Status</th><th style="padding:10px 8px;text-align:right">Billing</th><th style="padding:10px 8px;text-align:right">Action</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        `;
+    } else if (tab === 'invoices') {
+        const IV = _erpInv();
+        if (!IV) { stage.innerHTML = '<p style="padding:20px;color:var(--ink-3)">Invoice engine unavailable.</p>'; return; }
+        const q = (document.getElementById('invSearch') || {}).value || '';
+        const status = (document.getElementById('invStatus') || {}).value || '';
+        const from = (document.getElementById('invFrom') || {}).value || '';
+        const to = (document.getElementById('invTo') || {}).value || '';
+        const list = IV.listInvoices({ q: q, status: status || undefined, from: from || undefined, to: to || undefined });
+        const rep = IV.invoiceReport(from || undefined, to || undefined);
+        const money = n => '₹' + Number(n || 0).toLocaleString('en-IN');
+        const canDo = GurukripaERP.Core.can(GurukripaERP.Core.currentActor(), 'invoice.cancel');
+        const rows = list.length ? list.map(inv => {
+            const cu = inv.customerId && GurukripaERP.CRM ? GurukripaERP.CRM.getCustomer(inv.customerId) : null;
+            const sc = { paid: 'var(--success)', partially_paid: 'var(--warning)', draft: 'var(--ink-3)', cancelled: 'var(--danger)' }[inv.status] || 'var(--danger)';
+            const overdue = inv.balance > 0 && inv.dueDate && new Date(inv.dueDate) < new Date();
+            return `<tr style="border-bottom:1px solid var(--line)">
+                <td style="padding:10px 8px"><strong style="color:var(--brand)">${sanitizeHTML(inv.number)}</strong><br><small style="color:var(--ink-3)">${sanitizeHTML(IV.dateFmt(inv.date))}</small></td>
+                <td style="padding:10px 8px">${sanitizeHTML(cu ? cu.name : (inv.customerId || '—'))}</td>
+                <td style="padding:10px 8px;text-align:right">${money(inv.totals.grandTotal)}</td>
+                <td style="padding:10px 8px;text-align:right;color:var(--success)">${money(inv.paidTotal || 0)}</td>
+                <td style="padding:10px 8px;text-align:right;color:${overdue ? 'var(--danger)' : 'var(--ink)'}">${money(inv.balance || 0)}</td>
+                <td style="padding:10px 8px"><span style="color:${sc};font-weight:700;font-size:.78rem">${sanitizeHTML((inv.status || '').toUpperCase())}${overdue ? ' · OVERDUE' : ''}</span></td>
+                <td style="padding:10px 8px;text-align:right;white-space:nowrap">
+                    <button class="btn btn-outline btn-sm" onclick="openInvoicePdf('${sanitizeHTML(inv.number)}')">👁 Preview</button>
+                    <button class="btn btn-outline btn-sm" onclick="printInvoiceByNumber('${sanitizeHTML(inv.number)}')">🖨 PDF</button>
+                    ${canDo && inv.status !== 'cancelled' ? `<button class="btn btn-outline btn-sm" onclick="creditNoteAction('${sanitizeHTML(inv.number)}')">Credit</button><button class="btn btn-outline btn-sm" onclick="cancelInvoiceAction('${sanitizeHTML(inv.number)}')">Cancel</button>` : ''}
+                </td>
+            </tr>`;
+        }).join('') : `<tr><td colspan="7" style="padding:22px;text-align:center;color:var(--ink-3)">No invoices match. Invoices appear here once orders are delivered or created via ERP documents.</td></tr>`;
+        stage.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+                <div><h4 style="font-family:var(--display);font-size:1.3rem;color:var(--ink);margin:0">Invoice Management</h4>
+                <p style="font-size:.82rem;color:var(--ink-3);margin-top:2px">Every finalized GST invoice — preview, PDF, corrections and audit.</p></div>
+                <button class="btn btn-outline btn-sm" onclick="erpExport('invoices')">Export CSV</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px">
+                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="font-size:.72rem;color:var(--ink-3);text-transform:uppercase;font-weight:700">Total invoiced</div><div style="font-size:1.3rem;font-weight:800;color:var(--brand)">${money(rep.invoiced)}</div></div>
+                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="font-size:.72rem;color:var(--ink-3);text-transform:uppercase;font-weight:700">Tax collected</div><div style="font-size:1.3rem;font-weight:800">${money(rep.tax)}</div></div>
+                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="font-size:.72rem;color:var(--ink-3);text-transform:uppercase;font-weight:700">Received</div><div style="font-size:1.3rem;font-weight:800;color:var(--success)">${money(rep.received)}</div></div>
+                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="font-size:.72rem;color:var(--ink-3);text-transform:uppercase;font-weight:700">Outstanding</div><div style="font-size:1.3rem;font-weight:800;color:var(--warning)">${money(rep.outstanding)}</div></div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+                <input id="invSearch" placeholder="Search number / customer / order" value="${sanitizeHTML(q)}" style="flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--line);border-radius:8px" oninput="renderAdminTab('invoices')" />
+                <select id="invStatus" onchange="renderAdminTab('invoices')" style="padding:8px;border:1px solid var(--line);border-radius:8px"><option value="">All statuses</option>${['draft', 'finalized', 'partially_paid', 'paid', 'cancelled'].map(s => `<option value="${s}" ${s === status ? 'selected' : ''}>${s}</option>`).join('')}</select>
+                <input id="invFrom" type="date" value="${sanitizeHTML(from)}" onchange="renderAdminTab('invoices')" style="padding:8px;border:1px solid var(--line);border-radius:8px" />
+                <input id="invTo" type="date" value="${sanitizeHTML(to)}" onchange="renderAdminTab('invoices')" style="padding:8px;border:1px solid var(--line);border-radius:8px" />
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:12px;overflow-x:auto">
+                <table style="width:100%;border-collapse:collapse;font-size:.82rem;text-align:left">
+                    <thead><tr style="border-bottom:1.5px solid var(--line);color:var(--ink-3)"><th style="padding:10px 8px">Invoice</th><th style="padding:10px 8px">Customer</th><th style="padding:10px 8px;text-align:right">Total</th><th style="padding:10px 8px;text-align:right">Paid</th><th style="padding:10px 8px;text-align:right">Balance</th><th style="padding:10px 8px">Status</th><th style="padding:10px 8px;text-align:right">Actions</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        `;
+    } else if (tab === 'company') {
+        const IV = _erpInv();
+        if (!IV) { stage.innerHTML = '<p style="padding:20px;color:var(--ink-3)">Invoice engine unavailable.</p>'; return; }
+        const p = IV.getCompanyProfile();
+        stage.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+                <div><h4 style="font-family:var(--display);font-size:1.3rem;color:var(--ink);margin:0">Company Profile</h4>
+                <p style="font-size:.82rem;color:var(--ink-3);margin-top:2px">These details print on every invoice. Stored locally on this device.</p></div>
+                <button class="btn btn-primary btn-sm" onclick="openCompanyProfile()">✎ Edit profile</button>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:18px">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">${p.logo ? '<img src="' + p.logo + '" style="width:48px;height:48px;object-fit:contain;border:1px solid var(--line);border-radius:8px"/>' : ''}<div><strong style="font-size:1.1rem;color:var(--brand)">${sanitizeHTML(p.legalName)}</strong><div style="font-size:.8rem;color:var(--ink-3)">${sanitizeHTML(p.tradeName || '')}</div></div></div>
+                    <p style="font-size:.85rem;color:var(--ink-2);line-height:1.6">${sanitizeHTML(p.address.line1)}${p.address.line2 ? ', ' + sanitizeHTML(p.address.line2) : ''}<br/>${sanitizeHTML(p.address.state)}${p.address.stateCode ? ' (' + sanitizeHTML(p.address.stateCode) + ')' : ''}${p.address.pincode ? ' - ' + sanitizeHTML(p.address.pincode) : ''}<br/>${sanitizeHTML(p.contact.phone || '')} · ${sanitizeHTML(p.contact.email || '')}</p>
+                    <p style="font-size:.82rem;color:var(--ink-3);margin-top:8px">GSTIN <strong>${sanitizeHTML(p.registrations.gstin || '—')}</strong> · PAN ${sanitizeHTML(p.registrations.pan || '—')}</p>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:18px;font-size:.85rem;line-height:1.8">
+                    <strong>Invoice numbering:</strong> ${sanitizeHTML(p.numbering.prefix)} · ${p.numbering.resetByFinYear ? 'per financial year' : 'continuous'} (serial width ${p.numbering.serialWidth})<br/>
+                    <strong>Default tax:</strong> ${sanitizeHTML(p.tax.scheme)} · ${p.tax.defaultRate}% GST · ${sanitizeHTML(p.tax.defaultPlace)}<br/>
+                    <strong>Bank / UPI:</strong> ${sanitizeHTML(p.bank.bank || '—')}${p.bank.upi ? ' · UPI ' + sanitizeHTML(p.bank.upi) : ''}<br/>
+                    <strong>Signatory:</strong> ${sanitizeHTML(p.signatory.name || '—')}
+                </div>
             </div>
         `;
     } else if (tab === 'inventory') {
@@ -268,4 +371,32 @@ function renderAdminTab(tab) {
             </div>
         `;
     }
+}
+
+// ── Invoice / PDF action helpers (admin) ───────────────────────
+function _erpInv() { return (window.GurukripaERP && GurukripaERP.Invoices) ? GurukripaERP.Invoices : null; }
+function printInvoiceByNumber(number) {
+    const IV = _erpInv(); if (!IV) return;
+    IV.printInvoice(number); showToast('Opening print dialog — choose “Save as PDF”', 'info');
+}
+function cancelInvoiceAction(number) {
+    if (!window.GurukripaERP || !GurukripaERP.Documents) return;
+    const reason = window.prompt('Cancel invoice ' + number + '.\nEnter a reason (record is retained, never deleted):');
+    if (reason === null) return;
+    try { GurukripaERP.Documents.cancel(number, reason || 'Cancelled'); showToast('Invoice cancelled (record retained)', 'success'); renderAdminTab('invoices'); }
+    catch (e) { showToast('Cannot cancel: ' + e.message, 'warning'); }
+}
+function creditNoteAction(number) {
+    if (!window.GurukripaERP || !GurukripaERP.Documents) return;
+    const inv = GurukripaERP.Documents.getDoc(number);
+    if (!inv) { showToast('Invoice not found', 'warning'); return; }
+    const raw = window.prompt('Issue credit note against ' + number + '.\nEnter credit amount (₹) — leave blank for FULL credit of ₹' + (inv.balance || inv.totals.grandTotal) + ':');
+    if (raw === null) return;
+    const amount = Number(raw);
+    const opts = { reason: 'Credit note' };
+    if (amount > 0) opts.lines = [{ item: 'adjustment', name: 'Credit note', qty: 1, unitPrice: amount, taxRate: 0 }];
+    try {
+        GurukripaERP.Documents.issueCreditNote(number, opts);
+        showToast('Credit note issued — receivable reduced, invoice retained', 'success'); renderAdminTab('invoices');
+    } catch (e) { showToast('Credit failed: ' + e.message, 'warning'); }
 }

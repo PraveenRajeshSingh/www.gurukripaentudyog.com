@@ -113,17 +113,15 @@
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap"
         rel="stylesheet">
 
-    <!-- Early Theme Restoration (Prevents FOUC) -->
+    <!-- Theme: single consistent LIGHT theme (pinned before paint to avoid any flash) -->
     <script>
       (function() {
         try {
-          var savedTheme = localStorage.getItem('gb_theme');
-          if (savedTheme === 'dark' || savedTheme === 'light') {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-          }
-        } catch(e) {}
+          // The app intentionally ships one light theme; any legacy dark
+          // preference stored by older versions is ignored and cleared.
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.removeItem('gb_theme'); } catch (e) {}
+        } catch (e) {}
       })();
     </script>
 
@@ -187,9 +185,6 @@
                     <div class="topbar-controls">
                         <button class="lang-btn active" onclick="setLang('en')" id="langEn" aria-label="Switch language to English">🇬🇧 EN</button>
                         <button class="lang-btn" onclick="setLang('hi')" id="langHi" aria-label="हिंदी भाषा चुनें">🇮🇳 HI</button>
-                        <button class="theme-toggle-btn lang-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Dark or Light Theme" title="Toggle Theme">
-                            🌙 <span class="theme-label">Dark</span>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -229,18 +224,14 @@
                 <nav class="nav-links" role="navigation" aria-label="Primary Navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
+                    <a href="#categories" class="nav-link" onclick="setActiveNav(this)">Categories</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
                     <button type="button" class="btn btn-primary btn-sm nav-quote-btn" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
                 </nav>
 
-                <!-- Actions: Theme Toggle, Cart, Auth, Mobile Toggle -->
+                <!-- Actions: Cart, Wishlist, Auth / Account, Mobile Toggle -->
                 <div class="nav-actions">
-                    <!-- Theme Toggle -->
-                    <button class="nav-icon-btn theme-toggle-btn" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
-                        🌙
-                    </button>
-
                     <!-- Shopping Cart -->
                     <button class="nav-icon-btn" onclick="openCart()" aria-label="Shopping Cart" title="Shopping Cart">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
@@ -276,46 +267,55 @@
                                 <path d="M6 9l6 6 6-6" />
                             </svg>
                         </button>
-                        <div class="user-dropdown" id="userDropdown" role="menu">
+                        <div class="user-dropdown" id="userDropdown" role="menu" aria-label="Account menu">
                             <div class="ud-header">
-                                <div class="ud-name" id="udName">User</div>
-                                <div class="ud-email" id="udEmail">user@email.com</div>
+                                <div class="ud-identity">
+                                    <div class="ud-avatar" id="udAvatar"><span id="udAvatarInitial">U</span></div>
+                                    <div class="ud-idtext">
+                                        <div class="ud-name" id="udName">User</div>
+                                        <div class="ud-ref" id="udRef">—</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="ud-body">
+                                <div class="ud-grouplabel">Account</div>
                                 <button class="ud-item" onclick="openProfile()" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                                        <circle cx="12" cy="7" r="4" />
-                                    </svg>
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                     <span data-i18n="auth.myProfile">My Profile</span>
                                 </button>
-                                <button class="ud-item" onclick="openCart();closeUserDropdown()" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                                        <line x1="3" y1="6" x2="21" y2="6" />
-                                    </svg>
-                                    <span data-i18n="auth.myCart">My Cart</span>
+                                <button class="ud-item" onclick="openProfileTab('address')" role="menuitem">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    <span>Saved Addresses</span>
+                                </button>
+                            </div>
+                            <div class="ud-divider"></div>
+                            <div class="ud-body">
+                                <div class="ud-grouplabel">Orders &amp; Delivery</div>
+                                <button class="ud-item" onclick="openProfileTab('orders')" role="menuitem">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                                    <span>My Orders &amp; Invoices</span>
                                 </button>
                                 <button class="ud-item" onclick="openTrackerModal();closeUserDropdown()" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24" aria-hidden="true">
-                                        <rect x="1" y="3" width="15" height="13" />
-                                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                                        <circle cx="5.5" cy="18.5" r="2.5" />
-                                        <circle cx="18.5" cy="18.5" r="2.5" />
-                                    </svg>
-                                    <span>Track My Orders</span>
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                    <span>Track Delivery</span>
+                                </button>
+                            </div>
+                            <div class="ud-divider"></div>
+                            <div class="ud-body">
+                                <div class="ud-grouplabel">More</div>
+                                <button class="ud-item" onclick="openWishlistDrawer();closeUserDropdown()" role="menuitem">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                    <span>Wishlist</span>
+                                </button>
+                                <button class="ud-item" onclick="scrollToSection('contact');closeUserDropdown()" role="menuitem">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    <span>Help &amp; Support</span>
                                 </button>
                             </div>
                             <div class="ud-divider"></div>
                             <div class="ud-body">
                                 <button class="ud-item ud-logout" onclick="logoutUser()" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
-                                    </svg>
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
                                     Sign Out
                                 </button>
                             </div>
@@ -347,11 +347,8 @@
             <button class="drawer-close" onclick="toggleDrawer()" aria-label="Close Navigation Menu">✕</button>
         </div>
 
-        <!-- Quick Preferences: Theme & Language -->
+        <!-- Quick Preference: Language (single light theme — no dark toggle) -->
         <div class="drawer-settings">
-            <button class="theme-toggle-btn btn btn-outline btn-sm" onclick="Platform.toggleTheme()" aria-label="Toggle Dark/Light Mode">
-                🌙 <span class="theme-label">Dark</span>
-            </button>
             <button class="btn btn-outline btn-sm" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch Language">
                 🌐 <span id="drawerLangLabel">हिंदी / EN</span>
             </button>
@@ -1787,6 +1784,10 @@
                                 <div class="profile-info-value" id="profileViewMobile" style="font-weight:700;color:var(--ink)">—</div>
                             </div>
                             <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
+                                <div class="profile-info-label" id="profileRefLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">CUSTOMER ID</div>
+                                <div class="profile-info-value" id="profileViewRef" style="font-weight:700;color:var(--ink)">—</div>
+                            </div>
+                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm);grid-column:1/-1">
                                 <div class="profile-info-label" id="profileAddressLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">DELIVERY ADDRESS</div>
                                 <div class="profile-info-value" id="profileViewAddress" style="font-weight:700;color:var(--ink)">—</div>
                             </div>
@@ -2206,9 +2207,17 @@
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                         <span>Dispatch &amp; Drivers</span>
                     </button>
+                    <button class="admin-nav-item" onclick="switchAdminTab('invoices', this)">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+                                            <span>Invoices &amp; PDFs</span>
+                                        </button>
                     <button class="admin-nav-item" onclick="switchAdminTab('financials', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="21" x2="21" y2="21"/><rect x="5" y="11" width="3" height="10"/><rect x="10.5" y="6" width="3" height="15"/><rect x="16" y="13" width="3" height="8"/></svg>
                         <span>Finance &amp; Reports</span>
+                    </button>
+<button class="admin-nav-item" onclick="switchAdminTab('company', this)">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><line x1="9" y1="21" x2="9" y2="12"/><line x1="15" y1="21" x2="15" y2="12"/></svg>
+                        <span>Company Profile</span>
                     </button>
                 </nav>
 
@@ -2281,6 +2290,139 @@
             <div style="padding:12px 20px;background:var(--bg-subtle);border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px">
                 <button class="btn btn-outline btn-sm" onclick="closeGstInvoice()">Close</button>
                 <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ━━━━━━━━━━━━━━━━━ INVOICE PREVIEW / PDF MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="invoicePdfModal" onclick="if(event.target.id==='invoicePdfModal')closeInvoicePdf()">
+        <div class="modal-box inv-pdf-box">
+            <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
+                <div>
+                    <div class="modal-title" style="font-size:1.05rem">Invoice &amp; PDF</div>
+                    <div class="modal-subtitle" id="invPdfSubtitle">Preview, download or print a GST invoice</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body inv-pdf-body">
+                <iframe id="invPdfFrame" class="inv-pdf-frame" title="Invoice preview"></iframe>
+            </div>
+            <div class="inv-pdf-actions">
+                <button class="btn btn-outline btn-sm" onclick="printCurrentInvoice()">🖨️ Print / Save PDF</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadCurrentInvoice()">⬇️ Download</button>
+                <button class="btn btn-outline btn-sm" onclick="shareCurrentInvoice()">🔗 Share</button>
+                <button class="btn btn-outline btn-sm" onclick="resendCurrentInvoice()">✉️ Resend</button>
+                <button class="btn btn-primary btn-sm" onclick="closeInvoicePdf()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ━━━━━━━━━━━━━━━━━ COMPANY PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="companyProfileModal" onclick="if(event.target.id==='companyProfileModal')closeCompanyProfile()">
+        <div class="modal-box cp-box">
+            <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
+                <div>
+                    <div class="modal-title" style="font-size:1.05rem">🏢 Company Profile</div>
+                    <div class="modal-subtitle">These details appear on every generated invoice</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body cp-body">
+                <form id="companyProfileForm" onsubmit="return false" autocomplete="off">
+                    <div class="cp-grid">
+                        <fieldset>
+                            <legend>Identity</legend>
+                            <div class="cp-logo-row">
+                                <img id="cpLogoPreview" class="cp-logo" alt="Logo preview" />
+                                <div>
+                                    <label class="cp-file">Upload logo<input type="file" accept="image/*" id="cpLogoInput" /></label>
+                                    <button type="button" class="link-btn" onclick="clearCompanyLogo()">Remove logo</button>
+                                    <p class="cp-hint">Stored locally; a small square PNG/JPG works best.</p>
+                                </div>
+                            </div>
+                            <label>Legal business name<input name="legalName" /></label>
+                            <label>Trade name<input name="tradeName" /></label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Registered office</legend>
+                            <label>Address line 1<input name="addr.line1" /></label>
+                            <label>Address line 2<input name="addr.line2" /></label>
+                            <div class="cp-2col">
+                                <label>State<input name="addr.state" /></label>
+                                <label>State code<input name="addr.stateCode" maxlength="2" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Pincode<input name="addr.pincode" /></label>
+                                <label>Country<input name="addr.country" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Phone<input name="contact.phone" /></label>
+                                <label>Email<input name="contact.email" /></label>
+                            </div>
+                            <label>Website<input name="contact.website" /></label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Registrations &amp; tax</legend>
+                            <div class="cp-2col">
+                                <label>GSTIN<input name="reg.gstin" /></label>
+                                <label>PAN<input name="reg.pan" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Kiln licence<input name="reg.kilnLicense" /></label>
+                                <label>Udyam / CIN<input name="reg.udyam" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Default HSN/SAC<input name="tax.defaultHsn" /></label>
+                                <label>Default GST %<input name="tax.defaultRate" type="number" step="0.01" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Tax scheme<select name="tax.scheme"><option value="exclusive">Exclusive (tax added)</option><option value="inclusive">Inclusive (tax within)</option></select></label>
+                                <label>Default place<select name="tax.defaultPlace"><option value="intra">Intra-state (CGST+SGST)</option><option value="inter">Inter-state (IGST)</option></select></label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Invoice numbering</legend>
+                            <div class="cp-2col">
+                                <label>Prefix<input name="num.prefix" /></label>
+                                <label>Serial width<input name="num.serialWidth" type="number" min="2" max="8" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Copy label<input name="num.copyLabel" /></label>
+                                <label class="cp-check"><input name="num.resetByFinYear" type="checkbox" /> Reset each financial year</label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Bank &amp; payment</legend>
+                            <label>Account name<input name="bank.accountName" /></label>
+                            <div class="cp-2col">
+                                <label>Bank<input name="bank.bank" /></label>
+                                <label>Branch<input name="bank.branch" /></label>
+                            </div>
+                            <div class="cp-2col">
+                                <label>Account no.<input name="bank.accountNo" /></label>
+                                <label>IFSC<input name="bank.ifsc" /></label>
+                            </div>
+                            <label>UPI ID<input name="bank.upi" /></label>
+                            <label>Payment instructions<textarea name="bank.instructions" rows="2"></textarea></label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Signatory &amp; terms</legend>
+                            <div class="cp-2col">
+                                <label>Authorised signatory<input name="signatory.name" /></label>
+                                <label>Designation<input name="signatory.designation" /></label>
+                            </div>
+                            <label>Terms &amp; conditions<textarea name="terms" rows="3"></textarea></label>
+                            <label>Declaration<textarea name="declaration" rows="2"></textarea></label>
+                            <label>Footer note<input name="footer" /></label>
+                        </fieldset>
+                    </div>
+                </form>
+            </div>
+            <div class="cp-actions">
+                <button class="btn btn-outline btn-sm" onclick="resetCompanyProfileForm()">Reset to defaults</button>
+                <div style="flex:1"></div>
+                <button class="btn btn-outline btn-sm" onclick="closeCompanyProfile()">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="saveCompanyProfileForm()">Save profile</button>
             </div>
         </div>
     </div>
@@ -2500,6 +2642,7 @@
     <script src="src/js/erp-calculators.js" defer></script>
     <script src="src/js/erp-logistics.js" defer></script>
     <script src="src/js/erp-notify.js" defer></script>
+    <script src="src/js/erp-invoice.js" defer></script>
     <script src="src/js/ui.js" defer></script>
     <script src="src/js/products.js" defer></script>
     <script src="src/js/cart.js" defer></script>

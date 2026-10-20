@@ -20,119 +20,13 @@
 }
 
 /* 鈹€鈹€ 25. Dark Mode (System) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #130B05;
-        --bg-card: #1C1009;
-        --bg-subtle: #241509;
-        --bg-muted: #2E1B0E;
-        --ink: #F5EEE8;
-        --ink-2: #D4BCA8;
-        --ink-3: #8A6B55;
-        --line: rgba(200, 70, 10, 0.15);
-        --line-mid: rgba(200, 70, 10, 0.28);
-        --nav-glass: rgba(28, 16, 9, 0.92);
-        --bottom-nav-glass: rgba(20, 12, 6, 0.96);
-    }
-    .modal-box {
-        background: linear-gradient(145deg, #1C1009 0%, #241509 100%);
-        border-color: rgba(200, 70, 10, 0.2);
-    }
-    .nav {
-        background: var(--nav-glass);
-        border-bottom-color: rgba(200, 70, 10, 0.12);
-    }
-    .mobile-nav {
-        background: var(--bottom-nav-glass);
-        border-top-color: rgba(200, 70, 10, 0.15);
-    }
-    .drawer {
-        background: var(--bg-card);
-    }
-    .cart-drawer {
-        background: var(--bg-card);
-    }
-    .hero-cert,
-    .hero-img-badge {
-        background: rgba(28, 16, 9, 0.85);
-        border-color: rgba(200, 70, 10, 0.25);
-    }
-    .product-card {
-        background: var(--bg-card);
-        border-color: rgba(200, 70, 10, 0.12);
-    }
-    .review-card,
-    .contact-form-wrap,
-    .faq-item,
-    .calc-form,
-    .calc-result {
-        background: var(--bg-card);
-        border-color: rgba(200, 70, 10, 0.12);
-    }
-    input, textarea, select {
-        background: var(--bg-subtle);
-        color: var(--ink);
-        border-color: var(--line-mid);
-    }
-    input::placeholder, textarea::placeholder {
-        color: var(--ink-3);
-    }
-    .topbar {
-        background: #0D0703;
-    }
-    .trust-strip {
-        background: #0D0703;
-    }
-    #spbar {
-        background: linear-gradient(90deg, var(--brand), var(--brand-amber));
-    }
-}
-
-html[data-theme="dark"] .modal-box {
-    background: linear-gradient(145deg, #1C1009 0%, #241509 100%);
-    border-color: rgba(200, 70, 10, 0.2);
-}
-html[data-theme="dark"] .nav {
-    background: var(--nav-glass);
-    border-bottom-color: rgba(200, 70, 10, 0.12);
-}
-html[data-theme="dark"] .mobile-nav {
-    background: var(--bottom-nav-glass);
-    border-top-color: rgba(200, 70, 10, 0.15);
-}
-html[data-theme="dark"] .drawer,
-html[data-theme="dark"] .cart-drawer {
-    background: var(--bg-card);
-}
-html[data-theme="dark"] .hero-cert,
-html[data-theme="dark"] .hero-img-badge {
-    background: rgba(28, 16, 9, 0.85);
-    border-color: rgba(200, 70, 10, 0.25);
-}
-html[data-theme="dark"] .product-card,
-html[data-theme="dark"] .review-card,
-html[data-theme="dark"] .contact-form-wrap,
-html[data-theme="dark"] .faq-item,
-html[data-theme="dark"] .calc-form,
-html[data-theme="dark"] .calc-result {
-    background: var(--bg-card);
-    border-color: rgba(200, 70, 10, 0.12);
-}
-html[data-theme="dark"] input,
-html[data-theme="dark"] textarea,
-html[data-theme="dark"] select {
-    background: var(--bg-subtle);
-    color: var(--ink);
-    border-color: var(--line-mid);
-}
-html[data-theme="dark"] input::placeholder,
-html[data-theme="dark"] textarea::placeholder {
-    color: var(--ink-3);
-}
-html[data-theme="dark"] .topbar,
-html[data-theme="dark"] .trust-strip {
-    background: #0D0703;
-}
+/* ── 25. Theme ─────────────────────────────────────────────────
+   The site ships a single, consistent LIGHT theme. The former
+   system-dark (@media prefers-color-scheme: dark) and explicit
+   html[data-theme="dark"] palettes were the root cause of the site
+   flipping to dark on dark-mode OSes regardless of user intent. They
+   have been removed; <html> is pinned to data-theme="light" in
+   head.html and platform.js. */
 
         /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
    WHY BRL / DIRECT FROM BHATTA SECTION
@@ -2037,3 +1931,49 @@ body { overscroll-behavior-y: contain; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   INVOICE PDF PREVIEW + COMPANY PROFILE MODALS
+   (styles for the print/modal chrome; the invoice document itself
+   carries its own self-contained A4 CSS inside erp-invoice.js)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Invoice preview modal ── */
+.inv-pdf-box { max-width: 920px; width: min(920px, 94vw); display: flex; flex-direction: column; max-height: 92vh; }
+.inv-pdf-body { padding: 0; overflow: hidden; flex: 1; min-height: 0; background: #e9e6e0; }
+.inv-pdf-frame { width: 100%; height: 62vh; min-height: 380px; border: 0; display: block; background: #fff; }
+.inv-pdf-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; padding: 12px 18px; border-top: 1px solid var(--line); background: var(--bg-card, #fff); }
+.inv-pdf-actions .btn { white-space: nowrap; }
+@media (max-width: 640px) {
+    .inv-pdf-box { width: 100vw; max-width: 100vw; max-height: 100dvh; border-radius: 0; }
+    .inv-pdf-frame { height: 58vh; min-height: 300px; }
+    .inv-pdf-actions { justify-content: stretch; }
+    .inv-pdf-actions .btn { flex: 1 1 auto; }
+}
+
+/* ── Company profile modal ── */
+.cp-box { max-width: 960px; width: min(960px, 94vw); display: flex; flex-direction: column; max-height: 92vh; }
+.cp-body { padding: 16px 20px; overflow: auto; flex: 1; min-height: 0; }
+.cp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cp-grid fieldset { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 0; background: var(--bg-card, #fff); }
+.cp-grid legend { font-size: .74rem; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; color: var(--brand); padding: 0 6px; }
+.cp-grid label { display: block; font-size: .78rem; color: var(--ink-2, #4b4a47); margin-bottom: 8px; font-weight: 600; }
+.cp-grid input, .cp-grid select, .cp-grid textarea { display: block; width: 100%; margin-top: 3px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: .85rem; font-family: inherit; background: #fff; color: var(--ink); }
+.cp-grid input:focus, .cp-grid select:focus, .cp-grid textarea:focus { outline: 2px solid var(--brand); outline-offset: 1px; border-color: var(--brand); }
+.cp-grid textarea { resize: vertical; min-height: 42px; }
+.cp-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cp-check { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.cp-check input { width: auto; margin: 0; }
+.cp-logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.cp-logo { width: 64px; height: 64px; object-fit: contain; border: 1px dashed var(--line); border-radius: 10px; background: #faf8f4; }
+.cp-logo[src] { border-style: solid; }
+.cp-file { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 700; color: var(--brand); cursor: pointer; }
+.cp-file input { display: none; }
+.cp-hint { font-size: .7rem; color: var(--ink-3, #8a8781); margin: 4px 0 0; font-weight: 500; }
+.link-btn { background: none; border: 0; color: var(--ink-3, #8a8781); font-size: .72rem; cursor: pointer; text-decoration: underline; padding: 0; margin-top: 4px; }
+.cp-actions { display: flex; gap: 8px; align-items: center; padding: 12px 20px; border-top: 1px solid var(--line); background: var(--bg-card, #fff); }
+@media (max-width: 720px) {
+    .cp-box { width: 100vw; max-width: 100vw; max-height: 100dvh; border-radius: 0; }
+    .cp-grid { grid-template-columns: 1fr; }
+}

@@ -83,8 +83,8 @@ www.gurukripaentudyog.com/
 │   │   ├── sections.css        # Page sections (hero, features, catalog, bhatta)
 │   │   ├── overlays.css        # Modals, drawers, lightboxes, and popups
 │   │   ├── extras.css          # Calculator, sound tester, and vendor showcase
-│   │   ├── app.css             # Application-level controls, theme toggles, and nav
-│   │   ├── mobile-fixes.css    # Responsive touch targets, dark theme, and grid rules
+│   │   ├── app.css             # Application-level controls and nav styling
+│   │   ├── mobile-fixes.css    # Responsive touch targets, safe areas, and grid rules
 │   │   └── refinements.css     # Micro-interactions, animations, and visual polish
 │   └── types/
 │       └── index.d.ts          # TypeScript domain models and contracts
@@ -108,7 +108,10 @@ www.gurukripaentudyog.com/
 
 Tokens are centralized in [`src/styles/tokens.css`](file:///c:/Users/HP/www.gurukripaentudyog.com/src/styles/tokens.css) and cascaded universally:
 
-| Category | Token | Light Theme | Dark Theme | Purpose |
+### Theme: Single Light Mode
+The product ships **one consistent light theme**. The former dark-mode toggle (Topbar / Navbar / Mobile Drawer) and `prefers-color-scheme` auto-detection were retired: `<html>` is pinned to `data-theme="light"` by an inline pre-render script in `<head>` (zero FOUC) and by `Platform.init()`, and any legacy `gb_theme` value in `localStorage` is cleared on load. The `html[data-theme="dark"]` token block in `tokens.css` is kept only as dormant legacy (no UI path can activate it).
+
+| Category | Token | Light Theme | Dark Theme (legacy, inactive) | Purpose |
 |---|---|---|---|---|
 | **Brand** | `--brand` | `#C8460A` | `#C8460A` | Primary terracotta red brick brand |
 | **Brand Dark** | `--brand-dark` | `#8B2E05` | `#8B2E05` | Deep kiln clay accent |
@@ -127,11 +130,8 @@ Tokens are centralized in [`src/styles/tokens.css`](file:///c:/Users/HP/www.guru
 | | `--info` | `#0369a1` | `#0369a1` | Tooltips, informational notices |
 | **A11y** | `--focus-ring` | `rgba(200,70,10,0.35)` | `rgba(245,166,35,0.45)` | Visible keyboard focus outline |
 
-### Theme Switching Mechanism
-Theme mode can be controlled via:
-1. **User manual selection:** Light or Dark via UI toggle button in Topbar, Navbar, and Mobile Drawer. Stored in `localStorage.getItem('gb_theme')`.
-2. **System auto-detection:** Respects `prefers-color-scheme: dark` automatically when no manual preference is set.
-3. **Zero FOUC:** An inline pre-render script in `<head>` applies `data-theme` before CSS rendering begins.
+### Anchor & Sticky-Header Convention
+The navbar is `position: sticky` with a fixed 64px inner height; `html { scroll-padding-top: 78px }` keeps hash-linked sections from being hidden behind it, and `body { overflow-x: clip }` prevents accidental sideways scrolling.
 
 ---
 
@@ -146,7 +146,7 @@ Theme mode can be controlled via:
 - `Platform.share({ title, text, url })`: Native Capacitor Share plugin → Web Share API → Clipboard fallback.
 - `Platform.haptic(type)`: Subtle haptic vibration for button taps and action confirmations on mobile devices.
 - `Platform.openExternal(url)`: Native In-App Browser popover on Android/iOS; clean `target="_blank"` on desktop.
-- `Platform.setTheme(theme)` / `Platform.toggleTheme()`: Updates UI, document attributes, status bar theme, and storage.
+- `Platform.setTheme(theme)` / `Platform.toggleTheme()`: **Legacy API** — retained for backward compatibility (typed in `src/types/index.d.ts`) but no customer-facing control calls it since dark mode was retired; `Platform.init()` always pins the light theme.
 
 ---
 
