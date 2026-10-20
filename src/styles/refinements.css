@@ -658,21 +658,118 @@ button, a, input, select, textarea { touch-action: manipulation }
     margin-top: 24px;
 }
 
-@media (max-width: 960px) {
-    .catalog-layout-grid {
-        grid-template-columns: 1fr;
-    }
-    .catalog-sidebar {
-        display: none; /* Mobile view prioritizes direct catalog grid */
-    }
-}
-
 .catalog-sidebar {
     display: flex;
     flex-direction: column;
     gap: 18px;
     position: sticky;
     top: 90px;
+}
+
+/* Desktop-only: the mobile sheet helpers are hidden on wide screens */
+.mobile-filter-toggle { display: none; }
+.filter-sheet-bar { display: none; }
+.filter-sheet-actions { display: none; }
+.filter-sheet-backdrop { display: none; }
+
+/* ── MOBILE / APP: touch-first catalog (deliberately different from desktop) ── */
+@media (max-width: 960px) {
+    .catalog-layout-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    /* Horizontally scrollable category chips */
+    .products-filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin: 14px 0 18px;
+        padding-bottom: 4px;
+    }
+    .products-filters::-webkit-scrollbar { display: none; }
+    .filter-btn { flex: 0 0 auto; }
+
+    .products-toolbar-left { display: flex; align-items: center; gap: 12px; }
+    .mobile-filter-toggle { display: inline-flex; align-items: center; gap: 6px; }
+
+    /* Sidebar filters relocate into a slide-up bottom sheet */
+    .catalog-sidebar {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        z-index: 1200;
+        max-height: 82vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background: var(--bg, #FCFAF7);
+        padding: 8px 18px calc(20px + var(--safe-bottom, 0px));
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -14px 44px rgba(0, 0, 0, 0.3);
+        transform: translateY(105%);
+        transition: transform 0.32s cubic-bezier(0.32, 1, 0.23, 1);
+    }
+    .catalog-sidebar.open { transform: translateY(0); }
+
+    .filter-sheet-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-weight: 700;
+        color: var(--ink);
+        padding: 8px 0 14px;
+        margin-bottom: 6px;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        background: var(--bg, #FCFAF7);
+    }
+    .filter-sheet-close {
+        border: none;
+        background: var(--bg-subtle);
+        color: var(--ink-2);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        font-size: 1rem;
+        cursor: pointer;
+        line-height: 1;
+    }
+    .filter-sheet-actions {
+        display: block;
+        position: sticky;
+        bottom: -8px;
+        padding-top: 10px;
+        background: linear-gradient(to top, var(--bg, #FCFAF7) 62%, rgba(252, 250, 247, 0));
+    }
+    .filter-sheet-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 12, 6, 0.5);
+        z-index: 1190;
+        opacity: 0;
+        transition: opacity 0.28s ease;
+    }
+    .filter-sheet-backdrop.open { display: block; opacity: 1; }
+}
+
+/* ── PHONES: compact 2-column product grid (essential info only) ── */
+@media (max-width: 560px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .industrial-card .product-card-body { padding: 12px; }
+    .industrial-card .product-card-name { font-size: 0.9rem; }
+    .industrial-card .product-card-rating { margin-bottom: 4px; }
+    .product-delivery-meta { display: none; }
+    .product-add-btn { font-size: 0.78rem; padding: 8px 10px; }
+    .product-card-img-wrap { aspect-ratio: 1 / 1; }
 }
 
 .catalog-filter-card {
@@ -1264,3 +1361,10 @@ main [id].cta-banner {
 }
 .product-card-stars svg { display: block; }
 .product-card-rating-num { white-space: nowrap; flex: 0 0 auto; }
+
+/* ── Product detail on phones: cap imagery so title/price/actions stay reachable ── */
+@media (max-width: 560px) {
+    .pd-grid { gap: 16px; }
+    .pd-img { aspect-ratio: 4 / 3; }
+    .product-detail-modal .modal-box { max-width: 100%; }
+}

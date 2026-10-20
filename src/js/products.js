@@ -151,6 +151,20 @@ function triggerCartBounce(btn) {
     setTimeout(() => btn.classList.remove('cart-bounce'), 500);
 }
 
+// Mobile/app filter bottom sheet — the desktop sidebar becomes a slide-up sheet
+// on small screens so phone users keep full filtering without a shrunk desktop.
+function toggleFilterSheet(force) {
+    const sb = document.getElementById('catalogSidebar');
+    if (!sb) return;
+    const bd = document.getElementById('filterSheetBackdrop');
+    const btn = document.querySelector('.mobile-filter-toggle');
+    const isOpen = (typeof force === 'boolean') ? force : !sb.classList.contains('open');
+    sb.classList.toggle('open', isOpen);
+    if (bd) bd.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (btn) btn.setAttribute('aria-expanded', String(isOpen));
+}
+
 function openProductDetail(id) {
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;

@@ -659,7 +659,11 @@
             <!-- Industrial Bento Layout: Left Filter Sidebar + Right 3-Column Catalog -->
             <div class="catalog-layout-grid">
                 <!-- Left Sidebar Filters (BuildMart Style) -->
-                <aside class="catalog-sidebar">
+                <aside class="catalog-sidebar" id="catalogSidebar" role="region" aria-label="Product filters">
+                    <div class="filter-sheet-bar">
+                        <span>Refine Results</span>
+                        <button type="button" class="filter-sheet-close" onclick="toggleFilterSheet(false)" aria-label="Close filters">✕</button>
+                    </div>
                     <!-- Price Range Filter Card -->
                     <div class="catalog-filter-card">
                         <div class="filter-card-header">
@@ -732,6 +736,10 @@
                         <p style="font-size:0.8rem;color:var(--ink-3);margin-bottom:12px">Talk directly with our Bhatta Manager for 10,000+ brick requirements.</p>
                         <button type="button" class="btn btn-primary btn-full btn-sm" onclick="openBulkQuoteModal()">Request Bulk Quote</button>
                     </div>
+
+                    <div class="filter-sheet-actions">
+                        <button type="button" class="btn btn-primary btn-full" onclick="toggleFilterSheet(false)">Show Results</button>
+                    </div>
                 </aside>
 
                 <!-- Right Main Column: Toolbar + Product Grid -->
@@ -739,6 +747,7 @@
                     <!-- Top Toolbar -->
                     <div class="products-toolbar">
                         <div class="products-toolbar-left">
+                            <button type="button" class="btn btn-outline btn-sm mobile-filter-toggle" onclick="toggleFilterSheet()" aria-controls="catalogSidebar" aria-expanded="false">⚙︎ Filters</button>
                             <span class="products-count" id="productsCount">Showing 7 verified products</span>
                         </div>
                         <div class="products-toolbar-right">
@@ -758,6 +767,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Mobile filter bottom-sheet backdrop -->
+            <div class="filter-sheet-backdrop" id="filterSheetBackdrop" onclick="toggleFilterSheet(false)"></div>
         </div>
     </section>
 
