@@ -9,13 +9,13 @@ function openTrackerModal(orderId) {
         if (inp) inp.value = orderId;
     }
     modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
     renderTrackerDetails(orderId || 'GBI-20260728-4912');
 }
 
 function closeTrackerModal() {
     document.getElementById('trackerModal')?.classList.remove('open');
-    document.body.style.overflow = '';
+    overlayUnlock();
 }
 
 function demoTrackerOrder() {

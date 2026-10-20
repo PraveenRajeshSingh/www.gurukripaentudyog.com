@@ -70,14 +70,14 @@ function updateCartUI() {
 function openCart() {
     document.getElementById('cartOverlay')?.classList.add('open');
     document.getElementById('cartDrawer')?.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
     renderCartItems();
 }
 
 function closeCart() {
     document.getElementById('cartOverlay')?.classList.remove('open');
     document.getElementById('cartDrawer')?.classList.remove('open');
-    document.body.style.overflow = '';
+    overlayUnlock();
 }
 
 function renderCartItems() {

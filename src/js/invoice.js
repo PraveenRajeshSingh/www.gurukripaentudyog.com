@@ -57,12 +57,12 @@ function openGstInvoice(orderId) {
         </div>`;
 
     modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
 }
 
 function closeGstInvoice() {
     document.getElementById('gstInvoiceModal')?.classList.remove('open');
-    document.body.style.overflow = '';
+    overlayUnlock();
 }
 
 function reorderTrolley(orderId) {

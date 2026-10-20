@@ -96,15 +96,21 @@
     --sal: env(safe-area-inset-left, 0px);
     --sar: env(safe-area-inset-right, 0px);
 
-    /* ─── 14. Z-Index Scale ─── */
+    /* ─── 14. Z-Index Scale ───
+       The sticky navbar is z:900. Every popup surface (search overlay,
+       drawers, modals, lightbox) MUST stack above it; transient toasts
+       stack above everything. Values below were mis-scaled, which caused
+       modals/drawers to render *behind* the header. */
     --z-negative: -1;
     --z-base: 1;
     --z-sticky: 100;
-    --z-fixed: 200;
-    --z-overlay: 300;
-    --z-drawer: 400;
-    --z-modal: 500;
-    --z-toast: 1000;
+    --z-fixed: 900;                    /* mobile bottom nav & floating bars */
+    --z-header: 900;                   /* sticky navbar */
+    --z-overlay: 1000;                 /* search overlay / dimming */
+    --z-drawer: 1010;                  /* cart, wishlist, mobile drawers */
+    --z-modal: 1100;                   /* dialogs — above header */
+    --z-lightbox: 1200;                /* full-screen image viewer */
+    --z-toast: 9999;                   /* transient notices — always on top */
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

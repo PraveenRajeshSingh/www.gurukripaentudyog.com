@@ -4,14 +4,14 @@
 function openWishlistDrawer() {
     document.getElementById('wishlistOverlay')?.classList.add('open');
     document.getElementById('wishlistDrawer')?.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
     renderWishlistItems();
 }
 
 function closeWishlistDrawer() {
     document.getElementById('wishlistOverlay')?.classList.remove('open');
     document.getElementById('wishlistDrawer')?.classList.remove('open');
-    document.body.style.overflow = '';
+    overlayUnlock();
 }
 
 function renderWishlistItems() {

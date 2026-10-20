@@ -161,7 +161,7 @@ function toggleFilterSheet(force) {
     const isOpen = (typeof force === 'boolean') ? force : !sb.classList.contains('open');
     sb.classList.toggle('open', isOpen);
     if (bd) bd.classList.toggle('open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    isOpen ? overlayLock() : overlayUnlock();
     if (btn) btn.setAttribute('aria-expanded', String(isOpen));
 }
 
@@ -199,7 +199,7 @@ function openProductDetail(id) {
           </div>
         </div>`;
     document.getElementById('productModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
 }
 
 function changePdQty(d) {
@@ -209,7 +209,7 @@ function changePdQty(d) {
 
 function closeProductModal() {
     document.getElementById('productModal')?.classList.remove('open');
-    document.body.style.overflow = '';
+    overlayUnlock();
 }
 
 function handleProductModalClick(e) {

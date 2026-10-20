@@ -1040,11 +1040,25 @@ button, a, input, select, textarea { touch-action: manipulation }
 html {
     overflow-x: clip;
     max-width: 100%;
+    /* Reserve the scrollbar gutter so locking body scroll when a modal
+       opens does not change the layout width and jump the page (§2). */
+    scrollbar-gutter: stable;
 }
 
 body {
     overflow-x: clip;
     max-width: 100%;
+}
+
+/* Centralised scroll-lock: Overlay manager in ui.js toggles this class
+   instead of writing body.style.overflow inline. */
+body.overlay-open {
+    overflow: hidden;
+}
+
+/* Lightbox is a full-screen viewer; it must sit above dialogs/drawers. */
+#lb {
+    z-index: var(--z-lightbox, 1200);
 }
 
 .container {

@@ -106,7 +106,7 @@ function openBulkQuoteModal() {
     const modal = document.getElementById('bulkQuoteModal');
     if (modal) {
         modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
+        overlayLock();
     }
 }
 
@@ -114,7 +114,7 @@ function closeBulkQuoteModal() {
     const modal = document.getElementById('bulkQuoteModal');
     if (modal) {
         modal.classList.remove('open');
-        document.body.style.overflow = '';
+        overlayUnlock();
     }
 }
 
@@ -169,22 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('navSearch');
     if (!searchInput) return;
 
-    // Ctrl+K / Cmd+K focus shortcut
+    // Escape clears an active search field. Overlay close (ESC), drawer toggle and
+    // Ctrl/Cmd+K focus are centralised in the ui.js OVERLAY_STACK to avoid
+    // duplicate handlers double-firing (e.g. toggleDrawer toggling twice).
     document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-            e.preventDefault();
-            searchInput.focus();
-            searchInput.select();
-        }
-        if (e.key === 'Escape') {
-            if (document.activeElement === searchInput) {
-                searchInput.blur();
-                searchInput.value = '';
-                renderProducts(currentFilter || 'all');
-            }
-            if (document.getElementById('mobileDrawer')?.classList.contains('open')) {
-                toggleDrawer();
-            }
+        if (e.key === 'Escape' && document.activeElement === searchInput) {
+            searchInput.blur();
+            searchInput.value = '';
+            renderProducts(currentFilter || 'all');
         }
     });
 

@@ -28,12 +28,12 @@ function openCheckout() {
     resetCheckout();
     buildCheckoutSummary();
     document.getElementById('checkoutModal')?.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
 }
 
 function closeCheckout() {
     document.getElementById('checkoutModal')?.classList.remove('open');
-    document.body.style.overflow = '';
+    overlayUnlock();
 }
 
 function handleCheckoutOverlayClick(e) {

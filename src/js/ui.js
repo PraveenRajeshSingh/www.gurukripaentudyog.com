@@ -102,7 +102,7 @@ function toggleDrawer() {
     const isOpen = d.classList.toggle('open');
     o.classList.toggle('open', isOpen);
     t.classList.toggle('open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    isOpen ? overlayLock() : overlayUnlock();
 }
 
 // ══════════════════════════════════════════
@@ -198,20 +198,45 @@ function setLang(lang) {
 }
 
 // ══════════════════════════════════════════
-// OVERLAY KEYBOARD SYSTEM — ESC closes topmost;
-// Tab keeps focus inside the active modal/drawer.
+// OVERLAY MANAGER — ref-counted scroll lock +
+// focus return, ESC closes the topmost layer,
+// Tab keeps focus trapped inside it.
 // ══════════════════════════════════════════
+var __overlayCount = 0;
+var __overlayFocus = [];
+function overlayLock() {
+    __overlayFocus.push(document.activeElement);
+    if (__overlayCount === 0) document.body.classList.add('overlay-open');
+    __overlayCount++;
+}
+function overlayUnlock() {
+    const prev = __overlayFocus.pop();
+    __overlayCount = Math.max(0, __overlayCount - 1);
+    if (__overlayCount === 0) {
+        document.body.classList.remove('overlay-open');
+        // Return focus to the element that opened the overlay (§6 a11y).
+        if (prev && document.contains(prev) && typeof prev.focus === 'function') {
+            try { prev.focus(); } catch (_e) {}
+        }
+    }
+}
+
+// [element-id, closer] — checked top-most first (reverse paint order).
 const OVERLAY_STACK = [
-    // [element-id, closer] — checked top-most first (reverse paint order)
-    ['legalModal',      () => typeof closeLegalModal === 'function' && closeLegalModal()],
-    ['checkoutModal',   () => typeof closeCheckout   === 'function' && closeCheckout()],
-    ['productModal',    () => typeof closeProductModal === 'function' && closeProductModal()],
-    ['profileModal',    () => typeof closeProfile    === 'function' && closeProfile()],
-    ['authModal',       () => typeof closeAuth       === 'function' && closeAuth()],
-    ['trackerModal',    () => typeof closeTrackerModal === 'function' && closeTrackerModal()],
-    ['gstInvoiceModal', () => typeof closeGstInvoice === 'function' && closeGstInvoice()],
-    ['cartDrawer',      () => typeof closeCart       === 'function' && closeCart()],
-    ['mobileDrawer',    () => typeof toggleDrawer    === 'function' && toggleDrawer()]
+    ['lb',               () => typeof lbClose             === 'function' && lbClose()],
+    ['catalogSidebar',   () => typeof toggleFilterSheet   === 'function' && toggleFilterSheet(false)],
+    ['legalModal',       () => typeof closeLegalModal     === 'function' && closeLegalModal()],
+    ['bulkQuoteModal',   () => typeof closeBulkQuoteModal === 'function' && closeBulkQuoteModal()],
+    ['checkoutModal',    () => typeof closeCheckout       === 'function' && closeCheckout()],
+    ['adminPortalModal', () => typeof closeAdminPortal    === 'function' && closeAdminPortal()],
+    ['gstInvoiceModal',  () => typeof closeGstInvoice     === 'function' && closeGstInvoice()],
+    ['productModal',     () => typeof closeProductModal   === 'function' && closeProductModal()],
+    ['profileModal',     () => typeof closeProfile        === 'function' && closeProfile()],
+    ['authModal',        () => typeof closeAuth           === 'function' && closeAuth()],
+    ['trackerModal',     () => typeof closeTrackerModal   === 'function' && closeTrackerModal()],
+    ['wishlistDrawer',   () => typeof closeWishlistDrawer === 'function' && closeWishlistDrawer()],
+    ['cartDrawer',       () => typeof closeCart           === 'function' && closeCart()],
+    ['mobileDrawer',     () => typeof toggleDrawer        === 'function' && toggleDrawer()]
 ];
 
 function activeOverlay() {
@@ -221,13 +246,27 @@ function activeOverlay() {
     }
     return null;
 }
+function activeOverlayEl() {
+    const p = activeOverlay();
+    return p ? document.getElementById(p[0]) : null;
+}
 
-// Global Key Listeners: ESC for modals, Ctrl+K for Search
+const OVERLAY_FOCUSABLE = 'a[href],button:not([disabled]),textarea:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
+// Global keyboard: ESC closes topmost, Tab traps focus inside it, Ctrl/Cmd+K search.
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
         const pair = activeOverlay();
-        if (pair) { pair[1](); return; }
-        if (typeof lbClose === 'function') lbClose();
+        if (pair) { pair[1](); e.preventDefault(); }
+    } else if (e.key === 'Tab') {
+        const ov = activeOverlayEl();
+        if (!ov) return;
+        const items = Array.prototype.slice.call(ov.querySelectorAll(OVERLAY_FOCUSABLE));
+        if (!items.length) return;
+        const first = items[0], last = items[items.length - 1];
+        if (!ov.contains(document.activeElement)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+        else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         const searchInput = document.getElementById('navSearch');
         if (searchInput) {
@@ -246,7 +285,7 @@ function openLegalModal(tab = 'privacy') {
     const modal = document.getElementById('legalModal');
     if (modal) {
         modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
+        overlayLock();
     }
 }
 
@@ -254,7 +293,7 @@ function closeLegalModal() {
     const modal = document.getElementById('legalModal');
     if (modal) {
         modal.classList.remove('open');
-        document.body.style.overflow = '';
+        overlayUnlock();
     }
 }
 
@@ -281,13 +320,13 @@ function lbOpen(src, caption) {
     img.alt = caption || '';
     if (cap) cap.textContent = caption || '';
     lb.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
 }
 
 function lbClose(e) {
     if (!e || e.target.id === 'lb' || e.target.classList.contains('lb-close')) {
         document.getElementById('lb')?.classList.remove('open');
-        document.body.style.overflow = '';
+        overlayUnlock();
     }
 }
 

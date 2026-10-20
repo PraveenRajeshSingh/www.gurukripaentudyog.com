@@ -11,12 +11,12 @@ function openAuth(tab = 'login') {
     switchAuthTab(tab);
     closeOtpPanel();
     document.getElementById('authModal')?.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
 }
 
 function closeAuth() {
     document.getElementById('authModal')?.classList.remove('open');
-    document.body.style.overflow = '';
+    overlayUnlock();
 }
 
 function handleAuthOverlayClick(e) {

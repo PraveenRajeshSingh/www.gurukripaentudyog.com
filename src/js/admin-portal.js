@@ -8,7 +8,7 @@ function openAdminPortal() {
     const modal = document.getElementById('adminPortalModal');
     if (modal) {
         modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
+        overlayLock();
         renderAdminTab('overview');
     }
 }
@@ -17,7 +17,7 @@ function closeAdminPortal() {
     const modal = document.getElementById('adminPortalModal');
     if (modal) {
         modal.classList.remove('open');
-        document.body.style.overflow = '';
+        overlayUnlock();
     }
 }
 

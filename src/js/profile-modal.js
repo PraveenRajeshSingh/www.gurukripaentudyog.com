@@ -49,13 +49,13 @@ function openProfile() {
     renderWishlistInProfile();
 
     document.getElementById('profileModal')?.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    overlayLock();
     translateProfileModal();
 }
 
 function closeProfile() {
     document.getElementById('profileModal')?.classList.remove('open');
-    document.body.style.overflow = '';
+    overlayUnlock();
 }
 
 function handleProfileOverlayClick(e) {
