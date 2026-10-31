@@ -1,55 +1,70 @@
     <!-- ━━━━━━━━━━━━━━━━━ MOBILE BOTTOM NAVIGATION BAR ━━━━━━━━━━━━━━━━━ -->
+    <!-- Five flat, native-style destinations. Everything secondary (wishlist,
+         account, alerts, language) lives in the slide-in drawer so the bar
+         never grows past five targets on a narrow phone. -->
     <nav class="mobile-nav" role="navigation" aria-label="Mobile Navigation Bar">
         <div class="mobile-nav-inner">
             <!-- 1. Home -->
-            <a href="#home" class="mn-item active" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light')" aria-label="Home">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
+            <a href="#home" class="mn-item active" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate(30)" aria-label="Home">
+                <span class="mn-icon-wrap">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                </span>
                 <span class="mn-label">Home</span>
             </a>
 
-            <!-- 2. Products Catalog -->
-            <a href="#products" class="mn-item" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light')" aria-label="Products">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                </svg>
+            <!-- 2. Products -->
+            <a href="#products" class="mn-item" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate(30)" aria-label="Product catalog">
+                <span class="mn-icon-wrap">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    </svg>
+                </span>
                 <span class="mn-label">Products</span>
             </a>
 
-            <!-- 3. Elevated Floating Cart FAB -->
-            <button type="button" class="mn-item mn-item-cart" onclick="openCart();if(window.Platform)Platform.haptic('light')" aria-label="Shopping Cart">
-                <div class="mn-cart-fab">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+            <!-- 3. Estimator -->
+            <button type="button" class="mn-item" onclick="openMobileEstimator(this)" aria-label="Brick estimator">
+                <span class="mn-icon-wrap">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+                        <line x1="8" y1="6" x2="16" y2="6" />
+                        <line x1="8" y1="10" x2="16" y2="10" />
+                        <line x1="8" y1="14" x2="12" y2="14" />
+                    </svg>
+                </span>
+                <span class="mn-label">Estimator</span>
+            </button>
+
+            <!-- 4. Cart -->
+            <button type="button" class="mn-item mn-item-cart" onclick="setMNActive(this);openCart();if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate([30,15,30])" aria-label="Shopping cart">
+                <span class="mn-icon-wrap">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                         <line x1="3" y1="6" x2="21" y2="6" />
                         <path d="M16 10a4 4 0 01-8 0" />
                     </svg>
-                    <span class="mn-badge" id="mobileCartBadge">0</span>
-                </div>
+                    <span class="mn-badge cart-badge-off" id="mobileCartBadge">0</span>
+                </span>
                 <span class="mn-label">Cart</span>
             </button>
 
-            <!-- 4. Wishlist -->
-            <button type="button" class="mn-item" onclick="openWishlistDrawer();if(window.Platform)Platform.haptic('light')" aria-label="Wishlist">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                </svg>
-                <span class="mn-label">Wishlist</span>
-                <span class="mn-badge" id="mobileWishlistBadge" style="display:none">0</span>
-            </button>
-
-            <!-- 5. Account / Profile -->
-            <button type="button" class="mn-item" onclick="handleMobileProfile();if(window.Platform)Platform.haptic('light')" aria-label="Account">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                </svg>
-                <span class="mn-label" id="mnProfileLabel">Profile</span>
+            <!-- 5. Track orders -->
+            <button type="button" class="mn-item" onclick="openMobileTrack(this)" aria-label="Track orders">
+                <span class="mn-icon-wrap">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M1 3h15v13H1z" />
+                        <path d="M16 8h4l3 3v5h-7z" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg>
+                </span>
+                <span class="mn-label">Track</span>
             </button>
         </div>
     </nav>

@@ -143,30 +143,21 @@ function placeOrder() {
     if (procState) procState.style.display = 'block';
 
     setTimeout(() => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const rand = Math.floor(1000 + Math.random() * 9000);
-        const orderId = `GBI-${year}${month}${day}-${rand}`;
-
+        const orderId = makeLocalOrderRef();
         const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
         const total = Math.max(0, subtotal - couponDiscount);
+        const order = recordOrder(orderId, total, navigator.onLine ? 'Processing' : 'Queued (offline)');
 
-        orders.unshift({
-            id: orderId,
-            date: `${day}/${month}/${year}`,
-            itemsCount: cart.length,
-            total: total,
-            status: 'Processing'
-        });
-        setSafeStorage('gb_orders', orders);
+        // Snapshot the order for the offline outbox before the cart is cleared.
+        const offlinePayload = !navigator.onLine && window.WhatsAppOrder
+            ? WhatsAppOrder.buildCheckoutOrder(orderId)
+            : null;
 
         const orderIdDisp = document.getElementById('orderIdDisplay');
         if (orderIdDisp) orderIdDisp.textContent = orderId;
         const waBtn = document.getElementById('orderWaBtn');
         if (waBtn) {
-            waBtn.href = `https://wa.me/919198923230?text=Namaste!%20My%20Order%20ID%20is%20${orderId}.%20Please%20confirm%20delivery.`;
+            waBtn.href = `https://wa.me/919198923230?text=${encodeURIComponent(`Namaste! My Order ID is ${orderId}. Please confirm delivery.`)}`;
         }
 
         cart = [];
@@ -175,13 +166,76 @@ function placeOrder() {
         couponDiscount = 0;
         appliedCoupon = '';
 
+        if (offlinePayload) WhatsAppOrder.queueOffline(offlinePayload);
+        if (window.PushNotifications) PushNotifications.notifyOrderStatus(order, 'token');
+
         if (procState) procState.style.display = 'none';
         if (btnsRow) btnsRow.style.display = 'flex';
 
         showCheckoutStep(3);
         triggerConfetti();
-        showToast(t('checkout.orderPlaced'), 'success');
+        showToast(navigator.onLine ? t('checkout.orderPlaced') : 'Order saved offline and queued for WhatsApp.', 'success');
     }, 1800);
+}
+
+function makeLocalOrderRef() {
+    if (window.WhatsAppOrder) return WhatsAppOrder.makeOrderRef();
+    const now = new Date();
+    const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+    return `GBI-${stamp}-${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+// Single place that appends an order to the local ledger, so checkout, the
+// WhatsApp handoff and the offline outbox all agree on the same reference.
+function recordOrder(orderId, total, status) {
+    const now = new Date();
+    const date = [
+        String(now.getDate()).padStart(2, '0'),
+        String(now.getMonth() + 1).padStart(2, '0'),
+        now.getFullYear()
+    ].join('/');
+    orders.unshift({
+        id: orderId,
+        date: date,
+        itemsCount: cart.length,
+        total: total,
+        status: status || 'Processing'
+    });
+    setSafeStorage('gb_orders', orders);
+    return orders[0];
+}
+
+// WhatsApp-first confirmation: the yard receives the full order (items,
+// estimator specs, pincode, payment preference) as one formatted message.
+function confirmOrderOnWhatsApp() {
+    if (!window.WhatsAppOrder) {
+        showToast('WhatsApp handoff is unavailable right now.', 'error');
+        return;
+    }
+    const payload = WhatsAppOrder.buildCheckoutOrder();
+    if (!payload) return;
+
+    const order = recordOrder(payload.ref, payload.total, navigator.onLine ? 'Sent on WhatsApp' : 'Queued (offline)');
+    WhatsAppOrder.open(payload);
+    if (!navigator.onLine) WhatsAppOrder.queueOffline(payload);
+
+    const orderIdDisp = document.getElementById('orderIdDisplay');
+    if (orderIdDisp) orderIdDisp.textContent = payload.ref;
+    const waBtn = document.getElementById('orderWaBtn');
+    if (waBtn) waBtn.href = WhatsAppOrder.buildLink(`Namaste! My Order ID is ${payload.ref}. Please confirm dispatch.`);
+
+    cart = [];
+    saveCart();
+    updateCartUI();
+    couponDiscount = 0;
+    appliedCoupon = '';
+
+    if (window.PushNotifications) PushNotifications.notifyOrderStatus(order, 'token');
+    showCheckoutStep(3);
+    triggerConfetti();
+    showToast(navigator.onLine
+        ? 'Order handed off to WhatsApp for confirmation.'
+        : 'Order saved offline — send it when signal returns.', 'success');
 }
 
 function triggerConfetti() {

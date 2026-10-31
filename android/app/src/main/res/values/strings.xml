@@ -1,7 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">Gurukripa Bricks</string>
-    <string name="title_activity_main">Gurukripa Bricks</string>
+    <string name="title_activity_main">Gurukripa Bricks Industry</string>
     <string name="package_name">com.gurukripa.bricks</string>
     <string name="custom_url_scheme">com.gurukripa.bricks</string>
+
+    <!-- Play Store listing strings -->
+    <string name="short_description">Premium brick manufacturer — Jaunpur, UP. Order online, instant estimates &amp; delivery.</string>
+    <string name="wa_phone">+919198923230</string>
+    <string name="wa_url">https://wa.me/919198923230</string>
+    <string name="website_url">https://gurukripaentudyog.com</string>
 </resources>

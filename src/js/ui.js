@@ -88,7 +88,45 @@ function scrollToSection(id) {
 
 function setMNActive(el) {
     document.querySelectorAll('.mn-item').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
+    if (el) el.classList.add('active');
+}
+
+// Bottom-nav shortcuts that open in-page sections or overlays rather than
+// navigating to a hash. Kept next to setMNActive so the active state always
+// follows the tapped item.
+function openMobileEstimator(el) {
+    setMNActive(el);
+    scrollToSection('calculator');
+    if (window.Platform) Platform.haptic('light');
+}
+
+function openMobileTrack(el) {
+    setMNActive(el);
+    const latest = (typeof orders !== 'undefined' && orders.length) ? orders[0].id : undefined;
+    if (typeof openTrackerModal === 'function') openTrackerModal(latest);
+    if (window.Platform) Platform.haptic('light');
+}
+
+// ══════════════════════════════════════════
+// ORDER & RATE ALERT CENTER
+// ══════════════════════════════════════════
+function openNotificationCenter() {
+    const modal = document.getElementById('notificationCenterModal');
+    if (!modal) return;
+    modal.classList.add('open');
+    overlayLock();
+    if (typeof PushNotifications !== 'undefined') {
+        PushNotifications.renderCenter();
+        PushNotifications.renderSettings();
+    }
+}
+
+function closeNotificationCenter() {
+    document.getElementById('notificationCenterModal')?.classList.remove('open');
+    overlayUnlock();
+    // Alerts are considered seen once the panel is dismissed, so the bell
+    // badge clears while the unread highlight stays visible during reading.
+    if (typeof PushNotifications !== 'undefined') PushNotifications.markAllRead();
 }
 
 // ══════════════════════════════════════════
@@ -243,6 +281,7 @@ const OVERLAY_STACK = [
     ['profileModal',     () => typeof closeProfile        === 'function' && closeProfile()],
     ['authModal',        () => typeof closeAuth           === 'function' && closeAuth()],
     ['trackerModal',     () => typeof closeTrackerModal   === 'function' && closeTrackerModal()],
+    ['notificationCenterModal', () => typeof closeNotificationCenter === 'function' && closeNotificationCenter()],
     ['wishlistDrawer',   () => typeof closeWishlistDrawer === 'function' && closeWishlistDrawer()],
     ['cartDrawer',       () => typeof closeCart           === 'function' && closeCart()],
     ['mobileDrawer',     () => typeof toggleDrawer        === 'function' && toggleDrawer()]

@@ -54,6 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'setupOtpInputs': () => setupOtpInputs(),
         'setLang': () => setLang(currentLang),
         'initGoogleSignIn': () => initGoogleSignIn(),
+        'initAlerts': () => { if (window.PushNotifications) PushNotifications.init(); },
+        'checkOrderStatus': () => { if (window.PushNotifications) PushNotifications.checkOrderStatusChanges(); },
+        'renderOfflineOutbox': () => { if (window.WhatsAppOrder) WhatsAppOrder.renderQueuedNotice(); },
         'Platform.init': () => { if (window.Platform && typeof window.Platform.init === 'function') window.Platform.init(); }
     };
     Object.keys(steps).forEach((k) => safeRun(k, steps[k]));

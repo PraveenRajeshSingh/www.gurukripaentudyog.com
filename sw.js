@@ -1,4 +1,4 @@
-const VERSION = '4.3.1';
+const VERSION = '4.4.0';
 const CACHE_NAME = `gurukripa-cache-v${VERSION}`;
 
 // Only cache files that actually exist in this SPA
@@ -110,4 +110,77 @@ self.addEventListener('fetch', (event) => {
             }).catch(() => new Response('Offline', { status: 503 }));
         })
     );
+});
+
+// ── Push: order status & rate drop alerts ─────────────────────────────
+// Payload contract (sent by the push service, see docs/ANDROID-PACKAGING.md):
+//   { title, body, tag, url, kind, orderId }
+self.addEventListener('push', (event) => {
+    let payload = {};
+    try {
+        payload = event.data ? event.data.json() : {};
+    } catch (_e) {
+        payload = { title: 'Gurukripa Bricks', body: event.data ? event.data.text() : '' };
+    }
+
+    const title = payload.title || 'Gurukripa Bricks Industry';
+    const options = {
+        body: payload.body || 'You have a new update from the Jalalpur yard.',
+        icon: payload.icon || './src/assets/images/gurukripaLogo.jpg',
+        badge: './src/assets/images/gurukripaLogo.jpg',
+        tag: payload.tag || 'gbi-alert',
+        renotify: Boolean(payload.renotify),
+        data: {
+            url: payload.url || './',
+            kind: payload.kind || 'general',
+            orderId: payload.orderId || ''
+        },
+        vibrate: [24, 60, 24]
+    };
+
+    event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// ── Notification tap: focus an open tab, otherwise open the app ───────
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const data = event.notification.data || {};
+
+    event.waitUntil(
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if ('focus' in client) {
+                    if (client.postMessage) {
+                        client.postMessage({ type: 'NOTIFICATION_CLICKED', payload: data });
+                    }
+                    return client.focus();
+                }
+            }
+            const target = data.url && data.url !== './' ? data.url : './';
+            return self.clients.openWindow(target);
+        })
+    );
+});
+
+// ── Page → SW messages (local alerts, manual update) ──────────────────
+self.addEventListener('message', (event) => {
+    const message = event.data || {};
+
+    if (message.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+        return;
+    }
+
+    if (message.type === 'SHOW_NOTIFICATION') {
+        const payload = message.payload || {};
+        event.waitUntil(
+            self.registration.showNotification(payload.title || 'Gurukripa Bricks Industry', {
+                body: payload.body || '',
+                icon: payload.icon || './src/assets/images/gurukripaLogo.jpg',
+                badge: './src/assets/images/gurukripaLogo.jpg',
+                tag: payload.tag || 'gbi-local',
+                data: payload.data || { url: './' }
+            })
+        );
+    }
 });

@@ -1,0 +1,19 @@
+# Keep the Vercel upload lean. Everything listed here is build-time tooling or
+# a native/backend project that this static PWA deploy does not serve.
+#
+# DO NOT ignore scripts/ — vercel.json runs scripts/build.js and
+# scripts/prepare-www.js during the build.
+# DO NOT ignore .well-known/ — assetlinks.json must be served from the domain root.
+
+android/
+ios/
+flutter_app/
+backend/
+node_modules/
+docs/
+tests/
+.vercel-tmp/
+.github/
+.qoder/
+*.log
+_backup/

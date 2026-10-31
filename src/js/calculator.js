@@ -4,6 +4,8 @@
 let currentCalcTab = 'wall';
 let lastCalculatedBricks = 1640;
 let lastCalculatedTotalCost = 19680;
+// Snapshot of the last run, reused by the WhatsApp order handoff.
+let lastEstimateSpec = null;
 
 function switchCalcTab(tab) {
     currentCalcTab = tab;
@@ -41,6 +43,22 @@ function calculateBricks() {
 
     lastCalculatedBricks    = bricks;
     lastCalculatedTotalCost = totalCost;
+    lastEstimateSpec = {
+        tab: 'wall',
+        project: `Wall (${len}ft × ${ht}ft, ${thick}" thick)`,
+        bricks: bricks,
+        trolleys: parseFloat(trolleys),
+        cementBags: cementBags,
+        sandCuFt: sandCuFt,
+        cost: totalCost
+    };
+    scheduleEstimateSave({
+        tab: 'wall',
+        label: `Wall ${len}ft × ${ht}ft`,
+        bricks: bricks,
+        cost: totalCost,
+        inputs: { len: len, ht: ht, thick: thick, price: price }
+    });
 
     resBody.innerHTML = `
         <div class="estimator-results-grid">
@@ -75,6 +93,22 @@ function calculateHouseMaterial() {
 
     lastCalculatedBricks    = bricks;
     lastCalculatedTotalCost = totalCost;
+    lastEstimateSpec = {
+        tab: 'house',
+        project: `Full house (${sqft} sq.ft × ${floors} floor${floors > 1 ? 's' : ''})`,
+        bricks: bricks,
+        trolleys: parseFloat(trolleys),
+        cementBags: cementBags,
+        sandCuFt: sandCuFt,
+        cost: totalCost
+    };
+    scheduleEstimateSave({
+        tab: 'house',
+        label: `House ${sqft} sq.ft`,
+        bricks: bricks,
+        cost: totalCost,
+        inputs: { sqft: sqft, floors: floors, price: price }
+    });
 
     resBody.innerHTML = `
         <div class="estimator-results-grid">
@@ -107,6 +141,20 @@ function calculateBoundaryMaterial() {
 
     lastCalculatedBricks    = bricks;
     lastCalculatedTotalCost = totalCost;
+    lastEstimateSpec = {
+        tab: 'boundary',
+        project: `Boundary wall (${len}ft × ${ht}ft)`,
+        bricks: bricks,
+        trolleys: parseFloat(trolleys),
+        cost: totalCost
+    };
+    scheduleEstimateSave({
+        tab: 'boundary',
+        label: `Boundary ${len}ft × ${ht}ft`,
+        bricks: bricks,
+        cost: totalCost,
+        inputs: { len: len, ht: ht }
+    });
 
     resBody.innerHTML = `
         <div class="estimator-results-grid">
@@ -125,6 +173,10 @@ function calculateBoundaryMaterial() {
 }
 
 function sendWhatsAppQuote(projName, brickCount, totalCost) {
+    if (window.WhatsAppOrder) {
+        WhatsAppOrder.sendEstimate({ project: projName, bricks: brickCount, cost: totalCost });
+        return;
+    }
     const text = encodeURIComponent(`Namaste Gurukripa Bricks Industry!\nI need a quotation for my project:\n• Project: ${projName}\n• Bricks Estimate: ${formatNum(brickCount)} units\n• Estimated Budget: ${formatINR(totalCost)}\n\nPlease confirm availability and delivery slot.`);
     window.open(`https://wa.me/919198923230?text=${text}`, '_blank');
 }
@@ -137,6 +189,111 @@ function addCalcToCart(name, qty, unitPrice) {
     updateCartUI();
     openCart();
     showToast(t('calc.addedToCart', { qty: formatNum(qty), name }), 'success');
+}
+
+// ══════════════════════════════════════════
+// OFFLINE ESTIMATE HISTORY (IndexedDB)
+// ══════════════════════════════════════════
+// Builders often work at sites with no signal. Every estimate is stored on
+// the device so dimensions, brick counts and budgets can be re-opened later
+// without a network round-trip.
+const CALC_SAVED_LIMIT = 5;
+let savedEstimatesCache = [];
+let estimateSaveTimer = null;
+
+function calcTimeLabel(ts) {
+    if (!ts) return '';
+    try {
+        return new Date(ts).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    } catch (_e) {
+        return '';
+    }
+}
+
+function updateCalcOfflineState() {
+    const el = document.getElementById('calcOfflineState');
+    if (!el) return;
+    if (!window.OfflineStore) {
+        el.textContent = 'Offline storage unavailable — estimates stay in this tab only.';
+        return;
+    }
+    OfflineStore.status().then((s) => {
+        el.textContent = s.savedAt
+            ? `${s.cachedRates} brick rates saved offline · ${calcTimeLabel(s.savedAt)}${s.queuedOrders ? ` · ${s.queuedOrders} order(s) queued` : ''}`
+            : 'Estimator runs offline — download the rate card once for site work.';
+    });
+}
+
+function scheduleEstimateSave(payload) {
+    if (!window.OfflineStore) return;
+    clearTimeout(estimateSaveTimer);
+    estimateSaveTimer = setTimeout(() => {
+        const last = savedEstimatesCache[0];
+        const duplicate = last && last.tab === payload.tab && last.bricks === payload.bricks
+            && last.cost === payload.cost && (Date.now() - (last.createdAt || 0)) < 10 * 60 * 1000;
+        if (duplicate) { updateCalcOfflineState(); return; }
+        OfflineStore.saveEstimate(payload).then(() => renderSavedEstimates());
+    }, 1400);
+}
+
+function renderSavedEstimates() {
+    const box = document.getElementById('calcSavedEstimates');
+    if (!box) return;
+    if (!window.OfflineStore) {
+        box.innerHTML = '<div class="calc-saved-empty">This browser is blocking device storage.</div>';
+        return;
+    }
+    OfflineStore.listEstimates(CALC_SAVED_LIMIT).then((rows) => {
+        savedEstimatesCache = rows;
+        updateCalcOfflineState();
+        if (!rows.length) {
+            box.innerHTML = '<div class="calc-saved-empty">No saved estimates yet — every calculation is stored here for site visits.</div>';
+            return;
+        }
+        box.innerHTML = rows.map((r, i) => `
+            <button type="button" class="calc-saved-row" onclick="reuseEstimate(${i})">
+                <span class="calc-saved-main">
+                    <strong>${sanitizeHTML(r.label || 'Estimate')}</strong>
+                    <span>${formatNum(r.bricks)} bricks · ${formatINR(r.cost)}</span>
+                </span>
+                <span class="calc-saved-meta">${calcTimeLabel(r.createdAt)}</span>
+            </button>`).join('');
+    });
+}
+
+function setCalcInput(id, value) {
+    const el = document.getElementById(id);
+    if (el && value != null && value !== '') el.value = value;
+}
+
+function reuseEstimate(index) {
+    const row = savedEstimatesCache[index];
+    if (!row || !row.inputs) return;
+    const inputs = row.inputs;
+    if (row.tab === 'house') {
+        setCalcInput('houseArea', inputs.sqft);
+        setCalcInput('houseFloors', inputs.floors);
+        setCalcInput('houseBrickRate', inputs.price);
+    } else if (row.tab === 'boundary') {
+        setCalcInput('boundaryLength', inputs.len);
+        setCalcInput('boundaryHeight', inputs.ht);
+    } else {
+        setCalcInput('calcLength', inputs.len);
+        setCalcInput('calcHeight', inputs.ht);
+        setCalcInput('calcThickness', inputs.thick);
+        setCalcInput('calcBrickType', inputs.price);
+    }
+    switchCalcTab(row.tab || 'wall');
+    showToast('Saved estimate loaded — adjust dimensions to recalculate.', 'success');
+}
+
+function clearSavedEstimates() {
+    if (!window.OfflineStore) return;
+    OfflineStore.clearEstimates().then(() => {
+        savedEstimatesCache = [];
+        renderSavedEstimates();
+        showToast('Saved estimates cleared from this device.', 'success');
+    });
 }
 
 // ══════════════════════════════════════════
@@ -191,7 +348,11 @@ function playBrickSound(type) {
 
 // ── Auto-initialize the estimator result panel when the section is present ──
 (function initCalculator() {
-    const run = () => { if (document.getElementById('calcLength')) calculateBricks(); };
+    const run = () => {
+        if (!document.getElementById('calcLength')) return;
+        calculateBricks();
+        renderSavedEstimates();
+    };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
     else run();
 })();

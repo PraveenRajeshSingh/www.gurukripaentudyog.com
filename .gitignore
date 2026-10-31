@@ -2,6 +2,12 @@ node_modules/
 *twa/
 *.keystore
 .env
+.env.local
+.env.*.local
+*.env
+backend/.env
+flutter_app/.env
+
 .DS_Store
 
 # Generated web bundle for native packaging (rebuilt by `npm run www`)

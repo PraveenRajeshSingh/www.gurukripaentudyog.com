@@ -14,26 +14,53 @@
                 <div class="calc-tab" id="cTabBoundaryBtn" onclick="switchCalcTab('boundary')">🧱 Boundary Wall &amp; Pillars</div>
             </div>
 
+            <!-- Offline-first: the estimator and the last rate card work without signal -->
+            <div class="calc-offline-strip">
+                <span class="calc-offline-badge">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 2v13" /><polyline points="6 9 12 15 18 9" /><path d="M4 21h16" />
+                    </svg>
+                    <span id="calcOfflineState">Estimator runs offline · rates are stored on this device</span>
+                </span>
+                <button type="button" class="calc-offline-btn" onclick="PushNotifications.downloadRateCard()">Refresh offline rates</button>
+            </div>
+
             <div class="calc-wrap">
                 <!-- Left Form Panel -->
                 <div class="calc-form">
-                    <!-- Tab 1: Wall Estimator -->
+                    <!-- Tab 1: Wall Estimator — with interactive sliders -->
                     <div class="calc-tab-panel active" id="calcTabWall">
                         <div class="calc-form-head">
                             <h3>Wall Dimensions</h3>
-                            <p>Calculate exact brick &amp; mortar needs for walls</p>
+                            <p>Drag sliders or type values — updates instantly</p>
                         </div>
                         <div class="calc-form-body">
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-                                <div class="calc-field">
-                                    <label class="calc-label">Length (feet)</label>
-                                    <input type="number" class="calc-input" id="calcLength" placeholder="e.g. 20" min="1" value="20" oninput="calculateBricks()">
-                                </div>
-                                <div class="calc-field">
-                                    <label class="calc-label">Height (feet)</label>
-                                    <input type="number" class="calc-input" id="calcHeight" placeholder="e.g. 10" min="1" value="10" oninput="calculateBricks()">
-                                </div>
+
+                            <!-- Length Slider -->
+                            <div class="calc-field">
+                                <label class="calc-label" style="display:flex;justify-content:space-between">
+                                    <span>Length (feet)</span>
+                                    <span style="color:var(--brand);font-weight:800" id="calcLengthDisplay">20 ft</span>
+                                </label>
+                                <input type="range" class="calc-slider" id="calcLength" min="1" max="200" step="1" value="20"
+                                    oninput="document.getElementById('calcLengthDisplay').textContent=this.value+' ft';document.getElementById('calcLengthNum').value=this.value;calculateBricks()">
+                                <input type="number" class="calc-input calc-num-sync" id="calcLengthNum" min="1" max="200" value="20" placeholder="ft"
+                                    oninput="document.getElementById('calcLength').value=this.value||1;document.getElementById('calcLengthDisplay').textContent=(this.value||1)+' ft';calculateBricks()">
                             </div>
+
+                            <!-- Height Slider -->
+                            <div class="calc-field">
+                                <label class="calc-label" style="display:flex;justify-content:space-between">
+                                    <span>Height (feet)</span>
+                                    <span style="color:var(--brand);font-weight:800" id="calcHeightDisplay">10 ft</span>
+                                </label>
+                                <input type="range" class="calc-slider" id="calcHeight" min="1" max="50" step="0.5" value="10"
+                                    oninput="document.getElementById('calcHeightDisplay').textContent=this.value+' ft';document.getElementById('calcHeightNum').value=this.value;calculateBricks()">
+                                <input type="number" class="calc-input calc-num-sync" id="calcHeightNum" min="1" max="50" step="0.5" value="10" placeholder="ft"
+                                    oninput="document.getElementById('calcHeight').value=this.value||1;document.getElementById('calcHeightDisplay').textContent=(this.value||1)+' ft';calculateBricks()">
+                            </div>
+
+                            <!-- Thickness -->
                             <div class="calc-field">
                                 <label class="calc-label">Wall Thickness</label>
                                 <select class="calc-input" id="calcThickness" onchange="calculateBricks()">
@@ -42,6 +69,8 @@
                                     <option value="13.5">13.5 inch (Triple Foundation Wall)</option>
                                 </select>
                             </div>
+
+                            <!-- Brick Grade -->
                             <div class="calc-field">
                                 <label class="calc-label">Brick Grade &amp; Unit Rate</label>
                                 <select class="calc-input" id="calcBrickType" onchange="calculateBricks()">
@@ -114,7 +143,66 @@
                     <div id="calcResultsBody">
                         <!-- Populated dynamically via JS -->
                     </div>
+
+                    <!-- Live 2D Wall Preview -->
+                    <div style="margin-top:14px;border-radius:10px;overflow:hidden;background:#f5ede5;border:1px solid var(--line)" id="wallPreviewWrap">
+                        <div style="font-size:.7rem;color:var(--ink-3);font-weight:700;padding:6px 10px;letter-spacing:.04em">LIVE WALL PREVIEW</div>
+                        <svg id="wallPreviewSvg" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" aria-label="Wall brick pattern preview"></svg>
+                    </div>
+
+                    <!-- Pincode Delivery Checker -->
+                    <div style="margin-top:14px;padding:14px;background:var(--bg-subtle);border:1px solid var(--line);border-radius:10px">
+                        <div style="font-size:.75rem;font-weight:700;color:var(--ink-3);margin-bottom:8px;letter-spacing:.04em">🚚 DELIVERY PINCODE CHECKER</div>
+                        <div style="display:flex;gap:8px">
+                            <input type="tel" id="pincodeInput" maxlength="6" placeholder="Enter 6-digit pincode" inputmode="numeric"
+                                style="flex:1;padding:9px 12px;border:1.5px solid var(--line-mid);border-radius:8px;font-size:.85rem;outline:none">
+                            <button id="pincodeCheckBtn" class="btn btn-outline btn-sm" style="white-space:nowrap;min-height:38px">Check</button>
+                        </div>
+                        <div id="pincodeResult" style="margin-top:8px;font-size:.82rem"></div>
+                    </div>
+
+                    <!-- Estimates saved to IndexedDB on this device -->
+                    <div class="calc-saved-head">
+                        <span>Saved estimates (this device)</span>
+                        <button type="button" class="calc-saved-clear" onclick="clearSavedEstimates()">Clear</button>
+                    </div>
+                    <div id="calcSavedEstimates" class="calc-saved-list">
+                        <div class="calc-saved-empty">No saved estimates yet — every calculation is stored here for site visits.</div>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Saved Construction Sites & Quick Re-order (below estimator) -->
+        <div style="margin-top:28px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                <div>
+                    <div class="sec-tag" style="margin-bottom:6px">Quick Re-order</div>
+                    <h3 style="font-size:1.1rem;font-weight:800;color:var(--ink);margin:0">🏗 Saved Construction Sites</h3>
+                </div>
+                <button class="btn btn-outline btn-sm" style="gap:6px;min-height:36px"
+                    onclick="document.getElementById('saveSitePanel').classList.toggle('hidden')">
+                    💾 Save Current Estimate
+                </button>
+            </div>
+
+            <!-- Save site panel (hidden by default) -->
+            <div id="saveSitePanel" class="hidden" style="
+                background:var(--bg-subtle);
+                border:1.5px dashed var(--brand);
+                border-radius:14px;
+                padding:16px;
+                margin-bottom:16px;
+                display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <input type="text" id="siteNameInput" class="calc-input" placeholder='Site name e.g. "Jalalpur Site #2"'
+                    style="flex:1;min-width:200px;margin:0" maxlength="40">
+                <button class="btn btn-primary" style="min-height:40px;white-space:nowrap;background:#16a34a"
+                    onclick="saveConstructionSite()">💾 Save Site</button>
+            </div>
+
+            <!-- Saved sites list -->
+            <div id="savedSitesContainer">
+                <!-- Populated by saved-sites.js -->
             </div>
         </div>
     </section>

@@ -49,6 +49,8 @@ function updateCartUI() {
     if (navBadge) navBadge.textContent = total;
     const mb = document.getElementById('mobileCartBadge');
     if (mb) mb.textContent = total;
+    // An empty cart shows no pill at all — a permanent "0" reads as a glitch.
+    [navBadge, mb].forEach(b => { if (b) b.classList.toggle('cart-badge-off', total === 0); });
     const headCount = document.getElementById('cartHeadCount');
     if (headCount) headCount.textContent = total + ' ' + (total !== 1 ? t('cart.itemPlural') : t('cart.itemSingular'));
 
@@ -75,6 +77,7 @@ function openCart() {
     document.getElementById('cartDrawer')?.classList.add('open');
     overlayLock();
     renderCartItems();
+    if (window.WhatsAppOrder) WhatsAppOrder.renderQueuedNotice();
 }
 
 function closeCart() {

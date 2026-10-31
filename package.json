@@ -15,12 +15,14 @@
     "android": "npm run www && cap sync android && cap open android",
     "ios": "npm run www && cap sync ios && cap open ios",
     "doctor": "cap doctor",
+    "assetlinks": "node scripts/assetlinks.js",
     "twa:doctor": "bubblewrap doctor",
     "twa:init": "bubblewrap init --manifest https://www.gurukripaentudyog.com/manifest.json",
     "twa:build": "bubblewrap build --skipTwaValidation --skipPlayStorage"
   },
   "dependencies": {
     "@capacitor/app": "^6.0.0",
+    "@capacitor/camera": "^6.0.0",
     "@capacitor/core": "^6.1.2"
   },
   "devDependencies": {
@@ -30,6 +32,7 @@
     "@capacitor/ios": "^6.1.2",
     "@capacitor/splash-screen": "^6.0.2",
     "@capacitor/status-bar": "^6.0.2",
+    "follow-redirects": "^1.16.2",
     "http-server": "^14.1.1"
   }
 }

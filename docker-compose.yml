@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: brick_saas_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: brick_admin
+      POSTGRES_PASSWORD: brick_secure_password
+      POSTGRES_DB: brick_supply_saas
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/src/database/schema.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: brick_saas_backend
+    restart: always
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://brick_admin:brick_secure_password@postgres:5432/brick_supply_saas
+      JWT_SECRET: super_secure_brick_saas_jwt_secret_key_2026
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
