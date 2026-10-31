@@ -954,3 +954,48 @@
     .ops-cell--action { grid-column: 1 / -1; text-align: left; margin-top: 6px; }
     .ops-site { max-width: none; }
 }
+
+/* ── 6. Cart drawer — B2B GSTIN panel ───────────────────────── */
+/* The toggle was wired to handlers that did not exist, so the panel is now
+   real: it splits the 5% GST already inside the total and states plainly what
+   the check did. */
+.cart-gst-box {
+    margin: 10px 0;
+    padding: 10px;
+    background: var(--bg-subtle);
+    border: 1px dashed var(--line-mid);
+    border-radius: var(--r-sm);
+}
+
+.cart-gst-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cart-gst-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--ink-2);
+    cursor: pointer;
+}
+
+.cart-gst-title svg { color: var(--brand); flex: 0 0 auto; }
+.cart-gst-head input[type="checkbox"] { accent-color: var(--brand); cursor: pointer; width: 18px; height: 18px; }
+
+.cart-gst-state {
+    font-size: .7rem;
+    line-height: 1.45;
+    color: var(--ink-3);
+    min-height: 0;
+}
+
+.cart-gst-state:not(:empty) { margin-bottom: 6px; }
+.cart-gst-state--ok { color: var(--success); }
+.cart-gst-state--error { color: var(--danger); }
+
+.cart-gst-itc { color: var(--brand); font-weight: 600; margin-top: 2px; }

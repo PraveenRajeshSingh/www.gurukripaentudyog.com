@@ -129,6 +129,17 @@ const WhatsAppOrder = (function () {
             if (d.unloading) lines.push(`Unloading: ${d.unloading}`);
         }
 
+        // B2B billing identity — only appears when the buyer supplied a
+        // well-shaped GSTIN. The yard still verifies the registration itself.
+        const b = o.billing || {};
+        if (b.gstin) {
+            lines.push('');
+            lines.push('*BILLING (B2B)*');
+            if (b.businessName) lines.push(`Firm: ${b.businessName}`);
+            lines.push(`GSTIN: ${b.gstin}`);
+            lines.push('Kindly raise the tax invoice in this name.');
+        }
+
         lines.push('');
         lines.push(`*PAYMENT PREFERENCE*`);
         lines.push(PAYMENT_LABELS[o.payment] || PAYMENT_LABELS.cod);
@@ -206,6 +217,14 @@ const WhatsAppOrder = (function () {
         return pin && pin.value ? pin.value.trim() : '';
     }
 
+    // Firm details for the order: the GSTIN typed in the cart panel wins, then
+    // the one saved in the profile hub's GST directory.
+    function billing() {
+        const profile = (typeof user !== 'undefined' && user) ? user : {};
+        const gstin = String(window.cartGstNumber || profile.gstin || '').trim().toUpperCase();
+        return { gstin: gstin, businessName: String(profile.businessName || '').trim() };
+    }
+
     function orderFromCart(overrides) {
         const snap = cartSnapshot();
         if (!snap.items.length) {
@@ -222,6 +241,7 @@ const WhatsAppOrder = (function () {
             total: snap.total,
             estimator: currentEstimatorSpec(),
             delivery: { pincode: latestPincode() },
+            billing: billing(),
             payment: typeof selectedPayMethod === 'string' ? selectedPayMethod : 'cod',
             online: navigator.onLine
         }, overrides || {}));
@@ -272,6 +292,7 @@ const WhatsAppOrder = (function () {
             total: snap.total,
             estimator: spec,
             delivery,
+            billing: billing(),
             payment: typeof selectedPayMethod === 'string' ? selectedPayMethod : 'cod',
             notes,
             online: navigator.onLine

@@ -59,17 +59,23 @@
                 <div class="bill-row"><span data-i18n="cart.delivery">Delivery Charge</span><span class="free" id="cartDeliveryFee">FREE</span></div>
                 <div class="bill-row" id="discountRow" style="display:none"><span data-i18n="cart.savings">Coupon Savings</span><span id="discountAmt" style="color:var(--success)">-₹0</span></div>
                 
-                <!-- GST B2B Input & Instant Tax Breakup Toggle -->
-                <div style="margin:10px 0;padding:10px;background:var(--bg-subtle);border-radius:var(--r-sm);border:1px dashed var(--line-mid)">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-                        <label for="cartGstToggle" style="font-size:0.75rem;font-weight:700;color:var(--ink-2);cursor:pointer">🏢 Business GST Input (Tax Invoice)</label>
-                        <input type="checkbox" id="cartGstToggle" onchange="toggleCartGst(this.checked)" style="accent-color:var(--brand);cursor:pointer">
+                <!-- GST input for a B2B tax invoice. The split shown is the tax
+                     already inside the total — it never adds to what is paid. -->
+                <div class="cart-gst-box">
+                    <div class="cart-gst-head">
+                        <label for="cartGstToggle" class="cart-gst-title">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><line x1="9" y1="21" x2="9" y2="12"/><line x1="15" y1="21" x2="15" y2="12"/></svg>
+                            Business GSTIN (tax invoice)
+                        </label>
+                        <input type="checkbox" id="cartGstToggle" onchange="toggleCartGst(this.checked)" aria-label="Bill this order to a GST-registered firm">
                     </div>
                     <div id="cartGstFields" style="display:none;margin-top:8px">
-                        <input type="text" id="cartGstInput" class="co-input" placeholder="Enter 15-digit GSTIN (09...)" maxlength="15" style="text-transform:uppercase;font-size:0.8rem;padding:6px 10px;margin-bottom:6px" oninput="calculateCartGstBreakup()">
+                        <input type="text" id="cartGstInput" class="co-input" placeholder="15-character GSTIN (09...)" inputmode="text" maxlength="15" autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase;font-size:0.8rem;padding:6px 10px;margin-bottom:6px" oninput="calculateCartGstBreakup()">
+                        <div id="cartGstState" class="cart-gst-state"></div>
                         <div id="cartGstBreakdown" style="font-size:0.75rem;color:var(--ink-3);display:none;line-height:1.4">
+                            <div>Taxable value: <span id="cartTaxableVal">₹0</span></div>
                             <div>CGST (2.5%): <span id="cartCgstVal">₹0</span> | SGST (2.5%): <span id="cartSgstVal">₹0</span></div>
-                            <div style="color:var(--brand);font-weight:600">Input Tax Credit (ITC) Eligible</div>
+                            <div class="cart-gst-itc">Included in the total above — input tax credit claimable on the yard's tax invoice.</div>
                         </div>
                     </div>
                 </div>

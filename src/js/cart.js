@@ -141,6 +141,81 @@ function renderCartItems() {
         const dAmt = document.getElementById('discountAmt');
         if (dAmt) dAmt.textContent = '-' + formatINR(couponDiscount);
     } else if (dRow) { dRow.style.display = 'none'; }
+
+    // Keep the tax split in step with the amount actually being paid.
+    calculateCartGstBreakup();
+}
+
+// ── B2B GST input ─────────────────────────────────────────────────
+// Brick rates here are quoted GST-inclusive at 5% (2.5% CGST + 2.5% SGST),
+// which is the same reading the cash memo in invoice.js uses. So this panel
+// splits the tax already inside the total — it never adds to the amount the
+// buyer pays. The yard's tax invoice remains the final word.
+const CART_GST_PCT = 5;
+
+function toggleCartGst(on) {
+    const fields = document.getElementById('cartGstFields');
+    if (fields) fields.style.display = on ? 'block' : 'none';
+    if (on) {
+        const input = document.getElementById('cartGstInput');
+        // A contractor who saved a GSTIN in the profile shouldn't type it twice.
+        if (input && !input.value && typeof user !== 'undefined' && user && user.gstin) input.value = user.gstin;
+        if (input) input.focus();
+    }
+    calculateCartGstBreakup();
+}
+
+// Format-checks the number on this device and publishes it for the order
+// handoff. A wrong-shaped GSTIN is dropped rather than sent to the yard.
+function calculateCartGstBreakup() {
+    const toggle = document.getElementById('cartGstToggle');
+    const input = document.getElementById('cartGstInput');
+    const box = document.getElementById('cartGstBreakdown');
+    if (!toggle || !input || !box) return;
+
+    const raw = input.value.trim().toUpperCase().replace(/[^0-9A-Z]/g, '');
+    input.value = raw;
+
+    const check = (raw && window.BuyerProfile) ? BuyerProfile.validGstin(raw) : null;
+    const usable = toggle.checked && raw && (!check || check.ok);
+    window.cartGstNumber = usable ? raw : '';
+
+    const total = Math.max(0, cart.reduce((s, i) => s + i.price * i.qty, 0) - couponDiscount);
+    const taxable = Math.round(total / (1 + CART_GST_PCT / 100));
+    const tax = Math.max(0, total - taxable);
+    const cgst = Math.round(tax / 2);
+    const sgst = tax - cgst;
+
+    const setC = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+    setC('cartTaxableVal', formatINR(taxable));
+    setC('cartCgstVal', formatINR(cgst));
+    setC('cartSgstVal', formatINR(sgst));
+
+    const state = document.getElementById('cartGstState');
+    let tone = 'muted';
+    let msg;
+    if (!toggle.checked) {
+        box.style.display = 'none';
+        if (state) state.textContent = '';
+        return;
+    }
+    box.style.display = 'block';
+    if (!raw) {
+        msg = 'Billed as a cash supply — no input tax credit.';
+    } else if (!usable) {
+        tone = 'error';
+        msg = raw.length + ' of 15 characters — e.g. 09AAACG1234A1Z5.';
+    } else {
+        tone = 'ok';
+        msg = 'Format valid. Tax breakup shown below is indicative; the yard issues the tax invoice in your firm name.';
+    }
+    if (state) {
+        state.className = 'cart-gst-state cart-gst-state--' + tone;
+        state.textContent = msg;
+    }
 }
 
 function applyCoupon() {
