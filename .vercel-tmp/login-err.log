@@ -1,0 +1,14 @@
+Vercel CLI 65.9.0 (Node.js 20.14.0)
+> 
+  Visit https://vercel.com/oauth/device?user_code=XPFX-SSZK
+
+Waiting for authentication...
+[2K[1A[2K[GError: An unexpected error occurred in login: Error: Not able to create ~\AppData\Roaming\com.vercel.cli\Data\auth.json (operation not permitted).
+Error: An unexpected error occurred!
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:421:11)
+    at spawn (node:child_process:761:9)
+    at TelemetryEventStore.sendToSubprocess (file:///C:/Users/HP/AppData/Roaming/npm/node_modules/vercel/node_modules/@vercel/cli-support/dist/chunks/chunk-NAU6URTI.js:10:11647)
+    at TelemetryEventStore.save (file:///C:/Users/HP/AppData/Roaming/npm/node_modules/vercel/node_modules/@vercel/cli-support/dist/chunks/chunk-NAU6URTI.js:10:10254)
+    at saveTelemetry (file:///C:/Users/HP/AppData/Roaming/npm/node_modules/vercel/node_modules/@vercel/cli-support/dist/index.js:12:5521)
+    at async finishWithExitCode (file:///C:/Users/HP/AppData/Roaming/npm/node_modules/vercel/node_modules/@vercel/cli-support/dist/index.js:12:6333)

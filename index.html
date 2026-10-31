@@ -606,6 +606,8 @@
         <div class="trust-track" id="trustTrack">
             <span class="trust-item">🏆 <strong>Grade-A Certified</strong> Bricks</span>
             <span class="trust-sep">·</span>
+            <span class="trust-item" style="color:var(--brand);font-weight:700">🔥 <strong>Kiln Chamber #3 Live</strong> — Dispatch in 4 hrs</span>
+            <span class="trust-sep">·</span>
             <span class="trust-item">🚛 <strong>Same-Day</strong> Delivery Available</span>
             <span class="trust-sep">·</span>
             <span class="trust-item">💳 UPI · GPay · PhonePe · COD Accepted</span>
@@ -618,6 +620,8 @@
             <span class="trust-sep">·</span>
             <!-- Duplicate for seamless loop -->
             <span class="trust-item">🏆 <strong>Grade-A Certified</strong> Bricks</span>
+            <span class="trust-sep">·</span>
+            <span class="trust-item" style="color:var(--brand);font-weight:700">🔥 <strong>Kiln Chamber #3 Live</strong> — Dispatch in 4 hrs</span>
             <span class="trust-sep">·</span>
             <span class="trust-item">🚛 <strong>Same-Day</strong> Delivery Available</span>
             <span class="trust-sep">·</span>
@@ -1596,6 +1600,22 @@
                 <div class="bill-row"><span data-i18n="cart.subtotal">Item Subtotal</span><span id="cartSubtotal">₹0</span></div>
                 <div class="bill-row"><span data-i18n="cart.delivery">Delivery Charge</span><span class="free" id="cartDeliveryFee">FREE</span></div>
                 <div class="bill-row" id="discountRow" style="display:none"><span data-i18n="cart.savings">Coupon Savings</span><span id="discountAmt" style="color:var(--success)">-₹0</span></div>
+                
+                <!-- GST B2B Input & Instant Tax Breakup Toggle -->
+                <div style="margin:10px 0;padding:10px;background:var(--bg-subtle);border-radius:var(--r-sm);border:1px dashed var(--line-mid)">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                        <label for="cartGstToggle" style="font-size:0.75rem;font-weight:700;color:var(--ink-2);cursor:pointer">🏢 Business GST Input (Tax Invoice)</label>
+                        <input type="checkbox" id="cartGstToggle" onchange="toggleCartGst(this.checked)" style="accent-color:var(--brand);cursor:pointer">
+                    </div>
+                    <div id="cartGstFields" style="display:none;margin-top:8px">
+                        <input type="text" id="cartGstInput" class="co-input" placeholder="Enter 15-digit GSTIN (09...)" maxlength="15" style="text-transform:uppercase;font-size:0.8rem;padding:6px 10px;margin-bottom:6px" oninput="calculateCartGstBreakup()">
+                        <div id="cartGstBreakdown" style="font-size:0.75rem;color:var(--ink-3);display:none;line-height:1.4">
+                            <div>CGST (2.5%): <span id="cartCgstVal">₹0</span> | SGST (2.5%): <span id="cartSgstVal">₹0</span></div>
+                            <div style="color:var(--brand);font-weight:600">Input Tax Credit (ITC) Eligible</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bill-row total"><span data-i18n="cart.grandTotal">Grand Total</span><span id="cartTotal">₹0</span></div>
             </div>
         </div>
@@ -2251,6 +2271,16 @@
             </div>
             <div class="modal-body" style="padding:20px">
                 <form id="bulkQuoteForm" onsubmit="handleBulkQuoteSubmit(event)">
+                    <!-- Quick requirement pills -->
+                    <div style="margin-bottom:14px">
+                        <label class="co-form-label" style="margin-bottom:6px">Quick Volume Select</label>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <button type="button" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 10px;border-radius:20px" onclick="document.getElementById('rfqQty').value=4000;if(navigator.vibrate)navigator.vibrate(25)">1 Trolley (4k)</button>
+                            <button type="button" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 10px;border-radius:20px" onclick="document.getElementById('rfqQty').value=8000;if(navigator.vibrate)navigator.vibrate(25)">2 Trolleys (8k)</button>
+                            <button type="button" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 10px;border-radius:20px" onclick="document.getElementById('rfqQty').value=15000;if(navigator.vibrate)navigator.vibrate(25)">Commercial (15k+)</button>
+                        </div>
+                    </div>
+
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
                         <div>
                             <label class="co-form-label" for="rfqName">Full Name / Contact Person *</label>
@@ -2314,8 +2344,11 @@
 
                     <div id="rfqResultNotice" style="display:none;background:var(--success-bg);border:1px solid var(--success-border);border-radius:var(--r-sm);padding:10px;margin-bottom:14px;color:var(--success);font-size:.85rem;font-weight:600"></div>
 
-                    <button type="submit" class="auth-submit btn-full" id="rfqSubmitBtn">
+                    <button type="submit" class="auth-submit btn-full" id="rfqSubmitBtn" style="margin-bottom:8px">
                         Submit Bulk RFQ Quotation Request →
+                    </button>
+                    <button type="button" class="btn btn-full" style="background:#16a34a;color:#fff;font-weight:700;border:none;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--r-md)" onclick="sendBulkQuoteViaWhatsApp()">
+                        💬 One-Tap WhatsApp Inquiry
                     </button>
                 </form>
             </div>

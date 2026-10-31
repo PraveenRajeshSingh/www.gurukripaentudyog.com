@@ -9,7 +9,9 @@
  *   www/ is the clean, minimal, exactly-what-the-web-serves output.
  *
  * This does NOT change the GitHub Pages deploy, which still uploads the repo
- * root. www/ is generated for native packaging only (and is git-ignored).
+ * root. www/ is generated for native packaging (Capacitor's webDir) and is the
+ * outputDirectory that vercel.json serves. It is git-ignored and rebuilt by the
+ * CI build step, never committed.
  */
 
 const fs = require('fs');
@@ -32,11 +34,20 @@ const EXCLUDE_SUBTREES = new Set([
   path.join('src', 'pages') // partials + shell template are build-time only
 ]);
 
+// Skipped wherever they appear. Dev-dependency trees and build artefacts must
+// never be staged: they balloon the bundle from a few hundred files to several
+// thousand, turn staging into a multi-minute job, and would publish backend
+// dependency code as public site assets.
+const EXCLUDE_NAMES = new Set([
+  'node_modules', '.git', '.dart_tool', '.vercel', '.vercel-tmp',
+  'build', 'dist', 'out', 'coverage', '__pycache__'
+]);
+
 function copyTree(srcDir, relBase) {
   for (const entry of fs.readdirSync(srcDir)) {
     const abs = path.join(srcDir, entry);
     const rel = relBase ? path.join(relBase, entry) : entry;
-    if (EXCLUDE_SUBTREES.has(rel)) continue;
+    if (EXCLUDE_SUBTREES.has(rel) || EXCLUDE_NAMES.has(entry)) continue;
     if (!relBase && EXCLUDE_ROOT.has(entry)) continue;
 
     const dest = path.join(OUT, rel);

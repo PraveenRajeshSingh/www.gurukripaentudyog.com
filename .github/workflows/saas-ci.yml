@@ -25,15 +25,15 @@ jobs:
           cd backend
           npm ci
 
-      - name: Run Backend Tests
-        run: |
-          cd backend
-          npm test
-
       - name: Build Backend Artifact
         run: |
           cd backend
           npm run build
+
+      - name: Run Backend Tests
+        run: |
+          cd backend
+          npm test
 
   flutter-app-build:
     name: Flutter Cross-Platform App Build (Android/iOS)
@@ -59,10 +59,11 @@ jobs:
           cd flutter_app
           flutter pub get
 
-      - name: Run Flutter Static Analysis
+      - name: Run Flutter Static Analysis & Unit Tests
         run: |
           cd flutter_app
           flutter analyze --no-fatal-infos
+          flutter test
 
       - name: Build Android App Bundle (AAB)
         run: |

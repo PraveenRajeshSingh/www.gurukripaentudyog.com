@@ -44,6 +44,22 @@
                 <div class="bill-row"><span data-i18n="cart.subtotal">Item Subtotal</span><span id="cartSubtotal">₹0</span></div>
                 <div class="bill-row"><span data-i18n="cart.delivery">Delivery Charge</span><span class="free" id="cartDeliveryFee">FREE</span></div>
                 <div class="bill-row" id="discountRow" style="display:none"><span data-i18n="cart.savings">Coupon Savings</span><span id="discountAmt" style="color:var(--success)">-₹0</span></div>
+                
+                <!-- GST B2B Input & Instant Tax Breakup Toggle -->
+                <div style="margin:10px 0;padding:10px;background:var(--bg-subtle);border-radius:var(--r-sm);border:1px dashed var(--line-mid)">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                        <label for="cartGstToggle" style="font-size:0.75rem;font-weight:700;color:var(--ink-2);cursor:pointer">🏢 Business GST Input (Tax Invoice)</label>
+                        <input type="checkbox" id="cartGstToggle" onchange="toggleCartGst(this.checked)" style="accent-color:var(--brand);cursor:pointer">
+                    </div>
+                    <div id="cartGstFields" style="display:none;margin-top:8px">
+                        <input type="text" id="cartGstInput" class="co-input" placeholder="Enter 15-digit GSTIN (09...)" maxlength="15" style="text-transform:uppercase;font-size:0.8rem;padding:6px 10px;margin-bottom:6px" oninput="calculateCartGstBreakup()">
+                        <div id="cartGstBreakdown" style="font-size:0.75rem;color:var(--ink-3);display:none;line-height:1.4">
+                            <div>CGST (2.5%): <span id="cartCgstVal">₹0</span> | SGST (2.5%): <span id="cartSgstVal">₹0</span></div>
+                            <div style="color:var(--brand);font-weight:600">Input Tax Credit (ITC) Eligible</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bill-row total"><span data-i18n="cart.grandTotal">Grand Total</span><span id="cartTotal">₹0</span></div>
             </div>
         </div>

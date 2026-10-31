@@ -10,6 +10,16 @@
             </div>
             <div class="modal-body" style="padding:20px">
                 <form id="bulkQuoteForm" onsubmit="handleBulkQuoteSubmit(event)">
+                    <!-- Quick requirement pills -->
+                    <div style="margin-bottom:14px">
+                        <label class="co-form-label" style="margin-bottom:6px">Quick Volume Select</label>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <button type="button" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 10px;border-radius:20px" onclick="document.getElementById('rfqQty').value=4000;if(navigator.vibrate)navigator.vibrate(25)">1 Trolley (4k)</button>
+                            <button type="button" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 10px;border-radius:20px" onclick="document.getElementById('rfqQty').value=8000;if(navigator.vibrate)navigator.vibrate(25)">2 Trolleys (8k)</button>
+                            <button type="button" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 10px;border-radius:20px" onclick="document.getElementById('rfqQty').value=15000;if(navigator.vibrate)navigator.vibrate(25)">Commercial (15k+)</button>
+                        </div>
+                    </div>
+
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
                         <div>
                             <label class="co-form-label" for="rfqName">Full Name / Contact Person *</label>
@@ -73,8 +83,11 @@
 
                     <div id="rfqResultNotice" style="display:none;background:var(--success-bg);border:1px solid var(--success-border);border-radius:var(--r-sm);padding:10px;margin-bottom:14px;color:var(--success);font-size:.85rem;font-weight:600"></div>
 
-                    <button type="submit" class="auth-submit btn-full" id="rfqSubmitBtn">
+                    <button type="submit" class="auth-submit btn-full" id="rfqSubmitBtn" style="margin-bottom:8px">
                         Submit Bulk RFQ Quotation Request →
+                    </button>
+                    <button type="button" class="btn btn-full" style="background:#16a34a;color:#fff;font-weight:700;border:none;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--r-md)" onclick="sendBulkQuoteViaWhatsApp()">
+                        💬 One-Tap WhatsApp Inquiry
                     </button>
                 </form>
             </div>
