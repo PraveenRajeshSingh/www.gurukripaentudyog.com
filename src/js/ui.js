@@ -20,24 +20,74 @@ function showToast(msg, type = '') {
 }
 
 // ══════════════════════════════════════════
-// SCROLL PROGRESS BAR
+// SCROLL PROGRESS & 60FPS RAF DISPATCHER
 // ══════════════════════════════════════════
-function initScrollProgress() {
-    const bar = document.getElementById('spbar');
-    const scrollTopBtn = document.getElementById('scrollTopBtn');
-    if (!bar) return;
-    window.addEventListener('scroll', () => {
-        const dh = document.documentElement.scrollHeight - window.innerHeight;
-        bar.style.width = (dh > 0 ? (window.scrollY / dh) * 100 : 0) + '%';
-        if (scrollTopBtn) {
-            scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
-        }
-    }, { passive: true });
+let _scrollTicking = false;
+let _cachedSectionOffsets = null;
+
+function _updateCachedOffsets() {
+    const sections = document.querySelectorAll('section[id], header[id]');
+    _cachedSectionOffsets = Array.from(sections).map(s => ({
+        id: s.id,
+        offsetTop: s.offsetTop
+    }));
 }
 
-// ══════════════════════════════════════════
-// COUNTER ANIMATION
-// ══════════════════════════════════════════
+function _onScrollFrame() {
+    const scrollY = window.scrollY;
+    const bar = document.getElementById('spbar');
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    if (bar) {
+        const dh = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (dh > 0 ? (scrollY / dh) * 100 : 0) + '%';
+    }
+    if (scrollTopBtn) {
+        scrollTopBtn.classList.toggle('visible', scrollY > 300);
+    }
+
+    if (!_cachedSectionOffsets) _updateCachedOffsets();
+    let current = '';
+    if (_cachedSectionOffsets) {
+        for (let i = 0; i < _cachedSectionOffsets.length; i++) {
+            if (scrollY >= _cachedSectionOffsets[i].offsetTop - 120) {
+                current = _cachedSectionOffsets[i].id;
+            }
+        }
+    }
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+    });
+
+    _scrollTicking = false;
+}
+
+function _requestScrollTick() {
+    if (!_scrollTicking) {
+        window.requestAnimationFrame(_onScrollFrame);
+        _scrollTicking = true;
+    }
+}
+
+function initScrollProgress() {
+    window.addEventListener('scroll', _requestScrollTick, { passive: true });
+    window.addEventListener('resize', () => {
+        _updateCachedOffsets();
+        _requestScrollTick();
+    }, { passive: true });
+    _requestScrollTick();
+}
+
+function initNavHighlight() {
+    _updateCachedOffsets();
+    _requestScrollTick();
+}
+
+function setActiveNav(el) {
+    document.querySelectorAll('.nav-link, .drawer-link').forEach(l => l.classList.remove('active'));
+    el.classList.add('active');
+}
+
 function initCounters() {
     const counters = document.querySelectorAll('.counter');
     if (!counters.length) return;
@@ -62,24 +112,6 @@ function initCounters() {
         });
     }, { threshold: 0.5 });
     counters.forEach(c => obs.observe(c));
-}
-
-// ══════════════════════════════════════════
-// NAV HIGHLIGHTING
-// ══════════════════════════════════════════
-function setActiveNav(el) {
-    document.querySelectorAll('.nav-link, .drawer-link').forEach(l => l.classList.remove('active'));
-    el.classList.add('active');
-}
-
-function initNavHighlight() {
-    const sections = document.querySelectorAll('section[id], header[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
-        navLinks.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === '#' + current); });
-    }, { passive: true });
 }
 
 function scrollToSection(id) {
@@ -270,6 +302,7 @@ function overlayUnlock() {
 
 // [element-id, closer] — checked top-most first (reverse paint order).
 const OVERLAY_STACK = [
+    ['pincodeModal',     () => typeof closePincodeModal   === 'function' && closePincodeModal()],
     ['lb',               () => typeof lbClose             === 'function' && lbClose()],
     ['catalogSidebar',   () => typeof toggleFilterSheet   === 'function' && toggleFilterSheet(false)],
     ['legalModal',       () => typeof closeLegalModal     === 'function' && closeLegalModal()],

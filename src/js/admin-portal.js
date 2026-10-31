@@ -17,6 +17,8 @@ function openAdminPortal() {
         modal.classList.add('open');
         overlayLock();
         renderAdminTab('overview');
+        // The board advertises a 60s redraw, so start the actual timer.
+        if (window.DispatchOps) DispatchOps.startBoardWatch();
     }
 }
 
@@ -25,6 +27,7 @@ function closeAdminPortal() {
     if (modal) {
         modal.classList.remove('open');
         overlayUnlock();
+        if (window.DispatchOps) DispatchOps.stopBoardWatch();
     }
 }
 
@@ -61,78 +64,87 @@ function renderAdminTab(tab) {
         const quotes = (window.GurukripaServices && window.GurukripaServices.QuotationService)
             ? window.GurukripaServices.QuotationService.getAllQuotations()
             : [];
-        const orders = (window.GurukripaServices && window.GurukripaServices.OrderService)
-            ? window.GurukripaServices.OrderService.getAllOrders()
-            : [];
+        const orderList = _adminOrders();
         // Real ERP metrics (computed from finalized documents — never hardcoded)
         const A = (window.GurukripaERP && GurukripaERP.Analytics) ? GurukripaERP.Analytics : null;
         const k = A ? A.kpi('month') : null;
         const low = A ? A.lowStock() : [];
         const money = n => '₹' + Number(n || 0).toLocaleString('en-IN');
-        const arrow = p => p > 0 ? '<span style="color:var(--success)">▲ ' + p + '%</span>'
-                        : p < 0 ? '<span style="color:var(--danger)">▼ ' + Math.abs(p) + '%</span>'
-                        : '<span style="color:var(--ink-3)">— 0%</span>';
+        const m = window.DispatchOps ? DispatchOps.metrics(orderList) : null;
+        const kiln = window.DispatchOps ? DispatchOps.kiln() : null;
 
         stage.innerHTML = `
-            <div style="margin-bottom:20px">
-                <h4 style="font-family:var(--display);font-size:1.3rem;color:var(--ink);margin-bottom:4px">Bhatta Operations Overview</h4>
-                <p style="font-size:0.85rem;color:var(--ink-3)">Real-time yard dispatch metrics, B2B wholesale enquiries &amp; customer orders.</p>
-            </div>
-
-            <!-- KPI Metric Cards (live, from ERP documents) -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px;margin-bottom:24px">
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--sh-card)">
-                    <div style="font-size:0.75rem;color:var(--ink-3);font-weight:700;text-transform:uppercase">Sales This Month</div>
-                    <div style="font-size:1.8rem;font-weight:800;color:var(--brand);margin-top:4px">${k ? money(k.sales.period) : '—'}</div>
-                    <div style="font-size:0.72rem;color:var(--ink-3);margin-top:2px">${k ? arrow(k.sales.changePct) + ' vs prev · today ' + money(k.sales.today) : ''}</div>
+            <div class="ops-head">
+                <div>
+                    <h4 class="ops-head__title">Kiln &amp; Yard Operations Console</h4>
+                    <p class="ops-head__sub">Jalalpur Bhatta Yard · dispatch counts from this device</p>
                 </div>
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--sh-card)">
-                    <div style="font-size:0.75rem;color:var(--ink-3);font-weight:700;text-transform:uppercase">Invoiced Orders</div>
-                    <div style="font-size:1.8rem;font-weight:800;color:var(--ink);margin-top:4px">${k ? k.orders.count : orders.length}</div>
-                    <div style="font-size:0.72rem;color:var(--ink-3);margin-top:2px">${k ? 'AOV ' + money(k.orders.aov) + ' · ' + arrow(k.orders.changePct) : ''}</div>
-                </div>
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--sh-card)">
-                    <div style="font-size:0.75rem;color:var(--ink-3);font-weight:700;text-transform:uppercase">Outstanding Receivables</div>
-                    <div style="font-size:1.8rem;font-weight:800;color:var(--warning);margin-top:4px">${k ? money(k.receivables.outstanding) : '—'}</div>
-                    <div style="font-size:0.72rem;color:var(--ink-3);margin-top:2px">${k ? 'Collected ' + money(k.receivables.collected) + ' · Overdue ' + money(k.receivables.overdue) : ''}</div>
-                </div>
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--sh-card)">
-                    <div style="font-size:0.75rem;color:var(--ink-3);font-weight:700;text-transform:uppercase">Low-Stock SKUs</div>
-                    <div style="font-size:1.8rem;font-weight:800;color:${low.length ? 'var(--danger)' : 'var(--success)'};margin-top:4px">${low.length}</div>
-                    <div style="font-size:0.72rem;color:var(--ink-3);margin-top:2px">${quotes.length} open RFQ enquiries</div>
+                <div class="ops-head__actions">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="logManualOrder()">+ New Manual Order</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="updateKilnStatus()">Kiln Note</button>
                 </div>
             </div>
 
-            <!-- Recent RFQs Table -->
-            <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--sh-card)">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-                    <h5 style="font-size:1rem;color:var(--ink);font-weight:700;margin:0">Recent B2B Bulk RFQ Quotation Requests</h5>
+            <!-- Yard status: 1 column on phones, 2 on tablets, 4 on desktop -->
+            <div class="ops-metrics">
+                ${_opsMetric('brand', 'Kiln Firing Status',
+                    kiln && kiln.chamber ? kiln.chamber + ' · ' + kiln.state : 'Not reported',
+                    kiln && kiln.note ? kiln.note : 'No chamber has been written up by the yard yet.')}
+                ${_opsMetric('info', 'Trolleys En-Route',
+                    m ? m.enroute + (m.enroute === 1 ? ' load' : ' loads') : '—',
+                    m && m.enroute ? 'Operator-reported. There is no GPS feed to track position.' : 'Nothing has left the yard right now.')}
+                ${_opsMetric('', 'Today\'s Orders',
+                    m ? formatNum(m.piecesToday) + ' bricks' : '—',
+                    m ? m.ordersToday + ' orders logged · ' + m.pendingFollowup + ' still open' : '')}
+                ${_opsMetric('ok', 'Stock Available',
+                    m && m.stockPcs !== null ? formatNum(m.stockPcs) + ' pcs' : 'Ledger empty',
+                    m && m.stockPcs !== null ? 'Available balance from the yard stock ledger' : 'Post a goods-received entry to see figures.')}
+            </div>
+
+            ${_dispatchBoard(orderList)}
+
+            <!-- Money metrics, counted from finalized ERP documents -->
+            <div class="ops-metrics">
+                ${_opsMetric('brand', 'Sales This Month', k ? money(k.sales.period) : '—',
+                    k ? 'Today ' + money(k.sales.today) + ' · no prior month on this device to compare' : 'Nothing invoiced yet.')}
+                ${_opsMetric('', 'Invoiced Orders', k ? k.orders.count : orderList.length,
+                    k ? 'AOV ' + money(k.orders.aov) : 'Orders recorded locally on this device')}
+                ${_opsMetric('warn', 'Outstanding Receivables', k ? money(k.receivables.outstanding) : '—',
+                    k ? 'Collected ' + money(k.receivables.collected) + ' · Overdue ' + money(k.receivables.overdue) : '')}
+                ${_opsMetric(low.length ? 'warn' : 'ok', 'Low-Stock SKUs', String(low.length),
+                    quotes.length + ' open RFQ enquiries')}
+            </div>
+
+            <!-- Recent RFQs -->
+            <div class="ops-board">
+                <div class="ops-board__hd">
+                    <span class="ops-board__title">Recent B2B Bulk RFQ Quotation Requests</span>
                     <button class="btn btn-outline btn-sm" onclick="switchAdminTab('quotations')">View All</button>
                 </div>
-                <div style="overflow-x:auto">
-                    <table style="width:100%;border-collapse:collapse;font-size:0.84rem;text-align:left">
+                <div class="ops-scroll">
+                    <table class="ops-table">
                         <thead>
-                            <tr style="border-bottom:1.5px solid var(--line);color:var(--ink-3)">
-                                <th style="padding:10px 8px">Ref Number</th>
-                                <th style="padding:10px 8px">Buyer / Project</th>
-                                <th style="padding:10px 8px">Phone</th>
-                                <th style="padding:10px 8px">Brick Grade</th>
-                                <th style="padding:10px 8px">Quantity</th>
-                                <th style="padding:10px 8px">Status</th>
+                            <tr>
+                                <th>Ref Number</th>
+                                <th>Buyer / Project</th>
+                                <th>Phone</th>
+                                <th>Brick Grade</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${quotes.length ? quotes.map(q => `
-                                <tr style="border-bottom:1px solid var(--line)">
-                                    <td style="padding:10px 8px;font-weight:700;color:var(--brand)">${sanitizeHTML(q.id)}</td>
-                                    <td style="padding:10px 8px"><strong>${sanitizeHTML(q.name)}</strong><br><small style="color:var(--ink-3)">${sanitizeHTML(q.company)}</small></td>
-                                    <td style="padding:10px 8px">${sanitizeHTML(q.phone)}</td>
-                                    <td style="padding:10px 8px">${sanitizeHTML(q.product)}</td>
-                                    <td style="padding:10px 8px;font-weight:600">${formatNum(q.qty)} pcs</td>
-                                    <td style="padding:10px 8px"><span style="background:var(--warning-bg);color:var(--warning);padding:3px 8px;border-radius:12px;font-size:0.75rem;font-weight:700">Pending Followup</span></td>
+                                <tr class="ops-row">
+                                    <td class="ops-cell"><span class="ops-id">${sanitizeHTML(q.id)}</span></td>
+                                    <td class="ops-cell"><span class="ops-cust">${sanitizeHTML(q.name)}</span><span class="ops-site">${sanitizeHTML(q.company)}</span></td>
+                                    <td class="ops-cell">${sanitizeHTML(q.phone)}</td>
+                                    <td class="ops-cell">${sanitizeHTML(q.product)}</td>
+                                    <td class="ops-cell ops-cell--num">${formatNum(q.qty)} pcs</td>
+                                    <td class="ops-cell"><span class="ops-pill ops-pill--warn">Pending Followup</span></td>
                                 </tr>
                             `).join('') : `
-                                <tr><td colspan="6" style="padding:20px;text-align:center;color:var(--ink-3)">No active RFQ enquiries. Submit from homepage "Request Bulk Quote".</td></tr>
+                                <tr><td colspan="6" class="ops-empty">No active RFQ enquiries. Submit from homepage "Request Bulk Quote".</td></tr>
                             `}
                         </tbody>
                     </table>
@@ -325,18 +337,59 @@ function renderAdminTab(tab) {
         const A = (window.GurukripaERP && GurukripaERP.Analytics) ? GurukripaERP.Analytics : null;
         const pending = A ? A.pendingDeliveries() : [];
         const perf = A ? A.deliveryPerformance() : { total: 0, delivered: 0, pending: 0, rate: 0 };
+        const orderList = _adminOrders();
+        const m = window.DispatchOps ? DispatchOps.metrics(orderList) : null;
+        const fleet = window.DispatchOps ? DispatchOps.vehicles() : [];
+
         stage.innerHTML = `
-            <h4 style="font-family:var(--display);font-size:1.3rem;color:var(--ink);margin-bottom:4px">Dispatch &amp; Delivery</h4>
-            <p style="font-size:0.85rem;color:var(--ink-3);margin-bottom:16px">Delivery challans and dispatch status derived from ERP documents.</p>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px">
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="font-size:.72rem;color:var(--ink-3);text-transform:uppercase;font-weight:700">Challans</div><div style="font-size:1.5rem;font-weight:800">${perf.total}</div></div>
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="font-size:.72rem;color:var(--ink-3);text-transform:uppercase;font-weight:700">Delivered</div><div style="font-size:1.5rem;font-weight:800;color:var(--success)">${perf.delivered}</div></div>
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="font-size:.72rem;color:var(--ink-3);text-transform:uppercase;font-weight:700">Pending</div><div style="font-size:1.5rem;font-weight:800;color:var(--warning)">${perf.pending}</div></div>
+            <div class="ops-head">
+                <div>
+                    <h4 class="ops-head__title">Live Trolley Dispatches</h4>
+                    <p class="ops-head__sub">Tap a stage to move a load — the customer gets the matching alert.</p>
+                </div>
+                <div class="ops-head__actions">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="logManualOrder()">+ New Manual Order</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="renderAdminTab('dispatch')">Refresh</button>
+                </div>
             </div>
-            <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:18px">
-                ${pending.length ? pending.map(c => `<div style="padding:10px 0;border-bottom:1px solid var(--line)"><strong>${sanitizeHTML(c.number)}</strong> <span style="color:var(--ink-3);font-size:.8rem">· ${sanitizeHTML(c.status)}</span></div>`).join('')
-                : '<p style="text-align:center;color:var(--ink-3);padding:16px">No delivery challans yet. Dispatch scheduling, driver/vehicle assignment and live GPS tracking require the logistics backend (see docs/ERP-ARCHITECTURE.md) — no location data is fabricated here.</p>'}
+
+            <div class="ops-metrics">
+                ${_opsMetric('', 'Challans Issued', String(perf.total),
+                    perf.total ? 'Delivery challans from ERP documents' : 'No challans raised yet.')}
+                ${_opsMetric('ok', 'Delivered', String(perf.delivered),
+                    m ? m.delivered + ' loads marked delivered on the board' : '')}
+                ${_opsMetric('warn', 'Pending', String(perf.pending),
+                    m ? m.loading + ' loading · ' + m.firing + ' in kiln' : '')}
+                ${_opsMetric('info', 'Fleet', fleet.length ? fleet.length + ' vehicles' : 'Fleet empty',
+                    fleet.length ? (m.fleetOnTrip || 0) + ' shown as on-trip in the master' : 'Add vehicles to the ERP fleet master.')}
             </div>
+
+            ${_dispatchBoard(orderList)}
+
+            <!-- Vehicle allocation: the fleet master carries no driver field, so
+                 driver names live on the dispatch record and are listed there. -->
+            <div class="ops-board">
+                <div class="ops-board__hd">
+                    <span class="ops-board__title">Vehicles On File</span>
+                    <span class="ops-board__meta">${fleet.length} from the ERP fleet master</span>
+                </div>
+                <div style="padding:14px 16px">
+                    ${fleet.length ? `<div class="ops-metrics" style="margin-bottom:0">${fleet.slice(0, 8).map(v => _opsMetric(
+                        v.status === 'on_trip' ? 'info' : '',
+                        v.plate || v.name || v.id,
+                        (v.type || 'vehicle') + ' · ' + (v.status || 'available') + (v.active === false ? ' (inactive)' : ''),
+                        v.payloadKg || v.bedVolumeM3
+                            ? formatNum(v.payloadKg) + ' kg payload · ' + formatNum(v.bedVolumeM3) + ' m3 bed'
+                            : 'No payload or bed size recorded'
+                    )).join('')}</div>`
+                    : '<p class="ops-empty" style="padding:6px 0">No vehicles in the fleet master. Driver and trolley numbers typed on a dispatch row are saved against that order on this device.</p>'}
+                </div>
+            </div>
+
+            <p class="ops-note" style="margin-top:14px">
+                ${_opsIcon('info')}
+                <span>Stage changes and driver allocation are stored on this device and drive the customer's Track Orders status. Dispatch scheduling, live GPS positions and driver documents need the logistics backend described in docs/ERP-ARCHITECTURE.md — nothing here invents a location or an ETA. ${pending.length ? pending.length + ' ERP challan(s) still open: ' + pending.slice(0, 5).map(c => sanitizeHTML(c.number)).join(', ') + '.' : ''}</span>
+            </p>
         `;
     } else if (tab === 'financials') {
         const A = (window.GurukripaERP && GurukripaERP.Analytics) ? GurukripaERP.Analytics : null;
@@ -371,6 +424,62 @@ function renderAdminTab(tab) {
             </div>
         `;
     }
+}
+
+// ── Ops console render helpers (shared by overview + dispatch) ────
+// Single source for the metric card markup so both tabs stay identical.
+function _adminOrders() {
+    if (typeof orders !== 'undefined' && Array.isArray(orders)) return orders;
+    if (window.GurukripaServices && GurukripaServices.OrderService) return GurukripaServices.OrderService.getAllOrders();
+    return [];
+}
+
+function _esc(value) { return sanitizeHTML(String(value == null ? '' : value)); }
+
+function _opsMetric(tone, label, value, note) {
+    // All three text slots are escaped here, so callers pass raw values.
+    return `<div class="ops-metric${tone ? ' ops-metric--' + tone : ''}">` +
+        `<div class="ops-metric__label">${_esc(label)}</div>` +
+        `<div class="ops-metric__value">${_esc(value)}</div>` +
+        (note ? `<div class="ops-metric__note">${_esc(note)}</div>` : '') +
+        `</div>`;
+}
+
+function _opsIcon(name) {
+    const paths = {
+        info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+        truck: '<rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>'
+    };
+    return `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.info}</svg>`;
+}
+
+// The dispatch board: real rows from the order ledger + dispatch records.
+function _dispatchBoard(orderList) {
+    const rows = (window.DispatchOps && typeof DispatchOps.boardHtml === 'function')
+        ? DispatchOps.boardHtml(orderList)
+        : `<tr><td colspan="6" class="ops-empty">Dispatch tracker unavailable.</td></tr>`;
+    return `
+        <div class="ops-board">
+            <div class="ops-board__hd">
+                <span class="ops-board__title">Live Trolley Dispatch Board</span>
+                <span class="ops-board__meta">Redrawn every 60s while this console is open · counts are local</span>
+            </div>
+            <div class="ops-scroll">
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer &amp; Site</th>
+                            <th>Load</th>
+                            <th>Trolley Status</th>
+                            <th>Driver &amp; Vehicle</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        </div>`;
 }
 
 // ── Invoice / PDF action helpers (admin) ───────────────────────

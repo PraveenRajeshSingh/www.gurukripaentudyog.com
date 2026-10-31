@@ -1,12 +1,17 @@
-    <!-- ━━━━━━━━━━━━━━━━━ CHECKOUT MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay checkout-modal" id="checkoutModal" onclick="handleCheckoutOverlayClick(event)">
-        <div class="modal-box" id="checkoutBox">
-            <div class="modal-head">
+    <!-- ━━━━━━━━━━━━━━━━━ CHECKOUT SLIDE-OVER (MOBILE-FIRST) ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay checkout-modal co-sheet" id="checkoutModal" onclick="handleCheckoutOverlayClick(event)">
+        <div class="modal-box" id="checkoutBox" role="dialog" aria-modal="true" aria-labelledby="coSheetTitle">
+            <!-- Sticky sheet header -->
+            <div class="co-sheet__head">
                 <div>
-                    <div class="modal-badge"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
-                    <div class="modal-title">Checkout & Order</div>
+                    <span class="co-sheet__kick">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                        Direct Kiln Dispatch · Jalalpur Yard
+                    </span>
+                    <div class="co-sheet__title" id="coSheetTitle">Checkout &amp; Order Summary</div>
+                    <div class="co-sheet__sub">The yard confirms the loading slot after the order reaches it.</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeCheckout()">✕</button>
+                <button class="modal-close-btn" onclick="closeCheckout()" aria-label="Close Checkout">✕</button>
             </div>
 
             <!-- Numbered Step Bar -->
@@ -33,10 +38,19 @@
                 </div>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body co-sheet__body">
                 <!-- Step 1: Delivery Details -->
                 <div class="step-panel active" id="checkoutStep1">
                     <form id="deliveryForm" onsubmit="goToPayment(event)" novalidate>
+                        <!-- Trolley capacity meter (kept above the fold on phones) -->
+                        <div id="coTrolleyMeter" class="hidden"></div>
+
+                        <!-- Saved construction sites → one tap fills the address block -->
+                        <div id="coSavedSites" class="hidden" style="margin-bottom:12px">
+                            <div class="hub-section-title">Deliver to a saved site</div>
+                            <div id="coSiteChips"></div>
+                        </div>
+
                         <div class="auth-row">
                             <div class="auth-field">
                                 <label class="co-form-label" for="coName">Full Name <span class="co-required">*</span></label>
@@ -57,8 +71,8 @@
                                 <input type="text" id="coCity" class="co-input" value="Jaunpur" required oninput="handleCheckoutAddressCheck()">
                             </div>
                             <div class="auth-field">
-                                <label class="co-form-label" for="coPincode">Pincode</label>
-                                <input type="text" id="coPincode" class="co-input" placeholder="222001" oninput="handleCheckoutAddressCheck()">
+                                <label class="co-form-label" for="coPincode">Delivery Pincode</label>
+                                <input type="text" id="coPincode" class="co-input" inputmode="numeric" maxlength="6" placeholder="e.g. Jalalpur 222001" oninput="handleCheckoutAddressCheck()">
                             </div>
                         </div>
                         <div id="serviceabilityBadge" style="display:none;font-size:0.75rem;padding:6px 10px;border-radius:6px;margin-top:8px"></div>
@@ -87,9 +101,16 @@
                             </div>
                         </div>
                         <div class="checkout-order-summary" id="checkoutSummary" style="margin-top:14px"></div>
-                        <button type="submit" class="auth-submit" style="margin-top:14px">
-                            <span>Continue to Payment</span> →
+                        <!-- Save this delivery point as a named site (address book) -->
+                        <button type="button" class="btn btn-outline btn-full" onclick="toggleCheckoutSaveSite()" style="margin-top:12px;min-height:40px;font-size:.8rem">
+                            Save this site for next order
                         </button>
+                        <div class="hidden" id="saveSitePanelCheckout" style="margin-top:10px">
+                            <label class="co-form-label" for="siteNameInputCheckout">Site Nickname</label>
+                            <input type="text" class="co-input" id="siteNameInputCheckout" placeholder="e.g. Jalalpur Site #2" maxlength="40">
+                            <button type="button" class="btn btn-primary btn-full" onclick="saveConstructionSite()" style="margin-top:8px;min-height:40px">Save to My Sites</button>
+                            <p class="gst-note" style="margin-top:6px">Keeps this nickname with its own pincode and road access, so the next order to the same plot needs one tap.</p>
+                        </div>
                     </form>
                 </div>
 
@@ -208,12 +229,7 @@
 
                     <div class="checkout-order-summary" id="checkoutSummary2" style="margin-top:14px"></div>
                     <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap" id="checkoutPayBtns">
-                        <button class="btn btn-ghost" onclick="backToDetails()" style="flex:1">← Back</button>
-                        <button class="auth-submit" onclick="placeOrder()" id="placeOrderBtn" style="flex:2">Confirm Order</button>
-                        <button type="button" class="confirm-wa-btn" onclick="confirmOrderOnWhatsApp()">
-                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
-                            <span>Send full order on WhatsApp</span>
-                        </button>
+                        <button class="btn btn-ghost" onclick="backToDetails()" style="flex:1">← Back to details</button>
                     </div>
                 </div>
 
@@ -244,6 +260,24 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sticky action bar: the only place a buyer can order from -->
+            <div class="co-sheet__foot" id="coFoot">
+                <div class="co-foot__total">
+                    <span class="co-foot__label">Total Payable</span>
+                    <span class="co-foot__val" id="coPayableTotal">₹0</span>
+                </div>
+                <div id="coFootActions">
+                    <button type="button" class="co-wa-cta" id="coFootWa" onclick="confirmOrderOnWhatsApp()">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+                        <span>Instant WhatsApp Order</span>
+                    </button>
+                    <button type="button" class="co-primary-cta" id="coFootPrimary" onclick="coFootPrimaryAction()">Continue to Payment</button>
+                </div>
+                <div class="co-foot__hint" id="coFootHint">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span>WhatsApp sends the full order to the yard; UPI / COD goes through the payment screen.</span>
+                </div>
+            </div>
         </div>
     </div>
-

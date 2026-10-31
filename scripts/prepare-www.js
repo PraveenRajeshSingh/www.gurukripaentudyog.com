@@ -23,7 +23,7 @@ const OUT = path.join(ROOT, 'www');
 // Root entries never shipped into the native bundle.
 const EXCLUDE_ROOT = new Set([
   'node_modules', '.git', '.github', '.qoder', '.vscode',
-  'www', 'android', 'ios', 'docs', 'scripts',
+  'www', 'android', 'ios', 'docs', 'scripts', 'backend', 'flutter_app', 'tests',
   'package.json', 'package-lock.json', 'npm-shrinkwrap.json',
   'capacitor.config.json', 'capacitor.config.ts',
   '.gitignore', '.editorconfig', 'README.md', 'LICENSE', 'LICENSE.md'

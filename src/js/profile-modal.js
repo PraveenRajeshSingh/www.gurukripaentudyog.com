@@ -1,13 +1,19 @@
 // ══════════════════════════════════════════
-// PROFILE MODAL — view / edit / wishlist render
+// ACCOUNT HUB — profile modal: header card, quick access grid,
+// order history, saved construction sites, wishlist & GST business info
 // Split from the original monolithic auth.js (SRP).
 // Depends on: openAuth (auth-modal.js), updateAuthUI (auth-modal.js),
 //             renderOrderHistory (invoice.js),
 //             closeUserDropdown (ui.js), getAvatarBg, sanitizeHTML, setSafeStorage (state.js),
-//             showToast, t() (ui.js).
+//             showToast, t() (ui.js),
+//             SavedSites, BuyerProfile (saved-sites.js).
 // NOTE: translateProfileModal() is a pre-existing undefined reference kept
 // verbatim from the original auth.js to preserve 1:1 behavior.
 // ══════════════════════════════════════════
+
+// Tab order of the hub. 'address' survives only as an alias of 'sites' —
+// the navbar account menu still calls openProfileTab('address').
+const PROFILE_TABS = ['info', 'orders', 'sites', 'wishlist', 'gst'];
 
 function openProfile() {
     if (!user) { openAuth('login'); return; }
@@ -30,7 +36,6 @@ function openProfile() {
     const pWish = document.getElementById('profileStatWishlist');
     if (pOrders) pOrders.textContent = orders.length;
     if (pWish) pWish.textContent = wishlist.length;
-
     const vName = document.getElementById('profileViewName');
     const vEmail = document.getElementById('profileViewEmail');
     const vMobile = document.getElementById('profileViewMobile');
@@ -46,6 +51,7 @@ function openProfile() {
     if (aDisp) aDisp.textContent = sanitizeHTML(user.address || 'No saved address yet.');
 
     cancelEditProfile();
+    renderAccountHub();
     switchProfileTab('info');
     renderOrderHistory();
     renderWishlistInProfile();
@@ -53,6 +59,118 @@ function openProfile() {
     document.getElementById('profileModal')?.classList.add('open');
     overlayLock();
     translateProfileModal();
+}
+
+// ── Hub renderers ───────────────────────────────────────────
+// Everything the header card, the metric strip, the 2×2 quick-access grid and
+// the GST panel show. Counted from the local ledger — never hardcoded.
+function renderAccountHub() {
+    if (!window.BuyerProfile || !window.SavedSites) return;
+
+    // Header badge: customer type + what proof is actually on file.
+    const badge = BuyerProfile.badge();
+    const badgeEl = document.getElementById('profileBuyerBadge');
+    const badgeText = document.getElementById('profileBuyerBadgeText');
+    if (badgeEl) {
+        badgeEl.className = 'profile-header-badge profile-badge--' + badge.tone;
+        badgeEl.title = badge.title;
+    }
+    if (badgeText) badgeText.textContent = badge.label;
+
+    const rows = (typeof orders !== 'undefined' && Array.isArray(orders)) ? orders : [];
+    const active = rows.filter((o) => !/deliver|cancel/i.test(o.status || '')).length;
+    const sites = SavedSites.list();
+
+    const set = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+
+    set('profileStatOrders', rows.length);
+    set('profileStatWishlist', (typeof wishlist !== 'undefined') ? wishlist.length : 0);
+    set('profileStatBricks', formatNum(BuyerProfile.piecesOrdered()));
+    set('profileStatSites', sites.length);
+
+    // Quick-access tiles
+    set('hubOrdersBadge', active ? active + ' Active' : rows.length + ' Total');
+    set('hubOrdersMeta', rows.length
+        ? 'Last: ' + (rows[0].id || '—')
+        : 'No orders placed from this device yet');
+    set('hubSitesBadge', sites.length);
+    set('hubSitesMeta', SavedSites.localityHint());
+    set('hubWishlistBadge', (typeof wishlist !== 'undefined') ? wishlist.length : 0);
+
+    const gst = (user && user.gstin) ? user.gstin : '';
+    set('hubGstBadge', gst ? BuyerProfile.mask(gst) : '—');
+    set('hubGstMeta', BuyerProfile.type() === 'contractor'
+        ? (user && user.businessName) || 'Contractor — GSTIN pending'
+        : 'Retail buyer');
+
+    // Shortcuts list inside Account Info
+    set('hubNavOrders', rows.length + (rows.length === 1 ? ' order' : ' orders'));
+    set('hubNavSites', sites.length + (sites.length === 1 ? ' site' : ' sites'));
+    set('hubNavGst', gst ? BuyerProfile.mask(gst) : 'Not on file');
+
+    SavedSites.renderInto('pTabSitesList');
+    renderGstForm();
+}
+
+// Live GSTIN validity feedback while the buyer types. Says what was checked
+// and where, so nobody reads it as a government verification.
+function renderGstState() {
+    const box = document.getElementById('gstState');
+    const text = document.getElementById('gstStateText');
+    if (!box || !text || !window.BuyerProfile) return;
+
+    const raw = ((document.getElementById('editGstin') || {}).value || '').trim();
+    const isContractor = !!document.querySelector('input[name="buyerType"]:checked')
+        && document.querySelector('input[name="buyerType"]:checked').value === 'contractor';
+
+    let tone = 'neutral';
+    let msg;
+    if (!raw) {
+        msg = isContractor
+            ? 'Add the 15-character GSTIN so the yard can bill your firm by name.'
+            : 'Retail buyer — orders are billed as a cash supply, no input tax credit.';
+    } else {
+        const check = BuyerProfile.validGstin(raw);
+        if (check.ok) {
+            tone = 'verified';
+            msg = 'Format valid: ' + check.value + ' — state code ' + check.value.slice(0, 2) + '. The yard still confirms the registration before a tax invoice is issued.';
+        } else {
+            tone = 'pending';
+            msg = 'Not a valid GSTIN shape yet — ' + check.value.length + ' of 15 characters, e.g. 09AAACG1234A1Z5.';
+        }
+    }
+
+    box.className = 'gst-state gst-state--' + tone;
+    text.textContent = msg;
+}
+
+// Loads the GST panel with what is stored, so opening it never blanks the form.
+function renderGstForm() {
+    if (!user) return;
+    const put = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val || '';
+    };
+    put('editBusinessName', user.businessName);
+    put('editGstin', user.gstin);
+    put('editPan', user.pan);
+
+    const wantContractor = BuyerProfile.type() === 'contractor';
+    const retail = document.getElementById('buyerTypeRetail');
+    const contractor = document.getElementById('buyerTypeContractor');
+    if (retail) retail.checked = !wantContractor;
+    if (contractor) contractor.checked = wantContractor;
+    renderGstState();
+}
+
+function saveBuyerProfileType() {
+    const res = BuyerProfile.saveFromForm();
+    if (res.error) { showToast(res.error, 'error'); return; }
+    renderAccountHub();
+    showToast('Business info saved on this device.', 'success');
 }
 
 function closeProfile() {
@@ -65,7 +183,10 @@ function handleProfileOverlayClick(e) {
 }
 
 function switchProfileTab(tabName, btn) {
-    const tabs = ['info', 'orders', 'wishlist', 'address'];
+    // 'address' was the old tab name for the address book — it now lives with
+    // the saved sites, so existing callers keep working.
+    if (tabName === 'address') tabName = 'sites';
+    const tabs = PROFILE_TABS;
     const buttons = document.querySelectorAll('.profile-tabs .profile-tab');
     if (btn) {
         buttons.forEach(b => b.classList.remove('active'));
@@ -159,6 +280,7 @@ function saveProfile(e) {
     if (avatar) avatar.style.background = getAvatarBg(name);
 
     cancelEditProfile();
+    renderAccountHub();
     showToast(t('auth.profileSaved'), 'success');
 }
 

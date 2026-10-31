@@ -6,6 +6,15 @@
                 <h2 class="sec-title" data-i18n="faq.title">Frequently Asked Questions</h2>
                 <p class="sec-sub">Everything you need to know about Gurukripa Bricks</p>
             </div>
+            <!-- Quick FAQ Category Filter Tags -->
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 24px">
+                <button type="button" class="btn btn-outline btn-sm active" style="border-radius:20px;font-size:0.75rem;padding:5px 12px">All Questions</button>
+                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[0]?.scrollIntoView({behavior:'smooth'})">💰 Pricing &amp; Rates</button>
+                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[1]?.scrollIntoView({behavior:'smooth'})">🚚 Trolley Delivery</button>
+                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[2]?.scrollIntoView({behavior:'smooth'})">🧱 Replacement &amp; Breakage</button>
+                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[3]?.scrollIntoView({behavior:'smooth'})">📄 GST Invoicing</button>
+            </div>
+
             <div class="faq-list">
                 <div class="faq-item">
                     <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">

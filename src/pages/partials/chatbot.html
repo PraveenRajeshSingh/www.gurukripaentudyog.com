@@ -1,27 +1,28 @@
     <!-- ━━━━━━━━━━━━━━━━━ CHATBOT ━━━━━━━━━━━━━━━━━ -->
     <div class="chatbot-wrap" id="chatbotWrap">
-        <div class="chatbot-box">
+        <div class="chatbot-box" id="chatbotBox">
             <div class="chatbot-head">
-                <div class="chatbot-avatar">🤖</div>
+                <div class="chatbot-avatar">🧱</div>
                 <div class="chatbot-info">
-                    <h4>Gurukripa Assistant</h4>
-                    <p><span class="chatbot-online-dot"></span> Online · Instant replies</p>
+                    <h4>Gurukripa Kiln Assistant</h4>
+                    <p><span class="chatbot-online-dot"></span> Online · AI Construction Support</p>
                 </div>
-                <button class="chatbot-head-close" onclick="toggleChatbot()">✕</button>
+                <button class="chatbot-head-close" onclick="toggleChatbot()" aria-label="Close chat">✕</button>
             </div>
             <div class="chatbot-messages" id="chatMessages">
-                <div class="chat-msg bot">Namaste! 🙏 I'm here to help you find the perfect bricks. What can I assist
-                    you with today?</div>
+                <div class="chat-msg bot">Namaste! 🙏 I'm your Gurukripa Kiln Assistant. How can I help you today? Check live brick prices, delivery coverage, or calculate wall requirements below.</div>
             </div>
+            <!-- Quick Action Chips -->
             <div class="chatbot-chips">
-                <button class="chat-chip" onclick="sendChatChip('Brick Prices')">Brick Prices</button>
-                <button class="chat-chip" onclick="sendChatChip('Delivery Info')">Delivery Info</button>
-                <button class="chat-chip" onclick="sendChatChip('Place Order')">Place Order</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('🧱 Check Brick Prices')">🧱 Check Brick Prices</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('🚚 Track My Trolley')">🚚 Track My Trolley</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('📐 Calculate Wall Need')">📐 Calculate Wall Need</button>
+                <button type="button" class="chat-chip" onclick="openWhatsAppBhattaManager()">💬 Talk to Bhatta Manager</button>
             </div>
             <div class="chatbot-input-row">
-                <input type="text" class="chatbot-input" id="chatInput" placeholder="Type a message..."
+                <input type="text" class="chatbot-input" id="chatInput" placeholder="Ask in Hindi or English..."
                     autocomplete="off" onkeydown="if(event.key==='Enter')sendChat()">
-                <button class="chatbot-send" onclick="sendChat()" aria-label="Send">➤</button>
+                <button type="button" class="chatbot-send" onclick="sendChat()" aria-label="Send">➤</button>
             </div>
         </div>
     </div>

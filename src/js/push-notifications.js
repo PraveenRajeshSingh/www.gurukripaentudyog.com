@@ -39,6 +39,10 @@ const PushNotifications = (function () {
             title: 'Bhatta loading started',
             body: (o) => `Order ${o.id || ''} is being loaded on the trolley at the Jalalpur yard.`
         },
+        firing: {
+            title: 'Bricks in the kiln',
+            body: (o) => `Order ${o.id || ''} is queued against a firing chamber at the bhatta. Loading slot follows once the burn completes.`
+        },
         dispatched: {
             title: 'Trolley dispatched',
             body: (o) => `Order ${o.id || ''} has been dispatched from the Jalalpur yard. Open Track Orders for driver details.`
@@ -215,7 +219,8 @@ const PushNotifications = (function () {
         if (!s) return '';
         if (s.indexOf('deliver') >= 0 || s.indexOf('complete') >= 0 || s.indexOf('unload') >= 0) return 'delivered';
         if (s.indexOf('cancel') >= 0 || s.indexOf('reject') >= 0) return 'cancelled';
-        if (s.indexOf('dispatch') >= 0 || s.indexOf('transit') >= 0 || s.indexOf('road') >= 0) return 'dispatched';
+        if (s.indexOf('dispatch') >= 0 || s.indexOf('transit') >= 0 || s.indexOf('road') >= 0 || s.indexOf('route') >= 0) return 'dispatched';
+        if (s.indexOf('firing') >= 0 || s.indexOf('kiln') >= 0 || s.indexOf('chamber') >= 0) return 'firing';
         if (s.indexOf('load') >= 0) return 'loading';
         if (s.indexOf('process') >= 0 || s.indexOf('pending') >= 0 || s.indexOf('placed') >= 0 || s.indexOf('token') >= 0) return 'token';
         return '';

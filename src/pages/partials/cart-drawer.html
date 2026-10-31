@@ -18,6 +18,20 @@
                 <div class="cart-progress-fill" id="cartProgressFill" style="width:0%"></div>
             </div>
         </div>
+
+        <!-- Trolley Capacity Load Bar & Bulk Discount Ladder -->
+        <div class="cart-trolley-progress" id="cartTrolleyProgress" style="margin:4px 16px 8px;padding:10px 12px;background:var(--bg-subtle);border-radius:10px;border:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;font-weight:700;margin-bottom:6px">
+                <span>🚜 Trolley Load (4,000 pcs)</span>
+                <span id="cartTrolleyPct" style="color:var(--brand)">0%</span>
+            </div>
+            <div class="cart-progress-track" style="height:6px;background:rgba(0,0,0,0.06);border-radius:3px;overflow:hidden">
+                <div id="cartTrolleyFill" style="width:0%;height:100%;background:linear-gradient(90deg,var(--brand),#f59e0b);border-radius:3px;transition:width 0.3s"></div>
+            </div>
+            <div id="cartTrolleyLadder" style="font-size:0.72rem;color:var(--ink-2);margin-top:6px;line-height:1.3">
+                Add 4,000 bricks to complete 1 full trolley load &amp; unlock 5% bulk discount.
+            </div>
+        </div>
         <div class="cart-body" id="cartBody">
             <div class="cart-empty" id="cartEmpty">
                 <div class="cart-empty-anim">

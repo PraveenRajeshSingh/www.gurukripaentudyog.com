@@ -54,20 +54,23 @@ function updateCartUI() {
     const headCount = document.getElementById('cartHeadCount');
     if (headCount) headCount.textContent = total + ' ' + (total !== 1 ? t('cart.itemPlural') : t('cart.itemSingular'));
 
-    // Delivery Progress Bar Logic (Free delivery above ₹5,000)
-    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const freeThreshold = 5000;
-    const pct = Math.min(100, Math.round((subtotal / freeThreshold) * 100));
-    const fill = document.getElementById('cartProgressFill');
-    const label = document.getElementById('cartDeliveryLabel');
-    if (fill) fill.style.width = pct + '%';
-    if (label) {
-        if (subtotal >= freeThreshold) {
-            label.textContent = t('cart.unlocked');
-            label.className = 'free-label';
+    // Trolley Capacity Progress & Discount Ladder (4,000 pcs = 1 Trolley)
+    const trolleyCap = 4000;
+    const trolleyPct = Math.min(100, Math.round((total / trolleyCap) * 100));
+    const tFill = document.getElementById('cartTrolleyFill');
+    const tPctEl = document.getElementById('cartTrolleyPct');
+    const tLadder = document.getElementById('cartTrolleyLadder');
+    if (tFill) tFill.style.width = trolleyPct + '%';
+    if (tPctEl) tPctEl.textContent = `${total.toLocaleString('en-IN')} / 4,000 (${trolleyPct}%)`;
+    if (tLadder) {
+        if (total === 0) {
+            tLadder.innerHTML = 'Add 4,000 bricks to complete 1 full trolley load &amp; unlock 5% bulk discount.';
+        } else if (total < trolleyCap) {
+            const need = trolleyCap - total;
+            tLadder.innerHTML = `Add <strong>${need.toLocaleString('en-IN')} more bricks</strong> to unlock <strong>5% bulk trolley discount</strong>!`;
         } else {
-            label.textContent = t('cart.addMore', { amt: formatNum(freeThreshold - subtotal) });
-            label.className = '';
+            const trolleys = (total / trolleyCap).toFixed(1);
+            tLadder.innerHTML = `<span style="color:#16a34a;font-weight:700">🎉 Full Trolley Load (${trolleys} Trolleys) · 5% Bulk Discount Unlocked!</span>`;
         }
     }
 }

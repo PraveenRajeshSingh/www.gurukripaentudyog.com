@@ -76,6 +76,10 @@ function calculateBricks() {
             <button class="btn btn-primary btn-full" style="background:#16a34a;flex:1" onclick="sendWhatsAppQuote('Wall (${len}x${ht}ft)', ${bricks}, ${totalCost})">💬 Instant WhatsApp Quote</button>
             <button class="btn btn-outline btn-full" style="flex:1" onclick="addCalcToCart('Wall Bricks', ${bricks}, ${price})">🛒 Add Bricks to Cart</button>
         </div>`;
+
+    if (window.drawWallPreview) window.drawWallPreview(len, ht, thick);
+    updateMobileStickySummary(`Wall (${len}x${ht}ft)`, bricks, totalCost);
+    if (navigator.vibrate) navigator.vibrate(30);
 }
 
 function calculateHouseMaterial() {
@@ -126,6 +130,9 @@ function calculateHouseMaterial() {
             <button class="btn btn-primary btn-full" style="background:#16a34a;flex:1" onclick="sendWhatsAppQuote('Full House (${sqft}sqft, ${floors} floors)', ${bricks}, ${totalCost})">💬 Instant WhatsApp Quote</button>
             <button class="btn btn-outline btn-full" style="flex:1" onclick="addCalcToCart('House Construction Bricks', ${bricks}, ${price})">🛒 Add Bricks to Cart</button>
         </div>`;
+
+    updateMobileStickySummary(`House (${sqft}sqft, ${floors}fl)`, bricks, totalCost);
+    if (navigator.vibrate) navigator.vibrate(30);
 }
 
 function calculateBoundaryMaterial() {
@@ -169,6 +176,25 @@ function calculateBoundaryMaterial() {
         <div style="display:flex;gap:10px;flex-wrap:wrap">
             <button class="btn btn-primary btn-full" style="background:#16a34a;flex:1" onclick="sendWhatsAppQuote('Boundary Wall (${len}ft)', ${bricks}, ${totalCost})">💬 Instant WhatsApp Quote</button>
             <button class="btn btn-outline btn-full" style="flex:1" onclick="addCalcToCart('Boundary Wall Bricks', ${bricks}, ${price})">🛒 Add Bricks to Cart</button>
+        </div>`;
+
+    if (window.drawWallPreview) window.drawWallPreview(len, ht, 9);
+    updateMobileStickySummary(`Boundary (${len}ft)`, bricks, totalCost);
+    if (navigator.vibrate) navigator.vibrate(30);
+}
+
+function updateMobileStickySummary(projName, brickCount, totalCost) {
+    const el = document.getElementById('estimatorMobileSticky');
+    if (!el) return;
+    el.innerHTML = `
+        <div class="est-sticky-inner">
+            <div class="est-sticky-left">
+                <div class="est-sticky-label">Estimated Budget (${projName.split('(')[0].trim()})</div>
+                <div class="est-sticky-val">${formatINR(totalCost)} <small>(${formatNum(brickCount)} bricks)</small></div>
+            </div>
+            <button class="btn btn-primary btn-sm est-sticky-btn" onclick="sendWhatsAppQuote('${projName}', ${brickCount}, ${totalCost})">
+                💬 WhatsApp Quote
+            </button>
         </div>`;
 }
 
@@ -225,6 +251,9 @@ function updateCalcOfflineState() {
 }
 
 function scheduleEstimateSave(payload) {
+    // Expose the working estimate so "Save this site" can carry the brick count
+    // into the address book even when IndexedDB is blocked.
+    window.lastCalcEstimate = (typeof lastEstimateSpec !== 'undefined' && lastEstimateSpec) ? lastEstimateSpec : payload;
     if (!window.OfflineStore) return;
     clearTimeout(estimateSaveTimer);
     estimateSaveTimer = setTimeout(() => {

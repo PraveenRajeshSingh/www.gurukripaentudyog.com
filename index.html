@@ -131,7 +131,7 @@
       })();
     </script>
 
-    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements) -->
+    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements -> ops-console) -->
     <link rel="stylesheet" href="src/styles/tokens.css">
     <link rel="stylesheet" href="src/styles/base.css">
     <link rel="stylesheet" href="src/styles/sections.css">
@@ -140,6 +140,9 @@
     <link rel="stylesheet" href="src/styles/app.css">
     <link rel="stylesheet" href="src/styles/mobile-fixes.css">
     <link rel="stylesheet" href="src/styles/refinements.css">
+    <!-- Last: the checkout slide-over and the yard console override the
+         generic bottom-sheet rules above them. -->
+    <link rel="stylesheet" href="src/styles/ops-console.css">
 </head>
 
 <body>
@@ -1038,6 +1041,19 @@
                 <!-- Populated by saved-sites.js -->
             </div>
         </div>
+
+        <!-- Sticky Summary Footer on Mobile (<768px) -->
+        <div class="estimator-mobile-sticky" id="estimatorMobileSticky">
+            <div class="est-sticky-inner">
+                <div class="est-sticky-left">
+                    <div class="est-sticky-label">Estimated Total Budget</div>
+                    <div class="est-sticky-val">₹41,280 <small>(3,440 bricks)</small></div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm est-sticky-btn" onclick="sendWhatsAppQuote('Wall (20x10ft)', 3440, 41280)" style="background:#16a34a">
+                    💬 Instant Quote
+                </button>
+            </div>
+        </div>
     </section>
 
     <!-- ━━━━━━━━━━━━━━━━━ ABOUT ━━━━━━━━━━━━━━━━━ -->
@@ -1115,35 +1131,40 @@
             <div class="gallery-grid">
                 <div class="gallery-item"
                     onclick="lbOpen('src/assets/images/gurukripaEnt.jpg','Gurukripa Bricks — Main Factory View, Jaunpur')">
-                    <img src="src/assets/images/gurukripaEnt.jpg" alt="Gurukripa Factory Main View" loading="lazy">
+                    <img src="src/assets/images/gurukripaEnt.jpg" alt="Gurukripa Factory Main View" loading="lazy" width="600" height="400">
+                    <div class="gallery-status-chip">Chamber #3 Burning · 1,200°C</div>
                     <div class="gallery-item-ov"></div>
                     <div class="gallery-zoom">🔍</div>
-                    <div class="gallery-lbl">Main Factory — Jaunpur</div>
+                    <div class="gallery-lbl">Main Kiln Factory — Jaunpur</div>
                 </div>
                 <div class="gallery-item"
                     onclick="lbOpen('src/assets/images/gurukripaEnt1.png','Gurukripa Bricks — Production Area')">
-                    <img src="src/assets/images/gurukripaEnt1.png" alt="Gurukripa Production Area" loading="lazy">
+                    <img src="src/assets/images/gurukripaEnt1.png" alt="Gurukripa Production Area" loading="lazy" width="600" height="400">
+                    <div class="gallery-status-chip">Wirecut Plant Active</div>
                     <div class="gallery-item-ov"></div>
                     <div class="gallery-zoom">🔍</div>
-                    <div class="gallery-lbl">Production Area</div>
+                    <div class="gallery-lbl">Production & Moulding Yard</div>
                 </div>
                 <div class="gallery-item"
                     onclick="lbOpen('src/assets/images/redbrick1.jpg','Premium Grade-A Red Bricks — Ready for Dispatch')">
-                    <img src="src/assets/images/redbrick1.jpg" alt="Premium Red Bricks Ready" loading="lazy">
+                    <img src="src/assets/images/redbrick1.jpg" alt="Premium Red Bricks Ready" loading="lazy" width="600" height="400">
+                    <div class="gallery-status-chip" style="background:#16a34a">10k+ Ready Stock</div>
                     <div class="gallery-item-ov"></div>
                     <div class="gallery-zoom">🔍</div>
                     <div class="gallery-lbl">Ready for Dispatch</div>
                 </div>
                 <div class="gallery-item"
                     onclick="lbOpen('src/assets/images/gurukripaEnt2.png','Gurukripa Bricks — Kiln Area')">
-                    <img src="src/assets/images/gurukripaEnt2.png" alt="Gurukripa Kiln Area" loading="lazy">
+                    <img src="src/assets/images/gurukripaEnt2.png" alt="Gurukripa Kiln Area" loading="lazy" width="600" height="400">
+                    <div class="gallery-status-chip">Continuous Kiln Firing</div>
                     <div class="gallery-item-ov"></div>
                     <div class="gallery-zoom">🔍</div>
-                    <div class="gallery-lbl">Kiln Area</div>
+                    <div class="gallery-lbl">Kiln Firing Chambers</div>
                 </div>
                 <div class="gallery-item"
                     onclick="lbOpen('src/assets/images/redbricks.jpg','Gurukripa Premium Red Clay Bricks — Grade-A Quality')">
-                    <img src="src/assets/images/redbricks.jpg" alt="Grade-A Red Bricks" loading="lazy">
+                    <img src="src/assets/images/redbricks.jpg" alt="Grade-A Red Bricks" loading="lazy" width="600" height="400">
+                    <div class="gallery-status-chip" style="background:var(--brand)">ISI Grade-A Tested</div>
                     <div class="gallery-item-ov"></div>
                     <div class="gallery-zoom">🔍</div>
                     <div class="gallery-lbl">Grade-A Red Bricks</div>
@@ -1163,46 +1184,55 @@
             </div>
             <div class="reviews-grid">
                 <div class="review-card">
-                    <div class="review-stars">★★★★★</div>
-                    <div class="review-quote">"</div>
-                    <div class="review-text">Gurukripa bricks are exceptional — perfectly uniform size, great color, and
-                        they've held up beautifully through monsoon season. My entire house is built with their Grade-A
-                        bricks.</div>
-                    <div class="review-author">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                        <div class="review-stars">★★★★★</div>
+                        <span class="review-badge-verified">✓ Verified Builder</span>
+                    </div>
+                    <div class="review-text">"Gurukripa bricks are exceptional — perfectly uniform size, great color, and they've held up beautifully through monsoon season. My entire 2-story house is built with their Shiv Eent Grade-A bricks."</div>
+                    <div class="review-author" style="margin-top:14px">
                         <div class="review-avatar">RS</div>
                         <div>
                             <div class="review-name">Ramesh Singh</div>
-                            <div class="review-location">📍 Jaunpur, UP</div>
+                            <div class="review-location">📍 Contractor · Jaunpur, UP</div>
                         </div>
                     </div>
                 </div>
                 <div class="review-card">
-                    <div class="review-stars">★★★★★</div>
-                    <div class="review-quote">"</div>
-                    <div class="review-text">सबसे अच्छी ईंटें! Same-day delivery मिली, और quality बहुत बढ़िया थी। Prem
-                        Narayan ji का व्यवहार भी बहुत अच्छा है। अगली बार भी यहीं से लेंगे।</div>
-                    <div class="review-author">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                        <div class="review-stars">★★★★★</div>
+                        <span class="review-badge-verified">✓ Verified Buyer</span>
+                    </div>
+                    <div class="review-text">"सबसे अच्छी ईंटें! Same-day trolley delivery मिली Jalalpur में, और quality एकदम Awwal थी। Bhatta manager का व्यवहार भी बहुत पारदर्शी है। सीधे भट्ठे का सही रेट मिला।"</div>
+                    <div class="review-author" style="margin-top:14px">
                         <div class="review-avatar">MP</div>
                         <div>
                             <div class="review-name">Mahesh Prasad</div>
-                            <div class="review-location">📍 Varanasi, UP</div>
+                            <div class="review-location">📍 Home Builder · Varanasi, UP</div>
                         </div>
                     </div>
                 </div>
                 <div class="review-card">
-                    <div class="review-stars">★★★★★</div>
-                    <div class="review-quote">"</div>
-                    <div class="review-text">Used their machine-made wirecut bricks for my commercial project. Zero
-                        breakage in transport, perfect dimensions. The construction team was very impressed with the
-                        quality.</div>
-                    <div class="review-author">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                        <div class="review-stars">★★★★★</div>
+                        <span class="review-badge-verified">✓ Commercial Project</span>
+                    </div>
+                    <div class="review-text">"Used their machine-made wirecut bricks for our commercial godown project. Zero transit breakage, razor-sharp edges. The civil engineering team was thoroughly satisfied."</div>
+                    <div class="review-author" style="margin-top:14px">
                         <div class="review-avatar">AK</div>
                         <div>
                             <div class="review-name">Ajay Kumar</div>
-                            <div class="review-location">📍 Jalalpur, UP</div>
+                            <div class="review-location">📍 Project Engineer · Trilochan, UP</div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Submit Review Action -->
+            <div style="text-align:center;margin-top:24px">
+                <button type="button" class="btn btn-outline" style="border-radius:50px;font-weight:700;padding:10px 24px" onclick="openBulkQuoteModal()">
+                    ✍️ Submit Construction Review or Project Inquiry
+                </button>
+            </div>
             </div>
         </div>
     </section>
@@ -1284,6 +1314,15 @@
                 <h2 class="sec-title" data-i18n="faq.title">Frequently Asked Questions</h2>
                 <p class="sec-sub">Everything you need to know about Gurukripa Bricks</p>
             </div>
+            <!-- Quick FAQ Category Filter Tags -->
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 24px">
+                <button type="button" class="btn btn-outline btn-sm active" style="border-radius:20px;font-size:0.75rem;padding:5px 12px">All Questions</button>
+                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[0]?.scrollIntoView({behavior:'smooth'})">💰 Pricing &amp; Rates</button>
+                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[1]?.scrollIntoView({behavior:'smooth'})">🚚 Trolley Delivery</button>
+                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[2]?.scrollIntoView({behavior:'smooth'})">🧱 Replacement &amp; Breakage</button>
+                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[3]?.scrollIntoView({behavior:'smooth'})">📄 GST Invoicing</button>
+            </div>
+
             <div class="faq-list">
                 <div class="faq-item">
                     <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
@@ -1387,6 +1426,22 @@
                         <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg> Chat on WhatsApp
                     </a>
                 </div>
+                <!-- Google Maps Embed — Guru Kripa Eant Udyog, Newada, Jalalpur -->
+                <div class="contact-map-wrap" style="border-radius:16px;overflow:hidden;border:1px solid rgba(28,16,9,0.08);margin-bottom:24px">
+                    <iframe
+                        src="https://maps.google.com/maps?q=25.6041031,82.7939421&z=16&output=embed"
+                        width="100%" height="280" style="border:0;display:block" allowfullscreen
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                        title="Gurukripa Bricks Industry — Newada, Jalalpur, Jaunpur">
+                    </iframe>
+                    <a href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf"
+                       target="_blank" rel="noopener"
+                       class="btn btn-outline btn-full"
+                       style="border-radius:0;border-top:1px solid rgba(28,16,9,0.08);margin:0;border-bottom-left-radius:14px;border-bottom-right-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px">
+                        📍 Get Directions — Open in Google Maps
+                    </a>
+                </div>
+
                 <div class="contact-form-wrap">
                     <form id="contactForm" onsubmit="handleContactSubmit(event)" novalidate>
                         <div class="form-row">
@@ -1463,7 +1518,7 @@
                         </div>
                         <div class="footer-contact-row">
                             <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-                            <span>Bhatta Yard, Jaunpur – Varanasi Highway, UP — 222001</span>
+                            <a href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
                         </div>
                         <div class="footer-contact-row">
                             <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
@@ -1572,6 +1627,20 @@
             </div>
             <div class="cart-progress-track">
                 <div class="cart-progress-fill" id="cartProgressFill" style="width:0%"></div>
+            </div>
+        </div>
+
+        <!-- Trolley Capacity Load Bar & Bulk Discount Ladder -->
+        <div class="cart-trolley-progress" id="cartTrolleyProgress" style="margin:4px 16px 8px;padding:10px 12px;background:var(--bg-subtle);border-radius:10px;border:1px solid var(--line)">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;font-weight:700;margin-bottom:6px">
+                <span>🚜 Trolley Load (4,000 pcs)</span>
+                <span id="cartTrolleyPct" style="color:var(--brand)">0%</span>
+            </div>
+            <div class="cart-progress-track" style="height:6px;background:rgba(0,0,0,0.06);border-radius:3px;overflow:hidden">
+                <div id="cartTrolleyFill" style="width:0%;height:100%;background:linear-gradient(90deg,var(--brand),#f59e0b);border-radius:3px;transition:width 0.3s"></div>
+            </div>
+            <div id="cartTrolleyLadder" style="font-size:0.72rem;color:var(--ink-2);margin-top:6px;line-height:1.3">
+                Add 4,000 bricks to complete 1 full trolley load &amp; unlock 5% bulk discount.
             </div>
         </div>
         <div class="cart-body" id="cartBody">
@@ -1885,10 +1954,10 @@
     </div>
 
 
-    <!-- ━━━━━━━━━━━━━━━━━ PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
+    <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="profileModal" onclick="handleProfileOverlayClick(event)">
         <div class="modal-box profile-modal-box" style="padding:0;overflow:hidden">
-            <!-- Profile Dashboard Header -->
+            <!-- Compact header card: who is buying + what proof is on file -->
             <div class="profile-header">
                 <button class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close Profile Modal" style="position:absolute;top:16px;right:16px;color:#fff;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;z-index:25;pointer-events:auto">✕</button>
                 <div class="profile-header-inner">
@@ -1898,33 +1967,79 @@
                     <div class="profile-header-info">
                         <div class="profile-header-name" id="profileHeaderName">User</div>
                         <div class="profile-header-email" id="profileHeaderEmail">user@email.com</div>
-                        <span class="profile-header-badge">⭐ Verified Member</span>
+                        <!-- Customer type + verification state, rendered by renderAccountHub() -->
+                        <span class="profile-header-badge" id="profileBuyerBadge">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span id="profileBuyerBadgeText">Retail Buyer</span>
+                        </span>
                     </div>
+                    <button class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()">Edit</button>
                 </div>
             </div>
 
-            <!-- Profile Stats Row -->
-            <div class="profile-stats">
-                <div class="profile-stat">
-                    <div class="profile-stat-num" id="profileStatOrders">0</div>
-                    <div class="profile-stat-label">Orders</div>
+            <!-- Quick account metrics — counted from this device's ledger -->
+            <div class="profile-hub-metrics">
+                <div class="hub-metric">
+                    <span class="hub-metric__val" id="profileStatOrders">0</span>
+                    <span class="hub-metric__label">Orders</span>
                 </div>
-                <div class="profile-stat">
-                    <div class="profile-stat-num" id="profileStatWishlist">0</div>
-                    <div class="profile-stat-label">Wishlist</div>
+                <div class="hub-metric hub-metric--accent">
+                    <span class="hub-metric__val" id="profileStatBricks">0</span>
+                    <span class="hub-metric__label">Bricks Ordered</span>
                 </div>
-                <div class="profile-stat">
-                    <div class="profile-stat-num" id="profileStatYear">1998</div>
-                    <div class="profile-stat-label">Member Since</div>
+                <div class="hub-metric hub-metric--ok">
+                    <span class="hub-metric__val" id="profileStatSites">0</span>
+                    <span class="hub-metric__label">Saved Sites</span>
                 </div>
+                <div class="hub-metric">
+                    <span class="hub-metric__val" id="profileStatWishlist">0</span>
+                    <span class="hub-metric__label">Wishlist</span>
+                </div>
+            </div>
+
+            <!-- Quick access grid (2×2) -->
+            <div class="hub-quick">
+                <button class="hub-tile" onclick="openProfileTab('orders')">
+                    <span class="hub-tile__top">
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+                        <span class="hub-tile__badge" id="hubOrdersBadge">0</span>
+                    </span>
+                    <span class="hub-tile__label">My Orders &amp; Invoices</span>
+                    <span class="hub-tile__meta" id="hubOrdersMeta">Track, reorder &amp; download bills</span>
+                </button>
+                <button class="hub-tile" onclick="openProfileTab('sites')">
+                    <span class="hub-tile__top">
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                        <span class="hub-tile__badge" id="hubSitesBadge">0</span>
+                    </span>
+                    <span class="hub-tile__label">Saved Construction Sites</span>
+                    <span class="hub-tile__meta" id="hubSitesMeta">None yet</span>
+                </button>
+                <button class="hub-tile" onclick="openProfileTab('wishlist')">
+                    <span class="hub-tile__top">
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
+                        <span class="hub-tile__badge" id="hubWishlistBadge">0</span>
+                    </span>
+                    <span class="hub-tile__label">Wishlist</span>
+                    <span class="hub-tile__meta">Bricks &amp; rates you are watching</span>
+                </button>
+                <button class="hub-tile" onclick="openProfileTab('gst')">
+                    <span class="hub-tile__top">
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>
+                        <span class="hub-tile__badge" id="hubGstBadge">—</span>
+                    </span>
+                    <span class="hub-tile__label">GSTIN &amp; Business Info</span>
+                    <span class="hub-tile__meta" id="hubGstMeta">Not on file</span>
+                </button>
             </div>
 
             <!-- Profile Navigation Tabs -->
             <div class="profile-tabs">
                 <button class="profile-tab active" onclick="switchProfileTab('info',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Account Info</button>
                 <button class="profile-tab" onclick="switchProfileTab('orders',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> My Orders</button>
+                <button class="profile-tab" onclick="switchProfileTab('sites',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Sites</button>
                 <button class="profile-tab" onclick="switchProfileTab('wishlist',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Wishlist</button>
-                <button class="profile-tab" onclick="switchProfileTab('address',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Address</button>
+                <button class="profile-tab" onclick="switchProfileTab('gst',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> GST Business</button>
             </div>
 
             <div class="modal-body" style="padding:0">
@@ -1932,7 +2047,7 @@
                 <div class="profile-tab-panel active" id="pTabInfo">
                     <!-- View Mode -->
                     <div id="profileViewMode">
-                        <div class="profile-info-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+                        <div class="profile-info-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
                             <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
                                 <div class="profile-info-label" id="profileNameLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">FULL NAME</div>
                                 <div class="profile-info-value" id="profileViewName" style="font-weight:700;color:var(--ink)">—</div>
@@ -1950,7 +2065,7 @@
                                 <div class="profile-info-value" id="profileViewRef" style="font-weight:700;color:var(--ink)">—</div>
                             </div>
                             <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm);grid-column:1/-1">
-                                <div class="profile-info-label" id="profileAddressLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">DELIVERY ADDRESS</div>
+                                <div class="profile-info-label" id="profileAddressLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">DEFAULT DELIVERY ADDRESS</div>
                                 <div class="profile-info-value" id="profileViewAddress" style="font-weight:700;color:var(--ink)">—</div>
                             </div>
                         </div>
@@ -1958,6 +2073,23 @@
                             <button class="btn btn-primary btn-full" onclick="switchToEditProfile()" id="profileEditBtn">Edit Profile</button>
                             <button class="btn btn-outline btn-full" onclick="logoutUser();closeProfile()">Sign Out</button>
                         </div>
+
+                        <!-- Direct links for the two account surfaces buyers look for -->
+                        <nav class="hub-nav" style="padding:16px 0 0">
+                            <div class="hub-section-title">Account Shortcuts</div>
+                            <button class="hub-nav__row" onclick="openProfileTab('orders')">
+                                <span>My Orders &amp; Invoices</span>
+                                <span class="hub-nav__aside" id="hubNavOrders">0 orders</span>
+                            </button>
+                            <button class="hub-nav__row" onclick="openProfileTab('sites')">
+                                <span>Saved Construction Sites</span>
+                                <span class="hub-nav__aside" id="hubNavSites">0 sites</span>
+                            </button>
+                            <button class="hub-nav__row" onclick="openProfileTab('gst')">
+                                <span>GSTIN &amp; Business Info</span>
+                                <span class="hub-nav__aside" id="hubNavGst">Not on file</span>
+                            </button>
+                        </nav>
                     </div>
                     <!-- Edit Mode -->
                     <div id="profileEditMode" style="display:none">
@@ -1991,33 +2123,86 @@
                     <div id="orderHistoryList"></div>
                 </div>
 
-                <!-- Tab 3: Wishlist -->
-                <div class="profile-tab-panel" id="pTabWishlist">
-                    <div class="wishlist-grid" id="profileWishlistGrid"></div>
-                </div>
-
-                <!-- Tab 4: Address -->
-                <div class="profile-tab-panel" id="pTabAddress">
+                <!-- Tab 3: Saved construction sites + address book -->
+                <div class="profile-tab-panel" id="pTabSites">
                     <div class="order-success-box">
                         <div style="font-weight:700;color:var(--ink);font-size:.9rem;margin-bottom:4px;display:inline-flex;align-items:center;gap:6px"><svg width="15" height="15" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Default Delivery Address</div>
                         <div id="profileAddressDisplay" style="font-size:.84rem;color:var(--ink-2)">No saved address yet.</div>
                     </div>
-                    <button class="btn btn-outline btn-full" onclick="switchProfileTab('info');switchToEditProfile()">Edit Address →</button>
+                    <div class="hub-section-title" style="margin-top:16px">Saved Sites &amp; Delivery Pincodes</div>
+                    <div id="pTabSitesList"></div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+                        <button class="btn btn-primary btn-full" onclick="addSiteFromProfile()" style="flex:1;min-width:140px">+ Save a Site</button>
+                        <button class="btn btn-outline btn-full" onclick="switchProfileTab('info');switchToEditProfile()" style="flex:1;min-width:140px">Edit Default Address</button>
+                    </div>
+                    <p class="gst-note">Each site keeps its own nickname, delivery pincode and road access, so checkout can fill the whole address block in one tap. Saved on this device — the yard backend does not sync them between your phone and your desk yet.</p>
+                </div>
+
+                <!-- Tab 4: Wishlist -->
+                <div class="profile-tab-panel" id="pTabWishlist">
+                    <div class="wishlist-grid" id="profileWishlistGrid"></div>
+                </div>
+
+                <!-- Tab 5: GSTIN & business info -->
+                <div class="profile-tab-panel" id="pTabGst">
+                    <div class="gst-state gst-state--neutral" id="gstState">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span id="gstStateText">Retail buyer — no GSTIN on file.</span>
+                    </div>
+
+                    <div class="buyer-type-picker">
+                        <label class="buyer-type-opt">
+                            <input type="radio" name="buyerType" value="retail" id="buyerTypeRetail" onchange="renderGstState()">
+                            <span>
+                                <span class="buyer-type-opt__label">Retail Buyer</span>
+                                <span class="buyer-type-opt__note">Home owner or individual. Supply on a plain cash bill.</span>
+                            </span>
+                        </label>
+                        <label class="buyer-type-opt">
+                            <input type="radio" name="buyerType" value="contractor" id="buyerTypeContractor" onchange="renderGstState()">
+                            <span>
+                                <span class="buyer-type-opt__label">Contractor / GST Business</span>
+                                <span class="buyer-type-opt__note">Builders &amp; dealers taking input tax credit on the invoice.</span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="auth-field">
+                        <label class="co-form-label" for="editBusinessName">Business / Firm Name</label>
+                        <input type="text" class="co-input" id="editBusinessName" placeholder="e.g. Singh Construction Co.">
+                    </div>
+                    <div class="auth-field" style="margin-top:10px">
+                        <label class="co-form-label" for="editGstin">GSTIN</label>
+                        <input type="text" class="co-input" id="editGstin" maxlength="15" placeholder="09AAACG1234A1Z5" style="text-transform:uppercase;font-family:ui-monospace,Menlo,monospace" oninput="renderGstState()">
+                    </div>
+                    <div class="auth-field" style="margin-top:10px">
+                        <label class="co-form-label" for="editPan">PAN (optional)</label>
+                        <input type="text" class="co-input" id="editPan" maxlength="10" placeholder="AAACG1234A" style="text-transform:uppercase;font-family:ui-monospace,Menlo,monospace">
+                    </div>
+
+                    <button class="btn btn-primary btn-full" onclick="saveBuyerProfileType()" style="margin-top:14px;min-height:44px">Save Business Info</button>
+
+                    <p class="gst-note"><strong>What the tick means:</strong> the number is checked on this device against the Indian GSTIN structure (state code, 5 letters, 4 digits, check digit, entity, Z, checksum). It is not a government verification — the yard confirms the registration on the GST portal before a tax invoice with CGST/SGST or IGST is issued.</p>
+                    <p class="gst-note">With a GST business on file, invoices print your firm name and GSTIN, and inter-state loads are billed as IGST instead of CGST + SGST.</p>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <!-- ━━━━━━━━━━━━━━━━━ CHECKOUT MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay checkout-modal" id="checkoutModal" onclick="handleCheckoutOverlayClick(event)">
-        <div class="modal-box" id="checkoutBox">
-            <div class="modal-head">
+    <!-- ━━━━━━━━━━━━━━━━━ CHECKOUT SLIDE-OVER (MOBILE-FIRST) ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay checkout-modal co-sheet" id="checkoutModal" onclick="handleCheckoutOverlayClick(event)">
+        <div class="modal-box" id="checkoutBox" role="dialog" aria-modal="true" aria-labelledby="coSheetTitle">
+            <!-- Sticky sheet header -->
+            <div class="co-sheet__head">
                 <div>
-                    <div class="modal-badge"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
-                    <div class="modal-title">Checkout & Order</div>
+                    <span class="co-sheet__kick">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                        Direct Kiln Dispatch · Jalalpur Yard
+                    </span>
+                    <div class="co-sheet__title" id="coSheetTitle">Checkout &amp; Order Summary</div>
+                    <div class="co-sheet__sub">The yard confirms the loading slot after the order reaches it.</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeCheckout()">✕</button>
+                <button class="modal-close-btn" onclick="closeCheckout()" aria-label="Close Checkout">✕</button>
             </div>
 
             <!-- Numbered Step Bar -->
@@ -2044,10 +2229,19 @@
                 </div>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body co-sheet__body">
                 <!-- Step 1: Delivery Details -->
                 <div class="step-panel active" id="checkoutStep1">
                     <form id="deliveryForm" onsubmit="goToPayment(event)" novalidate>
+                        <!-- Trolley capacity meter (kept above the fold on phones) -->
+                        <div id="coTrolleyMeter" class="hidden"></div>
+
+                        <!-- Saved construction sites → one tap fills the address block -->
+                        <div id="coSavedSites" class="hidden" style="margin-bottom:12px">
+                            <div class="hub-section-title">Deliver to a saved site</div>
+                            <div id="coSiteChips"></div>
+                        </div>
+
                         <div class="auth-row">
                             <div class="auth-field">
                                 <label class="co-form-label" for="coName">Full Name <span class="co-required">*</span></label>
@@ -2068,8 +2262,8 @@
                                 <input type="text" id="coCity" class="co-input" value="Jaunpur" required oninput="handleCheckoutAddressCheck()">
                             </div>
                             <div class="auth-field">
-                                <label class="co-form-label" for="coPincode">Pincode</label>
-                                <input type="text" id="coPincode" class="co-input" placeholder="222001" oninput="handleCheckoutAddressCheck()">
+                                <label class="co-form-label" for="coPincode">Delivery Pincode</label>
+                                <input type="text" id="coPincode" class="co-input" inputmode="numeric" maxlength="6" placeholder="e.g. Jalalpur 222001" oninput="handleCheckoutAddressCheck()">
                             </div>
                         </div>
                         <div id="serviceabilityBadge" style="display:none;font-size:0.75rem;padding:6px 10px;border-radius:6px;margin-top:8px"></div>
@@ -2098,9 +2292,16 @@
                             </div>
                         </div>
                         <div class="checkout-order-summary" id="checkoutSummary" style="margin-top:14px"></div>
-                        <button type="submit" class="auth-submit" style="margin-top:14px">
-                            <span>Continue to Payment</span> →
+                        <!-- Save this delivery point as a named site (address book) -->
+                        <button type="button" class="btn btn-outline btn-full" onclick="toggleCheckoutSaveSite()" style="margin-top:12px;min-height:40px;font-size:.8rem">
+                            Save this site for next order
                         </button>
+                        <div class="hidden" id="saveSitePanelCheckout" style="margin-top:10px">
+                            <label class="co-form-label" for="siteNameInputCheckout">Site Nickname</label>
+                            <input type="text" class="co-input" id="siteNameInputCheckout" placeholder="e.g. Jalalpur Site #2" maxlength="40">
+                            <button type="button" class="btn btn-primary btn-full" onclick="saveConstructionSite()" style="margin-top:8px;min-height:40px">Save to My Sites</button>
+                            <p class="gst-note" style="margin-top:6px">Keeps this nickname with its own pincode and road access, so the next order to the same plot needs one tap.</p>
+                        </div>
                     </form>
                 </div>
 
@@ -2219,12 +2420,7 @@
 
                     <div class="checkout-order-summary" id="checkoutSummary2" style="margin-top:14px"></div>
                     <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap" id="checkoutPayBtns">
-                        <button class="btn btn-ghost" onclick="backToDetails()" style="flex:1">← Back</button>
-                        <button class="auth-submit" onclick="placeOrder()" id="placeOrderBtn" style="flex:2">Confirm Order</button>
-                        <button type="button" class="confirm-wa-btn" onclick="confirmOrderOnWhatsApp()">
-                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
-                            <span>Send full order on WhatsApp</span>
-                        </button>
+                        <button class="btn btn-ghost" onclick="backToDetails()" style="flex:1">← Back to details</button>
                     </div>
                 </div>
 
@@ -2255,9 +2451,27 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sticky action bar: the only place a buyer can order from -->
+            <div class="co-sheet__foot" id="coFoot">
+                <div class="co-foot__total">
+                    <span class="co-foot__label">Total Payable</span>
+                    <span class="co-foot__val" id="coPayableTotal">₹0</span>
+                </div>
+                <div id="coFootActions">
+                    <button type="button" class="co-wa-cta" id="coFootWa" onclick="confirmOrderOnWhatsApp()">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+                        <span>Instant WhatsApp Order</span>
+                    </button>
+                    <button type="button" class="co-primary-cta" id="coFootPrimary" onclick="coFootPrimaryAction()">Continue to Payment</button>
+                </div>
+                <div class="co-foot__hint" id="coFootHint">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span>WhatsApp sends the full order to the yard; UPI / COD goes through the payment screen.</span>
+                </div>
+            </div>
         </div>
     </div>
-
 
     <!-- ━━━━━━━━━━━━━━━━━ BULK QUOTATION & B2B RFQ MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="bulkQuoteModal" role="dialog" aria-modal="true" aria-labelledby="rfqTitle" onclick="if(event.target===this)closeBulkQuoteModal()">
@@ -2425,6 +2639,83 @@
             </div>
             <div class="modal-body" style="padding-top:8px">
                 <div class="pd-grid" id="pdContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ━━━━━━━━━━━━━━━━━ PINCODE & FREIGHT RATE DELIVERY MODAL ━━━━━━━━━━━━━━━━━ -->
+    <div class="modal-overlay" id="pincodeModal" onclick="if(event.target===this)closePincodeModal()">
+        <div class="modal-box" id="pincodeModalBox" style="max-width:520px;border-radius:18px">
+            <div class="modal-head" style="border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:10px">
+                    <span style="font-size:1.4rem">🚚</span>
+                    <div>
+                        <h3 style="font-size:1.05rem;font-weight:800;color:var(--ink);margin:0">Delivery &amp; Freight Checker</h3>
+                        <p style="font-size:0.75rem;color:var(--ink-3);margin:2px 0 0">Direct from Gurukripa Kiln, Newada, Jalalpur</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closePincodeModal()" aria-label="Close delivery modal" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--ink-3)">✕</button>
+            </div>
+
+            <div class="modal-body" style="padding:20px">
+                <!-- Pincode Input & Detect -->
+                <div style="margin-bottom:16px">
+                    <label for="modalPincodeInput" style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink-2);margin-bottom:6px">
+                        Enter 6-digit Delivery Pincode
+                    </label>
+                    <div style="display:flex;gap:8px">
+                        <input type="tel" id="modalPincodeInput" maxlength="6" placeholder="e.g. 222001 or 221001" inputmode="numeric"
+                            style="flex:1;padding:10px 14px;border:1.5px solid var(--line-mid);border-radius:10px;font-size:0.95rem;font-weight:700;letter-spacing:1px;outline:none"
+                            oninput="if(this.value.trim().length===6)runModalPincodeCheck()">
+                        <button type="button" class="btn btn-primary" onclick="runModalPincodeCheck()" style="padding:0 18px;min-height:44px;font-weight:700">
+                            Check
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick District Selector Pills -->
+                <div style="margin-bottom:18px">
+                    <div style="font-size:0.72rem;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Quick Delivery Hubs:</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px">
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222001')">📍 Jaunpur City (222001)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('221001')">📍 Varanasi (221001)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222105')">📍 Kerakat (222105)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222003')">📍 Mariahu (222003)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222125')">📍 Badlapur (222125)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('275301')">📍 Azamgarh (275301)</button>
+                    </div>
+                </div>
+
+                <!-- Vehicle Access Selector -->
+                <div style="margin-bottom:18px;padding:12px;background:var(--bg-subtle);border-radius:12px;border:1px solid var(--line)">
+                    <div style="font-size:0.75rem;font-weight:700;color:var(--ink);margin-bottom:8px">Site Road Access &amp; Vehicle Compatibility:</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer">
+                            <input type="radio" name="modalVehicle" id="vehTrolley" value="trolley" checked onchange="runModalPincodeCheck()" style="accent-color:var(--brand)">
+                            <span>Mini Trolley (4k pcs)<br><small style="color:var(--ink-3)">Narrow streets &lt; 12ft</small></span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer">
+                            <input type="radio" name="modalVehicle" id="vehTruck" value="truck" onchange="runModalPincodeCheck()" style="accent-color:var(--brand)">
+                            <span>Heavy Truck (10k+ pcs)<br><small style="color:var(--ink-3)">Wide road &gt; 18ft</small></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Live Results Container -->
+                <div id="modalPincodeResult" style="display:none;margin-bottom:16px"></div>
+
+                <!-- Kiln Dispatch Guarantee -->
+                <div style="font-size:0.75rem;color:var(--ink-3);display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(22,163,74,0.06);border:1px solid rgba(22,163,74,0.2);border-radius:10px">
+                    <span style="font-size:1.1rem">⚡</span>
+                    <span><strong>Gurukripa Kiln Guarantee:</strong> Zero breakage replacement on unloading. Free delivery within 10 km!</span>
+                </div>
+            </div>
+
+            <div class="modal-foot" style="padding:14px 20px;border-top:1px solid var(--line);background:var(--bg-card);display:flex;gap:10px">
+                <button type="button" class="btn btn-outline btn-full" onclick="closePincodeModal()">Close</button>
+                <button type="button" class="btn btn-primary btn-full" id="modalPincodeWaBtn" onclick="whatsappModalDeliveryQuote()" style="background:#16a34a">
+                    💬 Confirm on WhatsApp
+                </button>
             </div>
         </div>
     </div>
@@ -2798,28 +3089,29 @@
 
     <!-- ━━━━━━━━━━━━━━━━━ CHATBOT ━━━━━━━━━━━━━━━━━ -->
     <div class="chatbot-wrap" id="chatbotWrap">
-        <div class="chatbot-box">
+        <div class="chatbot-box" id="chatbotBox">
             <div class="chatbot-head">
-                <div class="chatbot-avatar">🤖</div>
+                <div class="chatbot-avatar">🧱</div>
                 <div class="chatbot-info">
-                    <h4>Gurukripa Assistant</h4>
-                    <p><span class="chatbot-online-dot"></span> Online · Instant replies</p>
+                    <h4>Gurukripa Kiln Assistant</h4>
+                    <p><span class="chatbot-online-dot"></span> Online · AI Construction Support</p>
                 </div>
-                <button class="chatbot-head-close" onclick="toggleChatbot()">✕</button>
+                <button class="chatbot-head-close" onclick="toggleChatbot()" aria-label="Close chat">✕</button>
             </div>
             <div class="chatbot-messages" id="chatMessages">
-                <div class="chat-msg bot">Namaste! 🙏 I'm here to help you find the perfect bricks. What can I assist
-                    you with today?</div>
+                <div class="chat-msg bot">Namaste! 🙏 I'm your Gurukripa Kiln Assistant. How can I help you today? Check live brick prices, delivery coverage, or calculate wall requirements below.</div>
             </div>
+            <!-- Quick Action Chips -->
             <div class="chatbot-chips">
-                <button class="chat-chip" onclick="sendChatChip('Brick Prices')">Brick Prices</button>
-                <button class="chat-chip" onclick="sendChatChip('Delivery Info')">Delivery Info</button>
-                <button class="chat-chip" onclick="sendChatChip('Place Order')">Place Order</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('🧱 Check Brick Prices')">🧱 Check Brick Prices</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('🚚 Track My Trolley')">🚚 Track My Trolley</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('📐 Calculate Wall Need')">📐 Calculate Wall Need</button>
+                <button type="button" class="chat-chip" onclick="openWhatsAppBhattaManager()">💬 Talk to Bhatta Manager</button>
             </div>
             <div class="chatbot-input-row">
-                <input type="text" class="chatbot-input" id="chatInput" placeholder="Type a message..."
+                <input type="text" class="chatbot-input" id="chatInput" placeholder="Ask in Hindi or English..."
                     autocomplete="off" onkeydown="if(event.key==='Enter')sendChat()">
-                <button class="chatbot-send" onclick="sendChat()" aria-label="Send">➤</button>
+                <button type="button" class="chatbot-send" onclick="sendChat()" aria-label="Send">➤</button>
             </div>
         </div>
     </div>
@@ -2929,6 +3221,8 @@
     <script src="src/js/i18n.js" defer></script>
     <script src="src/js/state.js" defer></script>
     <script src="src/js/offline-store.js" defer></script>
+    <!-- Address book + buyer type load before checkout/profile use them -->
+    <script src="src/js/saved-sites.js" defer></script>
     <script src="src/js/erp-core.js" defer></script>
     <script src="src/js/erp-inventory.js" defer></script>
     <script src="src/js/erp-documents.js" defer></script>
@@ -2939,6 +3233,8 @@
     <script src="src/js/erp-notify.js" defer></script>
     <script src="src/js/erp-invoice.js" defer></script>
     <script src="src/js/ui.js" defer></script>
+    <script src="src/js/pincodeChecker.js" defer></script>
+    <script src="src/js/voice-search.js" defer></script>
     <script src="src/js/products.js" defer></script>
     <script src="src/js/cart.js" defer></script>
     <script src="src/js/wishlist-drawer.js" defer></script>
@@ -2948,10 +3244,8 @@
     <script src="src/js/google-auth.js" defer></script>
     <script src="src/js/checkout.js" defer></script>
     <script src="src/js/admin-portal.js" defer></script>
-    <script src="src/js/estimatorLogic.js" defer></script>
+    <script src="src/js/dispatch-ops.js" defer></script>
     <script src="src/js/estimatorPreview.js" defer></script>
-    <script src="src/js/pincodeChecker.js" defer></script>
-    <script src="src/js/pdfExport.js" defer></script>
     <script src="src/js/calculator.js" defer></script>
     <script src="src/js/tracker.js" defer></script>
     <script src="src/js/whatsapp-order.js" defer></script>
@@ -2960,9 +3254,6 @@
     <script src="src/js/chatbot.js" defer></script>
     <script src="src/js/invoice.js" defer></script>
     <script src="src/js/platform.js" defer></script>
-    <script src="src/js/saved-sites.js" defer></script>
-    <script src="src/js/voice-search.js" defer></script>
-    <script src="src/js/pull-to-refresh.js" defer></script>
     <script src="src/js/main.js" defer></script>
 </body>
 

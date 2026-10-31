@@ -128,7 +128,7 @@
       })();
     </script>
 
-    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements) -->
+    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements -> ops-console) -->
     <link rel="stylesheet" href="src/styles/tokens.css">
     <link rel="stylesheet" href="src/styles/base.css">
     <link rel="stylesheet" href="src/styles/sections.css">
@@ -137,4 +137,7 @@
     <link rel="stylesheet" href="src/styles/app.css">
     <link rel="stylesheet" href="src/styles/mobile-fixes.css">
     <link rel="stylesheet" href="src/styles/refinements.css">
+    <!-- Last: the checkout slide-over and the yard console override the
+         generic bottom-sheet rules above them. -->
+    <link rel="stylesheet" href="src/styles/ops-console.css">
 </head>

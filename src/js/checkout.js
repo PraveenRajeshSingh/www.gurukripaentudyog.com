@@ -20,13 +20,109 @@ function handleCheckoutAddressCheck() {
 }
 
 // ══════════════════════════════════════════
+// TROLLEY LOAD MATH
+// ══════════════════════════════════════════
+// One tractor-trolley carries 4,000 pcs at these yards — the same figure the
+// rate card quotes (₹25,000 / 4,000 pcs) and the wall estimator divides by.
+// The checkout meter is built on it so a buyer can see how many loads the
+// cart actually needs before the yard books them.
+const TROLLEY_CAPACITY_PCS = 4000;
+
+// Every catalog line is priced per piece, so pieces are the summed quantity.
+// Anything not counted in pieces is skipped rather than guessed at.
+function cartPieces() {
+    return cart.reduce((sum, i) => {
+        return (/piece|\bpcs\b/i.test(String(i.unit || '')) ? sum + (Number(i.qty) || 0) : sum);
+    }, 0);
+}
+
+function trolleyLoad(pieces) {
+    const pcs = Math.max(0, Number(pieces) || 0);
+    const full = Math.floor(pcs / TROLLEY_CAPACITY_PCS);
+    const remainder = pcs % TROLLEY_CAPACITY_PCS;
+    return {
+        pieces: pcs,
+        capacity: TROLLEY_CAPACITY_PCS,
+        pct: Math.min(100, Math.round((pcs / TROLLEY_CAPACITY_PCS) * 100)),
+        full: full,
+        remainder: remainder,
+        // Loads the yard has to send — the partial counts as one trip.
+        loads: full + (remainder > 0 ? 1 : 0),
+        caption: full > 0
+            ? (remainder ? full + ' full + ' + formatNum(remainder) + ' pcs of the next' : full + ' × full trolley')
+            : formatNum(pcs) + ' of ' + formatNum(TROLLEY_CAPACITY_PCS) + ' pcs'
+    };
+}
+
+// Progress bar + honest trip count. Hidden when the cart has no piece lines.
+function renderTrolleyMeter() {
+    const box = document.getElementById('coTrolleyMeter');
+    if (!box) return;
+    const load = trolleyLoad(cartPieces());
+    if (!load.pieces) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+    box.classList.remove('hidden');
+    box.innerHTML = `
+        <div class="trolley-meter__top">
+            <span class="trolley-meter__label">Trolley Load</span>
+            <span class="trolley-meter__val">${load.pct}% · ${formatNum(load.pieces)} / ${formatNum(load.capacity)} pcs</span>
+        </div>
+        <div class="trolley-meter__track" role="progressbar" aria-valuenow="${load.pct}" aria-valuemin="0" aria-valuemax="100"
+             aria-label="Cart against one trolley capacity">
+            <div class="trolley-meter__fill${load.remainder === 0 && load.full > 0 ? ' trolley-meter__fill--exact' : ''}" style="width:${Math.max(2, load.pct)}%"></div>
+        </div>
+        <div class="trolley-meter__foot">
+            <span>${load.caption}</span>
+            <span class="trolley-meter__loads">${load.loads} load${load.loads > 1 ? 's' : ''} to book</span>
+        </div>`;
+}
+
+// ══════════════════════════════════════════
 // CHECKOUT & PAYMENT WIZARD
 // ══════════════════════════════════════════
+
+// The sheet keeps one sticky action bar for every step, so the buyer always
+// sees the payable total and the two ways to order. This tracks where they are.
+let checkoutStep = 1;
+
+function renderCheckoutFooter(n) {
+    const foot = document.getElementById('coFoot');
+    const primary = document.getElementById('coFootPrimary');
+    if (!foot || !primary) return;
+
+    // Step 3 brings its own confirmation actions, so the bar steps aside.
+    foot.classList.toggle('hidden', n === 3);
+    foot.classList.remove('is-busy');
+
+    if (n === 1) {
+        primary.innerHTML = 'Continue to Payment →';
+        primary.setAttribute('aria-label', 'Continue to payment');
+    } else {
+        primary.innerHTML = 'Pay via UPI / Cash on Delivery';
+        primary.setAttribute('aria-label', 'Confirm order and pay');
+    }
+}
+
+// One handler for the sticky primary button; it means whatever the current
+// step means, which is why the sheet never shows two primary actions.
+function coFootPrimaryAction() {
+    if (checkoutStep === 1) { goToPayment(); return; }
+    if (checkoutStep === 2) { placeOrder(); return; }
+    closeCheckout();
+}
+
+// Processing state: the total stays visible, the buttons drop out so a tap
+// cannot send the same order twice.
+function setCheckoutBusy(on) {
+    const foot = document.getElementById('coFoot');
+    if (foot) foot.classList.toggle('is-busy', !!on);
+}
+
 function openCheckout() {
     if (!cart.length) { showToast(t('checkout.emptyCart')); return; }
     closeCart();
     resetCheckout();
     buildCheckoutSummary();
+    if (window.SavedSites) SavedSites.renderAll();
     document.getElementById('checkoutModal')?.classList.add('open');
     overlayLock();
 }
@@ -49,6 +145,7 @@ function resetCheckout() {
 }
 
 function showCheckoutStep(n) {
+    checkoutStep = n;
     [1, 2, 3].forEach(i => {
         const p = document.getElementById('checkoutStep' + i);
         if (p) p.classList.toggle('active', i === n);
@@ -60,6 +157,7 @@ function showCheckoutStep(n) {
             else w.className = 'co-step-wrap';
         }
     });
+    renderCheckoutFooter(n);
 }
 
 function buildCheckoutSummary() {
@@ -73,10 +171,16 @@ function buildCheckoutSummary() {
     const s2 = document.getElementById('checkoutSummary2');
     if (s1) s1.innerHTML = html;
     if (s2) s2.innerHTML = html;
+
+    renderTrolleyMeter();
+    const payable = document.getElementById('coPayableTotal');
+    if (payable) payable.textContent = formatINR(total);
 }
 
+// Called by the form submit and by the sticky footer button, so the event is
+// optional — the checks are the same either way.
 function goToPayment(e) {
-    e.preventDefault();
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
     const name = document.getElementById('coName')?.value.trim();
     const phone = document.getElementById('coPhone')?.value.trim();
     const address = document.getElementById('coAddress')?.value.trim();
@@ -141,6 +245,7 @@ function placeOrder() {
 
     if (btnsRow) btnsRow.style.display = 'none';
     if (procState) procState.style.display = 'block';
+    setCheckoutBusy(true);
 
     setTimeout(() => {
         const orderId = makeLocalOrderRef();
@@ -171,6 +276,7 @@ function placeOrder() {
 
         if (procState) procState.style.display = 'none';
         if (btnsRow) btnsRow.style.display = 'flex';
+        setCheckoutBusy(false);
 
         showCheckoutStep(3);
         triggerConfetti();
@@ -187,6 +293,8 @@ function makeLocalOrderRef() {
 
 // Single place that appends an order to the local ledger, so checkout, the
 // WhatsApp handoff and the offline outbox all agree on the same reference.
+// The piece count and delivery site ride along — the profile hub totals them
+// and the yard board shows where the load is going without another lookup.
 function recordOrder(orderId, total, status) {
     const now = new Date();
     const date = [
@@ -194,12 +302,17 @@ function recordOrder(orderId, total, status) {
         String(now.getMonth() + 1).padStart(2, '0'),
         now.getFullYear()
     ].join('/');
+    const val = (id) => ((document.getElementById(id) || {}).value || '').trim();
     orders.unshift({
         id: orderId,
         date: date,
         itemsCount: cart.length,
+        pieces: cartPieces(),
         total: total,
-        status: status || 'Processing'
+        status: status || 'Processing',
+        customer: val('coName') || (user && user.name) || '',
+        site: val('coAddress'),
+        pincode: val('coPincode')
     });
     setSafeStorage('gb_orders', orders);
     return orders[0];

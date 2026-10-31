@@ -1931,6 +1931,496 @@ body { overscroll-behavior-y: contain; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   MOBILE VIEWPORT & BOTTOM SHEET DRAWERS REDESIGN (2026-10)
+   Guidelines:
+   1. Consistent px-4 mobile padding, fluid responsive scaling, stacked CTAs
+   2. Slide-up bottom sheets with frosted backdrop blur & top drag handles
+   3. Pinned bottom navigation above gesture bar (pb-safe, z-50)
+   4. 3-in-1 Estimator full-width touch sliders & 2x2 metric scan grid
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Mobile Viewport & Layout Optimization ── */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Fluid typography scaling */
+    .sec-title {
+        font-size: clamp(1.45rem, 6.2vw, 1.85rem) !important;
+        line-height: 1.25 !important;
+    }
+    .hero-h1 {
+        font-size: clamp(1.75rem, 7.5vw, 2.3rem) !important;
+        line-height: 1.15 !important;
+    }
+
+    /* Responsive CTAs: stacked with adequate touch spacing */
+    .hero-cta {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    .hero-cta .btn {
+        width: 100% !important;
+        justify-content: center !important;
+        min-height: 48px !important;
+    }
+}
+
+/* ── 2. Responsive Bottom Sheets & Drawers (Cart, Wishlist, Modals) ── */
+@media (max-width: 768px) {
+    /* Frosted backdrop blur on all overlays */
+    .cart-overlay,
+    .modal-overlay {
+        background: rgba(0, 0, 0, 0.55) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        z-index: 1000 !important;
+    }
+
+    /* Slide-up bottom sheet configuration */
+    .cart-drawer,
+    .wishlist-drawer {
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        max-height: 85vh !important;
+        height: auto !important;
+        border-radius: 20px 20px 0 0 !important;
+        transform: translateY(100%) !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25) !important;
+        padding-bottom: max(env(safe-area-inset-bottom, 16px), 16px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        z-index: 1001 !important;
+    }
+
+    .cart-drawer.open,
+    .wishlist-drawer.open {
+        transform: translateY(0) !important;
+    }
+
+    /* Tactile drag handle indicator */
+    .cart-head::before {
+        content: '';
+        display: block;
+        width: 44px;
+        height: 5px;
+        background: rgba(0, 0, 0, 0.18);
+        border-radius: 3px;
+        margin: -6px auto 12px auto;
+    }
+
+    .cart-head {
+        padding: 14px 18px 12px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .cart-body {
+        flex: 1 1 auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        max-height: calc(85vh - 160px) !important;
+    }
+
+    .cart-footer {
+        flex-shrink: 0 !important;
+        padding: 12px 18px !important;
+        padding-bottom: max(env(safe-area-inset-bottom, 16px), 16px) !important;
+    }
+
+    /* Modal bottom-sheet treatment */
+    .modal-box {
+        border-radius: 20px 20px 0 0 !important;
+        max-height: 85vh !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-y: auto !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PREMIUM POPUP & DIALOG SYSTEM (ALL MODALS UPGRADE)
+   Includes: Auth, Checkout, Product Detail, Bulk RFQ, Legal,
+   Company Profile, Notification Center, Admin Modals
+   ═══════════════════════════════════════════════════════════════ */
+
+.modal-overlay {
+    background: rgba(18, 10, 5, 0.65) !important;
+    backdrop-filter: blur(10px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(160%) !important;
+    transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.24s !important;
+}
+
+.modal-box {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(200, 70, 10, 0.12) !important;
+    box-shadow: 0 24px 64px -12px rgba(28, 16, 9, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.8) inset !important;
+    border-radius: 24px !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.modal-head {
+    background: linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 100%) !important;
+    border-bottom: 1px solid rgba(200, 70, 10, 0.08) !important;
+    padding: 18px 24px 16px !important;
+    position: relative !important;
+}
+
+.modal-head::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(28, 16, 9, 0.14);
+    margin: -4px auto 12px auto;
+}
+
+@media (min-width: 769px) {
+    .modal-head::before {
+        display: none !important;
+    }
+}
+
+.modal-close-btn {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: #F4EFEA !important;
+    border: 1px solid rgba(200, 70, 10, 0.12) !important;
+    color: var(--ink-2) !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.18s ease !important;
+}
+
+.modal-close-btn:hover {
+    background: var(--brand) !important;
+    color: #FFFFFF !important;
+    border-color: var(--brand) !important;
+    transform: rotate(90deg) !important;
+}
+
+.modal-body {
+    padding: 20px 24px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Modern Pill Inputs & Selects inside all Modals */
+.modal-box input[type="text"],
+.modal-box input[type="email"],
+.modal-box input[type="tel"],
+.modal-box input[type="number"],
+.modal-box input[type="password"],
+.modal-box textarea,
+.modal-box select {
+    border: 1.5px solid #E8E2DC !important;
+    border-radius: 12px !important;
+    background: #FDFCFA !important;
+    transition: border-color 0.18s, box-shadow 0.18s !important;
+}
+
+.modal-box input:focus,
+.modal-box textarea:focus,
+.modal-box select:focus {
+    border-color: var(--brand) !important;
+    box-shadow: 0 0 0 3px rgba(200, 70, 10, 0.12) !important;
+    background: #FFFFFF !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2026 MODERN E-COMMERCE INDUSTRIAL DESIGN TRENDS
+   Bento Cards, Glass Morphism, Micro-Interactions & Trust Polish
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Smooth Card Hover & Micro-Interactions */
+.cat-card,
+.product-card,
+.review-card,
+.contact-item,
+.contact-form-wrap {
+    border: 1px solid rgba(28, 16, 9, 0.08) !important;
+    border-radius: 20px !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s, border-color 0.22s !important;
+}
+
+.cat-card:hover,
+.product-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 16px 36px -8px rgba(179, 54, 20, 0.12), 0 4px 12px rgba(28, 16, 9, 0.04) !important;
+    border-color: rgba(179, 54, 20, 0.25) !important;
+}
+
+/* Filter Chips Modern Pill Treatment */
+.filter-btn {
+    border: 1.5px solid #EADBCE !important;
+    background: #FAF8F5 !important;
+    color: var(--ink-2) !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    padding: 8px 18px !important;
+    border-radius: 50px !important;
+    transition: all 0.18s ease !important;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--brand) !important;
+    color: #FFFFFF !important;
+    border-color: var(--brand) !important;
+    box-shadow: 0 4px 14px rgba(179, 54, 20, 0.28) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Trust Marquee Modern Glass Look */
+.trust-strip {
+    background: linear-gradient(90deg, #FAF8F5 0%, #FFF5EF 50%, #FAF8F5 100%) !important;
+    border-top: 1px solid rgba(179, 54, 20, 0.08) !important;
+    border-bottom: 1px solid rgba(179, 54, 20, 0.08) !important;
+    padding: 12px 0 !important;
+}
+
+.trust-item {
+    font-size: 0.84rem !important;
+    font-weight: 600 !important;
+    color: var(--ink-2) !important;
+}
+
+/* Contact Cards Modern Glass Layout */
+.contact-item {
+    background: #FFFFFF !important;
+    padding: 18px 20px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 4px 16px rgba(28, 16, 9, 0.03) !important;
+}
+
+.contact-item-icon {
+    background: rgba(179, 54, 20, 0.08) !important;
+    color: var(--brand) !important;
+    border-radius: 12px !important;
+    width: 44px !important;
+    height: 44px !important;
+}
+
+.contact-form-wrap {
+    background: #FFFFFF !important;
+    box-shadow: 0 16px 40px rgba(28, 16, 9, 0.05) !important;
+    padding: 32px 28px !important;
+}
+
+/* Floating Action Button (FAB) Modern Polish */
+.fab-main-btn {
+    box-shadow: 0 8px 24px rgba(179, 54, 20, 0.35) !important;
+    border: 3px solid #FFFFFF !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.fab-main-btn:hover {
+    transform: scale(1.08) !important;
+}
+
+.fab-main-btn:active {
+    transform: scale(0.94) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HARDWARE ACCELERATION & ZERO-LAG SCROLL PERFORMANCE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Hardware acceleration on sticky/fixed elements */
+.mobile-nav,
+.wa-float,
+.fab-wrap,
+#scrollTopBtn,
+.nav,
+.cart-drawer,
+.wishlist-drawer,
+.modal-box {
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Smooth Touch Scrolling on all overflow elements */
+.modal-box,
+.cart-body,
+#wishlistBody,
+.products-filters,
+.filter-checkbox-list,
+.catalog-sidebar,
+.chatbot-messages {
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+}
+
+/* Kiln Gallery Status Chips */
+.gallery-status-chip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(18, 10, 5, 0.78);
+    backdrop-filter: blur(6px);
+    color: #FFF;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Verified Review Badge */
+.review-badge-verified {
+    background: rgba(22, 163, 74, 0.12);
+    color: #16a34a;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+/* Modern AI Chatbot Styling */
+.chatbot-box {
+    border-radius: 20px !important;
+    box-shadow: 0 20px 50px rgba(28, 16, 9, 0.3) !important;
+    border: 1px solid rgba(200, 70, 10, 0.15) !important;
+}
+
+@media (max-width: 640px) {
+    .chatbot-box.open {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        border-radius: 0 !important;
+        z-index: 9999 !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CLEAN DESKTOP & MOBILE NAVBAR REDESIGN (ZERO-SCROLL SPILL)
+   ═══════════════════════════════════════════════════════════════ */
+
+.nav {
+    border-bottom: 1px solid rgba(200, 70, 10, 0.08) !important;
+    box-shadow: 0 4px 20px -2px rgba(28, 16, 9, 0.06) !important;
+}
+
+.nav-inner {
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+/* Search bar polish */
+.nav-search {
+    border-radius: 50px !important;
+    border: 1.5px solid #E8E2DC !important;
+    background: #F9F7F4 !important;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s !important;
+}
+
+.nav-search:focus-within {
+    border-color: var(--brand) !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 0 0 3px rgba(200, 70, 10, 0.12) !important;
+}
+
+.nav-link {
+    font-weight: 600 !important;
+    padding: 8px 14px !important;
+    border-radius: 20px !important;
+    transition: all 0.18s ease !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--brand) !important;
+    background: rgba(200, 70, 10, 0.08) !important;
+}
+
+/* Clean Hide of Redundant Top Scroll Progress Line */
+#spbar {
+    display: none !important;
+}
+
+/* ── 3. Bottom Navigation Bar Anchor & Safe-Area ── */
+.mobile-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+    padding-bottom: env(safe-area-inset-bottom, 8px) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+body {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 8px)) !important;
+}
+
+/* ── 4. 3-in-1 Estimator Touch Optimization & 2x2 Metric Grid ── */
+@media (max-width: 640px) {
+    .calc-slider {
+        width: 100% !important;
+        height: 8px !important;
+        margin: 12px 0 8px 0 !important;
+    }
+    .calc-slider::-webkit-slider-thumb {
+        width: 26px !important;
+        height: 26px !important;
+    }
+
+    /* 2x2 Clean Scan Grid for estimator metrics */
+    .estimator-results-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        margin-bottom: 14px !important;
+    }
+    .estimator-card {
+        padding: 14px 10px !important;
+        border-radius: 14px !important;
+        text-align: center !important;
+        background: var(--bg-card) !important;
+        border: 1px solid var(--line) !important;
+    }
+    .estimator-val {
+        font-size: 1.25rem !important;
+        font-weight: 800 !important;
+        color: var(--ink) !important;
+    }
+    .estimator-label {
+        font-size: 0.72rem !important;
+        font-weight: 600 !important;
+        color: var(--ink-3) !important;
+        margin-top: 3px !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
  */
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1976,4 +2466,256 @@ body { overscroll-behavior-y: contain; }
 @media (max-width: 720px) {
     .cp-box { width: 100vw; max-width: 100vw; max-height: 100dvh; border-radius: 0; }
     .cp-grid { grid-template-columns: 1fr; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   PRODUCTION PERFORMANCE, RESPONSIVE GRID & 60FPS SMOOTHNESS
+   (Hardware acceleration, touch manipulation, responsive blueprint)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. 60fps GPU Hardware Acceleration for Sticky/Fixed Layers ── */
+.fixed-bottom-nav,
+.mobile-nav,
+.wa-float,
+.whatsapp-fab,
+.modal-overlay,
+.drawer-overlay,
+.cart-overlay,
+#spbar,
+.scroll-top,
+.mn-cart-fab,
+.chatbot-wrap,
+.estimator-mobile-sticky,
+#ptrIndicator {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* ── 2. Touch Action Optimization & Tactile Feedback ── */
+button,
+a,
+.btn,
+.btn-tactile,
+.product-card,
+.cat-card,
+.mn-item,
+.filter-btn,
+.calc-tab,
+.faq-q,
+input,
+select,
+textarea,
+input[type="range"],
+[role="button"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:active,
+.btn:active,
+.btn-tactile:active,
+.product-add-btn:active,
+.filter-btn:active,
+.calc-tab:active {
+    transform: scale(0.97) !important;
+    transition: transform 0.1s cubic-bezier(0, 0, 0.2, 1) !important;
+}
+
+.product-card:active,
+.cat-card:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s cubic-bezier(0, 0, 0.2, 1) !important;
+}
+
+/* ── 3. Image Aspect Ratios (CLS Layout Shift Prevention) ── */
+.product-card-img-wrap,
+.cat-card-img-wrap,
+.gallery-item-wrap {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    position: relative;
+    background: #f5f2ed;
+}
+
+.product-card-img,
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── 4. Responsive Product Grid System ── */
+/* Desktop (> 1024px): 4 Columns */
+@media (min-width: 1024px) {
+    .catalog-main .products-grid,
+    #productsGrid {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 20px !important;
+    }
+}
+
+/* Tablet & Foldable (640px – 1023px): 3 Columns */
+@media (min-width: 640px) and (max-width: 1023px) {
+    .catalog-main .products-grid,
+    #productsGrid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+    }
+    .catalog-layout-grid {
+        display: block !important;
+    }
+    .catalog-sidebar {
+        display: none !important;
+    }
+    .mobile-filter-toggle {
+        display: inline-flex !important;
+    }
+}
+
+/* Standard Mobile (< 640px): 2 Columns Compact with High-Contrast Chips */
+@media (max-width: 639px) {
+    .catalog-main .products-grid,
+    #productsGrid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+    .catalog-layout-grid {
+        display: block !important;
+    }
+    .catalog-sidebar {
+        display: none !important;
+    }
+    .mobile-filter-toggle {
+        display: inline-flex !important;
+    }
+    .product-card {
+        border-radius: 14px !important;
+        overflow: hidden !important;
+    }
+    .product-card-body {
+        padding: 10px 10px 12px !important;
+    }
+    .product-card-name {
+        font-size: 0.85rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 4px !important;
+    }
+    .product-price-current {
+        font-size: 1.15rem !important;
+    }
+    .product-trolley-badge {
+        font-size: 0.7rem !important;
+        padding: 4px 6px !important;
+    }
+}
+
+/* Ultra Compact Mobile (< 380px) */
+@media (max-width: 379px) {
+    .catalog-main .products-grid,
+    #productsGrid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+}
+
+/* ── 5. Estimator Mobile Sticky Summary Footer (< 768px) ── */
+.estimator-mobile-sticky {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .estimator-mobile-sticky {
+        display: block;
+        position: fixed;
+        bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+        left: 12px;
+        right: 12px;
+        z-index: 850;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1.5px solid var(--brand);
+        border-radius: 14px;
+        box-shadow: 0 8px 24px rgba(179, 54, 20, 0.22);
+        padding: 10px 14px;
+        animation: slideUpSticky 0.25s ease-out;
+    }
+    .est-sticky-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .est-sticky-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--ink-3);
+    }
+    .est-sticky-val {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--brand);
+    }
+    .est-sticky-val small {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--ink-2);
+    }
+    .est-sticky-btn {
+        background: #16a34a !important;
+        color: #fff !important;
+        font-weight: 700 !important;
+        font-size: 0.78rem !important;
+        white-space: nowrap !important;
+        padding: 8px 14px !important;
+        min-height: 38px !important;
+        border-radius: 10px !important;
+    }
+    @keyframes slideUpSticky {
+        from { transform: translateY(100%); opacity: 0; }
+        to   { transform: translateY(0); opacity: 1; }
+    }
+}
+
+/* ── 6. Pincode Modal Pill Chips ── */
+.btn-pill-chip {
+    background: var(--bg-card);
+    border: 1px solid var(--line-mid);
+    border-radius: 50px;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+.btn-pill-chip:hover,
+.btn-pill-chip:active {
+    background: var(--brand-glow);
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
+/* ── 7. Lock Background Scroll When Any Overlay is Open ── */
+body.overlay-open {
+    overflow: hidden !important;
+    touch-action: none;
+}
+body.overlay-open .modal-box,
+body.overlay-open .cart-body,
+body.overlay-open .drawer,
+body.overlay-open .chatbot-box {
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
 }

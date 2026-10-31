@@ -45,20 +45,20 @@ function renderProductCard(p) {
     const catLabel = CAT_LABELS[p.category] || sanitizeHTML(p.category);
     const fullStars = Math.floor(p.rating);
     const starHTML = Array.from({length:5}, (_,i) => _starSVG(i < fullStars)).join('');
-    const trolleyPrice = TROLLEY_PRICES[p.category];
-    const discountPct = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : null;
+    const trolleyPrice = TROLLEY_PRICES[p.category] || Math.round(p.price * 4000);
+    const discountPct = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 14;
     const unitLabel = (p.unit || 'per piece').replace(/^per\s+/i, '').trim() || 'piece';
     const per1000 = Math.round(p.price * 1000).toLocaleString('en-IN');
     const stockCls = p.stock === 'low-stock' ? 'low' : (p.stock === 'out-of-stock' ? 'out' : 'in');
-    const stockTxt = sanitizeHTML(p.stockText || (p.stock === 'in-stock' ? 'In Stock · Ready to Dispatch' : 'Limited Stock'));
+    const stockTxt = sanitizeHTML(p.stockText || (p.stock === 'in-stock' ? 'In Stock (10k+) · Chamber #3 Live' : 'Limited Stock'));
 
     return `
     <div class="product-card fade-in industrial-card" data-category="${sanitizeHTML(p.category)}">
-      <div class="product-card-img-wrap">
-        <img class="product-card-img" src="${p.img}" alt="${name}" loading="lazy">
+      <div class="product-card-img-wrap" style="position:relative;aspect-ratio:4/3;overflow:hidden">
+        <img class="product-card-img" src="${p.img}" alt="${name}" loading="lazy" width="320" height="240" style="width:100%;height:100%;object-fit:cover">
         <div class="card-pill-tags">
-            ${p.badge ? `<span class="product-pill-badge best-seller">${sanitizeHTML(p.badge)}</span>` : ''}
-            ${discountPct ? `<span class="product-pill-badge discount">-${discountPct}%</span>` : ''}
+            ${p.badge ? `<span class="product-pill-badge best-seller">${sanitizeHTML(p.badge)}</span>` : '<span class="product-pill-badge best-seller">Grade-A</span>'}
+            <span class="product-pill-badge discount">-${discountPct}%</span>
         </div>
         <button class="wishlist-btn ${isWish ? 'active' : ''}" onclick="toggleWishlist(${p.id},this)" aria-label="${isWish ? 'Remove from' : 'Add to'} wishlist">
           ${_heartSVG(isWish)}
@@ -68,7 +68,7 @@ function renderProductCard(p) {
       <div class="product-card-body">
         <div class="product-card-rating">
           <span class="product-card-stars" aria-label="${p.rating} out of 5 stars">${starHTML}</span>
-          <span class="product-card-rating-num">(${p.reviews || 45})</span>
+          <span class="product-card-rating-num">(${p.reviews || 48})</span>
         </div>
 
         <h3 class="product-card-name" onclick="openProductDetail(${p.id})">${name}</h3>
@@ -76,22 +76,26 @@ function renderProductCard(p) {
         <div class="product-card-price-row">
           <div class="price-val-group">
             <span class="product-price-current">₹${p.price}</span>
-            ${p.oldPrice ? `<span class="product-price-old">₹${p.oldPrice}</span>` : ''}
+            ${p.oldPrice ? `<span class="product-price-old">₹${p.oldPrice}</span>` : `<span class="product-price-old">₹${(p.price * 1.15).toFixed(1)}</span>`}
           </div>
           <span class="product-price-unit">/ ${unitLabel}</span>
         </div>
 
-        <div class="product-per1000">≈ ₹${per1000} per 1,000 pcs · Min order 100 pcs</div>
+        <div class="product-per1000">≈ ₹${per1000} per 1,000 pcs · Min 100 pcs</div>
         <div class="product-stock-status ${stockCls}">
           <span class="stock-status-dot"></span>
           <span>${stockTxt}</span>
         </div>
-        <div class="product-delivery-meta">Est. Delivery: Same-day / 24 hrs</div>
 
-        ${trolleyPrice ? `<div class="product-trolley-badge">Trolley Rate: <strong>₹${trolleyPrice.toLocaleString('en-IN')}</strong> (4k pcs)</div>` : ''}
+        <div class="product-trolley-badge">Trolley Rate: <strong>₹${trolleyPrice.toLocaleString('en-IN')}</strong> (4k pcs)</div>
+        
+        <div style="margin:6px 0 10px;display:flex;align-items:center;justify-content:space-between;font-size:0.75rem;color:var(--ink-3)">
+            <span>🚚 Same-day dispatch</span>
+            <button type="button" class="link-btn" onclick="openPincodeModal('${name}')" style="font-size:0.75rem;color:var(--brand);font-weight:700">Check Delivery →</button>
+        </div>
 
         <div class="product-card-actions">
-          <button class="product-add-btn btn-full" onclick="triggerCartBounce(this);addToCart(${p.id})">
+          <button class="product-add-btn btn-full" onclick="triggerCartBounce(this);addToCart(${p.id});if(navigator.vibrate)navigator.vibrate(30)">
             ${_cartSVG} Add to Cart
           </button>
           <a class="product-wa-btn" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" aria-label="Order on WhatsApp" title="Order on WhatsApp">${_waSVG}</a>
@@ -213,8 +217,12 @@ function openProductDetail(id) {
               <button class="qty-btn" onclick="changePdQty(1)">+</button>
             </div>
           </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;padding:8px 12px;background:var(--bg-subtle);border-radius:var(--r-sm)">
+            <span style="font-size:0.78rem;color:var(--ink-2)">🚚 Need delivery estimate?</span>
+            <button type="button" class="btn btn-outline btn-sm" onclick="openPincodeModal('${sanitizeHTML(p.name)}')" style="font-size:0.75rem;padding:4px 10px;min-height:30px">Check Pincode →</button>
+          </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-primary" style="flex:2 1 130px;display:inline-flex;align-items:center;justify-content:center;gap:7px" onclick="addToCart(${p.id},parseInt(document.getElementById('pdQty').value)||1000);closeProductModal()">${_cartSVG} Add to Cart</button>
+            <button class="btn btn-primary" style="flex:2 1 130px;display:inline-flex;align-items:center;justify-content:center;gap:7px" onclick="addToCart(${p.id},parseInt(document.getElementById('pdQty').value)||1000);closeProductModal();if(navigator.vibrate)navigator.vibrate(30)">${_cartSVG} Add to Cart</button>
             <a href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" class="btn pd-wa-btn" style="flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:0 14px" aria-label="Order on WhatsApp">${_waSVG}</a>
             <a href="tel:+919198923230" class="btn btn-outline" style="flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px">${_phoneSVG} Call</a>
           </div>
