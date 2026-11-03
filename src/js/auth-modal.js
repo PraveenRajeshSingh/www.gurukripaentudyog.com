@@ -77,6 +77,34 @@ function handleLogin(e) {
 
     setButtonLoading('loginSubmitBtn', true, 'Signing in...');
 
+    // Server-first sign-in when the Platform API is configured (docs/PLATFORM-API.md).
+    // Network failures fall through to the local session — clearly labelled as offline.
+    if (window.GBApi && GBApi.enabled()) {
+        const phone = GBApi.phoneFor(email);
+        if (phone) {
+            GBApi.login({ phone, password }).then(su => {
+                failedLoginAttempts = 0;
+                loginSuccess({ name: su.name, email: su.email || email, mobile: su.phone });
+                GBApi.flushOutbox();
+            }).catch(err => {
+                if (err.code === 401) {
+                    failedLoginAttempts++;
+                    setButtonLoading('loginSubmitBtn', false, 'Sign In to Account →');
+                    triggerFormShake('loginForm');
+                    if (failedLoginAttempts >= 3) startLockoutTimer();
+                    else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
+                } else {
+                    showToast('Offline sign-in (server unreachable) — data stays on this device.', 'info');
+                    finishLocalLogin(email, password);
+                }
+            });
+            return;
+        }
+    }
+    finishLocalLogin(email, password);
+}
+
+function finishLocalLogin(email, password) {
     setTimeout(() => {
         const users = getSafeStorage('gb_users', []);
         const found = users.find(u => u.email === email);
@@ -133,7 +161,6 @@ function loginSuccess(userData) {
     showToast(t('auth.welcome', { name: user.name }), 'success');
     prefillUserInCheckout();
 }
-
 function handleRegister(e) {
     e.preventDefault();
     const name = document.getElementById('regName')?.value.trim();
@@ -163,6 +190,29 @@ function handleRegister(e) {
 
     setButtonLoading('registerSubmitBtn', true, 'Creating Account...');
 
+    // Server-first registration: real account with hashed password + JWT session.
+    if (window.GBApi && GBApi.enabled()) {
+        GBApi.register({ name, phone: mobile.replace(/\D/g, ''), password, email })
+            .then(() => {
+                const users = getSafeStorage('gb_users', []);
+                if (!users.some(u => u.email === email)) { users.push({ name, mobile, email }); setSafeStorage('gb_users', users); }
+                setButtonLoading('registerSubmitBtn', false, 'Create Free Account →');
+                loginSuccess({ name, mobile, email });
+                GBApi.flushOutbox();
+            })
+            .catch(err => {
+                setButtonLoading('registerSubmitBtn', false, 'Create Free Account →');
+                if (err.code === 409) { showFieldError('regMobileErr', 'Mobile already registered — sign in instead'); triggerFormShake('registerForm'); return; }
+                if (err.code === 400) { showFieldError('regPasswordErr', err.message || 'Check the details and retry'); triggerFormShake('registerForm'); return; }
+                showToast('Server unreachable — account created offline on this device.', 'info');
+                finishLocalRegister(name, mobile, email);
+            });
+        return;
+    }
+    finishLocalRegister(name, mobile, email);
+}
+
+function finishLocalRegister(name, mobile, email) {
     setTimeout(() => {
         const users = getSafeStorage('gb_users', []);
         if (users.some(u => u.email === email)) {
@@ -185,6 +235,7 @@ function handleRegister(e) {
 function logoutUser() {
     user = null;
     localStorage.removeItem('gb_user');
+    if (window.GBApi) GBApi.logout();
     updateAuthUI();
     closeUserDropdown();
     showToast(t('auth.signedOut'));

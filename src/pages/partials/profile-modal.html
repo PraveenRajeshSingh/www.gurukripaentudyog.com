@@ -1,9 +1,9 @@
     <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="profileModal" onclick="handleProfileOverlayClick(event)">
+    <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-label="My profile" onclick="handleProfileOverlayClick(event)">
         <div class="modal-box profile-modal-box" style="padding:0;overflow:hidden">
             <!-- Compact header card: who is buying + what proof is on file -->
             <div class="profile-header">
-                <button class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close Profile Modal" style="position:absolute;top:16px;right:16px;color:#fff;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;z-index:25;pointer-events:auto">✕</button>
+                <button class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close Profile Modal" style="position:absolute;top:12px;right:12px;color:#fff;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:50%;min-width:48px;min-height:48px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;z-index:25;pointer-events:auto">✕</button>
                 <div class="profile-header-inner">
                     <div class="profile-avatar-large" id="profileAvatarLg" style="background:var(--brand)">
                         <span id="profileAvatarLetter">U</span>

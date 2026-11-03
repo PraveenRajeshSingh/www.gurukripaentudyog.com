@@ -121,23 +121,31 @@ function closeBulkQuoteModal() {
     }
 }
 
+function collectBulkQuote() {
+    const val = (id) => {
+        const el = document.getElementById(id);
+        return el && typeof el.value === 'string' ? el.value.trim() : '';
+    };
+    return {
+        name: val('rfqName'),
+        phone: val('rfqPhone'),
+        company: val('rfqCompany'),
+        gstin: val('rfqGstin'),
+        product: val('rfqProduct'),
+        qty: val('rfqQty'),
+        site: val('rfqSite'),
+        roadAccess: val('rfqRoad') || 'wide',
+        unloadingReq: val('rfqUnload') || 'driver'
+    };
+}
+
 function handleBulkQuoteSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('rfqSubmitBtn');
     const notice = document.getElementById('rfqResultNotice');
     if (btn) btn.disabled = true;
 
-    const payload = {
-        name: document.getElementById('rfqName')?.value,
-        phone: document.getElementById('rfqPhone')?.value,
-        company: document.getElementById('rfqCompany')?.value,
-        gstin: document.getElementById('rfqGstin')?.value,
-        product: document.getElementById('rfqProduct')?.value,
-        qty: document.getElementById('rfqQty')?.value,
-        site: document.getElementById('rfqSite')?.value,
-        roadAccess: document.getElementById('rfqRoad')?.value,
-        unloadingReq: document.getElementById('rfqUnload')?.value
-    };
+    const payload = collectBulkQuote();
 
     let quote = null;
     try {
@@ -165,6 +173,56 @@ function handleBulkQuoteSubmit(e) {
             if (btn) btn.textContent = 'Submit Bulk RFQ Quotation Request →';
         }, 3000);
     }, 600);
+}
+
+// One-tap WhatsApp route for the same form: the enquiry is logged locally first
+// (identical record to the Submit button), then handed to the yard's WhatsApp so
+// a builder on a feature phone can enquire without waiting for a call back.
+function sendBulkQuoteViaWhatsApp() {
+    const payload = collectBulkQuote();
+    const labels = { name: 'your name', phone: 'phone number', qty: 'brick count', site: 'site address' };
+    const missing = ['name', 'phone', 'qty', 'site'].filter((key) => !payload[key]);
+    if (missing.length) {
+        showToast('The yard needs ' + missing.map((key) => labels[key]).join(', ') + ' before it can quote a rate.', 'warning');
+        return;
+    }
+    if (!window.WhatsAppOrder) {
+        showToast('WhatsApp handoff unavailable — use “Submit Bulk RFQ”.', 'warning');
+        return;
+    }
+
+    let quote = null;
+    try {
+        if (window.GurukripaServices && GurukripaServices.QuotationService) {
+            quote = GurukripaServices.QuotationService.submitRFQ(payload);
+        }
+    } catch (err) {
+        console.error('[GBI] RFQ log failed before WhatsApp handoff:', err);
+    }
+
+    const sel = document.getElementById('rfqProduct');
+    const grade = (sel && sel.selectedOptions && sel.selectedOptions[0])
+        ? sel.selectedOptions[0].text : payload.product;
+    const gstin = payload.gstin.toUpperCase();
+    const gstOk = gstin && (!window.BuyerProfile || BuyerProfile.validGstin(gstin).ok);
+
+    const lines = ['*BULK RFQ — Gurukripa Bricks Industry*'];
+    if (quote && quote.id) lines.push(`Enquiry ref: *${quote.id}*`);
+    lines.push(`Name: ${payload.name}`);
+    if (payload.company) lines.push(`Firm / Project: ${payload.company}`);
+    lines.push(`Phone: ${payload.phone}`);
+    lines.push(`Grade: ${grade}`);
+    lines.push(`Quantity: ${formatNum(Number(payload.qty) || 0)} pcs`);
+    lines.push(`Site: ${payload.site}`);
+    lines.push(`Road access: ${payload.roadAccess === 'narrow' ? 'Narrow village road (mini trolley)' : 'Wide road (standard trolley)'}`);
+    lines.push(`Unloading: ${payload.unloadingReq === 'self' ? 'Self-unloading at site' : 'Bhatta unloading labour required'}`);
+    if (gstOk) lines.push(`GSTIN: ${gstin} — please bill in our firm name.`);
+    else if (gstin) lines.push(`GSTIN on file (${gstin}) is not 15 characters — kindly check before invoicing.`);
+    lines.push('');
+    lines.push('Please share the latest rate and the next dispatch slot from the Jalalpur yard.');
+
+    WhatsAppOrder.openLink(WhatsAppOrder.buildLink(lines.join('\n')));
+    showToast(quote ? 'Enquiry opened in WhatsApp and logged on this device.' : 'Enquiry opened in WhatsApp.', 'success');
 }
 
 // Nav Search Live Filter & Shortcut

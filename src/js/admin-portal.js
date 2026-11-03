@@ -189,9 +189,17 @@ function renderAdminTab(tab) {
         const IV = _erpInv();
         const money = n => '₹' + Number(n || 0).toLocaleString('en-IN');
         const link = (typeof getSafeStorage === 'function') ? getSafeStorage('gb_erp_inv_link', {}) : {};
+        // Checkout stores customer as a name string; ERP/B2B orders may carry an
+        // object. Read both shapes so no order shows up as "—".
+        const buyerName = (o) => {
+            const c = o.customer;
+            return (c && typeof c === 'object') ? (c.name || c.businessName || '') : String(c || '');
+        };
         const rows = list.length ? list.map(o => {
             const inv = link[o.id] && IV ? IV.invoiceForOrder(o.id) : null;
             const delivered = /deliver/i.test(o.status || '');
+            const firm = o.businessName || (o.customer && o.customer.businessName) || '';
+            const orderGstin = o.gstin || (o.customer && o.customer.gstin) || '';
             const action = inv
                 ? `<button class="btn btn-outline btn-sm" onclick="openInvoicePdf('${sanitizeHTML(inv.number)}','Order ${sanitizeHTML(o.id)}')">📄 Invoice PDF</button>`
                 : (delivered
@@ -199,7 +207,7 @@ function renderAdminTab(tab) {
                     : `<button class="btn btn-outline btn-sm" onclick="markOrderDelivered('${sanitizeHTML(o.id)}')">✓ Mark delivered</button>`);
             return `<tr style="border-bottom:1px solid var(--line)">
                 <td style="padding:10px 8px"><strong style="color:var(--brand)">${sanitizeHTML(o.id)}</strong><br><small style="color:var(--ink-3)">${sanitizeHTML(o.date || '')}</small></td>
-                <td style="padding:10px 8px">${sanitizeHTML((o.customer && o.customer.name) || '—')}</td>
+                <td style="padding:10px 8px">${sanitizeHTML(buyerName(o) || '—')}${firm || orderGstin ? `<br><small style="color:var(--ink-3)">${sanitizeHTML(firm || '')}${orderGstin ? ' · ' + sanitizeHTML(orderGstin) : ''}</small>` : ''}</td>
                 <td style="padding:10px 8px;text-align:right">${money(o.total)}</td>
                 <td style="padding:10px 8px"><span style="background:${delivered ? 'var(--success-bg,rgba(22,163,74,.12))' : 'var(--warning-bg)'};color:${delivered ? 'var(--success)' : 'var(--warning)'};padding:3px 8px;border-radius:12px;font-size:.75rem;font-weight:700">${sanitizeHTML(o.status || 'Processing')}</span></td>
                 <td style="padding:10px 8px;text-align:right">${inv ? '<span style="color:var(--success);font-size:.75rem;font-weight:700">Invoiced</span>' : '<span style="color:var(--ink-3);font-size:.75rem">Not billed</span>'}</td>

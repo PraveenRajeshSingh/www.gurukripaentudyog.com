@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "Enterprise Multi-Tenant Brick Supply ERP & SaaS API Backend",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/main.js",
+    "build": "tsc && node scripts/copy-sql.js",
+    "start": "node dist/src/main.js",
     "start:dev": "ts-node src/main.ts",
-    "test": "node --test test/isolation_and_pricing.test.js dist/test/*.test.js"
+    "migrate": "node dist/src/database/migrator.js",
+    "smoke": "node scripts/smoke.js",
+    "test": "node --test test/isolation_and_pricing.test.js dist/test/backend.test.js dist/test/platform.test.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",

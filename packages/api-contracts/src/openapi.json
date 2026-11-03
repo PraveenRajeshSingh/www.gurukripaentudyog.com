@@ -1,0 +1,189 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Gurukripa Ent Udyog Enterprise API",
+    "version": "1.0.0",
+    "description": "Production REST API for Gurukripa Bricks Industry — Products, 3-in-1 Estimator, Order Submission, and Delivery Logistics.",
+    "contact": {
+      "name": "Gurukripa Ent Udyog",
+      "email": "info@gurukripaentudyog.com",
+      "url": "https://www.gurukripaentudyog.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.gurukripaentudyog.com",
+      "description": "Production Server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/api/v1/products": {
+      "get": {
+        "summary": "Get all products",
+        "description": "Returns full catalog of verified clay and machine-made bricks with current rates and trolley options.",
+        "responses": {
+          "200": {
+            "description": "List of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Product" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/estimate/wall": {
+      "post": {
+        "summary": "Calculate Wall brick estimate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/WallEstimateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Wall estimate calculated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EstimateResult" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/enquiry": {
+      "post": {
+        "summary": "Submit customer enquiry or quote request",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EnquiryRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Enquiry successfully logged"
+          }
+        }
+      }
+    },
+    "/api/v1/orders": {
+      "post": {
+        "summary": "Create brick order",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateOrderRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order created with tracking ID"
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{orderId}/track": {
+      "get": {
+        "summary": "Track order status and trolley dispatch",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order tracking details"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "price": { "type": "number" },
+          "oldPrice": { "type": ["number", "null"] },
+          "unit": { "type": "string" },
+          "desc": { "type": "string" },
+          "rating": { "type": "number" },
+          "reviews": { "type": "integer" },
+          "stock": { "type": "string", "enum": ["in-stock", "low-stock", "out-of-stock"] },
+          "img": { "type": "string" },
+          "features": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "WallEstimateRequest": {
+        "type": "object",
+        "required": ["length", "height"],
+        "properties": {
+          "length": { "type": "number", "example": 20 },
+          "height": { "type": "number", "example": 10 },
+          "thickness": { "type": "number", "default": 9 },
+          "brickPrice": { "type": "number", "default": 12 }
+        }
+      },
+      "EstimateResult": {
+        "type": "object",
+        "properties": {
+          "bricks": { "type": "integer" },
+          "trolleys": { "type": "number" },
+          "cementBags": { "type": "integer" },
+          "sandCuFt": { "type": "integer" },
+          "estimatedCost": { "type": "integer" }
+        }
+      },
+      "EnquiryRequest": {
+        "type": "object",
+        "required": ["fullName", "phone", "brickType", "quantity", "deliveryLocation"],
+        "properties": {
+          "fullName": { "type": "string" },
+          "phone": { "type": "string" },
+          "email": { "type": "string" },
+          "brickType": { "type": "string" },
+          "quantity": { "type": "integer" },
+          "deliveryLocation": { "type": "string" },
+          "pincode": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      },
+      "CreateOrderRequest": {
+        "type": "object",
+        "required": ["customerName", "customerPhone", "deliveryAddress", "city", "pincode", "items"],
+        "properties": {
+          "customerName": { "type": "string" },
+          "customerPhone": { "type": "string" },
+          "deliveryAddress": { "type": "string" },
+          "city": { "type": "string" },
+          "pincode": { "type": "string" },
+          "couponCode": { "type": "string" },
+          "items": { "type": "array" }
+        }
+      }
+    }
+  }
+}

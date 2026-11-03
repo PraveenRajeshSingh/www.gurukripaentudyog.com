@@ -45,15 +45,6 @@ exports.TenantIsolationGuard = TenantIsolationGuard;
 exports.TenantIsolationGuard = TenantIsolationGuard = __decorate([
     (0, common_1.Injectable)()
 ], TenantIsolationGuard);
-const Roles = (...roles) => {
-    return (target, key, descriptor) => {
-        if (descriptor) {
-            Reflect.defineMetadata('roles', roles, descriptor.value);
-            return descriptor;
-        }
-        Reflect.defineMetadata('roles', roles, target);
-        return target;
-    };
-};
+const Roles = (...roles) => (0, common_1.SetMetadata)('jwt:roles', roles);
 exports.Roles = Roles;
 //# sourceMappingURL=tenant.guard.js.map

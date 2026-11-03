@@ -1,0 +1,27 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.END_CUSTOMER_ROLES = exports.ADMIN_ROLES = exports.MANAGER_ROLES = exports.STAFF_ROLES = exports.ORDER_TRANSITIONS = exports.QUOTATION_TRANSITIONS = exports.ENQUIRY_TRANSITIONS = void 0;
+exports.ENQUIRY_TRANSITIONS = {
+    NEW: ['UNDER_REVIEW', 'CLOSED'],
+    UNDER_REVIEW: ['QUOTATION_PREPARED', 'CLOSED'],
+    QUOTATION_PREPARED: ['UNDER_REVIEW', 'CLOSED'],
+    CLOSED: [],
+};
+exports.QUOTATION_TRANSITIONS = {
+    DRAFT: ['SENT'],
+    SENT: ['APPROVED', 'REJECTED'],
+    APPROVED: [],
+    REJECTED: [],
+};
+exports.ORDER_TRANSITIONS = {
+    CONFIRMED: ['PRODUCTION', 'CANCELLED'],
+    PRODUCTION: ['DISPATCHED', 'CANCELLED'],
+    DISPATCHED: ['DELIVERED'],
+    DELIVERED: [],
+    CANCELLED: [],
+};
+exports.STAFF_ROLES = ['STAFF', 'SALES_MANAGER', 'ADMIN', 'TENANT_ADMIN', 'SUPER_ADMIN'];
+exports.MANAGER_ROLES = ['SALES_MANAGER', 'ADMIN', 'TENANT_ADMIN', 'SUPER_ADMIN'];
+exports.ADMIN_ROLES = ['ADMIN', 'TENANT_ADMIN', 'SUPER_ADMIN'];
+exports.END_CUSTOMER_ROLES = ['CUSTOMER', 'DEALER'];
+//# sourceMappingURL=types.js.map

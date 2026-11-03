@@ -4,7 +4,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
-import '../models/models.dart';
 
 class OfflineSyncService {
   static final OfflineSyncService _instance = OfflineSyncService._internal();

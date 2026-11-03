@@ -15,7 +15,7 @@ void main() {
 }
 
 class BrickSupplySaaSApp extends StatelessWidget {
-  const BrickSupplySaaSApp({Key? key}) : super(key: key);
+  const BrickSupplySaaSApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class BrickSupplySaaSApp extends StatelessWidget {
 }
 
 class SaaSMainShell extends StatefulWidget {
-  const SaaSMainShell({Key? key}) : super(key: key);
+  const SaaSMainShell({super.key});
 
   @override
   State<SaaSMainShell> createState() => _SaaSMainShellState();
@@ -144,7 +144,7 @@ class _SaaSMainShellState extends State<SaaSMainShell> {
 }
 
 class EstimatorStudioView extends StatefulWidget {
-  const EstimatorStudioView({Key? key}) : super(key: key);
+  const EstimatorStudioView({super.key});
 
   @override
   State<EstimatorStudioView> createState() => _EstimatorStudioViewState();
@@ -153,8 +153,8 @@ class EstimatorStudioView extends StatefulWidget {
 class _EstimatorStudioViewState extends State<EstimatorStudioView> {
   double _length = 20;
   double _height = 10;
-  double _thickness = 9;
-  double _rate = 7.05; // Awwal rate
+  final double _thickness = 9;
+  final double _rate = 7.05; // Awwal rate
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +227,7 @@ class _EstimatorStudioViewState extends State<EstimatorStudioView> {
 }
 
 class CatalogView extends StatelessWidget {
-  const CatalogView({Key? key}) : super(key: key);
+  const CatalogView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +260,7 @@ class CatalogView extends StatelessWidget {
 }
 
 class DispatchesView extends StatelessWidget {
-  const DispatchesView({Key? key}) : super(key: key);
+  const DispatchesView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -288,7 +288,7 @@ class DispatchesView extends StatelessWidget {
 }
 
 class InvoicesView extends StatelessWidget {
-  const InvoicesView({Key? key}) : super(key: key);
+  const InvoicesView({super.key});
 
   @override
   Widget build(BuildContext context) {

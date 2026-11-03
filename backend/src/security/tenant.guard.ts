@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Injectable, ExecutionContext, CanActivate, UnauthorizedException, ForbiddenException, createParamDecorator } from '@nestjs/common';
+import { Injectable, ExecutionContext, CanActivate, UnauthorizedException, ForbiddenException, SetMetadata, createParamDecorator } from '@nestjs/common';
 import type { Request } from 'express';
 import { AuthenticatedUser, UserRole } from '../types/domain';
 
@@ -73,15 +73,7 @@ export class TenantIsolationGuard implements CanActivate {
 }
 
 /**
- * Roles Guard: Role-Based Access Control
+ * Roles metadata marker; enforcement lives in RolesGuard (platform/guards.ts)
+ * so role checks run on the server before the handler executes.
  */
-export const Roles = (...roles: UserRole[]) => {
-  return (target: any, key?: string | symbol, descriptor?: TypedPropertyDescriptor<any>) => {
-    if (descriptor) {
-      Reflect.defineMetadata('roles', roles, descriptor.value);
-      return descriptor;
-    }
-    Reflect.defineMetadata('roles', roles, target);
-    return target;
-  };
-};
+export const Roles = (...roles: UserRole[]) => SetMetadata('jwt:roles', roles);

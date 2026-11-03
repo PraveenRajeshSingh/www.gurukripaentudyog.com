@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: #C8460A;
+  --brand-dark: #8B2E05;
+  --brand-amber: #F5A623;
+  --brand-glow: rgba(200, 70, 10, 0.08);
+  --bg: #FAFAF9;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #F5F0EC;
+  --ink: #1C1009;
+  --ink-2: #4A3728;
+  --ink-3: #6B5545;
+  --line: rgba(200, 70, 10, 0.12);
+  --line-mid: rgba(200, 70, 10, 0.22);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: clip;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* Respect user motion preferences (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Consistent, visible keyboard focus across the app */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Custom utility components */
+.brand-btn-primary {
+  background-color: var(--brand);
+  color: #FFFFFF;
+  transition: all 0.2s ease-in-out;
+}
+.brand-btn-primary:hover {
+  background-color: var(--brand-dark);
+  transform: translateY(-1px);
+}
+
+.brand-btn-outline {
+  border: 1.5px solid var(--brand);
+  color: var(--brand);
+  transition: all 0.2s ease-in-out;
+}
+.brand-btn-outline:hover {
+  background-color: var(--brand-glow);
+}

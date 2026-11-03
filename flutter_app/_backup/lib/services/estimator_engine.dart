@@ -1,4 +1,3 @@
-import 'dart:math';
 
 class PricingCalculationResult {
   final int bricksNeeded;

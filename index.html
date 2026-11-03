@@ -45,6 +45,10 @@
 
     <!-- Google Sign-In: paste your Web OAuth Client ID (ends with .apps.googleusercontent.com) to activate. Leave empty to keep dormant. -->
     <meta name="google-client-id" content="">
+    <!-- Platform API (backend/ NestJS service, see docs/PLATFORM-API.md).
+         Set to your deployed API base, e.g. https://api.gurukripaentudyog.com/api/v1
+         Leave empty to keep the app in local-only mode (no server calls). -->
+    <meta name="gb-api-base" content="">
     <!-- Razorpay & Google Maps Integration Meta Tags -->
     <meta name="razorpay-key-id" content="">
     <meta name="google-maps-api-key" content="">
@@ -1670,17 +1674,23 @@
                 <div class="bill-row"><span data-i18n="cart.delivery">Delivery Charge</span><span class="free" id="cartDeliveryFee">FREE</span></div>
                 <div class="bill-row" id="discountRow" style="display:none"><span data-i18n="cart.savings">Coupon Savings</span><span id="discountAmt" style="color:var(--success)">-₹0</span></div>
                 
-                <!-- GST B2B Input & Instant Tax Breakup Toggle -->
-                <div style="margin:10px 0;padding:10px;background:var(--bg-subtle);border-radius:var(--r-sm);border:1px dashed var(--line-mid)">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-                        <label for="cartGstToggle" style="font-size:0.75rem;font-weight:700;color:var(--ink-2);cursor:pointer">🏢 Business GST Input (Tax Invoice)</label>
-                        <input type="checkbox" id="cartGstToggle" onchange="toggleCartGst(this.checked)" style="accent-color:var(--brand);cursor:pointer">
+                <!-- GST input for a B2B tax invoice. The split shown is the tax
+                     already inside the total — it never adds to what is paid. -->
+                <div class="cart-gst-box">
+                    <div class="cart-gst-head">
+                        <label for="cartGstToggle" class="cart-gst-title">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><line x1="9" y1="21" x2="9" y2="12"/><line x1="15" y1="21" x2="15" y2="12"/></svg>
+                            Business GSTIN (tax invoice)
+                        </label>
+                        <input type="checkbox" id="cartGstToggle" onchange="toggleCartGst(this.checked)" aria-label="Bill this order to a GST-registered firm">
                     </div>
                     <div id="cartGstFields" style="display:none;margin-top:8px">
-                        <input type="text" id="cartGstInput" class="co-input" placeholder="Enter 15-digit GSTIN (09...)" maxlength="15" style="text-transform:uppercase;font-size:0.8rem;padding:6px 10px;margin-bottom:6px" oninput="calculateCartGstBreakup()">
+                        <input type="text" id="cartGstInput" class="co-input" placeholder="15-character GSTIN (09...)" inputmode="text" maxlength="15" autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase;font-size:0.8rem;padding:6px 10px;margin-bottom:6px" oninput="calculateCartGstBreakup()">
+                        <div id="cartGstState" class="cart-gst-state"></div>
                         <div id="cartGstBreakdown" style="font-size:0.75rem;color:var(--ink-3);display:none;line-height:1.4">
+                            <div>Taxable value: <span id="cartTaxableVal">₹0</span></div>
                             <div>CGST (2.5%): <span id="cartCgstVal">₹0</span> | SGST (2.5%): <span id="cartSgstVal">₹0</span></div>
-                            <div style="color:var(--brand);font-weight:600">Input Tax Credit (ITC) Eligible</div>
+                            <div class="cart-gst-itc">Included in the total above — input tax credit claimable on the yard's tax invoice.</div>
                         </div>
                     </div>
                 </div>
@@ -1740,7 +1750,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ AUTH MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="authModal" onclick="handleAuthOverlayClick(event)">
+    <div class="modal-overlay" id="authModal" role="dialog" aria-modal="true" aria-label="Login or register" onclick="handleAuthOverlayClick(event)">
         <div class="modal-box" id="authModalBox">
             <div class="auth-modal-brand">
                 <div class="auth-brand-icon"><svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="17"/><line x1="16" y1="7" x2="16" y2="17"/></svg></div>
@@ -1955,11 +1965,11 @@
 
 
     <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="profileModal" onclick="handleProfileOverlayClick(event)">
+    <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-label="My profile" onclick="handleProfileOverlayClick(event)">
         <div class="modal-box profile-modal-box" style="padding:0;overflow:hidden">
             <!-- Compact header card: who is buying + what proof is on file -->
             <div class="profile-header">
-                <button class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close Profile Modal" style="position:absolute;top:16px;right:16px;color:#fff;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;z-index:25;pointer-events:auto">✕</button>
+                <button class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close Profile Modal" style="position:absolute;top:12px;right:12px;color:#fff;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:50%;min-width:48px;min-height:48px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;z-index:25;pointer-events:auto">✕</button>
                 <div class="profile-header-inner">
                     <div class="profile-avatar-large" id="profileAvatarLg" style="background:var(--brand)">
                         <span id="profileAvatarLetter">U</span>
@@ -2631,7 +2641,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ PRODUCT DETAIL MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay product-detail-modal" id="productModal" onclick="handleProductModalClick(event)">
+    <div class="modal-overlay product-detail-modal" id="productModal" role="dialog" aria-modal="true" aria-label="Product details" onclick="handleProductModalClick(event)">
         <div class="modal-box" id="productModalBox">
             <div class="modal-head">
                 <div></div>
@@ -2644,7 +2654,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ PINCODE & FREIGHT RATE DELIVERY MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="pincodeModal" onclick="if(event.target===this)closePincodeModal()">
+    <div class="modal-overlay" id="pincodeModal" role="dialog" aria-modal="true" aria-label="Delivery availability check" onclick="if(event.target===this)closePincodeModal()">
         <div class="modal-box" id="pincodeModalBox" style="max-width:520px;border-radius:18px">
             <div class="modal-head" style="border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
                 <div style="display:flex;align-items:center;gap:10px">
@@ -2721,7 +2731,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ LIVE ORDER & DELIVERY TRACKER MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="trackerModal" onclick="if(event.target.id==='trackerModal')closeTrackerModal()">
+    <div class="modal-overlay" id="trackerModal" role="dialog" aria-modal="true" aria-label="Order and delivery tracker" onclick="if(event.target.id==='trackerModal')closeTrackerModal()">
         <div class="modal-box tracker-modal-box">
             <div class="modal-head">
                 <div>
@@ -2751,7 +2761,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ GST TAX INVOICE MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="gstInvoiceModal" onclick="if(event.target.id==='gstInvoiceModal')closeGstInvoice()">
+    <div class="modal-overlay" id="gstInvoiceModal" role="dialog" aria-modal="true" aria-label="GST tax invoice" onclick="if(event.target.id==='gstInvoiceModal')closeGstInvoice()">
         <div class="modal-box gst-invoice-box">
             <div class="modal-head" style="padding:16px 20px;border-bottom:1px solid var(--line)">
                 <div>
@@ -2773,7 +2783,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ INVOICE PREVIEW / PDF MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="invoicePdfModal" onclick="if(event.target.id==='invoicePdfModal')closeInvoicePdf()">
+    <div class="modal-overlay" id="invoicePdfModal" role="dialog" aria-modal="true" aria-label="Invoice preview" onclick="if(event.target.id==='invoicePdfModal')closeInvoicePdf()">
         <div class="modal-box inv-pdf-box">
             <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
                 <div>
@@ -2796,7 +2806,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ COMPANY PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="companyProfileModal" onclick="if(event.target.id==='companyProfileModal')closeCompanyProfile()">
+    <div class="modal-overlay" id="companyProfileModal" role="dialog" aria-modal="true" aria-label="Company profile" onclick="if(event.target.id==='companyProfileModal')closeCompanyProfile()">
         <div class="modal-box cp-box">
             <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
                 <div>
@@ -2906,7 +2916,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ LEGAL & POLICIES MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="legalModal" onclick="if(event.target.id==='legalModal')closeLegalModal()">
+    <div class="modal-overlay" id="legalModal" role="dialog" aria-modal="true" aria-label="Legal and policies" onclick="if(event.target.id==='legalModal')closeLegalModal()">
         <div class="modal-box legal-modal-box">
             <div class="modal-head">
                 <div>
@@ -2975,7 +2985,7 @@
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ ORDER & RATE ALERT CENTER ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="notificationCenterModal" onclick="if(event.target.id==='notificationCenterModal')closeNotificationCenter()">
+    <div class="modal-overlay" id="notificationCenterModal" role="dialog" aria-modal="true" aria-label="Notifications" onclick="if(event.target.id==='notificationCenterModal')closeNotificationCenter()">
         <div class="modal-box alert-center-box">
             <div class="modal-head">
                 <div>
@@ -3220,6 +3230,7 @@
     <script src="src/services/payment-service.js" defer></script>
     <script src="src/js/i18n.js" defer></script>
     <script src="src/js/state.js" defer></script>
+    <script src="src/js/api-client.js" defer></script>
     <script src="src/js/offline-store.js" defer></script>
     <!-- Address book + buyer type load before checkout/profile use them -->
     <script src="src/js/saved-sites.js" defer></script>
@@ -3233,6 +3244,7 @@
     <script src="src/js/erp-notify.js" defer></script>
     <script src="src/js/erp-invoice.js" defer></script>
     <script src="src/js/ui.js" defer></script>
+    <script src="src/js/dialogs.js" defer></script>
     <script src="src/js/pincodeChecker.js" defer></script>
     <script src="src/js/voice-search.js" defer></script>
     <script src="src/js/products.js" defer></script>

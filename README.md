@@ -7,6 +7,31 @@
 
 ---
 
+## 0. Repository Layout (read this first)
+
+This repository is an npm-workspaces **enterprise monorepo**. The active development targets are:
+
+| Path | What it is | Shipped by |
+| --- | --- | --- |
+| `apps/web` | Next.js 14 App Router storefront (Tailwind, Zod, server API proxies) | `.github/workflows/web-ci-deploy.yml` → Vercel production |
+| `apps/android` | Native Kotlin Jetpack Compose app (Material 3, Room, Gradle wrapper included) | `.github/workflows/android-build.yml` → APK/AAB |
+| `packages/api-contracts` | Single source of truth: schemas, 5% GST math, 3-in-1 estimator, catalog, brand tokens | Built by every workspace install |
+| `backend` | NestJS multi-tenant platform API + PostgreSQL migrations | Docker / `docker-compose.yml` |
+| `src/`, `www/`, `android/`, `ios/` | **Legacy** static PWA storefront and Capacitor shells — still functional; `www/` is what GitHub Pages currently serves on the live domain | `.github/workflows/deploy.yml` (`npm run www` locally for shells) |
+
+Full architecture, math specifications and conventions: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Local setup: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md). Production release: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
+```bash
+npm ci                 # installs root + apps/web + packages/* workspaces
+npm run test:all       # contracts + web + legacy regression suites
+npm run dev:web        # Next.js app on http://localhost:3000
+```
+
+Everything below documents the legacy static storefront.
+
+---
+
 ## 1. Executive Summary & Architecture Standard
 
 Gurukripa Bricks Industry is an enterprise client-side e-commerce and manufacturing portal engineered with a **Single Source of Truth** architecture:

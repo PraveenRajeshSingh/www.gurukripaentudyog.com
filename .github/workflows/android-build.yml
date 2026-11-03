@@ -1,0 +1,67 @@
+name: Android CI & Build Automation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/android/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/android/**'
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Test and Build Android APK & AAB
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle Dependencies and Wrapper
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: Grant Execute Permission for Gradlew
+        run: chmod +x apps/android/gradlew
+
+      - name: Run Unit Tests
+        working-directory: apps/android
+        run: ./gradlew test --stacktrace
+
+      - name: Build Release APK
+        working-directory: apps/android
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Build Release Bundle (AAB for Play Store)
+        working-directory: apps/android
+        run: ./gradlew bundleRelease --stacktrace
+
+      - name: Upload Test Report on Failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: android-test-reports
+          path: apps/android/app/build/reports/tests
+          if-no-files-found: ignore
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: apps/android/app/build/outputs/apk/release/*.apk
+
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: apps/android/app/build/outputs/bundle/release/*.aab

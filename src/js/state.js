@@ -71,7 +71,9 @@ let lockoutTimerId      = null;
 // Google OAuth Client ID: leave empty to keep Google Sign-In dormant.
 // ══════════════════════════════════════════
 const APP_CONFIG = {
-    googleClientId: (document.querySelector('meta[name="google-client-id"]') || {}).content || ''
+    googleClientId: (document.querySelector('meta[name="google-client-id"]') || {}).content || '',
+    // Platform API base (docs/PLATFORM-API.md). Empty = local-only mode.
+    apiBase: (document.querySelector('meta[name="gb-api-base"]') || {}).content || ''
 };
 
 // Security: Remove plaintext passwords from stored user objects

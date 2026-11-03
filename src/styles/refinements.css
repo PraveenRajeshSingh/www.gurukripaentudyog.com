@@ -1717,3 +1717,90 @@ main [id].cta-banner {
     .calc-saved-meta { white-space: normal; }
 }
 
+/* ════════════════════════════════════════════════════════════════
+   UNIFIED DIALOG SYSTEM (dialogs.js + overlay manager in ui.js)
+   Safe areas, short/landscape screens, shared confirm/alert polish.
+   This file loads last among stylesheets — rules here win on ties. */
+
+/* Notch / punch-hole and side insets on centered desktop dialogs. */
+.modal-overlay {
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+
+/* Bottom-sheet mode (matches the <=480px rules in mobile-fixes.css,
+   which this file overrides by load order) — keep the home-indicator
+   strip clear of sheet actions. */
+@media (max-width: 480px) {
+    .modal-overlay {
+        padding: max(env(safe-area-inset-top), 0px) 0 env(safe-area-inset-bottom) 0;
+        align-items: flex-end;
+    }
+
+    .modal-box {
+        border-radius: var(--r-xl) var(--r-xl) 0 0;
+        max-height: 92dvh;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Landscape phones / split-screen / 200% zoom: short viewports get the
+   dialog edge-to-edge with internal scrolling instead of clipping. */
+@media (max-height: 560px) {
+    .modal-overlay {
+        padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+        align-items: center;
+    }
+    .modal-box { max-height: 96dvh; }
+    .modal-head { padding: 14px 18px 0; }
+    .modal-body { padding: 14px 18px; }
+}
+
+/* Overlay focus: the box itself receives programmatic focus (a11y) —
+   never show a ring around the whole dialog surface. */
+.modal-box:focus { outline: none; }
+
+/* ── GBDialogs (confirm / alert / prompt) ── */
+.gb-dialog .modal-body { padding-top: 18px; }
+.gb-dialog-row { display: flex; align-items: flex-start; gap: 12px; }
+.gb-dialog-icon { flex-shrink: 0; line-height: 0; }
+.gb-dialog-msg { font-size: .88rem; color: var(--ink-2); line-height: 1.6; }
+.gb-dialog-input { padding-left: 14px; }
+.gb-dialog-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+.gb-dialog-foot .btn { min-height: 42px; min-width: 96px; }
+.gb-btn-danger {
+    background: #dc2626;
+    color: #fff;
+    border: 1px solid #dc2626;
+    border-radius: var(--r-md);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--t);
+}
+.gb-btn-danger:hover { background: #b91c1c; }
+
+/* Busy/progress state used while a dialog action is in flight. */
+.gb-spin {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    border: 2px solid rgba(255, 255, 255, .35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: gbSpin .7s linear infinite;
+    vertical-align: -2px;
+}
+@keyframes gbSpin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+    .gb-spin { animation-duration: 1.6s; }
+}
+

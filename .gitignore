@@ -13,6 +13,10 @@ flutter_app/.env
 # Generated web bundle for native packaging (rebuilt by `npm run www`)
 www/
 
+# Local tooling/runtime artifacts (Vercel login/logs)
+.vercel-tmp/
+*.log
+
 # Capacitor / native build artifacts (keep the android/ and ios/ project source)
 android/.gradle/
 android/build/
@@ -21,3 +25,15 @@ android/local.properties
 ios/App/Pods/
 ios/App/build/
 ios/App/DerivedData/
+
+# Monorepo build artifacts
+apps/web/.next/
+apps/web/out/
+apps/web/next-env.d.ts
+apps/web/tsconfig.tsbuildinfo
+apps/android/.gradle/
+apps/android/build/
+apps/android/app/build/
+apps/android/local.properties
+packages/*/dist/
+.vercel/

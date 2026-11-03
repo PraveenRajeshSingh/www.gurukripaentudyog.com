@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Background color resource for ic_launcher_background.
+    Used by the adaptive icon on devices running API < 26.
+    Must match the brand primary: Brick Red #B33614
+-->
+<resources>
+    <color name="ic_launcher_background">#B33614</color>
+</resources>

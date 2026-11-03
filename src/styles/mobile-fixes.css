@@ -2719,3 +2719,159 @@ body.overlay-open .chatbot-box {
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   8. ENHANCED MOBILE POPUP, DIALOG & BOTTOM-SHEET SYSTEM
+   48px Touch Targets, Keyboard Avoidance & Safe-Area Padding
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Minimum 48px Touch Targets for all close and dismissal controls */
+.modal-close-btn,
+.profile-close-btn,
+.cart-close-btn,
+.drawer-close-btn,
+.gb-dialog .modal-close-btn {
+    min-width: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    touch-action: manipulation !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Mobile-first bottom sheet transformation for all dialogs and modals */
+@media (max-width: 768px) {
+    .modal-overlay {
+        padding: 0 !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        background: rgba(18, 10, 5, 0.72) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+    }
+
+    .modal-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 24px 24px 0 0 !important;
+        max-height: calc(100dvh - 28px) !important;
+        margin: 0 !important;
+        border-bottom: none !important;
+        box-shadow: 0 -12px 40px rgba(28, 16, 9, 0.3) !important;
+        animation: none !important;
+    }
+
+    .modal-overlay.open .modal-box {
+        animation: sheetSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    @keyframes sheetSlideUp {
+        from {
+            transform: translateY(100%);
+            opacity: 0.8;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Tactile Drag Handle */
+    .modal-box::before {
+        content: '' !important;
+        display: block !important;
+        width: 48px !important;
+        height: 5px !important;
+        border-radius: 3px !important;
+        background: rgba(28, 16, 9, 0.22) !important;
+        margin: 10px auto 4px auto !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Modal Head on Mobile */
+    .modal-head {
+        padding: 12px 18px !important;
+        min-height: 52px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    .modal-head::before {
+        display: none !important; /* Replaced by container drag pill */
+    }
+
+    .modal-title {
+        font-size: 1.05rem !important;
+        font-weight: 800 !important;
+        color: var(--ink) !important;
+    }
+
+    /* Modal Body with smooth scrolling and keyboard avoidance */
+    .modal-body {
+        padding: 16px 18px calc(24px + env(safe-area-inset-bottom, 16px)) !important;
+        max-height: calc(100dvh - 120px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain !important;
+    }
+
+    /* Form Fields 48px touch targets & iOS zoom prevention */
+    .modal-box input[type="text"],
+    .modal-box input[type="email"],
+    .modal-box input[type="tel"],
+    .modal-box input[type="number"],
+    .modal-box input[type="password"],
+    .modal-box select {
+        min-height: 48px !important;
+        font-size: 16px !important; /* Prevents iOS auto-zoom on input focus */
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+    }
+
+    .modal-box textarea {
+        min-height: 80px !important;
+        font-size: 16px !important;
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+    }
+
+    /* Sticky Primary Action Footers in Modals */
+    .modal-foot,
+    .gb-dialog-foot,
+    .checkout-nav-bar {
+        position: sticky !important;
+        bottom: 0 !important;
+        background: #FFFFFF !important;
+        border-top: 1px solid rgba(200, 70, 10, 0.1) !important;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 12px)) !important;
+        z-index: 10 !important;
+    }
+
+    /* Comfortable touch target for primary buttons */
+    .modal-foot .btn,
+    .gb-dialog-foot .btn,
+    .checkout-nav-bar .btn,
+    .auth-submit-btn {
+        min-height: 48px !important;
+        font-size: 0.92rem !important;
+        font-weight: 700 !important;
+        border-radius: 12px !important;
+    }
+
+    /* Centered Confirmation Dialogs Stay Compact */
+    .gb-dialog .modal-box {
+        max-width: 92% !important;
+        margin: auto !important;
+        border-radius: 20px !important;
+        animation: scaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .gb-dialog.modal-overlay {
+        align-items: center !important;
+        padding: 16px !important;
+    }
+}
+

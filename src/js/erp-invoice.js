@@ -360,6 +360,25 @@ window.GurukripaERP = window.GurukripaERP || {};
             };
         });
     }
+
+    // Storefront checkout stores `customer` as a name string plus site/pincode,
+    // while ERP documents expect a customer record. Normalise both shapes here so
+    // a delivered trolley bills the firm that actually ordered it.
+    function _orderCustomer(order) {
+        var c = order.customer;
+        if (c && typeof c === 'object') return c;
+        if (!c && !order.site) return {};
+        return {
+            name: String(c || 'Customer'),
+            phone: order.customerPhone || '',
+            gstin: order.gstin || '',
+            businessName: order.businessName || '',
+            address: order.site || '',
+            city: order.city || '',
+            stateCode: order.stateCode || ''
+        };
+    }
+
     function _place(order, customer, profile) {
         var seller = (profile.address && profile.address.stateCode) || (profile.registrations && profile.registrations.gstin || '').slice(0, 2);
         var buyer = (customer && customer.addresses && customer.addresses[0] && customer.addresses[0].stateCode) || (order && order.shipping && order.shipping.stateCode) || null;
@@ -390,10 +409,10 @@ window.GurukripaERP = window.GurukripaERP || {};
         var profile = getCompanyProfile();
         // Customer: reuse/extend CRM so statements & aging reflect it.
         var customerId = order.customerId || null;
-        var cust = order.customer || {};
+        var cust = _orderCustomer(order);
         if (!customerId && (cust.phone || cust.name)) {
             customerId = 'cu_' + String(cust.phone || cust.name).replace(/[^0-9a-zA-Z]/g, '').slice(0, 16);
-            E.CRM.upsertCustomer(Object.assign({ id: customerId, name: cust.name || 'Customer', phone: cust.phone || '', gstin: cust.gstin || '' }, {}));
+            E.CRM.upsertCustomer(Object.assign({ id: customerId, name: cust.businessName || cust.name || 'Customer', phone: cust.phone || '', gstin: cust.gstin || '', segment: cust.gstin ? 'contractor' : 'retail' }, {}));
             if (cust.address || (order.shipping && order.shipping.address)) {
                 E.CRM.addAddress(customerId, { line1: (order.shipping && order.shipping.address) || cust.address || '', city: cust.city || (order.shipping && order.shipping.city) || '', stateCode: cust.stateCode || (order.shipping && order.shipping.stateCode) || '' });
             }

@@ -1,4 +1,4 @@
-export type UserRole = 'SUPER_ADMIN' | 'TENANT_ADMIN' | 'DISPATCHER' | 'WAREHOUSE_STAFF' | 'DRIVER' | 'CUSTOMER';
+export type UserRole = 'SUPER_ADMIN' | 'TENANT_ADMIN' | 'ADMIN' | 'SALES_MANAGER' | 'STAFF' | 'DEALER' | 'DISPATCHER' | 'WAREHOUSE_STAFF' | 'DRIVER' | 'CUSTOMER';
 export interface Tenant {
     id: string;
     slug: string;

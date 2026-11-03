@@ -303,6 +303,9 @@ function recordOrder(orderId, total, status) {
         now.getFullYear()
     ].join('/');
     const val = (id) => ((document.getElementById(id) || {}).value || '').trim();
+    // B2B identity travels with the order, so the invoice the yard issues after
+    // delivery is billed to the firm and not to a walk-in cash sale.
+    const gstin = window.cartGstNumber || (user && user.gstin) || '';
     orders.unshift({
         id: orderId,
         date: date,
@@ -311,8 +314,12 @@ function recordOrder(orderId, total, status) {
         total: total,
         status: status || 'Processing',
         customer: val('coName') || (user && user.name) || '',
+        customerPhone: val('coPhone') || (user && user.mobile) || '',
         site: val('coAddress'),
-        pincode: val('coPincode')
+        city: val('coCity') || '',
+        pincode: val('coPincode'),
+        gstin: gstin,
+        businessName: gstin ? ((user && user.businessName) || '') : ''
     });
     setSafeStorage('gb_orders', orders);
     return orders[0];

@@ -267,13 +267,22 @@ function saveConstructionSite() {
 }
 
 // Profile-side shortcut: name a site without going through checkout first.
-function addSiteFromProfile() {
+async function addSiteFromProfile() {
     if (!user) { openAuth('login'); return; }
-    const nickname = window.prompt('Site name — e.g. "Jalalpur Site #2":', '');
+    if (!window.GBDialogs) return;
+    const nickname = await GBDialogs.prompt({ title: 'Add saved site', label: 'Site name', placeholder: 'e.g. Jalalpur Site #2', required: true, confirmLabel: 'Next' });
     if (nickname === null) return;
-    const address = window.prompt('Street / village / landmark:', user.address || '') || '';
-    const pincode = window.prompt('Delivery pincode (6 digits):', '') || '';
-    const road = window.prompt('Road access at the plot — type "narrow" for a village lane, anything else means a truck can reach it:', 'wide') || 'wide';
+    const address = await GBDialogs.prompt({ title: 'Add saved site', label: 'Street / village / landmark', value: user.address || '', confirmLabel: 'Next' });
+    if (address === null) return;
+    const pincode = await GBDialogs.prompt({ title: 'Add saved site', label: 'Delivery pincode (6 digits)', confirmLabel: 'Next' });
+    if (pincode === null) return;
+    const road = await GBDialogs.prompt({
+        title: 'Add saved site',
+        label: 'Road access at the plot',
+        value: 'wide',
+        message: 'Type "narrow" for a village lane; anything else means a truck can reach it.'
+    });
+    if (road === null) return;
 
     const res = SavedSites.add({
         nickname: nickname,
@@ -289,13 +298,14 @@ function addSiteFromProfile() {
 
 function renderSavedSites() { SavedSites.renderAll(); }
 
-function editSavedSite(id) {
+async function editSavedSite(id) {
     const s = SavedSites.get(id);
-    if (!s) return;
-    const nickname = window.prompt('Site name', s.nickname);
+    if (!s || !window.GBDialogs) return;
+    const nickname = await GBDialogs.prompt({ title: 'Edit saved site', label: 'Site name', value: s.nickname, required: true, confirmLabel: 'Next' });
     if (nickname === null) return;
-    const address = window.prompt('Street / landmark', s.address || '') || '';
-    const pincode = window.prompt('Delivery pincode', s.pincode || '');
+    const address = await GBDialogs.prompt({ title: 'Edit saved site', label: 'Street / landmark', value: s.address || '', confirmLabel: 'Next' });
+    if (address === null) return;
+    const pincode = await GBDialogs.prompt({ title: 'Edit saved site', label: 'Delivery pincode', value: s.pincode || '' });
     if (pincode === null) return;
     const res = SavedSites.update(id, { nickname: nickname.trim(), address: address.trim(), pincode: pincode.trim() });
     if (res.error) { showToast(res.error, 'error'); return; }
@@ -304,10 +314,17 @@ function editSavedSite(id) {
 
 function deleteSavedSite(id) {
     const s = SavedSites.get(id);
-    if (!s) return;
-    if (!window.confirm('Remove "' + s.nickname + '" from your saved sites?')) return;
-    SavedSites.remove(id);
-    showToast('Site removed from this device.', 'success');
+    if (!s || !window.GBDialogs) return;
+    GBDialogs.confirm({
+        title: 'Remove saved site?',
+        message: 'Remove "' + s.nickname + '" from your saved sites on this device?',
+        confirmLabel: 'Remove',
+        danger: true
+    }).then(function (go) {
+        if (!go) return;
+        SavedSites.remove(id);
+        showToast('Site removed from this device.', 'success');
+    });
 }
 
 function makeSavedSiteDefault(id) {

@@ -11,4 +11,4 @@ export declare const CurrentUser: (...dataOrPipes: unknown[]) => ParameterDecora
 export declare class TenantIsolationGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean;
 }
-export declare const Roles: (...roles: UserRole[]) => (target: any, key?: string | symbol, descriptor?: TypedPropertyDescriptor<any>) => any;
+export declare const Roles: (...roles: UserRole[]) => import("@nestjs/common").CustomDecorator<string>;

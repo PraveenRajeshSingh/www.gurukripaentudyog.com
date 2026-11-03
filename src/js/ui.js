@@ -287,6 +287,15 @@ function overlayLock() {
     __overlayFocus.push(document.activeElement);
     if (__overlayCount === 0) document.body.classList.add('overlay-open');
     __overlayCount++;
+    // Move keyboard / screen-reader focus into the dialog that just opened.
+    // Fields that want the caret (pincode, search) focus themselves after.
+    setTimeout(function () {
+        const ov = activeOverlayEl();
+        if (!ov || ov.contains(document.activeElement)) return;
+        const target = ov.querySelector('[data-autofocus]') || ov.querySelector('.modal-box') || ov;
+        if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+        try { target.focus({ preventScroll: true }); } catch (_e) {}
+    }, 40);
 }
 function overlayUnlock() {
     const prev = __overlayFocus.pop();
@@ -346,7 +355,17 @@ document.addEventListener('keydown', e => {
             return;
         }
         const pair = activeOverlay();
-        if (pair) { pair[1](); e.preventDefault(); }
+        if (pair) {
+            // Unsaved form text? Ask before discarding (GBDialogs, dialogs.js).
+            if (window.GBDialogs && pair[0] !== 'gbDialogModal' &&
+                GBDialogs.isDirty(document.getElementById(pair[0]))) {
+                GBDialogs.requestDismiss(document.getElementById(pair[0]), pair);
+                e.preventDefault();
+                return;
+            }
+            pair[1]();
+            e.preventDefault();
+        }
     } else if (e.key === 'Tab') {
         const ov = activeOverlayEl();
         if (!ov) return;
