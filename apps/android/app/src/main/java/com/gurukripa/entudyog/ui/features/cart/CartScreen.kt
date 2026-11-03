@@ -13,12 +13,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gurukripa.entudyog.R
 import com.gurukripa.entudyog.core.theme.BrandTerracotta
 import com.gurukripa.entudyog.core.theme.SemanticSuccess
 import com.gurukripa.entudyog.core.util.PricingEngine
 import com.gurukripa.entudyog.data.model.CartItem
 import com.gurukripa.entudyog.data.repository.CartRepository
 import com.gurukripa.entudyog.ui.common.GBConfirmDialog
+import com.gurukripa.entudyog.ui.common.LocalizedResources
+import com.gurukripa.entudyog.ui.common.str
+import com.gurukripa.entudyog.ui.common.strFmt
 import kotlinx.coroutines.launch
 
 @Composable
@@ -27,12 +31,17 @@ fun CartScreen(
     onNavigateToCatalog: () -> Unit
 ) {
     val context = LocalContext.current
+    // Capture the active-language Resources during composition so the WhatsApp
+    // handoff (an imperative onClick) can resolve localized text outside compose.
+    val res = LocalizedResources.current
     val coroutineScope = rememberCoroutineScope()
     val cartItems by cartRepository.cartItems.collectAsState(initial = emptyList())
 
     var couponInput by remember { mutableStateOf("") }
     var appliedCoupon by remember { mutableStateOf<String?>(null) }
-    var couponError by remember { mutableStateOf<String?>(null) }
+    // Store the resource id, not the resolved text, so a mid-session language
+    // switch re-renders the message in the new language.
+    var couponError by remember { mutableStateOf<Int?>(null) }
     // Destructive-action guard: removing a whole line asks first (§3 of the popup spec).
     var pendingRemove by remember { mutableStateOf<CartItem?>(null) }
 
@@ -47,7 +56,7 @@ fun CartScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "Your Cart & Invoice",
+            text = str(R.string.cart_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Black
         )
@@ -60,13 +69,13 @@ fun CartScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Your cart is empty", fontWeight = FontWeight.Bold)
+                    Text(str(R.string.cart_empty), fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         onClick = onNavigateToCatalog,
                         colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta)
                     ) {
-                        Text("Browse Bricks")
+                        Text(str(R.string.cart_browse))
                     }
                 }
             }
@@ -92,7 +101,7 @@ fun CartScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(item.productName, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                                 Text(
-                                    "${PricingEngine.formatNumber(item.quantity)} pcs @ ₹${item.unitPrice}",
+                                    strFmt(R.string.cart_item_line, PricingEngine.formatNumber(item.quantity), "${item.unitPrice}"),
                                     fontSize = 11.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -151,7 +160,7 @@ fun CartScreen(
                         OutlinedTextField(
                             value = couponInput,
                             onValueChange = { couponInput = it },
-                            placeholder = { Text("Coupon (e.g. GURU10)") },
+                            placeholder = { Text(str(R.string.coupon_placeholder)) },
                             singleLine = true,
                             modifier = Modifier.weight(1f)
                         )
@@ -162,19 +171,19 @@ fun CartScreen(
                                     appliedCoupon = c
                                     couponError = null
                                 } else {
-                                    couponError = "Invalid coupon code"
+                                    couponError = R.string.coupon_invalid
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta)
                         ) {
-                            Text("Apply")
+                            Text(str(R.string.action_apply))
                         }
                     }
-                    if (couponError != null) {
-                        Text(couponError!!, color = MaterialTheme.colorScheme.error, fontSize = 11.sp)
+                    couponError?.let {
+                        Text(str(it), color = MaterialTheme.colorScheme.error, fontSize = 11.sp)
                     }
-                    if (appliedCoupon != null) {
-                        Text("✓ Coupon $appliedCoupon applied!", color = SemanticSuccess, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    appliedCoupon?.let {
+                        Text(strFmt(R.string.coupon_applied, it), color = SemanticSuccess, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -186,22 +195,22 @@ fun CartScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Subtotal", fontSize = 12.sp)
+                        Text(str(R.string.lbl_subtotal), fontSize = 12.sp)
                         Text(PricingEngine.formatINR(subtotal), fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                     if (discount > 0) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("Discount ($appliedCoupon)", fontSize = 12.sp, color = SemanticSuccess)
+                            Text(strFmt(R.string.lbl_discount, appliedCoupon.orEmpty()), fontSize = 12.sp, color = SemanticSuccess)
                             Text("-${PricingEngine.formatINR(discount)}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = SemanticSuccess)
                         }
                     }
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("5% GST (CGST 2.5% + SGST 2.5%)", fontSize = 12.sp)
+                        Text(str(R.string.lbl_gst), fontSize = 12.sp)
                         Text(PricingEngine.formatINR(gst.totalTax), fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                     Divider(modifier = Modifier.padding(vertical = 4.dp))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Grand Total", fontSize = 15.sp, fontWeight = FontWeight.Black)
+                        Text(str(R.string.lbl_grand_total), fontSize = 15.sp, fontWeight = FontWeight.Black)
                         Text(PricingEngine.formatINR(gst.grandTotal), fontSize = 18.sp, fontWeight = FontWeight.Black, color = BrandTerracotta)
                     }
 
@@ -209,20 +218,23 @@ fun CartScreen(
 
                     Button(
                         onClick = {
-                            var text = "Hello Gurukripa Ent Udyog! I would like to place an order:%0A"
+                            val builder = StringBuilder(res.getString(R.string.cart_wa_intro))
+                            builder.append("\n")
                             cartItems.forEachIndexed { i, it ->
-                                text += "${i + 1}. ${it.productName} - ${it.quantity} pcs (${PricingEngine.formatINR(it.totalCost)})%0A"
+                                builder.append(res.getString(R.string.cart_wa_line, i + 1, it.productName, PricingEngine.formatNumber(it.quantity), PricingEngine.formatINR(it.totalCost)))
+                                builder.append("\n")
                             }
-                            text += "Grand Total (with 5% GST): ${PricingEngine.formatINR(gst.grandTotal)}%0A"
-                            text += "Please confirm trolley dispatch schedule."
+                            builder.append(res.getString(R.string.cart_wa_total, PricingEngine.formatINR(gst.grandTotal)))
+                            builder.append("\n")
+                            builder.append(res.getString(R.string.cart_wa_footer))
 
-                            val uri = Uri.parse("https://wa.me/919198923230?text=${Uri.encode(text)}")
+                            val uri = Uri.parse("https://wa.me/919198923230?text=${Uri.encode(builder.toString())}")
                             context.startActivity(Intent(Intent.ACTION_VIEW, uri))
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = SemanticSuccess),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Complete Order via WhatsApp", fontWeight = FontWeight.Bold)
+                        Text(str(R.string.cart_complete_wa), fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -231,9 +243,9 @@ fun CartScreen(
 
     pendingRemove?.let { item ->
         GBConfirmDialog(
-            title = "Remove from cart?",
-            message = "${item.productName} — ${PricingEngine.formatNumber(item.quantity)} pcs (${PricingEngine.formatINR(item.totalCost)}) will be taken out of this cart.",
-            confirmLabel = "Remove",
+            title = str(R.string.cart_remove_title),
+            message = strFmt(R.string.cart_remove_message, item.productName, PricingEngine.formatNumber(item.quantity), PricingEngine.formatINR(item.totalCost)),
+            confirmLabel = str(R.string.action_remove),
             danger = true,
             onConfirm = {
                 coroutineScope.launch { cartRepository.removeItem(item) }

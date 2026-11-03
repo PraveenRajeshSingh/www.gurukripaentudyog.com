@@ -12,15 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.gurukripa.entudyog.R
 import com.gurukripa.entudyog.core.theme.BrandTerracotta
 import com.gurukripa.entudyog.data.repository.CartRepository
 import com.gurukripa.entudyog.data.repository.ProductRepository
+import com.gurukripa.entudyog.ui.common.LanguageSwitcher
+import com.gurukripa.entudyog.ui.common.str
 import com.gurukripa.entudyog.ui.features.cart.CartScreen
 import com.gurukripa.entudyog.ui.features.catalog.CatalogScreen
 import com.gurukripa.entudyog.ui.features.contact.ContactScreen
@@ -32,7 +36,7 @@ import com.gurukripa.entudyog.ui.features.profile.ProfileViewModel
 data class BottomNavItem(
     val screen: Screen,
     val icon: ImageVector,
-    val label: String
+    val labelRes: Int
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,12 +47,12 @@ fun MainNavHost(
     cartRepository: CartRepository
 ) {
     val navItems = listOf(
-        BottomNavItem(Screen.Home, Icons.Default.Home, "Home"),
-        BottomNavItem(Screen.Catalog, Icons.Default.ShoppingCart, "Catalog"),
-        BottomNavItem(Screen.Estimator, Icons.Default.Build, "Estimator"),
-        BottomNavItem(Screen.Cart, Icons.Default.ShoppingCart, "Cart"),
-        BottomNavItem(Screen.Profile, Icons.Default.Person, "Profile"),
-        BottomNavItem(Screen.Contact, Icons.Default.Call, "Contact")
+        BottomNavItem(Screen.Home, Icons.Default.Home, R.string.nav_home),
+        BottomNavItem(Screen.Catalog, Icons.Default.ShoppingCart, R.string.nav_catalog),
+        BottomNavItem(Screen.Estimator, Icons.Default.Build, R.string.nav_estimator),
+        BottomNavItem(Screen.Cart, Icons.Default.ShoppingCart, R.string.nav_cart),
+        BottomNavItem(Screen.Profile, Icons.Default.Person, R.string.nav_profile),
+        BottomNavItem(Screen.Contact, Icons.Default.Call, R.string.nav_contact)
     )
 
     Scaffold(
@@ -56,9 +60,12 @@ fun MainNavHost(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Gurukripa Ent Udyog",
+                        text = str(R.string.company_name),
                         style = MaterialTheme.typography.titleMedium
                     )
+                },
+                actions = {
+                    LanguageSwitcher(modifier = Modifier.padding(end = 12.dp))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = BrandTerracotta,
@@ -72,9 +79,10 @@ fun MainNavHost(
                 val currentRoute = navBackStackEntry?.destination?.route
 
                 navItems.forEach { item ->
+                    val label = str(item.labelRes)
                     NavigationBarItem(
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) },
+                        icon = { Icon(item.icon, contentDescription = label) },
+                        label = { Text(label) },
                         selected = currentRoute == item.screen.route,
                         onClick = {
                             navController.navigate(item.screen.route) {

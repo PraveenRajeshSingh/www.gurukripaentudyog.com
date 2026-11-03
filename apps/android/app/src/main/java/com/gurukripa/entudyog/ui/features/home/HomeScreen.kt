@@ -15,6 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gurukripa.entudyog.core.theme.BrandDark
 import com.gurukripa.entudyog.core.theme.BrandTerracotta
+import com.gurukripa.entudyog.R
+import com.gurukripa.entudyog.ui.common.LocalizedResources
+import com.gurukripa.entudyog.ui.common.str
 
 @Composable
 fun HomeScreen(
@@ -23,6 +26,8 @@ fun HomeScreen(
     onNavigateToContact: () -> Unit
 ) {
     val context = LocalContext.current
+    // Captured for the imperative WhatsApp onClick (composable scope only).
+    val res = LocalizedResources.current
     val scrollState = rememberScrollState()
 
     Column(
@@ -39,21 +44,21 @@ fun HomeScreen(
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(
-                    text = "GURUKRIPA ENT UDYOG",
+                    text = str(R.string.home_eyebrow),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.tertiary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "गुरुकृपा ईंट उद्योग",
+                    text = str(R.string.company_name),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Black,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Direct kiln bhatta manufacturer of double-fired red clay, Awwal, and machine wirecut bricks on Jaunpur–Varanasi Highway.",
+                    text = str(R.string.home_tagline),
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
                 )
@@ -69,13 +74,13 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("3-in-1 Estimator", fontSize = 12.sp)
+                        Text(str(R.string.home_cta_estimator), fontSize = 12.sp)
                     }
                     OutlinedButton(
                         onClick = onNavigateToCatalog,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("View Rates", fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary)
+                        Text(str(R.string.home_cta_view_rates), fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }
@@ -83,7 +88,7 @@ fun HomeScreen(
 
         // Verified Technical Standards
         Text(
-            text = "Verified Manufacturing & Supply Standards",
+            text = str(R.string.home_standards_title),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold
         )
@@ -94,9 +99,9 @@ fun HomeScreen(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    Text("Trolley Capacity", fontSize = 11.sp, color = MaterialTheme.colorScheme.outline)
-                    Text("4,000 Bricks", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    Text("Standard tractor load", fontSize = 10.sp)
+                    Text(str(R.string.home_trolley_capacity), fontSize = 11.sp, color = MaterialTheme.colorScheme.outline)
+                    Text(str(R.string.home_trolley_count), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text(str(R.string.home_trolley_note), fontSize = 10.sp)
                 }
             }
             Card(
@@ -104,9 +109,9 @@ fun HomeScreen(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    Text("GST Invoicing", fontSize = 11.sp, color = MaterialTheme.colorScheme.outline)
-                    Text("5% GST", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    Text("2.5% CGST + 2.5% SGST", fontSize = 10.sp)
+                    Text(str(R.string.home_gst_invoicing), fontSize = 11.sp, color = MaterialTheme.colorScheme.outline)
+                    Text(str(R.string.home_gst_value), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text(str(R.string.home_gst_note), fontSize = 10.sp)
                 }
             }
         }
@@ -118,13 +123,13 @@ fun HomeScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Direct Kiln Logistics & Dispatch",
+                    text = str(R.string.home_logistics_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Fleet of 12 trolleys delivering across Jaunpur, Varanasi, Jalalpur, and Trilochan.",
+                    text = str(R.string.home_logistics_desc),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -145,18 +150,18 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Call: +91 91989 23230", fontSize = 12.sp)
+                        Text(str(R.string.home_call_btn), fontSize = 12.sp)
                     }
 
                     Button(
                         onClick = {
-                            val uri = Uri.parse("https://wa.me/919198923230?text=Hello%20Gurukripa%20Ent%20Udyog,%20I%20need%20a%20quote.")
+                            val uri = Uri.parse("https://wa.me/919198923230?text=${Uri.encode(res.getString(R.string.home_wa_greeting))}")
                             context.startActivity(Intent(Intent.ACTION_VIEW, uri))
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = com.gurukripa.entudyog.core.theme.SemanticSuccess),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("WhatsApp", fontSize = 12.sp)
+                        Text(str(R.string.action_whatsapp), fontSize = 12.sp)
                     }
                 }
             }

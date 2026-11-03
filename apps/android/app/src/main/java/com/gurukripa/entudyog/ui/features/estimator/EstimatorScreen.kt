@@ -18,6 +18,9 @@ import com.gurukripa.entudyog.core.theme.BrandTerracotta
 import com.gurukripa.entudyog.core.theme.SemanticSuccess
 import com.gurukripa.entudyog.core.util.EstimatorEngine
 import com.gurukripa.entudyog.core.util.PricingEngine
+import com.gurukripa.entudyog.R
+import com.gurukripa.entudyog.ui.common.LocalizedResources
+import com.gurukripa.entudyog.ui.common.str
 import com.gurukripa.entudyog.data.model.CartItem
 import com.gurukripa.entudyog.data.repository.CartRepository
 import kotlinx.coroutines.launch
@@ -28,6 +31,8 @@ fun EstimatorScreen(
     onNavigateToCart: () -> Unit
 ) {
     val context = LocalContext.current
+    // Captured for the imperative WhatsApp onClick (composable scope only).
+    val res = LocalizedResources.current
     val coroutineScope = rememberCoroutineScope()
     var selectedTab by remember { mutableStateOf(0) } // 0: Wall, 1: House, 2: Boundary
 
@@ -65,12 +70,12 @@ fun EstimatorScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "3-in-1 Estimator Studio",
+            text = str(R.string.est_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Black
         )
         Text(
-            text = "Calculates exact bricks, trolleys (4,000/tr), cement bags and sand volume with 5% breakage allowance.",
+            text = str(R.string.est_subtitle),
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -78,13 +83,13 @@ fun EstimatorScreen(
         // Tab Selector
         TabRow(selectedTabIndex = selectedTab) {
             Tab(selected = selectedTab == 0, onClick = { selectedTab = 0 }) {
-                Text("Wall", modifier = Modifier.padding(12.dp), fontSize = 13.sp)
+                Text(str(R.string.tab_wall), modifier = Modifier.padding(12.dp), fontSize = 13.sp)
             }
             Tab(selected = selectedTab == 1, onClick = { selectedTab = 1 }) {
-                Text("House", modifier = Modifier.padding(12.dp), fontSize = 13.sp)
+                Text(str(R.string.tab_house), modifier = Modifier.padding(12.dp), fontSize = 13.sp)
             }
             Tab(selected = selectedTab == 2, onClick = { selectedTab = 2 }) {
-                Text("Boundary", modifier = Modifier.padding(12.dp), fontSize = 13.sp)
+                Text(str(R.string.tab_boundary), modifier = Modifier.padding(12.dp), fontSize = 13.sp)
             }
         }
 
@@ -99,14 +104,14 @@ fun EstimatorScreen(
                         OutlinedTextField(
                             value = lengthStr,
                             onValueChange = { lengthStr = it },
-                            label = { Text("Length (ft)") },
+                            label = { Text(str(R.string.field_length_ft)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.weight(1f)
                         )
                         OutlinedTextField(
                             value = heightStr,
                             onValueChange = { heightStr = it },
-                            label = { Text("Height (ft)") },
+                            label = { Text(str(R.string.field_height_ft)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.weight(1f)
                         )
@@ -115,7 +120,7 @@ fun EstimatorScreen(
                     OutlinedTextField(
                         value = sqftStr,
                         onValueChange = { sqftStr = it },
-                        label = { Text("Built-up Plot Area (sq. ft)") },
+                        label = { Text(str(R.string.field_plot_area)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -123,7 +128,7 @@ fun EstimatorScreen(
                     OutlinedTextField(
                         value = perimStr,
                         onValueChange = { perimStr = it },
-                        label = { Text("Perimeter Length (ft)") },
+                        label = { Text(str(R.string.field_perimeter)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -138,7 +143,7 @@ fun EstimatorScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Material Breakdown",
+                    text = str(R.string.material_breakdown),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
@@ -148,14 +153,14 @@ fun EstimatorScreen(
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Card(modifier = Modifier.weight(1f)) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Bricks", fontSize = 11.sp)
+                            Text(str(R.string.res_bricks), fontSize = 11.sp)
                             Text(PricingEngine.formatNumber(result.bricks), fontWeight = FontWeight.Black, fontSize = 16.sp, color = BrandTerracotta)
                         }
                     }
                     Card(modifier = Modifier.weight(1f)) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Trolleys", fontSize = 11.sp)
-                            Text("${result.trolleys} tr", fontWeight = FontWeight.Black, fontSize = 16.sp)
+                            Text(str(R.string.res_trolleys), fontSize = 11.sp)
+                            Text("${result.trolleys} ${str(R.string.res_trolley_unit)}", fontWeight = FontWeight.Black, fontSize = 16.sp)
                         }
                     }
                 }
@@ -165,14 +170,14 @@ fun EstimatorScreen(
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Card(modifier = Modifier.weight(1f)) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Cement Bags", fontSize = 11.sp)
+                            Text(str(R.string.res_cement), fontSize = 11.sp)
                             Text("${result.cementBags}", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                         }
                     }
                     Card(modifier = Modifier.weight(1f)) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Sand Volume", fontSize = 11.sp)
-                            Text("${result.sandCuFt} cu.ft", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                            Text(str(R.string.res_sand), fontSize = 11.sp)
+                            Text("${result.sandCuFt} ${str(R.string.res_sand_unit)}", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                         }
                     }
                 }
@@ -186,9 +191,9 @@ fun EstimatorScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
-                        Text("ESTIMATED BRICK BUDGET", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = BrandTerracotta)
+                        Text(str(R.string.est_budget_label), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = BrandTerracotta)
                         Text(PricingEngine.formatINR(result.estimatedCost), fontSize = 24.sp, fontWeight = FontWeight.Black, color = BrandTerracotta)
-                        Text("Ex-bhatta loading price with 5% breakage allowance", fontSize = 10.sp)
+                        Text(str(R.string.est_budget_note), fontSize = 10.sp)
                     }
                 }
 
@@ -197,23 +202,31 @@ fun EstimatorScreen(
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
                         onClick = {
-                            val msg = "Hello Gurukripa! Please provide an official quote: Bricks required: ${result.bricks} (${result.trolleys} trolleys). Estimated budget: ${PricingEngine.formatINR(result.estimatedCost)}."
+                            val msg = res.getString(
+                                R.string.est_wa_message,
+                                PricingEngine.formatNumber(result.bricks),
+                                "${result.trolleys}",
+                                PricingEngine.formatINR(result.estimatedCost)
+                            )
                             val uri = Uri.parse("https://wa.me/919198923230?text=${Uri.encode(msg)}")
                             context.startActivity(Intent(Intent.ACTION_VIEW, uri))
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = SemanticSuccess),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("WhatsApp Quote", fontSize = 12.sp)
+                        Text(str(R.string.est_whatsapp_quote), fontSize = 12.sp)
                     }
 
                     Button(
                         onClick = {
+                            val cartName = if (selectedTab == 0) res.getString(R.string.est_cart_wall)
+                                else if (selectedTab == 1) res.getString(R.string.est_cart_house)
+                                else res.getString(R.string.est_cart_boundary)
                             coroutineScope.launch {
                                 cartRepository.addItem(
                                     CartItem(
                                         productId = 1,
-                                        productName = if (selectedTab == 0) "Wall Bricks" else if (selectedTab == 1) "House Bricks" else "Boundary Bricks",
+                                        productName = cartName,
                                         unitPrice = brickPrice,
                                         quantity = result.bricks
                                     )
@@ -224,7 +237,7 @@ fun EstimatorScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Add to Cart", fontSize = 12.sp)
+                        Text(str(R.string.est_add_to_cart), fontSize = 12.sp)
                     }
                 }
             }

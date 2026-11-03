@@ -16,13 +16,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gurukripa.entudyog.R
 import com.gurukripa.entudyog.core.theme.BrandTerracotta
 import com.gurukripa.entudyog.core.theme.SemanticSuccess
 import com.gurukripa.entudyog.ui.common.GBEnquiryDialog
+import com.gurukripa.entudyog.ui.common.LocalizedResources
+import com.gurukripa.entudyog.ui.common.str
 
 @Composable
 fun ContactScreen() {
     val context = LocalContext.current
+    // Captured for the imperative WhatsApp onClick (composable scope only).
+    val res = LocalizedResources.current
     var showEnquiry by remember { mutableStateOf(false) }
 
     Column(
@@ -33,12 +38,12 @@ fun ContactScreen() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Contact Gurukripa Ent Udyog",
+            text = str(R.string.contact_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Black
         )
         Text(
-            text = "Direct connection to kiln sales desk and tractor trolley logistics.",
+            text = str(R.string.contact_subtitle),
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -48,14 +53,14 @@ fun ContactScreen() {
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Bhatta Location", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text("Jaunpur–Varanasi Highway, Uttar Pradesh, India", fontSize = 13.sp)
-                Text("Convenient off-highway turning for tractor trolleys and multi-axle trucks.", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(str(R.string.contact_bhatta_location), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text(str(R.string.kiln_address), fontSize = 13.sp)
+                Text(str(R.string.contact_address_note), fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
                 Divider()
 
-                Text("Telephone & WhatsApp", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text("+91 91989 23230", fontSize = 16.sp, fontWeight = FontWeight.Black, color = BrandTerracotta)
+                Text(str(R.string.contact_phone_whatsapp), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text(str(R.string.phone_number), fontSize = 16.sp, fontWeight = FontWeight.Black, color = BrandTerracotta)
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
@@ -66,30 +71,30 @@ fun ContactScreen() {
                         colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Call Kiln")
+                        Text(str(R.string.contact_call_kiln))
                     }
 
                     Button(
                         onClick = {
-                            val uri = Uri.parse("https://wa.me/919198923230?text=Hello%20Gurukripa%20Ent%20Udyog!")
+                            val uri = Uri.parse("https://wa.me/919198923230?text=${Uri.encode(res.getString(R.string.contact_wa_greeting))}")
                             context.startActivity(Intent(Intent.ACTION_VIEW, uri))
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = SemanticSuccess),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("WhatsApp")
+                        Text(str(R.string.action_whatsapp))
                     }
                 }
 
                 Divider()
 
-                Text("Official Email", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text("info@gurukripaentudyog.com", fontSize = 13.sp)
+                Text(str(R.string.contact_email_label), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text(str(R.string.contact_email), fontSize = 13.sp)
 
                 Divider()
 
-                Text("Operating Hours", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text("Monday – Saturday: 8:00 AM – 6:00 PM\nSunday: Advance scheduled dispatches only", fontSize = 12.sp)
+                Text(str(R.string.contact_hours_label), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text(str(R.string.contact_hours_value), fontSize = 12.sp)
             }
         }
 
@@ -99,13 +104,13 @@ fun ContactScreen() {
             colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Send Enquiry / Request Quotation", fontWeight = FontWeight.Bold)
+            Text(str(R.string.contact_enquiry_btn), fontWeight = FontWeight.Bold)
         }
     }
 
     if (showEnquiry) {
         GBEnquiryDialog(
-            subject = "Bulk Project Quotation",
+            subject = str(R.string.enquiry_subject_bulk),
             onDismiss = { showEnquiry = false }
         )
     }

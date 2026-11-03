@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
+import com.gurukripa.entudyog.R
 import com.gurukripa.entudyog.core.theme.SemanticDanger
 import com.gurukripa.entudyog.core.theme.SemanticSuccess
 
@@ -69,12 +70,15 @@ enum class GBMessageKind { SUCCESS, ERROR, INFO }
 fun GBConfirmDialog(
     title: String,
     message: String,
-    confirmLabel: String = "Confirm",
-    dismissLabel: String = "Cancel",
+    confirmLabel: String? = null,
+    dismissLabel: String? = null,
     danger: Boolean = false,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Defaults resolved here (not in the signature) so they follow the active language.
+    val confirm = confirmLabel ?: str(R.string.action_confirm)
+    val cancel = dismissLabel ?: str(R.string.action_cancel)
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -83,10 +87,10 @@ fun GBConfirmDialog(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (danger) SemanticDanger else MaterialTheme.colorScheme.primary
                 )
-            ) { Text(confirmLabel, fontWeight = FontWeight.Bold) }
+            ) { Text(confirm, fontWeight = FontWeight.Bold) }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismiss) { Text(dismissLabel) }
+            OutlinedButton(onClick = onDismiss) { Text(cancel) }
         },
         title = { Text(title, fontWeight = FontWeight.Black) },
         text = { Text(message, style = MaterialTheme.typography.bodyMedium) },
@@ -102,9 +106,10 @@ fun GBMessageDialog(
     title: String,
     message: String,
     kind: GBMessageKind = GBMessageKind.INFO,
-    primaryLabel: String = "OK",
+    primaryLabel: String? = null,
     onDismiss: () -> Unit
 ) {
+    val okLabel = primaryLabel ?: str(R.string.action_ok)
     val (tint, icon) = when (kind) {
         GBMessageKind.SUCCESS -> SemanticSuccess to Icons.Filled.Check
         GBMessageKind.ERROR -> SemanticDanger to Icons.Filled.Close
@@ -113,7 +118,7 @@ fun GBMessageDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            Button(onClick = onDismiss) { Text(primaryLabel, fontWeight = FontWeight.Bold) }
+            Button(onClick = onDismiss) { Text(okLabel, fontWeight = FontWeight.Bold) }
         },
         icon = {
             Surface(shape = MaterialTheme.shapes.large, color = tint.copy(alpha = 0.12f)) {
@@ -214,7 +219,7 @@ private fun GBDialogHeader(title: String, onDismiss: () -> Unit, dismissible: Bo
         )
         if (dismissible) {
             IconButton(onClick = onDismiss, modifier = Modifier.size(40.dp)) {
-                Icon(Icons.Filled.Clear, contentDescription = "Close dialog")
+                Icon(Icons.Filled.Clear, contentDescription = str(R.string.close_dialog))
             }
         }
     }
@@ -243,11 +248,12 @@ fun GBFormDialog(
     title: String,
     primaryLabel: String,
     busy: Boolean = false,
-    secondaryLabel: String = "Cancel",
+    secondaryLabel: String? = null,
     onSubmit: () -> Unit,
     onDismiss: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val cancel = secondaryLabel ?: str(R.string.action_cancel)
     GBAdaptiveDialog(
         title = title,
         onDismiss = onDismiss,
@@ -259,7 +265,7 @@ fun GBFormDialog(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.End)
         ) {
-            OutlinedButton(onClick = onDismiss, enabled = !busy) { Text(secondaryLabel) }
+            OutlinedButton(onClick = onDismiss, enabled = !busy) { Text(cancel) }
             Button(onClick = onSubmit, enabled = !busy) {
                 if (busy) {
                     CircularProgressIndicator(

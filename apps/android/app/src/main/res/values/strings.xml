@@ -1,6 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Gurukripa Ent Udyog</string>
-    <string name="company_name_hi">गुरुकृपा ईंट उद्योग</string>
-    <string name="phone_number">+91 91989 23230</string>
-    <string name="contact_email">info@gurukripaentudyog.com</string>
+    <!-- ══════════════ Non-translatable business data ══════════════ -->
+    <string name="app_name" translatable="false">Gurukripa Ent Udyog</string>
+    <string name="phone_number" translatable="false">+91 91989 23230</string>
+    <string name="contact_email" translatable="false">info@gurukripaentudyog.com</string>
+    <string name="kiln_address" translatable="false">Jaunpur–Varanasi Highway, Uttar Pradesh, India</string>
+
+    <!-- ══════════════ Shared / chrome ══════════════ -->
+    <string name="company_name">Gurukripa Ent Udyog</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_whatsapp">WhatsApp</string>
+    <string name="close_dialog">Close dialog</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hindi">हिंदी</string>
+    <string name="lang_switch_desc">Switch language</string>
+
+    <!-- ══════════════ Bottom navigation ══════════════ -->
+    <string name="nav_home">Home</string>
+    <string name="nav_catalog">Catalog</string>
+    <string name="nav_estimator">Estimator</string>
+    <string name="nav_cart">Cart</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_contact">Contact</string>
+
+    <!-- ══════════════ Home ══════════════ -->
+    <string name="home_eyebrow" translatable="false">GURUKRIPA ENT UDYOG</string>
+    <string name="home_tagline">Direct kiln bhatta manufacturer of double-fired red clay, Awwal, and machine wirecut bricks on the Jaunpur–Varanasi Highway.</string>
+    <string name="home_cta_estimator">3-in-1 Estimator</string>
+    <string name="home_cta_view_rates">View Rates</string>
+    <string name="home_standards_title">Verified Manufacturing &amp; Supply Standards</string>
+    <string name="home_trolley_capacity">Trolley Capacity</string>
+    <string name="home_trolley_count">4,000 Bricks</string>
+    <string name="home_trolley_note">Standard tractor load</string>
+    <string name="home_gst_invoicing">GST Invoicing</string>
+    <string name="home_gst_value" formatted="false">5% GST</string>
+    <string name="home_gst_note" formatted="false">2.5% CGST + 2.5% SGST</string>
+    <string name="home_logistics_title">Direct Kiln Logistics &amp; Dispatch</string>
+    <string name="home_logistics_desc">Fleet of 12 trolleys delivering across Jaunpur, Varanasi, Jalalpur and Trilochan.</string>
+    <string name="home_call_btn">Call: +91 91989 23230</string>
+    <string name="home_wa_greeting">Hello Gurukripa Ent Udyog, I need a quote.</string>
+
+    <!-- ══════════════ Estimator ══════════════ -->
+    <string name="est_title">3-in-1 Estimator Studio</string>
+    <string name="est_subtitle" formatted="false">Calculates exact bricks, trolleys (4,000/tr), cement bags and sand volume with 5% breakage allowance.</string>
+    <string name="tab_wall">Wall</string>
+    <string name="tab_house">House</string>
+    <string name="tab_boundary">Boundary</string>
+    <string name="field_length_ft">Length (ft)</string>
+    <string name="field_height_ft">Height (ft)</string>
+    <string name="field_plot_area">Built-up Plot Area (sq. ft)</string>
+    <string name="field_perimeter">Perimeter Length (ft)</string>
+    <string name="material_breakdown">Material Breakdown</string>
+    <string name="res_bricks">Bricks</string>
+    <string name="res_trolleys">Trolleys</string>
+    <string name="res_trolley_unit">tr</string>
+    <string name="res_cement">Cement Bags</string>
+    <string name="res_sand">Sand Volume</string>
+    <string name="res_sand_unit">cu.ft</string>
+    <string name="est_budget_label">ESTIMATED BRICK BUDGET</string>
+    <string name="est_budget_note" formatted="false">Ex-bhatta loading price with 5% breakage allowance</string>
+    <string name="est_whatsapp_quote">WhatsApp Quote</string>
+    <string name="est_add_to_cart">Add to Cart</string>
+    <string name="est_cart_wall">Wall Bricks</string>
+    <string name="est_cart_house">House Bricks</string>
+    <string name="est_cart_boundary">Boundary Bricks</string>
+    <string name="est_wa_message">Hello Gurukripa! Please provide an official quote.\nBricks required: %1$s (%2$s trolleys).\nEstimated budget: %3$s.</string>
+
+    <!-- ══════════════ Catalog ══════════════ -->
+    <string name="cat_title">Verified Brick Catalog</string>
+    <string name="cat_subtitle" formatted="false">All pricing verified direct ex-bhatta with 5% GST tax invoicing.</string>
+    <string name="unit_per_piece">per piece</string>
+    <string name="cat_price_per_pc">%1$s / pc</string>
+    <string name="cat_trolley_price">%1$s (4,000 pcs trolley)</string>
+    <string name="action_details">Details</string>
+    <string name="cat_add_trolley">+ 1 Trolley</string>
+    <string name="cat_add_trolley_full">Add 1 Trolley (4,000 pcs)</string>
+    <string name="cat_detail_price_line">%1$s per piece  •  %2$s per 4,000-pc trolley</string>
+    <string name="cat_added_title">Added to cart</string>
+    <string name="cat_added_message">%1$s — one trolley (4,000 pcs) is now in your cart.</string>
+
+    <!-- ══════════════ Cart ══════════════ -->
+    <string name="cart_title">Your Cart &amp; Invoice</string>
+    <string name="cart_empty">Your cart is empty</string>
+    <string name="cart_browse">Browse Bricks</string>
+    <string name="cart_item_line">%1$s pcs @ ₹%2$s</string>
+    <string name="coupon_placeholder">Coupon (e.g. GURU10)</string>
+    <string name="coupon_invalid">Invalid coupon code</string>
+    <string name="coupon_applied">✓ Coupon %1$s applied!</string>
+    <string name="lbl_subtotal">Subtotal</string>
+    <string name="lbl_discount">Discount (%1$s)</string>
+    <string name="lbl_gst" formatted="false">5% GST (CGST 2.5% + SGST 2.5%)</string>
+    <string name="lbl_grand_total">Grand Total</string>
+    <string name="cart_complete_wa">Complete Order via WhatsApp</string>
+    <string name="cart_wa_intro">Hello Gurukripa Ent Udyog! I would like to place an order:</string>
+    <string name="cart_wa_line">%1$d. %2$s - %3$s pcs (%4$s)</string>
+    <string name="cart_wa_total">Grand Total (with 5%% GST): %1$s</string>
+    <string name="cart_wa_footer">Please confirm trolley dispatch schedule.</string>
+    <string name="cart_remove_title">Remove from cart?</string>
+    <string name="cart_remove_message">%1$s — %2$s pcs (%3$s) will be taken out of this cart.</string>
+
+    <!-- ══════════════ Contact ══════════════ -->
+    <string name="contact_title">Contact Gurukripa Ent Udyog</string>
+    <string name="contact_subtitle">Direct connection to the kiln sales desk and tractor trolley logistics.</string>
+    <string name="contact_bhatta_location">Bhatta Location</string>
+    <string name="contact_address_note">Convenient off-highway turning for tractor trolleys and multi-axle trucks.</string>
+    <string name="contact_phone_whatsapp">Telephone &amp; WhatsApp</string>
+    <string name="contact_call_kiln">Call Kiln</string>
+    <string name="contact_email_label">Official Email</string>
+    <string name="contact_hours_label">Operating Hours</string>
+    <string name="contact_hours_value">Monday – Saturday: 8:00 AM – 6:00 PM\nSunday: Advance scheduled dispatches only</string>
+    <string name="contact_enquiry_btn">Send Enquiry / Request Quotation</string>
+    <string name="contact_wa_greeting">Hello Gurukripa Ent Udyog!</string>
+    <string name="enquiry_subject_bulk">Bulk Project Quotation</string>
+
+    <!-- ══════════════ Enquiry form ══════════════ -->
+    <string name="enq_send_wa">Send via WhatsApp</string>
+    <string name="enq_field_name">Your name</string>
+    <string name="enq_field_mobile">Mobile number</string>
+    <string name="enq_hint_mobile">10 digits — we call or WhatsApp back on this number.</string>
+    <string name="enq_field_site">Construction site / village (optional)</string>
+    <string name="enq_field_pincode">Delivery pincode</string>
+    <string name="enq_hint_pincode">Trolley delivery is confirmed against this pincode.</string>
+    <string name="enq_field_quantity">Quantity in pcs (optional)</string>
+    <string name="enq_hint_quantity">One tractor trolley ≈ 4,000 pcs.</string>
+    <string name="enq_field_details">Anything specific? (optional)</string>
+    <string name="enq_ready_title">Enquiry ready to send</string>
+    <string name="enq_fail_title">Could not open WhatsApp</string>
+    <string name="enq_success_msg">Your enquiry was prepared and handed to WhatsApp. Press send there to reach the kiln desk.</string>
+    <string name="enq_fail_msg">WhatsApp is not installed on this device. Call +91 91989 23230 instead.</string>
+    <string name="enq_msg_product">Product: %1$s</string>
+    <string name="enq_msg_name">Name: %1$s</string>
+    <string name="enq_msg_mobile">Mobile: %1$s</string>
+    <string name="enq_msg_site">Site / address: %1$s</string>
+    <string name="enq_msg_pincode">Delivery pincode: %1$s</string>
+    <string name="enq_msg_quantity">Quantity: %1$s pcs</string>
+    <string name="enq_msg_details">Details: %1$s</string>
+
+    <!-- ══════════════ Form validation ══════════════ -->
+    <string name="err_name_empty">Please enter your name.</string>
+    <string name="err_name_short">Name looks too short.</string>
+    <string name="err_name_letters">Name should contain letters only.</string>
+    <string name="err_mobile_invalid">Enter a valid 10-digit Indian mobile number.</string>
+    <string name="err_pincode_required">Delivery pincode is required.</string>
+    <string name="err_pincode_invalid">Pincode must be 6 digits (e.g. 223101).</string>
+    <string name="err_qty_required">Quantity is required.</string>
+    <string name="err_qty_whole">Quantity must be a whole number of bricks.</string>
+    <string name="err_qty_range">Quantity must be between %1$d and %2$d pcs.</string>
+    <string name="err_msg_required">Please describe your requirement.</string>
+    <string name="err_msg_long">Please keep it under 600 characters.</string>
+
+    <!-- ══════════════ Profile ══════════════ -->
+    <string name="profile_verified">✓ Verified</string>
+    <string name="profile_edit_btn">Edit Profile Information</string>
+    <string name="profile_details_title">Personal &amp; Site Delivery Details</string>
+    <string name="profile_business_name">Business Name</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_delivery_address">Delivery Address</string>
+    <string name="profile_city_pin">City &amp; PIN</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_menu_orders">My Orders &amp; Cart</string>
+    <string name="profile_menu_orders_sub" formatted="false">View cart, trolley counts and 5% GST breakdown</string>
+    <string name="profile_menu_catalog">Brick Catalog &amp; Rates</string>
+    <string name="profile_menu_catalog_sub">8 verified grades direct from the Jaunpur kiln</string>
+    <string name="profile_menu_support">Kiln Support Line</string>
+    <string name="profile_menu_support_sub">(Direct bhatta dispatch)</string>
+    <string name="profile_menu_logout">Log Out</string>
+    <string name="profile_edit_name">Full Name</string>
+    <string name="profile_edit_phone">Mobile Phone (10 digits)</string>
+    <string name="profile_edit_email">Email Address</string>
+    <string name="profile_edit_business">Business / Contractor Name (Optional)</string>
+    <string name="profile_edit_address">Delivery Site Address</string>
+    <string name="profile_edit_city">City</string>
+    <string name="profile_edit_pin">PIN Code</string>
+    <string name="profile_err_name_min">Name must be at least 2 characters</string>
+    <string name="profile_err_phone">Enter a valid 10-digit Indian phone number</string>
+    <string name="profile_save">Save Changes</string>
+    <string name="profile_logout_title">Confirm Log Out</string>
+    <string name="profile_logout_message">Are you sure you want to log out of your Gurukripa Ent Udyog account?</string>
+    <string name="profile_logout_confirm">Log Out</string>
+    <string name="profile_settings_title">Settings</string>
+    <string name="profile_app_language">App language</string>
+
+    <!-- Dynamic profile values (known business data) -->
+    <string name="role_retail">Retail Customer</string>
+    <string name="role_contractor">Contractor</string>
+    <string name="role_dealer">Authorized Dealer</string>
+
+    <!-- Catalog badge / stock label mapping (known business data) -->
+    <string name="badge_best_seller">Best Seller</string>
+    <string name="badge_heavy_duty">Heavy Duty</string>
+    <string name="badge_popular">Popular</string>
+    <string name="badge_value_pick">Value Pick</string>
+    <string name="badge_new">New</string>
+    <string name="stock_in_stock">In Stock</string>
+    <string name="stock_in_stock_10k">In Stock (10k+)</string>
+    <string name="stock_limited">Limited Stock</string>
 </resources>

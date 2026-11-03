@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ══════════════ Shared / chrome ══════════════ -->
+    <string name="company_name">गुरुकृपा ईंट उद्योग</string>
+    <string name="action_confirm">पुष्टि करें</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="action_ok">ठीक है</string>
+    <string name="action_remove">हटाएँ</string>
+    <string name="action_apply">लागू करें</string>
+    <string name="action_whatsapp">WhatsApp</string>
+    <string name="close_dialog">डायलॉग बंद करें</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hindi">हिंदी</string>
+    <string name="lang_switch_desc">भाषा बदलें</string>
+
+    <!-- ══════════════ Bottom navigation ══════════════ -->
+    <string name="nav_home">होम</string>
+    <string name="nav_catalog">कैटलॉग</string>
+    <string name="nav_estimator">कैलकुलेटर</string>
+    <string name="nav_cart">कार्ट</string>
+    <string name="nav_profile">प्रोफ़ाइल</string>
+    <string name="nav_contact">संपर्क</string>
+
+    <!-- ══════════════ Home ══════════════ -->
+    <string name="home_tagline">जौनपुर–वाराणसी हाईवे पर स्थित सीधा ईंट भट्ठा — डबल-फायर्ड लाल मिट्टी की ईंट, आव्वल और मशीन मेड वायरकट ईंटों का निर्माता।</string>
+    <string name="home_cta_estimator">3-इन-1 कैलकुलेटर</string>
+    <string name="home_cta_view_rates">रेट देखें</string>
+    <string name="home_standards_title">प्रमाणित निर्माण एवं आपूर्ति मानक</string>
+    <string name="home_trolley_capacity">ट्रॉली क्षमता</string>
+    <string name="home_trolley_count">4,000 ईंटें</string>
+    <string name="home_trolley_note">मानक ट्रैक्टर लोड</string>
+    <string name="home_gst_invoicing">जीएसटी इनवॉइसिंग</string>
+    <string name="home_gst_value" formatted="false">5% जीएसटी</string>
+    <string name="home_gst_note" formatted="false">2.5% CGST + 2.5% SGST</string>
+    <string name="home_logistics_title">सीधा भट्ठा लॉजिस्टिक्स एवं डिस्पैच</string>
+    <string name="home_logistics_desc">12 ट्रॉली का बेड़ा — जौनपुर, वाराणसी, जलालपुर और त्रिलोचन में डिलीवरी।</string>
+    <string name="home_call_btn">कॉल करें: +91 91989 23230</string>
+    <string name="home_wa_greeting">नमस्ते गुरुकृपा ईंट उद्योग, मुझे ईंटों का कोटेशन चाहिए।</string>
+
+    <!-- ══════════════ Estimator ══════════════ -->
+    <string name="est_title">3-इन-1 एस्टिमेटर स्टूडियो</string>
+    <string name="est_subtitle" formatted="false">ईंट, ट्रॉली (4,000/ट्रॉली), सीमेंट बोरी और रेत की सटीक मात्रा 5% ब्रेकेज के साथ गिनें।</string>
+    <string name="tab_wall">दीवार</string>
+    <string name="tab_house">मकान</string>
+    <string name="tab_boundary">बाउंड्री</string>
+    <string name="field_length_ft">लंबाई (फीट)</string>
+    <string name="field_height_ft">ऊंचाई (फीट)</string>
+    <string name="field_plot_area">निर्मित प्लॉट क्षेत्र (वर्ग फीट)</string>
+    <string name="field_perimeter">परिधि लंबाई (फीट)</string>
+    <string name="material_breakdown">सामग्री विवरण</string>
+    <string name="res_bricks">ईंटें</string>
+    <string name="res_trolleys">ट्रॉली</string>
+    <string name="res_trolley_unit">ट्रॉली</string>
+    <string name="res_cement">सीमेंट बोरियां</string>
+    <string name="res_sand">रेत की मात्रा</string>
+    <string name="res_sand_unit">घन फीट</string>
+    <string name="est_budget_label">अनुमानित ईंट बजट</string>
+    <string name="est_budget_note" formatted="false">5% ब्रेकेज के साथ एक्स-भट्ठा लोडिंग कीमत</string>
+    <string name="est_whatsapp_quote">व्हाट्सएप कोट</string>
+    <string name="est_add_to_cart">कार्ट में जोड़ें</string>
+    <string name="est_cart_wall">दीवार की ईंटें</string>
+    <string name="est_cart_house">मकान की ईंटें</string>
+    <string name="est_cart_boundary">बाउंड्री की ईंटें</string>
+    <string name="est_wa_message">नमस्ते गुरुकृपा! कृपया आधिकारिक कोटेशन भेजें।\nआवश्यक ईंटें: %1$s (%2$s ट्रॉली)।\nअनुमानित बजट: %3$s।</string>
+
+    <!-- ══════════════ Catalog ══════════════ -->
+    <string name="cat_title">प्रमाणित ईंट कैटलॉग</string>
+    <string name="cat_subtitle" formatted="false">सभी कीमतें सीधे भट्ठे से, 5% जीएसटी टैक्स इनवॉइसिंग के साथ प्रमाणित।</string>
+    <string name="unit_per_piece">प्रति ईंट</string>
+    <string name="cat_price_per_pc">%1$s / ईंट</string>
+    <string name="cat_trolley_price">%1$s (4,000 ईंट प्रति ट्रॉली)</string>
+    <string name="action_details">विवरण</string>
+    <string name="cat_add_trolley">+ 1 ट्रॉली</string>
+    <string name="cat_add_trolley_full">1 ट्रॉली (4,000 ईंट) जोड़ें</string>
+    <string name="cat_detail_price_line">%1$s प्रति ईंट  •  %2$s प्रति 4,000-ईंट ट्रॉली</string>
+    <string name="cat_added_title">कार्ट में जोड़ा गया</string>
+    <string name="cat_added_message">%1$s — एक ट्रॉली (4,000 ईंट) अब आपके कार्ट में है।</string>
+
+    <!-- ══════════════ Cart ══════════════ -->
+    <string name="cart_title">आपका कार्ट एवं बिल</string>
+    <string name="cart_empty">आपका कार्ट खाली है</string>
+    <string name="cart_browse">ईंटें देखें</string>
+    <string name="cart_item_line">%1$s ईंट @ ₹%2$s</string>
+    <string name="coupon_placeholder">कूपन (जैसे GURU10)</string>
+    <string name="coupon_invalid">कूपन कोड गलत है</string>
+    <string name="coupon_applied">✓ कूपन %1$s लागू हुआ!</string>
+    <string name="lbl_subtotal">उप-योग</string>
+    <string name="lbl_discount">छूट (%1$s)</string>
+    <string name="lbl_gst" formatted="false">5% जीएसटी (CGST 2.5% + SGST 2.5%)</string>
+    <string name="lbl_grand_total">कुल योग</string>
+    <string name="cart_complete_wa">व्हाट्सएप से ऑर्डर पूरा करें</string>
+    <string name="cart_wa_intro">नमस्ते गुरुकृपा ईंट उद्योग! मुझे ऑर्डर करना है:</string>
+    <string name="cart_wa_line">%1$d. %2$s - %3$s ईंट (%4$s)</string>
+    <string name="cart_wa_total">कुल योग (5%% जीएसटी सहित): %1$s</string>
+    <string name="cart_wa_footer">कृपया ट्रॉली डिस्पैच शेड्यूल की पुष्टि करें।</string>
+    <string name="cart_remove_title">कार्ट से हटाएं?</string>
+    <string name="cart_remove_message">%1$s — %2$s ईंट (%3$s) इस कार्ट से हटा दी जाएंगी।</string>
+
+    <!-- ══════════════ Contact ══════════════ -->
+    <string name="contact_title">गुरुकृपा ईंट उद्योग से संपर्क करें</string>
+    <string name="contact_subtitle">भट्ठा सेल्स डेस्क और ट्रैक्टर ट्रॉली लॉजिस्टिक्स से सीधा संपर्क।</string>
+    <string name="contact_bhatta_location">भट्ठे का स्थान</string>
+    <string name="contact_address_note">ट्रैक्टर ट्रॉली और मल्टी-एक्सल ट्रक के लिए हाईवे से आसान टर्निंग।</string>
+    <string name="contact_phone_whatsapp">फोन एवं व्हाट्सएप</string>
+    <string name="contact_call_kiln">भट्ठे पर कॉल करें</string>
+    <string name="contact_email_label">आधिकारिक ईमेल</string>
+    <string name="contact_hours_label">कार्य समय</string>
+    <string name="contact_hours_value">सोमवार – शनिवार: सुबह 8:00 – शाम 6:00\nरविवार: केवल अग्रिम निर्धारित डिस्पैच</string>
+    <string name="contact_enquiry_btn">पूछताछ भेजें / कोटेशन मांगें</string>
+    <string name="contact_wa_greeting">नमस्ते गुरुकृपा ईंट उद्योग!</string>
+    <string name="enquiry_subject_bulk">थोक परियोजना कोटेशन</string>
+
+    <!-- ══════════════ Enquiry form ══════════════ -->
+    <string name="enq_send_wa">व्हाट्सएप से भेजें</string>
+    <string name="enq_field_name">आपका नाम</string>
+    <string name="enq_field_mobile">मोबाइल नंबर</string>
+    <string name="enq_hint_mobile">10 अंक — हम इसी नंबर पर कॉल या व्हाट्सएप पर जवाब देंगे।</string>
+    <string name="enq_field_site">निर्माण स्थल / गाँव (वैकल्पिक)</string>
+    <string name="enq_field_pincode">डिलीवरी पिनकोड</string>
+    <string name="enq_hint_pincode">ट्रॉली डिलीवरी इसी पिनकोड से सत्यापित होती है।</string>
+    <string name="enq_field_quantity">मात्रा (ईंट, वैकल्पिक)</string>
+    <string name="enq_hint_quantity">एक ट्रैक्टर ट्रॉली ≈ 4,000 ईंट।</string>
+    <string name="enq_field_details">कोई विशेष आवश्यकता? (वैकल्पिक)</string>
+    <string name="enq_ready_title">पूछताछ भेजने के लिए तैयार</string>
+    <string name="enq_fail_title">व्हाट्सएप नहीं खुल सका</string>
+    <string name="enq_success_msg">आपकी पूछताछ तैयार कर व्हाट्सएप पर सौंप दी गई है। भट्ठा डेस्क तक पहुंचाने के लिए वहां भेजें दबाएं।</string>
+    <string name="enq_fail_msg">इस फ़ोन पर व्हाट्सएप इंस्टॉल नहीं है। इसके बजाय +91 91989 23230 पर कॉल करें।</string>
+    <string name="enq_msg_product">उत्पाद: %1$s</string>
+    <string name="enq_msg_name">नाम: %1$s</string>
+    <string name="enq_msg_mobile">मोबाइल: %1$s</string>
+    <string name="enq_msg_site">स्थल / पता: %1$s</string>
+    <string name="enq_msg_pincode">डिलीवरी पिनकोड: %1$s</string>
+    <string name="enq_msg_quantity">मात्रा: %1$s ईंट</string>
+    <string name="enq_msg_details">विवरण: %1$s</string>
+
+    <!-- ══════════════ Form validation ══════════════ -->
+    <string name="err_name_empty">कृपया अपना नाम दर्ज करें।</string>
+    <string name="err_name_short">नाम बहुत छोटा लग रहा है।</string>
+    <string name="err_name_letters">नाम में केवल अक्षर होने चाहिए।</string>
+    <string name="err_mobile_invalid">मान्य 10 अंकों का भारतीय मोबाइल नंबर दर्ज करें।</string>
+    <string name="err_pincode_required">डिलीवरी पिनकोड आवश्यक है।</string>
+    <string name="err_pincode_invalid">पिनकोड 6 अंकों का होना चाहिए (जैसे 223101)।</string>
+    <string name="err_qty_required">मात्रा आवश्यक है।</string>
+    <string name="err_qty_whole">मात्रा ईंटों की पूर्ण संख्या में होनी चाहिए।</string>
+    <string name="err_qty_range">मात्रा %1$d और %2$d ईंट के बीच होनी चाहिए।</string>
+    <string name="err_msg_required">कृपया अपनी आवश्यकता बताएं।</string>
+    <string name="err_msg_long">कृपया संदेश 600 अक्षरों से कम रखें।</string>
+
+    <!-- ══════════════ Profile ══════════════ -->
+    <string name="profile_verified">✓ सत्यापित</string>
+    <string name="profile_edit_btn">प्रोफ़ाइल जानकारी संपादित करें</string>
+    <string name="profile_details_title">व्यक्तिगत एवं डिलीवरी विवरण</string>
+    <string name="profile_business_name">व्यावसायिक नाम</string>
+    <string name="profile_email">ईमेल</string>
+    <string name="profile_delivery_address">डिलीवरी पता</string>
+    <string name="profile_city_pin">शहर एवं पिन</string>
+    <string name="profile_language">भाषा</string>
+    <string name="profile_menu_orders">मेरे ऑर्डर एवं कार्ट</string>
+    <string name="profile_menu_orders_sub" formatted="false">कार्ट, ट्रॉली संख्या और 5% जीएसटी विवरण देखें</string>
+    <string name="profile_menu_catalog">ईंट कैटलॉग एवं रेट</string>
+    <string name="profile_menu_catalog_sub">जौनपुर भट्ठे से 8 प्रमाणित ग्रेड</string>
+    <string name="profile_menu_support">भट्ठा सहायता लाइन</string>
+    <string name="profile_menu_support_sub">(सीधा भट्ठा डिस्पैच)</string>
+    <string name="profile_menu_logout">लॉग आउट</string>
+    <string name="profile_edit_name">पूरा नाम</string>
+    <string name="profile_edit_phone">मोबाइल फोन (10 अंक)</string>
+    <string name="profile_edit_email">ईमेल पता</string>
+    <string name="profile_edit_business">व्यावसायिक / ठेकेदार नाम (वैकल्पिक)</string>
+    <string name="profile_edit_address">डिलीवरी स्थल का पता</string>
+    <string name="profile_edit_city">शहर</string>
+    <string name="profile_edit_pin">पिन कोड</string>
+    <string name="profile_err_name_min">नाम कम से कम 2 अक्षरों का होना चाहिए</string>
+    <string name="profile_err_phone">मान्य 10 अंकों का भारतीय फोन नंबर दर्ज करें</string>
+    <string name="profile_save">बदलाव सेव करें</string>
+    <string name="profile_logout_title">लॉग आउट की पुष्टि करें</string>
+    <string name="profile_logout_message">क्या आप वाकई अपने गुरुकृपा ईंट उद्योग खाते से लॉग आउट करना चाहते हैं?</string>
+    <string name="profile_logout_confirm">लॉग आउट</string>
+    <string name="profile_settings_title">सेटिंग्स</string>
+    <string name="profile_app_language">ऐप भाषा</string>
+
+    <!-- Dynamic profile values (known business data) -->
+    <string name="role_retail">रिटेल ग्राहक</string>
+    <string name="role_contractor">ठेकेदार</string>
+    <string name="role_dealer">अधिकृत डीलर</string>
+
+    <!-- Catalog badge / stock label mapping (known business data) -->
+    <string name="badge_best_seller">सर्वाधिक बिकने वाला</string>
+    <string name="badge_heavy_duty">मजबूत निर्माण</string>
+    <string name="badge_popular">लोकप्रिय</string>
+    <string name="badge_value_pick">बेहतर मूल्य</string>
+    <string name="badge_new">नया</string>
+    <string name="stock_in_stock">स्टॉक में</string>
+    <string name="stock_in_stock_10k">स्टॉक में (10k+)</string>
+    <string name="stock_limited">सीमित स्टॉक</string>
+</resources>

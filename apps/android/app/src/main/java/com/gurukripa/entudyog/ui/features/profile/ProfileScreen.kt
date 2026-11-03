@@ -21,10 +21,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gurukripa.entudyog.R
 import com.gurukripa.entudyog.core.theme.BrandDark
 import com.gurukripa.entudyog.core.theme.BrandTerracotta
 import com.gurukripa.entudyog.core.theme.SemanticSuccess
+import com.gurukripa.entudyog.core.util.LanguagePrefs
 import com.gurukripa.entudyog.data.model.UserProfile
+import com.gurukripa.entudyog.ui.common.LanguageSwitcher
+import com.gurukripa.entudyog.ui.common.str
+
+/**
+ * Map the profile's role value to a localized label. Only the three known
+ * business roles are translated; anything unexpected is shown verbatim so we
+ * never invent a translation for unknown account data (spec §6).
+ */
+@Composable
+private fun displayRole(role: String): String {
+    val id = when (role) {
+        "Retail Customer" -> R.string.role_retail
+        "Contractor" -> R.string.role_contractor
+        "Authorized Dealer" -> R.string.role_dealer
+        else -> null
+    }
+    return id?.let { str(it) } ?: role
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +67,7 @@ fun ProfileScreen(
     var editAddress by remember { mutableStateOf(profile.address) }
     var editCity by remember { mutableStateOf(profile.city) }
     var editPincode by remember { mutableStateOf(profile.pincode) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var errorMessage by remember { mutableStateOf<Int?>(null) }
 
     val initials = profile.name.split(" ")
         .mapNotNull { it.firstOrNull() }
@@ -103,7 +123,7 @@ fun ProfileScreen(
                             modifier = Modifier.padding(vertical = 2.dp)
                         ) {
                             Text(
-                                text = profile.role,
+                                text = displayRole(profile.role),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = BrandTerracotta,
@@ -120,7 +140,7 @@ fun ProfileScreen(
                             if (profile.phoneVerified) {
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "✓ Verified",
+                                    text = str(R.string.profile_verified),
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = SemanticSuccess
@@ -150,7 +170,7 @@ fun ProfileScreen(
                 ) {
                     Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Edit Profile Information", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    Text(str(R.string.profile_edit_btn), fontSize = 13.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -162,7 +182,7 @@ fun ProfileScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Personal & Site Delivery Details",
+                    text = str(R.string.profile_details_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
                     color = BrandDark
@@ -171,28 +191,29 @@ fun ProfileScreen(
                 Divider()
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("Business Name", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
+                    Text(str(R.string.profile_business_name), fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
                     Text(profile.businessName ?: "—", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("Email", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
+                    Text(str(R.string.profile_email), fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
                     Text(profile.email ?: "—", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("Delivery Address", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
+                    Text(str(R.string.profile_delivery_address), fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
                     Text(profile.address, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("City & PIN", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
+                    Text(str(R.string.profile_city_pin), fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
                     Text("${profile.city} - ${profile.pincode}", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("Language", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
-                    Text(profile.preferredLanguage, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(str(R.string.profile_language), fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
+                    // Reflect the live app language, not the stale seed value.
+                    Text(str(if (LanguagePrefs.isHindi()) R.string.lang_hindi else R.string.lang_english), fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -204,8 +225,8 @@ fun ProfileScreen(
         ) {
             Column(modifier = Modifier.padding(8.dp)) {
                 ListItem(
-                    headlineContent = { Text("My Orders & Cart", fontWeight = FontWeight.Bold, fontSize = 13.sp) },
-                    supportingContent = { Text("View cart, trolley counts and 5% GST breakdown", fontSize = 11.sp) },
+                    headlineContent = { Text(str(R.string.profile_menu_orders), fontWeight = FontWeight.Bold, fontSize = 13.sp) },
+                    supportingContent = { Text(str(R.string.profile_menu_orders_sub), fontSize = 11.sp) },
                     leadingContent = { Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = BrandTerracotta) },
                     trailingContent = { Text("→", color = MaterialTheme.colorScheme.outline) },
                     modifier = Modifier.height(56.dp)
@@ -214,8 +235,8 @@ fun ProfileScreen(
                 Divider()
 
                 ListItem(
-                    headlineContent = { Text("Brick Catalog & Rates", fontWeight = FontWeight.Bold, fontSize = 13.sp) },
-                    supportingContent = { Text("8 verified grades direct from Jaunpur kiln", fontSize = 11.sp) },
+                    headlineContent = { Text(str(R.string.profile_menu_catalog), fontWeight = FontWeight.Bold, fontSize = 13.sp) },
+                    supportingContent = { Text(str(R.string.profile_menu_catalog_sub), fontSize = 11.sp) },
                     leadingContent = { Icon(Icons.Default.List, contentDescription = null, tint = BrandTerracotta) },
                     trailingContent = { Text("→", color = MaterialTheme.colorScheme.outline) },
                     modifier = Modifier.height(56.dp)
@@ -224,8 +245,8 @@ fun ProfileScreen(
                 Divider()
 
                 ListItem(
-                    headlineContent = { Text("Kiln Support Line", fontWeight = FontWeight.Bold, fontSize = 13.sp) },
-                    supportingContent = { Text("+91 91989 23230 (Direct bhatta dispatch)", fontSize = 11.sp) },
+                    headlineContent = { Text(str(R.string.profile_menu_support), fontWeight = FontWeight.Bold, fontSize = 13.sp) },
+                    supportingContent = { Text("${str(R.string.phone_number)} ${str(R.string.profile_menu_support_sub)}", fontSize = 11.sp) },
                     leadingContent = { Icon(Icons.Default.Call, contentDescription = null, tint = BrandTerracotta) },
                     trailingContent = { Text("→", color = MaterialTheme.colorScheme.outline) },
                     modifier = Modifier.height(56.dp)
@@ -234,10 +255,34 @@ fun ProfileScreen(
                 Divider()
 
                 ListItem(
-                    headlineContent = { Text("Log Out", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold, fontSize = 13.sp) },
+                    headlineContent = { Text(str(R.string.profile_menu_logout), color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold, fontSize = 13.sp) },
                     leadingContent = { Icon(Icons.Default.ExitToApp, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
                     modifier = Modifier.height(48.dp)
                 )
+            }
+        }
+
+        // 4. Settings — app language. Switching here drives the whole UI instantly.
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        ) {
+            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    text = str(R.string.profile_settings_title),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                    color = BrandDark
+                )
+                Divider()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(str(R.string.profile_app_language), fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
+                    LanguageSwitcher()
+                }
             }
         }
     }
@@ -255,19 +300,19 @@ fun ProfileScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Edit Profile Information",
+                    text = str(R.string.profile_edit_btn),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
 
-                if (errorMessage != null) {
-                    Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
+                errorMessage?.let {
+                    Text(text = str(it), color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
                 }
 
                 OutlinedTextField(
                     value = editName,
                     onValueChange = { editName = it },
-                    label = { Text("Full Name") },
+                    label = { Text(str(R.string.profile_edit_name)) },
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -277,7 +322,7 @@ fun ProfileScreen(
                 OutlinedTextField(
                     value = editPhone,
                     onValueChange = { editPhone = it },
-                    label = { Text("Mobile Phone (10 digits)") },
+                    label = { Text(str(R.string.profile_edit_phone)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     singleLine = true,
                     modifier = Modifier
@@ -288,7 +333,7 @@ fun ProfileScreen(
                 OutlinedTextField(
                     value = editEmail,
                     onValueChange = { editEmail = it },
-                    label = { Text("Email Address") },
+                    label = { Text(str(R.string.profile_edit_email)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     singleLine = true,
                     modifier = Modifier
@@ -299,7 +344,7 @@ fun ProfileScreen(
                 OutlinedTextField(
                     value = editBusiness,
                     onValueChange = { editBusiness = it },
-                    label = { Text("Business / Contractor Name (Optional)") },
+                    label = { Text(str(R.string.profile_edit_business)) },
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -309,7 +354,7 @@ fun ProfileScreen(
                 OutlinedTextField(
                     value = editAddress,
                     onValueChange = { editAddress = it },
-                    label = { Text("Delivery Site Address") },
+                    label = { Text(str(R.string.profile_edit_address)) },
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -320,7 +365,7 @@ fun ProfileScreen(
                     OutlinedTextField(
                         value = editCity,
                         onValueChange = { editCity = it },
-                        label = { Text("City") },
+                        label = { Text(str(R.string.profile_edit_city)) },
                         modifier = Modifier
                             .weight(1f)
                             .height(56.dp)
@@ -328,7 +373,7 @@ fun ProfileScreen(
                     OutlinedTextField(
                         value = editPincode,
                         onValueChange = { editPincode = it },
-                        label = { Text("PIN Code") },
+                        label = { Text(str(R.string.profile_edit_pin)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier
                             .weight(1f)
@@ -341,11 +386,11 @@ fun ProfileScreen(
                 Button(
                     onClick = {
                         if (editName.trim().length < 2) {
-                            errorMessage = "Name must be at least 2 characters"
+                            errorMessage = R.string.profile_err_name_min
                             return@Button
                         }
                         if (!editPhone.trim().matches(Regex("^[6-9]\\d{9}$"))) {
-                            errorMessage = "Enter valid 10-digit Indian phone number"
+                            errorMessage = R.string.profile_err_phone
                             return@Button
                         }
                         viewModel.updateProfile(
@@ -366,7 +411,7 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
-                    Text("Save Changes", fontWeight = FontWeight.Bold)
+                    Text(str(R.string.profile_save), fontWeight = FontWeight.Bold)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -378,19 +423,19 @@ fun ProfileScreen(
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
-            title = { Text("Confirm Log Out") },
-            text = { Text("Are you sure you want to log out of your Gurukripa Ent Udyog account?") },
+            title = { Text(str(R.string.profile_logout_title)) },
+            text = { Text(str(R.string.profile_logout_message)) },
             confirmButton = {
                 Button(
                     onClick = { showLogoutDialog = false },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Log Out")
+                    Text(str(R.string.profile_logout_confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showLogoutDialog = false }) {
-                    Text("Cancel")
+                    Text(str(R.string.action_cancel))
                 }
             }
         )

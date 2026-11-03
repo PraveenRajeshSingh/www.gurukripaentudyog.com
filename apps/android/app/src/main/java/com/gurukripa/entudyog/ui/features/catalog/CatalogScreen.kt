@@ -10,7 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gurukripa.entudyog.R
 import com.gurukripa.entudyog.core.theme.BrandTerracotta
+import com.gurukripa.entudyog.core.util.LanguagePrefs
 import com.gurukripa.entudyog.core.util.PricingEngine
 import com.gurukripa.entudyog.data.model.CartItem
 import com.gurukripa.entudyog.data.model.Product
@@ -19,6 +21,8 @@ import com.gurukripa.entudyog.data.repository.ProductRepository
 import com.gurukripa.entudyog.ui.common.GBAdaptiveDialog
 import com.gurukripa.entudyog.ui.common.GBMessageDialog
 import com.gurukripa.entudyog.ui.common.GBMessageKind
+import com.gurukripa.entudyog.ui.common.str
+import com.gurukripa.entudyog.ui.common.strFmt
 import kotlinx.coroutines.launch
 
 @Composable
@@ -29,6 +33,8 @@ fun CatalogScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val products by productRepository.getProducts().collectAsState(initial = Product.getVerifiedCatalog())
+    // Re-render catalog copy whenever the app language changes.
+    val hindi = LanguagePrefs.language.value == LanguagePrefs.HI
     // Product preview popup + one non-blocking confirmation after the cart write succeeds.
     var detailProduct by remember { mutableStateOf<Product?>(null) }
     var addedProduct by remember { mutableStateOf<String?>(null) }
@@ -38,13 +44,13 @@ fun CatalogScreen(
             cartRepository.addItem(
                 CartItem(
                     productId = product.id,
-                    productName = product.name,
+                    productName = product.displayName(hindi),
                     unitPrice = product.price,
                     quantity = 4000
                 )
             )
             // Success is announced only after the Room write completed (§4).
-            addedProduct = product.name
+            addedProduct = product.displayName(hindi)
             detailProduct = null
         }
     }
@@ -57,12 +63,12 @@ fun CatalogScreen(
     ) {
         item {
             Text(
-                text = "Verified Brick Catalog",
+                text = str(R.string.cat_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Black
             )
             Text(
-                text = "All pricing verified direct ex-bhatta with 5% GST tax invoicing.",
+                text = str(R.string.cat_subtitle),
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -82,11 +88,12 @@ fun CatalogScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = product.name,
+                                text = product.displayName(hindi),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
                             )
-                            if (product.nameHi != null) {
+                            // In English mode, show the Hindi name as a friendly subtitle.
+                            if (!hindi && product.nameHi != null) {
                                 Text(
                                     text = product.nameHi,
                                     fontSize = 12.sp,
@@ -95,13 +102,13 @@ fun CatalogScreen(
                             }
                         }
 
-                        if (product.badge != null) {
+                        product.displayBadge(hindi)?.let { badge ->
                             Surface(
                                 color = BrandTerracotta.copy(alpha = 0.1f),
                                 shape = MaterialTheme.shapes.small
                             ) {
                                 Text(
-                                    text = product.badge,
+                                    text = badge,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = BrandTerracotta,
@@ -113,7 +120,7 @@ fun CatalogScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = product.desc,
+                        text = product.displayDesc(hindi),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -127,13 +134,13 @@ fun CatalogScreen(
                     ) {
                         Column {
                             Text(
-                                text = PricingEngine.formatINR(product.price) + " / pc",
+                                text = strFmt(R.string.cat_price_per_pc, PricingEngine.formatINR(product.price)),
                                 fontWeight = FontWeight.Black,
                                 fontSize = 18.sp,
                                 color = BrandTerracotta
                             )
                             Text(
-                                text = PricingEngine.formatINR(product.trolleyPrice) + " (4,000 pcs trolley)",
+                                text = strFmt(R.string.cat_trolley_price, PricingEngine.formatINR(product.trolleyPrice)),
                                 fontSize = 11.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -144,13 +151,13 @@ fun CatalogScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             TextButton(onClick = { detailProduct = product }) {
-                                Text("Details", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandTerracotta)
+                                Text(str(R.string.action_details), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandTerracotta)
                             }
                             Button(
                                 onClick = { addToCart(product) },
                                 colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta)
                             ) {
-                                Text("+ 1 Trolley", fontSize = 12.sp)
+                                Text(str(R.string.cat_add_trolley), fontSize = 12.sp)
                             }
                         }
                     }
@@ -160,16 +167,16 @@ fun CatalogScreen(
     }
 
     detailProduct?.let { product ->
-        GBAdaptiveDialog(title = product.name, onDismiss = { detailProduct = null }) {
-            if (product.nameHi != null) {
+        GBAdaptiveDialog(title = product.displayName(hindi), onDismiss = { detailProduct = null }) {
+            if (!hindi && product.nameHi != null) {
                 Text(product.nameHi, fontSize = 13.sp, color = BrandTerracotta, fontWeight = FontWeight.Bold)
             }
-            product.badge?.let {
+            product.displayBadge(hindi)?.let {
                 Text(it, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Text(product.desc, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(product.displayDesc(hindi), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(
-                "₹${product.price} per piece  •  ₹${product.trolleyPrice} per 4,000-pc trolley",
+                strFmt(R.string.cat_detail_price_line, PricingEngine.formatINR(product.price), PricingEngine.formatINR(product.trolleyPrice)),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Black,
                 color = BrandTerracotta
@@ -179,15 +186,15 @@ fun CatalogScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = BrandTerracotta),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Add 1 Trolley (4,000 pcs)", fontWeight = FontWeight.Bold)
+                Text(str(R.string.cat_add_trolley_full), fontWeight = FontWeight.Bold)
             }
         }
     }
 
     addedProduct?.let { name ->
         GBMessageDialog(
-            title = "Added to cart",
-            message = "$name — one trolley (4,000 pcs) is now in your cart.",
+            title = str(R.string.cat_added_title),
+            message = strFmt(R.string.cat_added_message, name),
             kind = GBMessageKind.SUCCESS,
             // Keep the previous flow: after the confirmed-add message, land in the cart.
             onDismiss = { addedProduct = null; onNavigateToCart() }
