@@ -4,13 +4,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { formatINR, formatNum } from '@gurukripa/api-contracts';
 import { api, formatDate } from '@/lib/client-api';
+import { setSiteLang } from '@/lib/lang';
+import { SESSION_EVENT, notifySessionChange } from '@/lib/session';
 import type { MeUser, MeAddress, MeEnquiry, MeQuotation, MeOrder } from '@/types/account';
 import Modal from '@/components/ui/Modal';
 import StatusPill from '@/components/ui/StatusPill';
 import AuthCard from './auth-card';
 import {
   Spinner, EditIcon, LogoutIcon, TrashIcon, TruckIcon, MessageIcon,
-  BuildingIcon, PhoneIcon, AlertIcon,
+  BuildingIcon, PhoneIcon, AlertIcon, UserIcon, CheckCircleIcon,
 } from '@/components/ui/icons';
 
 const inputCls =
@@ -99,6 +101,9 @@ export default function AccountPortal() {
 
   useEffect(() => {
     checkSession();
+    // Keep in sync with the navbar's account menu (sign-out elsewhere).
+    window.addEventListener(SESSION_EVENT, checkSession);
+    return () => window.removeEventListener(SESSION_EVENT, checkSession);
   }, [checkSession]);
 
   useEffect(() => {
@@ -114,6 +119,7 @@ export default function AccountPortal() {
     setSession('anon');
     setLogoutOpen(false);
     setNotice('You have been signed out.');
+    notifySessionChange();
   };
 
   // --------------------------------------------------------------- rendering
@@ -145,7 +151,7 @@ export default function AccountPortal() {
   }
 
   if (session === 'anon' || !user) {
-    return <AuthCard onSignedIn={(u) => { setUser(u); setSession('authed'); setTab('profile'); }} />;
+    return <AuthCard onSignedIn={(u) => { setUser(u); setSession('authed'); setTab('profile'); notifySessionChange(); }} />;
   }
 
   return (
@@ -179,30 +185,31 @@ export default function AccountPortal() {
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0" role="tablist" aria-label="Account sections">
         {(
           [
-            ['profile', 'Profile'],
-            ['enquiries', 'My enquiries'],
-            ['quotations', 'Quotations'],
-            ['orders', 'Orders'],
-            ['addresses', 'Addresses'],
-          ] as [Tab, string][]
-        ).map(([id, label]) => (
+            ['profile', 'Profile', UserIcon],
+            ['enquiries', 'My enquiries', MessageIcon],
+            ['quotations', 'Quotations', CheckCircleIcon],
+            ['orders', 'Orders', TruckIcon],
+            ['addresses', 'Addresses', BuildingIcon],
+          ] as [Tab, string, (p: { className?: string }) => React.ReactElement][]
+        ).map(([id, label, Icon]) => (
           <button
             key={id}
             role="tab"
             aria-selected={tab === id}
             onClick={() => setTab(id)}
-            className={`px-4 min-h-[44px] rounded-full text-sm font-bold whitespace-nowrap border transition ${
+            className={`inline-flex items-center gap-1.5 px-4 min-h-[44px] rounded-full text-sm font-bold whitespace-nowrap border transition ${
               tab === id
                 ? 'bg-[#C8460A] text-white border-[#C8460A]'
                 : 'bg-white border-neutral-200 text-[#4A3728] hover:border-[#C8460A]'
             }`}
           >
+            <Icon className="w-4 h-4" />
             {label}
           </button>
         ))}
       </div>
 
-      {tab === 'profile' && <ProfileTab user={user} onSaved={(u) => { setUser(u); setNotice('Profile updated on the server.'); }} />}
+      {tab === 'profile' && <ProfileTab user={user} onSaved={(u) => { setUser(u); setNotice('Profile updated on the server.'); notifySessionChange(); }} />}
       {tab === 'enquiries' && <EnquiriesTab />}
       {tab === 'quotations' && <QuotationsTab onActioned={setNotice} />}
       {tab === 'orders' && <OrdersTab onActioned={setNotice} />}
@@ -271,7 +278,11 @@ function ProfileTab({ user, onSaved }: { user: MeUser; onSaved: (u: MeUser) => v
     });
     setBusy(false);
     if (r.ok && (r.json as any)?.data) {
-      onSaved((r.json as any).data as MeUser);
+      const updated = (r.json as any).data as MeUser;
+      onSaved(updated);
+      // Flip the site chrome instantly to the saved preference ('en'|'hi';
+      // Marathi falls back to English so untranslated UI never breaks).
+      setSiteLang(updated.language);
       setOpen(false);
     } else {
       setSaveError(r.message || 'The server rejected the update — nothing was saved.');
