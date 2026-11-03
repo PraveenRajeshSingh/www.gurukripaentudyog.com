@@ -27,6 +27,16 @@ body {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+  /* Stop iOS Safari inflating body text on portrait phones. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Remove the grey flash on tap for a cleaner native feel. */
+a,
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Respect user motion preferences (WCAG 2.3.3) */

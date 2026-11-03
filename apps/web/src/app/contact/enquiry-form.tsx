@@ -115,7 +115,7 @@ export default function EnquiryForm() {
 
   if (state.kind === 'ok') {
     return (
-      <div className="bg-white p-6 sm:p-8 rounded-xl border border-neutral-200 text-center space-y-4">
+      <div className="bg-white p-5 sm:p-8 rounded-xl border border-neutral-200 text-center space-y-4">
         <h2 className="text-xl font-black text-[#1C1009]" role="status">
           Enquiry registered
         </h2>
@@ -154,7 +154,7 @@ export default function EnquiryForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 sm:p-8 rounded-xl border border-neutral-200 space-y-4"
+      className="bg-white p-5 sm:p-8 rounded-xl border border-neutral-200 space-y-4"
       noValidate
     >
       <h2 className="font-extrabold text-lg text-[#1C1009] mb-1">Request a Rate Quote</h2>

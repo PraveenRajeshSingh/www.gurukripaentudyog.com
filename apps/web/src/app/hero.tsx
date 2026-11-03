@@ -11,7 +11,7 @@ const WHATSAPP_HERO =
 export default function HeroSection() {
   return (
     <section className="bg-[#8B2E05] text-white border-b-4 border-[#C8460A]" aria-labelledby="hero-heading">
-      <div className="container mx-auto px-4 py-12 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="container mx-auto px-4 py-10 sm:py-14 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className="lg:col-span-7 space-y-5">
           <p className="inline-block bg-[#FAFAF9] text-[#8B2E05] text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded">
             Direct Kiln Manufacturer · Jaunpur–Varanasi Highway
@@ -26,16 +26,16 @@ export default function HeroSection() {
             count-verified 4,000-brick trolley loads and 5% GST invoicing.
           </p>
 
-          <div className="flex flex-wrap gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 pt-2">
             <a
               href="#estimator"
-              className="bg-[#F5A623] hover:bg-amber-400 text-[#1C1009] font-bold text-sm px-6 py-3.5 rounded-lg transition min-h-[48px] inline-flex items-center"
+              className="bg-[#F5A623] hover:bg-amber-400 text-[#1C1009] font-bold text-sm px-6 py-3.5 rounded-lg transition min-h-[48px] inline-flex items-center justify-center"
             >
               Estimate Bricks &amp; Trolleys
             </a>
             <Link
               href="/products"
-              className="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-6 py-3.5 rounded-lg border border-white/30 transition min-h-[48px] inline-flex items-center"
+              className="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-6 py-3.5 rounded-lg border border-white/30 transition min-h-[48px] inline-flex items-center justify-center"
             >
               Catalog &amp; Trolley Rates
             </Link>
@@ -43,7 +43,7 @@ export default function HeroSection() {
               href={WHATSAPP_HERO}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#16a34a] hover:bg-[#15803d] text-white font-bold text-sm px-5 py-3.5 rounded-lg transition min-h-[48px] inline-flex items-center gap-2"
+              className="bg-[#16a34a] hover:bg-[#15803d] text-white font-bold text-sm px-5 py-3.5 rounded-lg transition min-h-[48px] inline-flex items-center justify-center gap-2"
             >
               <MessageIcon className="w-4 h-4" />
               +91 91989 23230

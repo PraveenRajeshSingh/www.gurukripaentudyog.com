@@ -27,7 +27,7 @@ export default function ContactPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Kiln contact details — static, server-rendered */}
-        <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-xl border border-neutral-200 space-y-6">
+        <div className="lg:col-span-5 bg-white p-5 sm:p-8 rounded-xl border border-neutral-200 space-y-6">
           <div>
             <h2 className="font-extrabold text-lg text-[#1C1009] mb-4">Kiln Bhatta Details</h2>
             <ul className="space-y-5 text-sm text-[#4A3728] list-none p-0 m-0">

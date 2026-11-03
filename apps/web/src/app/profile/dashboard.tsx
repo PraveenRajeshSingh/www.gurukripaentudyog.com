@@ -451,7 +451,8 @@ function QuotationsTab({ onActioned }: { onActioned: (msg: string) => void }) {
                 <p className="text-xs text-[#6B5545] mb-2">
                   Created {formatDate(q.createdAt)} · Valid until {formatDate(q.validUntil)}
                 </p>
-                <table className="w-full text-xs border-collapse mb-2">
+                <div className="overflow-x-auto mb-2">
+                <table className="w-full text-xs border-collapse min-w-[300px]">
                   <thead>
                     <tr className="text-left text-neutral-500">
                       <th className="py-1 font-bold">Item</th>
@@ -469,6 +470,7 @@ function QuotationsTab({ onActioned }: { onActioned: (msg: string) => void }) {
                     ))}
                   </tbody>
                 </table>
+                </div>
                 <div className="text-xs text-[#4A3728] space-y-0.5 mb-3">
                   {q.discountAmount > 0 && <p>Discount: −{formatINR(q.discountAmount)}</p>}
                   <p>GST (5%): {formatINR(q.cgst + q.sgst)} (CGST {formatINR(q.cgst)} + SGST {formatINR(q.sgst)})</p>

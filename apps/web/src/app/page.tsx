@@ -22,14 +22,14 @@ export default function HomePage() {
       <ProductCardGrid />
 
       {/* 3-in-1 Estimator */}
-      <section className="py-10 bg-[#F5F0EC] border-y border-neutral-300" aria-labelledby="estimator-heading">
+      <section className="py-6 sm:py-10 bg-[#F5F0EC] border-y border-neutral-300" aria-labelledby="estimator-heading">
         <div className="container mx-auto px-4">
           <EstimatorStudio />
         </div>
       </section>
 
       {/* Manufacturing process */}
-      <section className="py-14 container mx-auto px-4" aria-labelledby="process-heading">
+      <section className="py-10 sm:py-14 container mx-auto px-4" aria-labelledby="process-heading">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-6 space-y-4 text-sm text-[#4A3728] leading-relaxed">
             <span className="text-xs font-bold text-[#C8460A] uppercase tracking-wider block">
@@ -102,9 +102,9 @@ export default function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-sm text-center font-bold text-[#1C1009] list-none">
+          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 text-sm text-center font-bold text-[#1C1009] list-none">
             {['Jaunpur City', 'Varanasi (Lanka)', 'Jalalpur', 'Trilochan', 'Shahganj', 'Sultanpur'].map((c) => (
-              <li key={c} className="p-4 bg-[#FAFAF9] border border-neutral-200 rounded">
+              <li key={c} className="p-3 sm:p-4 bg-[#FAFAF9] border border-neutral-200 rounded">
                 {c}
               </li>
             ))}

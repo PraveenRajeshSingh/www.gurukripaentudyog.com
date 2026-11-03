@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function TrackerPage() {
   return (
-    <div className="py-12 container mx-auto px-4">
+    <div className="py-8 sm:py-12 container mx-auto px-4">
       <div className="text-center max-w-xl mx-auto mb-8">
         <span className="text-xs font-extrabold uppercase tracking-wider text-[#C8460A] bg-[rgba(200,70,10,0.08)] px-3 py-1 rounded-full">
           Live Dispatch

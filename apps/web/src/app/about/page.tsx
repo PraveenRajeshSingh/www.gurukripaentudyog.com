@@ -28,7 +28,7 @@ export default function AboutPage() {
       </div>
 
       <div className="space-y-8 text-sm text-[#4A3728] leading-relaxed">
-        <div className="bg-white p-6 sm:p-8 rounded-xl border border-neutral-200">
+        <div className="bg-white p-5 sm:p-8 rounded-xl border border-neutral-200">
           <h2 className="text-xl font-black text-[#1C1009] mb-3">Our Manufacturing Standards</h2>
           <p>
             Brick making is an exact discipline. We select alluvial clay from the Gangetic plains,
@@ -43,8 +43,8 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="bg-[#FAFAF9] p-5 rounded-xl border border-neutral-200">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          <div className="bg-[#FAFAF9] p-4 sm:p-5 rounded-xl border border-neutral-200">
             <FlameIcon className="w-7 h-7 text-[#C8460A] mb-2" />
             <h3 className="font-bold text-[#1C1009] text-base mb-1">Double-Fired</h3>
             <p className="text-xs text-[#6B5545]">
@@ -52,7 +52,7 @@ export default function AboutPage() {
               low water absorption.
             </p>
           </div>
-          <div className="bg-[#FAFAF9] p-5 rounded-xl border border-neutral-200">
+          <div className="bg-[#FAFAF9] p-4 sm:p-5 rounded-xl border border-neutral-200">
             <ScaleIcon className="w-7 h-7 text-[#C8460A] mb-2" />
             <h3 className="font-bold text-[#1C1009] text-base mb-1">Count-Verified Trolleys</h3>
             <p className="text-xs text-[#6B5545]">
@@ -60,7 +60,7 @@ export default function AboutPage() {
               contractors can check what they pay for.
             </p>
           </div>
-          <div className="bg-[#FAFAF9] p-5 rounded-xl border border-neutral-200">
+          <div className="bg-[#FAFAF9] p-4 sm:p-5 rounded-xl border border-neutral-200">
             <BuildingIcon className="w-7 h-7 text-[#C8460A] mb-2" />
             <h3 className="font-bold text-[#1C1009] text-base mb-1">Institutional Supply</h3>
             <p className="text-xs text-[#6B5545]">
@@ -83,14 +83,14 @@ export default function AboutPage() {
           </figcaption>
         </figure>
 
-        <div className="bg-white p-6 sm:p-8 rounded-xl border border-neutral-200">
+        <div className="bg-white p-5 sm:p-8 rounded-xl border border-neutral-200">
           <h2 className="text-xl font-black text-[#1C1009] mb-1">
             Authorized Partners &amp; Supply Network
           </h2>
           <p className="text-xs text-[#6B5545] mb-5">
             Long-standing suppliers, dealers and logistics partners named by the kiln.
           </p>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 list-none p-0 m-0">
             {VENDORS.map((v) => (
               <li key={v.name} className="p-4 bg-[#FAFAF9] rounded-lg border border-neutral-200 text-xs">
                 <div className="flex items-center gap-2 mb-1">

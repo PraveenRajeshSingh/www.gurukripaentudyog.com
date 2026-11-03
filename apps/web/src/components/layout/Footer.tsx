@@ -10,8 +10,8 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1C1009] text-[#FAFAF9] pt-14 pb-10 border-t-4 border-[#C8460A]">
-      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+    <footer className="bg-[#1C1009] text-[#FAFAF9] pt-10 sm:pt-14 pb-8 sm:pb-10 border-t-4 border-[#C8460A]">
+      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8 sm:mb-10">
         {/* Col 1: Brand */}
         <div>
           <div className="flex items-center gap-3 mb-4">

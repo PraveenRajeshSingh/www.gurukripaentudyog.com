@@ -14,7 +14,7 @@ export default function ProductCardGrid() {
   const { addItem } = useCart();
 
   return (
-    <section className="py-14 container mx-auto px-4" aria-labelledby="grades-heading">
+    <section className="py-10 sm:py-14 container mx-auto px-4" aria-labelledby="grades-heading">
       <div className="border-b-2 border-neutral-200 pb-4 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
         <div>
           <span className="text-xs font-bold text-[#C8460A] uppercase tracking-wider">
@@ -29,7 +29,7 @@ export default function ProductCardGrid() {
         </Link>
       </div>
 
-      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 list-none">
+      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 list-none">
         {PRODUCTS.slice(0, 4).map((p) => {
           const trolleyPrice = p.price * 4000;
           return (

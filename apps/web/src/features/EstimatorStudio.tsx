@@ -65,9 +65,9 @@ export default function EstimatorStudio() {
   };
 
   return (
-    <div id="estimator" className="bg-white rounded-2xl border border-[rgba(200,70,10,0.15)] shadow-xl overflow-hidden my-8">
+    <div id="estimator" className="bg-white rounded-2xl border border-[rgba(200,70,10,0.15)] shadow-xl overflow-hidden">
       {/* Studio Header */}
-      <div className="bg-[#8B2E05] text-white p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="bg-[#8B2E05] text-white p-4 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <span className="bg-[#F5A623] text-[#1C1009] text-[11px] font-extrabold uppercase px-2.5 py-1 rounded tracking-wider inline-block mb-2">
             3-in-1 Estimator Studio
@@ -114,7 +114,7 @@ export default function EstimatorStudio() {
       </div>
 
       {/* Studio Body: Inputs + Real-time Results */}
-      <div id="estimator-panel" role="tabpanel" aria-label={`${tab} estimator`} className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div id="estimator-panel" role="tabpanel" aria-label={`${tab} estimator`} className="p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
         {/* Left: Inputs */}
         <div className="lg:col-span-6 space-y-4">
           {tab === 'wall' && (
@@ -126,7 +126,7 @@ export default function EstimatorStudio() {
                     type="number"
                     value={wallLen}
                     onChange={(e) => setWallLen(Math.max(1, parseFloat(e.target.value) || 0))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                    className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                   />
                 </div>
                 <div>
@@ -135,7 +135,7 @@ export default function EstimatorStudio() {
                     type="number"
                     value={wallHt}
                     onChange={(e) => setWallHt(Math.max(1, parseFloat(e.target.value) || 0))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                    className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                   />
                 </div>
               </div>
@@ -145,7 +145,7 @@ export default function EstimatorStudio() {
                   <select
                     value={wallThick}
                     onChange={(e) => setWallThick(parseFloat(e.target.value))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                    className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                   >
                     <option value={9}>9-inch Outer Wall</option>
                     <option value={4.5}>4.5-inch Partition Wall</option>
@@ -156,7 +156,7 @@ export default function EstimatorStudio() {
                   <select
                     value={wallPrice}
                     onChange={(e) => setWallPrice(parseFloat(e.target.value))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                    className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                   >
                     <option value={12}>Shiv Eent Grade-A (₹12)</option>
                     <option value={7.05}>Awwal Bricks (₹7.05)</option>
@@ -176,7 +176,7 @@ export default function EstimatorStudio() {
                   type="number"
                   value={houseArea}
                   onChange={(e) => setHouseArea(Math.max(100, parseFloat(e.target.value) || 0))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                  className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -185,7 +185,7 @@ export default function EstimatorStudio() {
                   <select
                     value={houseFloors}
                     onChange={(e) => setHouseFloors(parseInt(e.target.value, 10))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                    className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                   >
                     <option value={1}>Single Story (G)</option>
                     <option value={2}>Double Story (G+1)</option>
@@ -197,7 +197,7 @@ export default function EstimatorStudio() {
                   <select
                     value={housePrice}
                     onChange={(e) => setHousePrice(parseFloat(e.target.value))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                    className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                   >
                     <option value={7.05}>Awwal Bricks (₹7.05)</option>
                     <option value={12}>Shiv Eent Grade-A (₹12)</option>
@@ -216,7 +216,7 @@ export default function EstimatorStudio() {
                   type="number"
                   value={boundPerim}
                   onChange={(e) => setBoundPerim(Math.max(10, parseFloat(e.target.value) || 0))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                  className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -226,7 +226,7 @@ export default function EstimatorStudio() {
                     type="number"
                     value={boundHt}
                     onChange={(e) => setBoundHt(Math.max(1, parseFloat(e.target.value) || 0))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                    className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                   />
                 </div>
                 <div>
@@ -234,7 +234,7 @@ export default function EstimatorStudio() {
                   <select
                     value={boundThick}
                     onChange={(e) => setBoundThick(parseFloat(e.target.value))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                    className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                   >
                     <option value={4.5}>4.5-inch Standard</option>
                     <option value={9}>9-inch Reinforced</option>
@@ -246,7 +246,7 @@ export default function EstimatorStudio() {
                 <select
                   value={boundPrice}
                   onChange={(e) => setBoundPrice(parseFloat(e.target.value))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm font-semibold focus:outline-[#C8460A]"
+                  className="w-full min-h-[44px] px-3 py-2 border border-neutral-300 rounded-lg text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#C8460A]"
                 >
                   <option value={6.25}>Laal Peti Bricks (₹6.25)</option>
                   <option value={7.05}>Awwal Bricks (₹7.05)</option>
@@ -263,7 +263,7 @@ export default function EstimatorStudio() {
         </div>
 
         {/* Right: Results Breakdown */}
-        <div className="lg:col-span-6 flex flex-col justify-between bg-[#FAFAF9] p-6 rounded-xl border border-[rgba(200,70,10,0.12)]">
+        <div className="lg:col-span-6 flex flex-col justify-between bg-[#FAFAF9] p-4 sm:p-6 rounded-xl border border-[rgba(200,70,10,0.12)]">
           <div>
             <span className="text-[11px] font-bold tracking-wider text-[#6B5545] uppercase">
               Real-Time Quantity Breakdown

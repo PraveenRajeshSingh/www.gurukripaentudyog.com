@@ -56,7 +56,7 @@ export default function ServicesPage() {
         {services.map((s) => (
           <li
             key={s.title}
-            className="bg-white p-6 rounded-xl border border-neutral-200 flex flex-col justify-between"
+            className="bg-white p-5 sm:p-6 rounded-xl border border-neutral-200 flex flex-col justify-between"
           >
             <div>
               <div className="flex justify-between items-start mb-4 gap-3">
@@ -80,22 +80,22 @@ export default function ServicesPage() {
         ))}
       </ul>
 
-      <div className="bg-[#8B2E05] text-white p-6 sm:p-8 rounded-xl text-center">
+      <div className="bg-[#8B2E05] text-white p-5 sm:p-8 rounded-xl text-center">
         <h2 className="text-2xl font-black mb-2">Need a trolley schedule or bulk quote?</h2>
         <p className="text-sm text-neutral-200 max-w-xl mx-auto mb-6">
           The dispatch desk confirms routes, load access and vehicle availability for your site
           pincode before an order is accepted.
         </p>
-        <div className="flex justify-center gap-4 flex-wrap">
+        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
           <a
             href="tel:+919198923230"
-            className="inline-flex items-center gap-2 bg-[#F5A623] hover:bg-amber-400 text-[#1C1009] font-extrabold min-h-[48px] px-6 py-3 rounded-lg text-sm transition"
+            className="inline-flex items-center justify-center gap-2 bg-[#F5A623] hover:bg-amber-400 text-[#1C1009] font-extrabold min-h-[48px] px-6 py-3 rounded-lg text-sm transition"
           >
             <PhoneIcon className="w-4 h-4" /> Call Dispatch: +91 91989 23230
           </a>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold min-h-[48px] px-6 py-3 rounded-lg text-sm transition"
+            className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold min-h-[48px] px-6 py-3 rounded-lg text-sm transition"
           >
             <MessageIcon className="w-4 h-4" /> Submit Formal Enquiry
           </Link>
