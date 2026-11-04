@@ -47,6 +47,13 @@
             color: rgba(255, 255, 255, .75)
         }
 
+        /* Long address wraps inside the column instead of overflowing it. */
+.footer-contact-row a.footer-map-link {
+            text-decoration: underline dotted;
+            text-underline-offset: 3px;
+            overflow-wrap: anywhere
+        }
+
         .footer-contact-row a:hover {
             color: var(--brand-amber)
         }
@@ -69,13 +76,27 @@
             margin-bottom: 8px
         }
 
-        .footer-links a {
+        .footer-links a,
+        .footer-links button {
             font-size: .84rem;
             color: rgba(255, 255, 255, .6);
             transition: color var(--t)
         }
 
-        .footer-links a:hover {
+        /* Footer entries that open a modal are buttons, not links - reset the UA
+           button defaults so they align with the anchor rows around them. */
+        .footer-links button {
+            background: none;
+            border: 0;
+            padding: 0;
+            width: 100%;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer
+        }
+
+        .footer-links a:hover,
+        .footer-links button:hover {
             color: var(--brand-amber)
         }
 
@@ -86,8 +107,8 @@
         }
 
         .social-btn {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: var(--r-sm);
             background: rgba(255, 255, 255, .07);
             border: 1px solid rgba(255, 255, 255, .1);

@@ -1,0 +1,75 @@
+﻿typeless buttons total      : 68
+  must stay submit buttons  : 0 (inside a form, no onclick)
+  safe to make type=button  : 68
+
+--- must stay submit (do NOT blanket-patch) ---
+
+--- to convert ---
+  admin-dashboard-modal.html:12  closeAdminPortal()   |Γ£ò|
+  admin-dashboard-modal.html:20  switchAdminTab('overview', this)   ||
+  admin-dashboard-modal.html:24  switchAdminTab('quotations', this)   ||
+  admin-dashboard-modal.html:28  switchAdminTab('orders', this)   ||
+  admin-dashboard-modal.html:32  switchAdminTab('inventory', this)   ||
+  admin-dashboard-modal.html:36  switchAdminTab('dispatch', this)   ||
+  admin-dashboard-modal.html:40  switchAdminTab('invoices', this)   ||
+  admin-dashboard-modal.html:44  switchAdminTab('financials', this)   ||
+  admin-dashboard-modal.html:48  switchAdminTab('company', this)   ||
+  brick-quality-specifications-and-sound-tester.html:28  playBrickSound('gradeA')   |≡ƒöö Ringing Bell Sound (αñûαñ¿αñò)|
+  brick-quality-specifications-and-sound-tester.html:36  playBrickSound('awwal')   |≡ƒöö Sharp Ringing|
+  brick-quality-specifications-and-sound-tester.html:44  playBrickSound('laalPeti')   |≡ƒöë Clear Tone|
+  brick-quality-specifications-and-sound-tester.html:52  playBrickSound('gradeA')   |≡ƒöö Crisp Metallic|
+  brick-quality-specifications-and-sound-tester.html:60  playBrickSound('standard')   |≡ƒöê Dull Thud|
+  brick-quality-specifications-and-sound-tester.html:74  playBrickSound('gradeA')   |≡ƒöö Test G|
+  brick-quality-specifications-and-sound-tester.html:77  playBrickSound('standard')   |≡ƒöê Test L|
+  bulk-quotation-modal.html:9  closeBulkQuoteModal()   |Γ£ò|
+  calculator-2-0.html:159  (no handler!)   |Check|
+  calculator-2-0.html:183  document.getElementById('saveSitePanel').classList.toggle('h   |≡ƒÆ╛ Save Curre|
+  calculator-2-0.html:199  saveConstructionSite()   |≡ƒÆ╛ Save Site|
+  cart-drawer.html:9  closeCart()   |Γ£ò|
+  cart-drawer.html:44  closeCart();scrollToSection('products')   |Browse Products ΓåÆ|
+  cart-drawer.html:51  applyCoupon()   |Apply|
+  cart-drawer.html:88  openCheckout()   ||
+  chatbot.html:10  toggleChatbot()   |Γ£ò|
+  checkout-modal.html:14  closeCheckout()   |Γ£ò|
+  checkout-modal.html:232  backToDetails()   |ΓåÉ Back to details|
+  checkout-modal.html:258  closeCheckout()   |Continue Shopping|
+  company-profile-modal.html:9  closeCompanyProfile()   |Γ£ò|
+  company-profile-modal.html:103  resetCompanyProfileForm()   |Reset to defaults|
+  company-profile-modal.html:105  closeCompanyProfile()   |Cancel|
+  company-profile-modal.html:106  saveCompanyProfileForm()   |Save profile|
+  faq.html:20  toggleFaq(this)   ||
+  faq.html:31  toggleFaq(this)   ||
+  faq.html:42  toggleFaq(this)   ||
+  faq.html:52  toggleFaq(this)   ||
+  faq.html:62  toggleFaq(this)   ||
+  gst-tax-invoice-modal.html:9  closeGstInvoice()   |Γ£ò|
+  gst-tax-invoice-modal.html:17  closeGstInvoice()   |Close|
+  gst-tax-invoice-modal.html:18  window.print()   |≡ƒû¿∩╕Å Print / Save PDF|
+  invoice-print-modal.html:9  closeInvoicePdf()   |Γ£ò|
+  invoice-print-modal.html:15  printCurrentInvoice()   |≡ƒû¿∩╕Å Print / Save PDF|
+  invoice-print-modal.html:16  downloadCurrentInvoice()   |Γ¼ç∩╕Å Download|
+  invoice-print-modal.html:17  shareCurrentInvoice()   |≡ƒöù Share|
+  invoice-print-modal.html:18  resendCurrentInvoice()   |Γ£ë∩╕Å Resend|
+  invoice-print-modal.html:19  closeInvoicePdf()   |Close|
+  legal-modal.html:9  closeLegalModal()   |Γ£ò|
+  legal-modal.html:14  switchLegalTab('privacy')   |≡ƒöÆ Privacy Policy|
+  legal-modal.html:15  switchLegalTab('terms')   |ΓÜû∩╕Å Terms of Sale|
+  legal-modal.html:16  switchLegalTab('shipping')   |≡ƒÜÜ Shipping &amp; Delivery|
+  legal-modal.html:17  switchLegalTab('quality')   |≡ƒÅå Quality Standards|
+  legal-modal.html:65  closeLegalModal()   |Understood &amp; Close|
+  live-order-and-delivery-tracker-modal.html:10  closeTrackerModal()   |Γ£ò|
+  live-order-and-delivery-tracker-modal.html:15  trackOrderSubmit()   |Search|
+  live-order-and-delivery-tracker-modal.html:18  demoTrackerOrder()   |Γ£¿ Test Demo Active Dispatch|
+  mobile-floating-quick-action-bar.html:12  openTrackerModal()   ||
+  notification-center.html:15  closeNotificationCenter()   |Γ£ò|
+  product-detail-modal.html:6  closeProductModal()   |Γ£ò|
+  products.html:12  filterProducts('all',this)   |All Materials|
+  products.html:13  filterProducts('shiv-eent',this)   |Shiv Eent (Grade-A)|
+  products.html:14  filterProducts('awwal',this)   |Awwal αñêαñéαñƒ (Heavy Duty)|
+  products.html:15  filterProducts('laal-peti',this)   |Laal Peti (Popular)|
+  products.html:16  filterProducts('premium',this)   |First Class Red|
+  products.html:17  filterProducts('machine-made',this)   |Machine Wirecut|
+  products.html:18  filterProducts('standard',this)   |Standard Bricks|
+  topbar.html:20  setLang('en')   |≡ƒç¼≡ƒçº EN|
+  topbar.html:21  setLang('hi')   |≡ƒç«≡ƒç│ HI|
+  whatsapp-float.html:17  lbClose()   |Γ£ò|

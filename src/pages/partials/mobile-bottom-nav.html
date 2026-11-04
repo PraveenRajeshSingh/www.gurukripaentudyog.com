@@ -2,10 +2,10 @@
     <!-- Five flat, native-style destinations. Everything secondary (wishlist,
          account, alerts, language) lives in the slide-in drawer so the bar
          never grows past five targets on a narrow phone. -->
-    <nav class="mobile-nav" role="navigation" aria-label="Mobile Navigation Bar">
+    <nav class="mobile-nav" aria-label="Mobile Navigation Bar">
         <div class="mobile-nav-inner">
             <!-- 1. Home -->
-            <a href="#home" class="mn-item active" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate(30)" aria-label="Home">
+            <a href="#home" class="mn-item active" aria-current="true" onclick="setMNActive(this);mnFeedback()" aria-label="Home">
                 <span class="mn-icon-wrap">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -16,7 +16,7 @@
             </a>
 
             <!-- 2. Products -->
-            <a href="#products" class="mn-item" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate(30)" aria-label="Product catalog">
+            <a href="#products" class="mn-item" onclick="setMNActive(this);mnFeedback()" aria-label="Product catalog">
                 <span class="mn-icon-wrap">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <rect x="3" y="3" width="7" height="7" rx="1.5" />
@@ -42,7 +42,7 @@
             </button>
 
             <!-- 4. Cart -->
-            <button type="button" class="mn-item mn-item-cart" onclick="setMNActive(this);openCart();if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate([30,15,30])" aria-label="Shopping cart">
+            <button type="button" class="mn-item mn-item-cart" onclick="setMNActive(this, false);openCart();mnFeedback()" aria-label="Shopping cart">
                 <span class="mn-icon-wrap">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />

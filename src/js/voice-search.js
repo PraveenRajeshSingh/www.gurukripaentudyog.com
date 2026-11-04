@@ -32,8 +32,10 @@ const VoiceSearch = (function () {
     function setVisual(on) {
         const btn = button();
         if (!btn) return;
-        btn.style.color = on ? 'var(--brand)' : 'var(--ink-3)';
-        btn.style.background = on ? 'var(--brand-light)' : 'none';
+        // A class rather than inline styles: inline colour would outrank the
+        // button's own :hover rule, so the control would stop reacting once the
+        // user had used it once.
+        btn.classList.toggle('is-listening', !!on);
         btn.setAttribute('aria-pressed', on ? 'true' : 'false');
         btn.title = on ? 'Listening… tap to stop' : 'Voice search (' + locale() + ')';
     }
@@ -113,7 +115,8 @@ const VoiceSearch = (function () {
         markAvailability: () => {
             const btn = button();
             if (!btn || supported()) return;
-            btn.style.opacity = '.55';
+            btn.classList.add('is-disabled');
+            btn.disabled = true;
             btn.title = 'Voice search is not available in this browser';
         }
     };

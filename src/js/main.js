@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'initScrollReveal': () => initScrollReveal(),
         'initTouchSwipe': () => initTouchSwipe(),
         'prefillUserInCheckout': () => prefillUserInCheckout(),
-        'setupOtpInputs': () => setupOtpInputs(),
         'setLang': () => setLang(currentLang),
         'initGoogleSignIn': () => initGoogleSignIn(),
         'initAlerts': () => { if (window.PushNotifications) PushNotifications.init(); },

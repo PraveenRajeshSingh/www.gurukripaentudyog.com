@@ -19,6 +19,10 @@ const _waSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentCol
 
 const _phoneSVG = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>`;
 
+const _truckSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
+
+const _chevRightSVG = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>`;
+
 const WA_NUMBER = '919198923230';
 function waOrderURL(name, qty) {
     const msg = `Namaste! I'd like to order ${name}` + (qty ? ` — ${qty} pieces` : '') + `. Please share the best price and delivery time. (Gurukripa Bricks)`;
@@ -53,25 +57,35 @@ function renderProductCard(p) {
     const stockTxt = sanitizeHTML(p.stockText || (p.stock === 'in-stock' ? 'In Stock (10k+) · Chamber #3 Live' : 'Limited Stock'));
 
     return `
-    <div class="product-card fade-in industrial-card" data-category="${sanitizeHTML(p.category)}">
-      <div class="product-card-img-wrap" style="position:relative;aspect-ratio:4/3;overflow:hidden">
-        <img class="product-card-img" src="${p.img}" alt="${name}" loading="lazy" width="320" height="240" style="width:100%;height:100%;object-fit:cover">
-        <div class="card-pill-tags">
-            ${p.badge ? `<span class="product-pill-badge best-seller">${sanitizeHTML(p.badge)}</span>` : '<span class="product-pill-badge best-seller">Grade-A</span>'}
-            <span class="product-pill-badge discount">-${discountPct}%</span>
+    <article class="product-card industrial-card fade-in" data-category="${sanitizeHTML(p.category)}" data-product-id="${p.id}">
+      <div class="product-card-media">
+        <img class="product-card-img" src="${p.img}" alt="${name}" loading="lazy" decoding="async" width="320" height="240">
+        <!-- Badges and the wishlist control share one flow row, so the heart
+             can never land on top of a badge, the image caption or the price. -->
+        <div class="card-media-bar">
+            <div class="card-pill-tags">
+                ${p.badge ? `<span class="product-pill-badge best-seller">${sanitizeHTML(p.badge)}</span>` : '<span class="product-pill-badge best-seller">Grade-A</span>'}
+                <span class="product-pill-badge discount">-${discountPct}%</span>
+            </div>
+            <button type="button" class="wishlist-btn ${isWish ? 'active' : ''}" data-wish-id="${p.id}"
+                aria-pressed="${isWish ? 'true' : 'false'}"
+                aria-label="${isWish ? 'Remove ' + name + ' from wishlist' : 'Add ' + name + ' to wishlist'}">
+                ${_heartSVG(isWish)}
+            </button>
         </div>
-        <button class="wishlist-btn ${isWish ? 'active' : ''}" onclick="toggleWishlist(${p.id},this)" aria-label="${isWish ? 'Remove from' : 'Add to'} wishlist">
-          ${_heartSVG(isWish)}
-        </button>
       </div>
 
       <div class="product-card-body">
         <div class="product-card-rating">
-          <span class="product-card-stars" aria-label="${p.rating} out of 5 stars">${starHTML}</span>
+          <span class="product-card-stars" role="img" aria-label="${p.rating} out of 5 stars">${starHTML}</span>
           <span class="product-card-rating-num">(${p.reviews || 48})</span>
         </div>
 
-        <h3 class="product-card-name" onclick="openProductDetail(${p.id})">${name}</h3>
+        <h3 class="product-card-name">
+          <button type="button" class="product-card-name-btn" onclick="openProductDetail(${p.id})">${name}</button>
+        </h3>
+
+        <p class="product-card-desc">${desc}</p>
 
         <div class="product-card-price-row">
           <div class="price-val-group">
@@ -83,25 +97,25 @@ function renderProductCard(p) {
 
         <div class="product-per1000">≈ ₹${per1000} per 1,000 pcs · Min 100 pcs</div>
         <div class="product-stock-status ${stockCls}">
-          <span class="stock-status-dot"></span>
+          <span class="stock-status-dot" aria-hidden="true"></span>
           <span>${stockTxt}</span>
         </div>
 
         <div class="product-trolley-badge">Trolley Rate: <strong>₹${trolleyPrice.toLocaleString('en-IN')}</strong> (4k pcs)</div>
-        
-        <div style="margin:6px 0 10px;display:flex;align-items:center;justify-content:space-between;font-size:0.75rem;color:var(--ink-3)">
-            <span>🚚 Same-day dispatch</span>
-            <button type="button" class="link-btn" onclick="openPincodeModal('${name}')" style="font-size:0.75rem;color:var(--brand);font-weight:700">Check Delivery →</button>
+
+        <div class="product-delivery-meta">
+            <span class="product-delivery-meta__label">${_truckSVG} Same-day dispatch</span>
+            <button type="button" class="link-btn" onclick="openPincodeModal('${name}')">Check Delivery ${_chevRightSVG}</button>
         </div>
 
         <div class="product-card-actions">
-          <button class="product-add-btn btn-full" onclick="triggerCartBounce(this);addToCart(${p.id});if(navigator.vibrate)navigator.vibrate(30)">
+          <button type="button" class="product-add-btn btn-full" onclick="triggerCartBounce(this);addToCart(${p.id});if(navigator.vibrate)navigator.vibrate(30)">
             ${_cartSVG} Add to Cart
           </button>
-          <a class="product-wa-btn" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" aria-label="Order on WhatsApp" title="Order on WhatsApp">${_waSVG}</a>
+          <a class="product-wa-btn" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" aria-label="Order ${name} on WhatsApp" title="Order on WhatsApp">${_waSVG}</a>
         </div>
       </div>
-    </div>`;
+    </article>`;
 }
 
 function handlePriceRangeFilter(val) {
@@ -245,34 +259,26 @@ function handleProductModalClick(e) {
     if (e.target.id === 'productModal') closeProductModal();
 }
 
+// Wishlist hearts are event-delegated: cards are re-rendered on every
+// filter/sort, so binding per-button would leak handlers.
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('.wishlist-btn[data-wish-id]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(parseInt(btn.getAttribute('data-wish-id'), 10), btn);
+});
+
 function toggleWishlist(id, btn) {
-    let wasAdded = false;
-    if (wishlist.includes(id)) {
-        wishlist = wishlist.filter(x => x !== id);
-        if (btn) {
-            btn.classList.remove('active');
-            btn.innerHTML = _heartSVG(false);
-            btn.setAttribute('aria-label', 'Add to wishlist');
-        }
-    } else {
-        wishlist.push(id);
-        wasAdded = true;
-        if (btn) {
-            btn.classList.add('active');
-            btn.innerHTML = _heartSVG(true);
-            btn.setAttribute('aria-label', 'Remove from wishlist');
-        }
-        showToast(t('wishlist.added'));
+    const wasAdded = !isWishlisted(id);
+    setWishlistMembership(id, wasAdded);
+    // Repaint every control for this product (catalogue card, wishlist
+    // drawer, profile hub) so state can never disagree between surfaces.
+    syncWishlistUI();
+    if (btn && btn.classList.contains('wishlist-btn')) {
+        btn.classList.add('pop');
+        setTimeout(() => btn.classList.remove('pop'), 400);
     }
-    setSafeStorage('gb_wishlist', wishlist);
-    if (typeof updateWishlistBadges === 'function') {
-        updateWishlistBadges();
-    } else {
-        const stat = document.getElementById('profileStatWishlist');
-        if (stat) stat.textContent = wishlist.length;
-        const navB = document.getElementById('wishlistBadgeNav');
-        if (navB) navB.textContent = wishlist.length;
-        const mobB = document.getElementById('mobileWishlistBadge');
-        if (mobB) mobB.textContent = wishlist.length;
-    }
+    if (window.Platform) Platform.haptic('light');
+    showToast(wasAdded ? t('wishlist.added') : t('wishlist.removed'), wasAdded ? 'success' : '');
 }

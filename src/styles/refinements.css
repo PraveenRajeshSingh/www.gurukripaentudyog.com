@@ -426,32 +426,38 @@ footer .footer-legal, .footer .footer-legal {
 }
 footer .brand-logo, .footer .brand-logo { filter: brightness(10) opacity(.9) }
 
-/* ── R11. Wishlist / heart button ───────────────────────────────── */
-.wishlist-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    transition: background .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease);
-    cursor: pointer;
+/* ── R11. Wishlist / heart button ─────────────────────────────────
+   Structure and base size live in sections.css (.card-media-bar /
+   .wishlist-btn). This layer only adds state feedback and the
+   phone-width size step, so the two files can no longer disagree. */
+.wishlist-btn svg {
+    width: 18px;
+    height: 18px;
 }
-.wishlist-btn .icon-heart-outline { display: block }
-.wishlist-btn .icon-heart-filled  { display: none; color: var(--danger) }
-.wishlist-btn.active .icon-heart-outline { display: none }
-.wishlist-btn.active .icon-heart-filled  { display: block }
-.wishlist-btn.active {
-    background: var(--danger-bg);
-    border-color: rgba(198, 40, 40, .3);
+.wishlist-btn:active { transform: scale(.92) }
+.wishlist-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring), 0 2px 8px rgba(28, 16, 9, .14);
+}
+.wishlist-btn.active svg {
+    fill: var(--danger);
+    stroke: var(--danger);
 }
 .wishlist-btn:hover:not(.active) {
-    background: var(--bg-subtle);
-    border-color: rgba(198, 40, 40, .3);
-    transform: scale(1.1);
+    background: var(--bg-card);
+    border-color: var(--danger-border);
+    color: var(--danger);
+    transform: scale(1.06);
 }
-.wishlist-btn.active:hover { transform: scale(1.1) }
+.wishlist-btn.active:hover { transform: scale(1.06) }
+
+/* On 2-column phone cards every pixel of media width counts. */
+@media (max-width: 560px) {
+    .card-media-bar { top: 6px; left: 6px; right: 6px; gap: 6px }
+    .wishlist-btn { width: 40px; height: 40px }
+    .wishlist-btn svg { width: 16px; height: 16px }
+    .product-pill-badge { font-size: .62rem; padding: 3px 7px }
+}
 
 /* Heart pop animation on toggle */
 @keyframes heartPop {
@@ -679,17 +685,17 @@ button, a, input, select, textarea { touch-action: manipulation }
         gap: 0;
     }
 
-    /* Horizontally scrollable category chips */
+    /* Category chips WRAP instead of scrolling sideways. A horizontally
+       scrollable rail hides the 4th+ filter completely on a phone, which
+       reads as a broken navigation bar. */
     .products-filters {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
+        flex-wrap: wrap;
+        overflow-x: visible;
+        gap: 8px;
         margin: 14px 0 18px;
-        padding-bottom: 4px;
+        padding-bottom: 0;
     }
-    .products-filters::-webkit-scrollbar { display: none; }
-    .filter-btn { flex: 0 0 auto; }
+    .filter-btn { flex: 0 1 auto; min-height: 44px; }
 
     .products-toolbar-left { display: flex; align-items: center; gap: 12px; }
     .mobile-filter-toggle { display: inline-flex; align-items: center; gap: 6px; }
@@ -733,13 +739,16 @@ button, a, input, select, textarea { touch-action: manipulation }
         border: none;
         background: var(--bg-subtle);
         color: var(--ink-2);
-        width: 30px;
-        height: 30px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
-        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
         line-height: 1;
     }
+    .filter-sheet-close svg { width: 16px; height: 16px }
     .filter-sheet-actions {
         display: block;
         position: sticky;
@@ -758,18 +767,29 @@ button, a, input, select, textarea { touch-action: manipulation }
     .filter-sheet-backdrop.open { display: block; opacity: 1; }
 }
 
-/* ── PHONES: compact 2-column product grid (essential info only) ── */
-@media (max-width: 560px) {
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
+/* ── PHONES: card density. Column counts live with the .products-grid
+   base definition further down, so media queries always win over it. ── */
+@media (max-width: 600px) {
     .industrial-card .product-card-body { padding: 12px; }
     .industrial-card .product-card-name { font-size: 0.9rem; }
     .industrial-card .product-card-rating { margin-bottom: 4px; }
-    .product-delivery-meta { display: none; }
-    .product-add-btn { font-size: 0.78rem; padding: 8px 10px; }
-    .product-card-img-wrap { aspect-ratio: 1 / 1; }
+    .industrial-card .product-trolley-badge { font-size: .68rem; padding: 5px 8px; margin-bottom: 10px; }
+    .product-per1000 { font-size: .68rem; }
+    .product-card-desc { display: none; }
+    .product-delivery-meta { font-size: .68rem; gap: 6px; margin-bottom: 8px; }
+    .product-add-btn { font-size: 0.74rem; padding: 8px 8px; }
+    .product-card-media { aspect-ratio: 4 / 3; }
+}
+
+@media (max-width: 360px) {
+    .industrial-card .product-card-body { padding: 16px; }
+    .industrial-card .product-card-name { font-size: 1rem; }
+    .product-card-desc { display: -webkit-box; }
+    .product-delivery-meta { font-size: .74rem; }
+    .product-add-btn { font-size: .82rem; padding: 10px 14px; }
+    .wishlist-btn { width: 44px; height: 44px }
+    .wishlist-btn svg { width: 18px; height: 18px }
+    .product-card-media { aspect-ratio: 16 / 10; }
 }
 
 .catalog-filter-card {
@@ -853,11 +873,11 @@ button, a, input, select, textarea { touch-action: manipulation }
     border-color: rgba(183, 67, 46, 0.4);
 }
 
-.industrial-card .product-card-img-wrap {
+.industrial-card .product-card-media {
     position: relative;
     aspect-ratio: 16/11;
     overflow: hidden;
-    background: #111;
+    background: var(--bg-muted, #EDE5DF);
 }
 
 .industrial-card .product-card-img {
@@ -871,13 +891,13 @@ button, a, input, select, textarea { touch-action: manipulation }
     transform: scale(1.05);
 }
 
+/* Lives inside .card-media-bar as a flex child — no absolute positioning, so
+   badges can never slide under the wishlist heart. */
 .card-pill-tags {
-    position: absolute;
-    top: 12px;
-    left: 12px;
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
-    z-index: 2;
+    min-width: 0;
 }
 
 .product-pill-badge {
@@ -886,6 +906,7 @@ button, a, input, select, textarea { touch-action: manipulation }
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
 .product-pill-badge.best-seller {
@@ -925,11 +946,9 @@ button, a, input, select, textarea { touch-action: manipulation }
     color: var(--ink);
     margin-bottom: 8px;
     line-height: 1.35;
-    cursor: pointer;
-    transition: color 0.15s;
 }
 
-.industrial-card .product-card-name:hover {
+.industrial-card .product-card-name-btn:hover {
     color: var(--brand);
 }
 
@@ -1212,17 +1231,29 @@ main [id].cta-banner {
     }
 }
 
-/* ── Products & Catalog Grid Polish ── */
+/* ── Products & Catalog Grid ───────────────────────────────────────
+   ONE authoritative set of column rules, base first then the phone
+   breakpoints, so no later/unscoped rule can undo a media query. */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: clamp(16px, 2vw, 24px);
     width: 100%;
 }
 
+/* 361–600px: two columns. Below 360px a 2-up card drops under 150px and
+   the price/action row starts clipping, so it becomes a single column. */
 @media (max-width: 600px) {
     .products-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .products-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
     }
 }
 
@@ -1802,5 +1833,430 @@ main [id].cta-banner {
 
 @media (prefers-reduced-motion: reduce) {
     .gb-spin { animation-duration: 1.6s; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ACCOUNT HUB - PROFILE POPUP
+   The shared dialog shell (mobile-fixes.css "PREMIUM POPUP & DIALOG
+   SYSTEM") already gives every .modal-box a flex column, a clipped shell,
+   a bottom sheet + drag pill at <=768px and a scroll-safe .modal-body.
+   Rules below only add what the hub still needed: an anchored close button,
+   a tab strip that WRAPS instead of scrolling sideways, a body that can
+   actually shrink inside the flex column, and the new panels.
+   ════════════════════════════════════════════════════════════ */
+.profile-modal-box {
+    max-width: 560px;
+    position: relative; /* anchors .profile-close-btn - without it the absolute
+                            close button resolves against the fixed overlay and
+                            lands in the corner of the SCREEN, not the dialog */
+    padding: 0;
+}
+
+/* mobile-fixes.css gives the header its own top radius; inside a clipped flex
+   column that double radius reads as a seam. Let the box own the corners. */
+.profile-header { border-radius: 0; padding: 20px 20px 18px; flex-shrink: 0 }
+.profile-hub-metrics, .hub-quick, .profile-tabs { flex-shrink: 0 }
+
+/* Close control - 44x44 touch target with an SVG glyph. The shared
+   .modal-close-btn is forced to 34x34 !important, which is under the
+   comfortable-target requirement, so it is re-asserted here. */
+.profile-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 6;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px;
+    min-height: 44px;
+    background: rgba(255, 255, 255, .18) !important;
+    border: 1px solid rgba(255, 255, 255, .38) !important;
+    color: #fff !important;
+}
+.profile-close-btn:hover { background: rgba(255, 255, 255, .3) !important; transform: none }
+.profile-close-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px }
+
+/* Tabs WRAP instead of scrolling sideways. The rail had overflow-x:auto plus
+   white-space:nowrap, which pushed "Sites", "Wishlist" and "GST" off the edge
+   of a phone screen with no cue that they existed. */
+.profile-tabs {
+    overflow-x: visible;
+    padding: 0 8px;
+}
+.profile-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 46px;
+    padding: 10px 6px;
+    justify-content: center;
+    white-space: nowrap;
+}
+.profile-tab:focus-visible { outline: none; box-shadow: inset var(--focus-ring) }
+.profile-tab > svg { flex-shrink: 0 }
+
+/* The scrollable region. `flex:1 1 auto` + `min-height:0` lets the body shrink
+   inside the flex column; without it the dialog grows past the viewport and the
+   bottom actions are unreachable. `overscroll-behavior: contain` stops the list
+   chaining its scroll onto the page once you hit the end (§6). */
+.profile-modal-body {
+    flex: 1 1 auto !important;
+    min-height: 0;
+    max-height: none !important;
+    padding: 20px 22px !important;
+    overscroll-behavior: contain !important;
+}
+.profile-tab-panel { padding: 0 }
+
+/* Account details */
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.profile-info-card {
+    background: var(--bg-subtle);
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    border-radius: var(--r-sm);
+    min-width: 0;
+}
+.profile-info-card--wide { grid-column: 1 / -1 }
+.profile-info-label { font-size: .68rem; color: var(--ink-3); font-weight: 700; letter-spacing: .04em }
+.profile-info-value { font-weight: 700; color: var(--ink); font-size: .9rem; overflow-wrap: anywhere }
+
+.profile-view-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px }
+.profile-view-actions > .btn { flex: 1 1 150px }
+.profile-view-footer { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line) }
+
+.hub-nav { padding-top: 16px }
+.hub-nav__row {
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
+    font-size: .86rem;
+}
+.hub-nav__aside { font-size: .76rem; color: var(--ink-3); font-weight: 700; white-space: nowrap }
+
+/* Help and support - real tel: and WhatsApp destinations, not a stub */
+.hub-support { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px }
+.hub-support__btn {
+    flex: 1 1 150px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--line-mid);
+    border-radius: var(--r-sm);
+    background: var(--bg-card);
+    font-size: .84rem;
+    font-weight: 700;
+    color: var(--brand-dark);
+}
+.hub-support__btn:hover { background: var(--brand-glow) }
+.hub-support__btn--wa { color: #128c7e; border-color: rgba(18, 140, 126, .35) }
+.hub-support__btn--wa:hover { background: rgba(18, 140, 126, .1) }
+
+/* Empty states shared by the enquiry, site and wishlist panels */
+.hub-empty {
+    padding: 22px 14px;
+    text-align: center;
+    color: var(--ink-3);
+    font-size: .84rem;
+    border: 1px dashed var(--line-mid);
+    border-radius: var(--r-md);
+    margin-bottom: 14px;
+}
+
+/* Enquiries & quotation requests (gb_quotations ledger) */
+.enquiry-row {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: var(--bg-card);
+}
+.enquiry-row__top { display: flex; align-items: center; justify-content: space-between; gap: 10px }
+.enquiry-row__ref {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .74rem;
+    font-weight: 700;
+    color: var(--ink-3);
+}
+.enquiry-row__status {
+    font-size: .68rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: var(--radius-pill);
+    background: var(--brand-glow);
+    color: var(--brand-dark);
+    text-align: right;
+}
+.enquiry-row__title { font-size: .9rem; font-weight: 700; color: var(--ink); margin-top: 7px }
+.enquiry-row__meta { font-size: .76rem; color: var(--ink-3); margin-top: 2px }
+.enquiry-row__action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--brand);
+}
+.enquiry-row__action:hover { text-decoration: underline }
+
+/* Profile wishlist rows now carry two actions, so each entry owns a full row. */
+.wishlist-grid { grid-template-columns: 1fr }
+.wishlist-item-body { flex: 1 1 auto; min-width: 0 }
+.wishlist-item-actions { display: flex; gap: 6px; flex-shrink: 0 }
+.wishlist-item-actions .btn-sm { min-height: 36px }
+
+.sites-default-label {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: .9rem;
+    margin-bottom: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Inline field errors + monospace code fields (GSTIN / PAN) */
+.field-error { margin: 4px 0 0; font-size: .74rem; font-weight: 600; color: var(--danger) }
+.field-error:empty { display: none }
+.input-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace }
+.input-upper { text-transform: uppercase }
+
+/* Narrow phones: two tidy rows of three tabs rather than six unreadable
+   slivers, single-column account details, tighter shell padding. */
+@media (max-width: 540px) {
+    .profile-header { padding: 12px 14px 16px }
+    .profile-tabs { padding: 0 6px }
+    .profile-tab { flex: 1 1 33.333%; min-height: 44px; font-size: .78rem }
+    .profile-tab > svg { display: none }
+    .profile-modal-body { padding: 16px 14px calc(16px + env(safe-area-inset-bottom, 0px)) !important }
+    .profile-info-grid { grid-template-columns: 1fr }
+    .enquiry-row__top { flex-direction: column; align-items: flex-start; gap: 4px }
+    .enquiry-row__status { text-align: left }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   R11. Navigation & dialog markup pass
+   Every rule below backs a class that replaced either an inline style
+   attribute or an `<a href="#">` that really opened a dialog. Anchors
+   are links, controls that run script are buttons - so each button
+   reset exists to make a <button> render exactly like the link it
+   replaced, with no UA border, background or font left showing.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Header: voice-search toggle inside the search field ──────────── */
+.nav-voice-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: color var(--t), background var(--t);
+}
+.nav-voice-btn:hover { color: var(--brand); background: var(--brand-glow) }
+.nav-voice-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px }
+.nav-voice-btn.is-listening {
+    color: var(--brand);
+    background: var(--brand-light);
+    animation: gbVoicePulse 1.6s var(--ease) infinite;
+}
+.nav-voice-btn.is-disabled,
+.nav-voice-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    animation: none;
+}
+@keyframes gbVoicePulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--brand-glow) }
+    60%      { box-shadow: 0 0 0 7px rgba(200, 62, 10, 0) }
+}
+
+/* Typed text must stop short of the mic, and a section heading must clear
+   the sticky bar when the browser restores a hash on load. */
+.nav-search-input { padding-right: 44px }
+
+/* ── Drawer: rows that are buttons, language control, legal block ─── */
+button.drawer-link {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.drawer-link__count {
+    margin-left: auto;
+    min-width: 22px;
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    background: var(--brand-glow);
+    color: var(--brand-dark);
+    font-size: .72rem;
+    font-weight: 700;
+    text-align: center;
+}
+.drawer-lang-btn { min-height: 40px; justify-content: center }
+.drawer-lang-btn svg { flex-shrink: 0 }
+.drawer-legal {
+    text-align: center;
+    padding: 12px 16px calc(20px + var(--sab, 0px));
+    font-size: .76rem;
+    color: var(--ink-3);
+}
+
+/* The drawer's own close control is a primary escape hatch, so it gets the
+   44px minimum - the shared 48px rule in mobile-fixes targets .drawer-close-btn,
+   which is a different class and never matched this element. */
+.drawer-close {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+
+/* ── Auth dialog: panels, password gutters, link-shaped buttons ───── */
+.modal-head-tight { padding-top: 8px !important }
+
+/* The global mobile reset gives every modal input `padding: 12px 14px
+   !important`, which slides typed text under the leading field icon and the
+   trailing visibility toggle. That rule is `.modal-box input[type=...]` - two
+   class-level selectors plus a type - so the override needs three classes to
+   outrank it. Verified in the browser at 466px: 14px before, 40px after. */
+.modal-box .auth-input-wrap .auth-input { padding-left: 40px !important }
+.modal-box .auth-input-wrap .auth-input-pw { padding-right: 44px !important }
+
+.auth-submit-arrow { flex-shrink: 0 }
+
+button.auth-forgot {
+    border: 0;
+    background: none;
+    padding: 4px 2px;
+    font: inherit;
+    font-size: .8rem;
+    cursor: pointer;
+}
+button.auth-forgot:hover { text-decoration: underline }
+
+/* These replaced anchors, so they keep the link appearance the dialog had. */
+.auth-inline-link,
+.auth-switch-link {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--brand);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+.auth-inline-link:hover,
+.auth-switch-link:hover { color: var(--brand-dark) }
+
+/* ── Estimator: inline delivery pincode checker ───────────────────── */
+/* Replaces the inline style attributes this block was built with, and gives
+   the result panel the two readable states it never had before. */
+.calc-pin-checker {
+    margin-top: 14px;
+    padding: 14px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+}
+.calc-pin-checker__title {
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+.calc-pin-checker__row { display: flex; gap: 8px; align-items: stretch }
+.calc-pin-checker__row .calc-input { flex: 1 1 auto; min-width: 0; margin: 0 }
+.calc-pin-checker__row .btn { flex-shrink: 0; white-space: nowrap; min-height: 40px }
+.calc-pin-checker__result:not(:empty) { margin-top: 10px }
+
+.pin-check-result {
+    font-size: .82rem;
+    line-height: 1.55;
+    border-radius: var(--r-sm);
+    padding: 11px 13px;
+    margin: 0;
+}
+.pin-check-result--ok {
+    background: var(--bg-card);
+    border: 1px solid var(--line-mid);
+    color: var(--ink-2);
+}
+.pin-check-result--warn {
+    background: rgba(198, 40, 40, .06);
+    border: 1px solid rgba(198, 40, 40, .25);
+    color: var(--danger);
+}
+.pin-check-result__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+}
+.pin-check-result__head strong { font-size: .95rem; color: var(--ink) }
+.pin-check-result__pin {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .72rem;
+    font-weight: 700;
+    color: var(--brand);
+    background: var(--brand-glow);
+    border-radius: var(--r-xs);
+    padding: 2px 7px;
+    flex-shrink: 0;
+}
+.pin-check-result__line { margin: 4px 0 0; color: var(--ink-3) }
+.pin-check-result__freight { font-weight: 700; color: var(--brand) }
+.pin-check-result__cta { margin-top: 9px; min-height: 38px }
+
+/* ── Footer: description + delivery note blocks ───────────────────── */
+.newsletter-desc {
+    font-size: .8rem;
+    color: var(--ink-3);
+    margin: 0 0 10px;
+    line-height: 1.5;
+}
+.footer-delivery-note {
+    margin: 16px 0 0;
+    font-size: .78rem;
+    color: var(--ink-3);
+    line-height: 1.55;
+}
+
+/* ── FAB: help/close glyph swap, previously done with emoji text ──── */
+.fab-icon-close { display: none }
+.fab-main-btn.open .fab-icon-help { display: none }
+.fab-main-btn.open .fab-icon-close { display: block }
+
+/* The back-to-top button used to hold an arrow character; the SVG needs the
+   same optical centring the text had. */
+.scroll-top > svg { display: block }
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-voice-btn.is-listening { animation: none }
 }
 

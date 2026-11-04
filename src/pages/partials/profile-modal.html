@@ -1,11 +1,18 @@
-    <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-label="My profile" onclick="handleProfileOverlayClick(event)">
-        <div class="modal-box profile-modal-box" style="padding:0;overflow:hidden">
+    <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━
+         Mobile: bottom sheet (grab handle, sticky header + tabs, scrolling
+         body, safe-area aware). Desktop: centred 620px dialog.
+         All geometry lives in refinements.css / overlays.css - no inline styles,
+         because inline styles cannot respond to viewport or open mobile keyboard.
+    -->
+    <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileHeaderName" onclick="handleProfileOverlayClick(event)">
+        <div class="modal-box profile-modal-box">
             <!-- Compact header card: who is buying + what proof is on file -->
             <div class="profile-header">
-                <button class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close Profile Modal" style="position:absolute;top:12px;right:12px;color:#fff;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:50%;min-width:48px;min-height:48px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;z-index:25;pointer-events:auto">✕</button>
+                <button type="button" class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close profile">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
                 <div class="profile-header-inner">
-                    <div class="profile-avatar-large" id="profileAvatarLg" style="background:var(--brand)">
+                    <div class="profile-avatar-large" id="profileAvatarLg" aria-hidden="true">
                         <span id="profileAvatarLetter">U</span>
                     </div>
                     <div class="profile-header-info">
@@ -17,7 +24,7 @@
                             <span id="profileBuyerBadgeText">Retail Buyer</span>
                         </span>
                     </div>
-                    <button class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()">Edit</button>
+                    <button type="button" class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()">Edit</button>
                 </div>
             </div>
 
@@ -41,9 +48,9 @@
                 </div>
             </div>
 
-            <!-- Quick access grid (2×2) -->
+            <!-- Quick access grid (2x2) -->
             <div class="hub-quick">
-                <button class="hub-tile" onclick="openProfileTab('orders')">
+                <button type="button" class="hub-tile" onclick="openProfileTab('orders')">
                     <span class="hub-tile__top">
                         <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
                         <span class="hub-tile__badge" id="hubOrdersBadge">0</span>
@@ -51,7 +58,7 @@
                     <span class="hub-tile__label">My Orders &amp; Invoices</span>
                     <span class="hub-tile__meta" id="hubOrdersMeta">Track, reorder &amp; download bills</span>
                 </button>
-                <button class="hub-tile" onclick="openProfileTab('sites')">
+                <button type="button" class="hub-tile" onclick="openProfileTab('sites')">
                     <span class="hub-tile__top">
                         <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
                         <span class="hub-tile__badge" id="hubSitesBadge">0</span>
@@ -59,7 +66,7 @@
                     <span class="hub-tile__label">Saved Construction Sites</span>
                     <span class="hub-tile__meta" id="hubSitesMeta">None yet</span>
                 </button>
-                <button class="hub-tile" onclick="openProfileTab('wishlist')">
+                <button type="button" class="hub-tile" onclick="openProfileTab('wishlist')">
                     <span class="hub-tile__top">
                         <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
                         <span class="hub-tile__badge" id="hubWishlistBadge">0</span>
@@ -67,96 +74,132 @@
                     <span class="hub-tile__label">Wishlist</span>
                     <span class="hub-tile__meta">Bricks &amp; rates you are watching</span>
                 </button>
-                <button class="hub-tile" onclick="openProfileTab('gst')">
+                <button type="button" class="hub-tile" onclick="openProfileTab('enquiries')">
                     <span class="hub-tile__top">
-                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>
-                        <span class="hub-tile__badge" id="hubGstBadge">—</span>
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+                        <span class="hub-tile__badge" id="hubEnquiryBadge">0</span>
                     </span>
-                    <span class="hub-tile__label">GSTIN &amp; Business Info</span>
-                    <span class="hub-tile__meta" id="hubGstMeta">Not on file</span>
+                    <span class="hub-tile__label">Enquiries &amp; Quotations</span>
+                    <span class="hub-tile__meta" id="hubEnquiryMeta">RFQs logged on this device</span>
                 </button>
             </div>
 
-            <!-- Profile Navigation Tabs -->
-            <div class="profile-tabs">
-                <button class="profile-tab active" onclick="switchProfileTab('info',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Account Info</button>
-                <button class="profile-tab" onclick="switchProfileTab('orders',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> My Orders</button>
-                <button class="profile-tab" onclick="switchProfileTab('sites',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Sites</button>
-                <button class="profile-tab" onclick="switchProfileTab('wishlist',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Wishlist</button>
-                <button class="profile-tab" onclick="switchProfileTab('gst',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> GST Business</button>
+            <!-- Profile Navigation Tabs. These WRAP - a sideways-scrolling tab
+                 rail hid "Sites", "Wishlist" and "GST" completely on a phone.
+                 Plain buttons with aria-current rather than role="tab": every
+                 panel is reachable by Tab and the inactive ones are removed from
+                 the a11y tree with display:none, which is what the markup does. -->
+            <div class="profile-tabs" role="group" aria-label="Account sections">
+                <button type="button" aria-current="true" class="profile-tab active" onclick="switchProfileTab('info',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Account</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('orders',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Orders</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('enquiries',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> Enquiries</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('sites',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Sites</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('wishlist',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Wishlist</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('gst',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> GST</button>
             </div>
 
-            <div class="modal-body" style="padding:0">
+            <div class="modal-body profile-modal-body">
                 <!-- Tab 1: Account Info -->
                 <div class="profile-tab-panel active" id="pTabInfo">
                     <!-- View Mode -->
                     <div id="profileViewMode">
-                        <div class="profile-info-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
-                                <div class="profile-info-label" id="profileNameLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">FULL NAME</div>
-                                <div class="profile-info-value" id="profileViewName" style="font-weight:700;color:var(--ink)">—</div>
+                        <div class="profile-info-grid">
+                            <div class="profile-info-card">
+                                <div class="profile-info-label" id="profileNameLabel">FULL NAME</div>
+                                <div class="profile-info-value" id="profileViewName">—</div>
                             </div>
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
-                                <div class="profile-info-label" id="profileEmailLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">EMAIL ADDRESS</div>
-                                <div class="profile-info-value" id="profileViewEmail" style="font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis">—</div>
+                            <div class="profile-info-card">
+                                <div class="profile-info-label" id="profileEmailLabel">EMAIL ADDRESS</div>
+                                <div class="profile-info-value profile-info-value--break" id="profileViewEmail">—</div>
                             </div>
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
-                                <div class="profile-info-label" id="profileMobileLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">MOBILE NUMBER</div>
-                                <div class="profile-info-value" id="profileViewMobile" style="font-weight:700;color:var(--ink)">—</div>
+                            <div class="profile-info-card">
+                                <div class="profile-info-label" id="profileMobileLabel">MOBILE NUMBER</div>
+                                <div class="profile-info-value" id="profileViewMobile">—</div>
                             </div>
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
-                                <div class="profile-info-label" id="profileRefLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">CUSTOMER ID</div>
-                                <div class="profile-info-value" id="profileViewRef" style="font-weight:700;color:var(--ink)">—</div>
+                            <div class="profile-info-card">
+                                <div class="profile-info-label" id="profileRefLabel">CUSTOMER ID</div>
+                                <div class="profile-info-value" id="profileViewRef">—</div>
                             </div>
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm);grid-column:1/-1">
-                                <div class="profile-info-label" id="profileAddressLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">DEFAULT DELIVERY ADDRESS</div>
-                                <div class="profile-info-value" id="profileViewAddress" style="font-weight:700;color:var(--ink)">—</div>
+                            <div class="profile-info-card profile-info-card--wide">
+                                <div class="profile-info-label" id="profileAddressLabel">DEFAULT DELIVERY ADDRESS</div>
+                                <div class="profile-info-value" id="profileViewAddress">—</div>
                             </div>
                         </div>
-                        <div style="display:flex;gap:10px">
-                            <button class="btn btn-primary btn-full" onclick="switchToEditProfile()" id="profileEditBtn">Edit Profile</button>
-                            <button class="btn btn-outline btn-full" onclick="logoutUser();closeProfile()">Sign Out</button>
+                        <div class="profile-view-actions">
+                            <button type="button" class="btn btn-primary btn-full" onclick="switchToEditProfile()" id="profileEditBtn">Edit Profile</button>
                         </div>
 
-                        <!-- Direct links for the two account surfaces buyers look for -->
-                        <nav class="hub-nav" style="padding:16px 0 0">
+                        <!-- Every account surface a buyer looks for, wired to what
+                             actually exists on this build. -->
+                        <nav class="hub-nav" aria-label="Account shortcuts">
                             <div class="hub-section-title">Account Shortcuts</div>
-                            <button class="hub-nav__row" onclick="openProfileTab('orders')">
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('orders')">
                                 <span>My Orders &amp; Invoices</span>
                                 <span class="hub-nav__aside" id="hubNavOrders">0 orders</span>
                             </button>
-                            <button class="hub-nav__row" onclick="openProfileTab('sites')">
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('enquiries')">
+                                <span>My Enquiries &amp; Quotations</span>
+                                <span class="hub-nav__aside" id="hubNavEnquiries">0 RFQs</span>
+                            </button>
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('sites')">
                                 <span>Saved Construction Sites</span>
                                 <span class="hub-nav__aside" id="hubNavSites">0 sites</span>
                             </button>
-                            <button class="hub-nav__row" onclick="openProfileTab('gst')">
-                                <span>GSTIN &amp; Business Info</span>
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('gst')">
+                                <span>Account Settings — GSTIN &amp; Business Info</span>
                                 <span class="hub-nav__aside" id="hubNavGst">Not on file</span>
                             </button>
+                            <button type="button" class="hub-nav__row" onclick="openNotificationCenter()">
+                                <span>Notifications</span>
+                                <span class="hub-nav__aside" id="hubNavAlerts">Order &amp; rate alerts</span>
+                            </button>
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('wishlist')">
+                                <span>Wishlist</span>
+                                <span class="hub-nav__aside" id="hubNavWishlist">0 items</span>
+                            </button>
                         </nav>
+
+                        <div class="hub-support">
+                            <a class="hub-support__btn" href="tel:+919198923230">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z"/></svg>
+                                Call the Yard
+                            </a>
+                            <a class="hub-support__btn hub-support__btn--wa" href="https://wa.me/919198923230" target="_blank" rel="noopener">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+                                Help &amp; Support
+                            </a>
+                        </div>
+
+                        <div class="profile-view-footer">
+                            <button type="button" class="btn btn-outline btn-full" onclick="requestProfileSignOut()">Sign Out</button>
+                        </div>
                     </div>
+
                     <!-- Edit Mode -->
-                    <div id="profileEditMode" style="display:none">
-                        <form id="profileEditForm" onsubmit="saveProfile(event)">
+                    <div id="profileEditMode" hidden>
+                        <form id="profileEditForm" onsubmit="saveProfile(event)" novalidate>
                             <div class="auth-field">
-                                <label class="co-form-label" id="editNameLabel">Full Name</label>
-                                <input type="text" class="co-input" id="editName" required>
+                                <label class="co-form-label" for="editName" id="editNameLabel">Full Name</label>
+                                <input type="text" class="co-input" id="editName" autocomplete="name" required>
+                                <p class="field-error" id="errEditName"></p>
                             </div>
-                            <div class="auth-field" style="margin-top:10px">
-                                <label class="co-form-label" id="editEmailLabel">Email Address</label>
-                                <input type="email" class="co-input" id="editEmail" required>
+                            <div class="auth-field">
+                                <label class="co-form-label" for="editEmail" id="editEmailLabel">Email Address</label>
+                                <input type="email" class="co-input" id="editEmail" autocomplete="email" inputmode="email" required>
+                                <p class="field-error" id="errEditEmail"></p>
                             </div>
-                            <div class="auth-field" style="margin-top:10px">
-                                <label class="co-form-label" id="editMobileLabel">Mobile Number</label>
-                                <input type="tel" class="co-input" id="editMobile" pattern="[0-9]{10}">
+                            <div class="auth-field">
+                                <label class="co-form-label" for="editMobile" id="editMobileLabel">Mobile Number</label>
+                                <input type="tel" class="co-input" id="editMobile" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10">
+                                <p class="field-error" id="errEditMobile"></p>
                             </div>
-                            <div class="auth-field" style="margin-top:10px">
-                                <label class="co-form-label" id="editAddressLabel">Delivery Address</label>
-                                <input type="text" class="co-input" id="editAddress" placeholder="Enter default delivery address">
+                            <div class="auth-field">
+                                <label class="co-form-label" for="editAddress" id="editAddressLabel">Delivery Address</label>
+                                <input type="text" class="co-input" id="editAddress" autocomplete="street-address" placeholder="Enter default delivery address">
                             </div>
-                            <div class="profile-edit-actions" style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-                                <button type="submit" class="btn btn-primary btn-full" id="profileSaveBtn" style="flex:1;min-width:120px;min-height:44px">Save Changes</button>
-                                <button type="button" class="btn btn-outline btn-full" onclick="cancelEditProfile()" id="profileCancelEditBtn" style="flex:1;min-width:100px;min-height:44px;cursor:pointer">Cancel</button>
+                            <div class="profile-edit-actions">
+                                <button type="submit" class="btn btn-primary btn-full" id="profileSaveBtn">Save Changes</button>
+                                <button type="button" class="btn btn-outline btn-full" onclick="cancelEditProfile()" id="profileCancelEditBtn">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -167,27 +210,36 @@
                     <div id="orderHistoryList"></div>
                 </div>
 
-                <!-- Tab 3: Saved construction sites + address book -->
+                <!-- Tab 3: Enquiries & bulk quotation requests (gb_quotations ledger) -->
+                <div class="profile-tab-panel" id="pTabEnquiries">
+                    <div id="enquiryList"></div>
+                    <div class="profile-view-actions">
+                        <button type="button" class="btn btn-primary btn-full" onclick="openBulkQuoteModal()">Raise a New Quotation Request</button>
+                    </div>
+                    <p class="gst-note">Enquiries and RFQs raised from this app are listed from this device's log. A Bhatta Manager reviews each one and replies on WhatsApp; the yard backend does not yet mirror them to your other devices.</p>
+                </div>
+
+                <!-- Tab 4: Saved construction sites + address book -->
                 <div class="profile-tab-panel" id="pTabSites">
                     <div class="order-success-box">
-                        <div style="font-weight:700;color:var(--ink);font-size:.9rem;margin-bottom:4px;display:inline-flex;align-items:center;gap:6px"><svg width="15" height="15" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Default Delivery Address</div>
-                        <div id="profileAddressDisplay" style="font-size:.84rem;color:var(--ink-2)">No saved address yet.</div>
+                        <div class="sites-default-label"><svg width="15" height="15" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Default Delivery Address</div>
+                        <div id="profileAddressDisplay">No saved address yet.</div>
                     </div>
-                    <div class="hub-section-title" style="margin-top:16px">Saved Sites &amp; Delivery Pincodes</div>
+                    <div class="hub-section-title">Saved Sites &amp; Delivery Pincodes</div>
                     <div id="pTabSitesList"></div>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-                        <button class="btn btn-primary btn-full" onclick="addSiteFromProfile()" style="flex:1;min-width:140px">+ Save a Site</button>
-                        <button class="btn btn-outline btn-full" onclick="switchProfileTab('info');switchToEditProfile()" style="flex:1;min-width:140px">Edit Default Address</button>
+                    <div class="profile-view-actions profile-view-actions--pair">
+                        <button type="button" class="btn btn-primary btn-full" onclick="addSiteFromProfile()">+ Save a Site</button>
+                        <button type="button" class="btn btn-outline btn-full" onclick="switchProfileTab('info');switchToEditProfile()">Edit Default Address</button>
                     </div>
                     <p class="gst-note">Each site keeps its own nickname, delivery pincode and road access, so checkout can fill the whole address block in one tap. Saved on this device — the yard backend does not sync them between your phone and your desk yet.</p>
                 </div>
 
-                <!-- Tab 4: Wishlist -->
+                <!-- Tab 5: Wishlist -->
                 <div class="profile-tab-panel" id="pTabWishlist">
                     <div class="wishlist-grid" id="profileWishlistGrid"></div>
                 </div>
 
-                <!-- Tab 5: GSTIN & business info -->
+                <!-- Tab 6: GSTIN & business info (account settings) -->
                 <div class="profile-tab-panel" id="pTabGst">
                     <div class="gst-state gst-state--neutral" id="gstState">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -215,16 +267,16 @@
                         <label class="co-form-label" for="editBusinessName">Business / Firm Name</label>
                         <input type="text" class="co-input" id="editBusinessName" placeholder="e.g. Singh Construction Co.">
                     </div>
-                    <div class="auth-field" style="margin-top:10px">
+                    <div class="auth-field">
                         <label class="co-form-label" for="editGstin">GSTIN</label>
-                        <input type="text" class="co-input" id="editGstin" maxlength="15" placeholder="09AAACG1234A1Z5" style="text-transform:uppercase;font-family:ui-monospace,Menlo,monospace" oninput="renderGstState()">
+                        <input type="text" class="co-input input-mono input-upper" id="editGstin" maxlength="15" placeholder="09AAACG1234A1Z5" oninput="renderGstState()">
                     </div>
-                    <div class="auth-field" style="margin-top:10px">
+                    <div class="auth-field">
                         <label class="co-form-label" for="editPan">PAN (optional)</label>
-                        <input type="text" class="co-input" id="editPan" maxlength="10" placeholder="AAACG1234A" style="text-transform:uppercase;font-family:ui-monospace,Menlo,monospace">
+                        <input type="text" class="co-input input-mono input-upper" id="editPan" maxlength="10" placeholder="AAACG1234A">
                     </div>
 
-                    <button class="btn btn-primary btn-full" onclick="saveBuyerProfileType()" style="margin-top:14px;min-height:44px">Save Business Info</button>
+                    <button type="button" class="btn btn-primary btn-full" onclick="saveBuyerProfileType()">Save Business Info</button>
 
                     <p class="gst-note"><strong>What the tick means:</strong> the number is checked on this device against the Indian GSTIN structure (state code, 5 letters, 4 digits, check digit, entity, Z, checksum). It is not a government verification — the yard confirms the registration on the GST portal before a tax invoice with CGST/SGST or IGST is issued.</p>
                     <p class="gst-note">With a GST business on file, invoices print your firm name and GSTIN, and inter-state loads are billed as IGST instead of CGST + SGST.</p>

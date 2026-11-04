@@ -27,6 +27,19 @@
     const BASE_DELIVERY_MIN  = 450;   // minimum delivery charge (₹)
     const FREE_THRESHOLD_KM  = 10;    // free delivery within 10 km
 
+    // The estimator writes its result into live markup, so untrusted input
+    // (whatever the visitor typed) has to be neutralised before it lands.
+    function escapeHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[c]);
+    }
+    // The ETA strings in the table carry a decorative glyph for the modal; the
+    // inline result reads better without it.
+    function stripEmoji(s) {
+        return String(s || '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, '').trim();
+    }
+
     window.checkPincodeDelivery = function (pincode, trolleys = 1, vehicle = 'trolley') {
         const pin = (pincode || '').trim();
         if (!/^\d{6}$/.test(pin)) return { found: false, error: 'Please enter a valid 6-digit Indian pincode.' };
@@ -147,6 +160,66 @@
         const text = encodeURIComponent(
             `Namaste Gurukripa Bhatta! I would like to check delivery and rates:\n• Product: ${selectedProductName}\n• Delivery Pincode: ${pin}\n• Preferred Vehicle: ${vehicle}\n\nPlease confirm availability and freight cost to my site.`
         );
-        window.open(`https://wa.me/919198923230?text=${text}`, '_blank');
+        const url = 'https://wa.me/919198923230?text=' + text;
+        // The native shell has to leave the WebView for this, and a plain
+        // window.open('_blank') without noopener hands the new tab a handle on
+        // this one.
+        if (window.Platform && Platform.openExternal) Platform.openExternal(url);
+        else window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
+    /**
+     * Inline delivery checker inside the estimator.
+     *
+     * This block shipped with a "Check" button that had no handler and no
+     * listener anywhere in the codebase - tapping it did nothing at all. It now
+     * calls checkPincodeDelivery(), the same lookup the delivery modal uses, so
+     * the two surfaces can never disagree about distance or freight.
+     */
+    window.runEstimatorPincodeCheck = function () {
+        const input = document.getElementById('pincodeInput');
+        const resEl = document.getElementById('pincodeResult');
+        const btn = document.getElementById('pincodeCheckBtn');
+        if (!input || !resEl) return;
+        if (btn && btn.disabled) return;   // one lookup per tap
+
+        const pin = input.value.trim();
+        if (!/^\d{6}$/.test(pin)) {
+            resEl.innerHTML = '<p class="pin-check-result pin-check-result--warn">'
+                + 'Enter all 6 digits of the delivery pincode to see the freight.</p>';
+            input.focus();
+            return;
+        }
+
+        const trolleys = (typeof cart !== 'undefined' && cart.length)
+            ? Math.max(1, Math.ceil(cart.reduce((s, i) => s + i.qty, 0) / 4000))
+            : 1;
+        const res = window.checkPincodeDelivery(pin, trolleys, 'trolley');
+
+        if (!res.found) {
+            // Say what is unknown instead of inventing an answer: the automated
+            // table covers Eastern UP; anywhere else goes to the yard office.
+            resEl.innerHTML = '<p class="pin-check-result pin-check-result--warn">'
+                + '<strong>' + escapeHtml(pin) + '</strong> is outside the automated rate table. '
+                + 'Gurukripa delivers across Jaunpur, Varanasi, Azamgarh and Sultanpur, so the yard '
+                + 'office can quote this route by hand.</p>'
+                + '<a class="btn btn-outline btn-sm pin-check-result__cta" '
+                + 'href="https://wa.me/919198923230?text=' + encodeURIComponent('Delivery check for pincode ' + pin) + '" '
+                + 'target="_blank" rel="noopener">Ask the Yard Office</a>';
+            return;
+        }
+
+        const freight = res.charge === 0
+            ? 'Free delivery (within ' + FREE_THRESHOLD_KM + ' km)'
+            : '₹' + res.charge.toLocaleString('en-IN') + ' freight · ' + trolleys + ' load' + (trolleys > 1 ? 's' : '');
+
+        resEl.innerHTML = '<div class="pin-check-result pin-check-result--ok">'
+            + '<div class="pin-check-result__head">'
+            + '<strong>' + escapeHtml(res.area) + '</strong>'
+            + '<span class="pin-check-result__pin">PIN ' + escapeHtml(res.pincode) + '</span></div>'
+            + '<p class="pin-check-result__line">' + res.km + ' km from Gurukripa Kiln · ' + escapeHtml(res.zone) + '</p>'
+            + '<p class="pin-check-result__line pin-check-result__freight">' + freight + '</p>'
+            + '<p class="pin-check-result__line">' + stripEmoji(res.eta) + '</p>'
+            + '</div>';
     };
 })();

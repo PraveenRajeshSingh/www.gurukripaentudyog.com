@@ -5,7 +5,7 @@
 // Depends on: sanitizeHTML, getAvatarBg, getSafeStorage, setSafeStorage (state.js),
 //             showToast (ui.js), t() (ui.js), prefillUserInCheckout (checkout.js),
 //             closeUserDropdown (ui.js), toggleDrawer (ui.js),
-//             closeOtpPanel (otp-panel.js), openProfile (profile-modal.js).
+//             openProfile (profile-modal.js), GBDialogs (dialogs.js).
 // ══════════════════════════════════════════
 const _authEyeSVG = `<svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 const _authEyeOffSVG = `<svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
@@ -14,7 +14,6 @@ const _authStarSVG = `<svg width="22" height="22" fill="none" stroke="currentCol
 
 function openAuth(tab = 'login') {
     switchAuthTab(tab);
-    closeOtpPanel();
     document.getElementById('authModal')?.classList.add('open');
     overlayLock();
 }
@@ -29,30 +28,31 @@ function handleAuthOverlayClick(e) {
 }
 
 function switchAuthTab(tab, btn) {
-    closeOtpPanel();
     const loginPanel = document.getElementById('loginPanel');
     const regPanel = document.getElementById('registerPanel');
     const tabLogin = document.getElementById('tabLogin');
     const tabReg = document.getElementById('tabRegister');
     if (!loginPanel || !regPanel) return;
 
-    if (tab === 'login' || (btn && btn.id === 'tabLogin')) {
-        loginPanel.style.display = 'block';
-        regPanel.style.display = 'none';
-        tabLogin?.classList.add('active');
-        tabReg?.classList.remove('active');
-        document.getElementById('authTitle').textContent = 'Welcome Back';
-        document.getElementById('authSubtitle').textContent = 'Sign in to your account';
-        document.getElementById('authBadge').innerHTML = _authLockSVG;
-    } else {
-        loginPanel.style.display = 'none';
-        regPanel.style.display = 'block';
-        tabLogin?.classList.remove('active');
-        tabReg?.classList.add('active');
-        document.getElementById('authTitle').textContent = 'Create Account';
-        document.getElementById('authSubtitle').textContent = 'Join Gurukripa Bricks today';
-        document.getElementById('authBadge').innerHTML = _authStarSVG;
-    }
+    // Driven by the `hidden` property rather than inline display, so the panels
+    // stay in one visibility model with the rest of the storefront.
+    const showLogin = tab === 'login' || (btn && btn.id === 'tabLogin');
+    loginPanel.hidden = !showLogin;
+    regPanel.hidden = showLogin;
+    tabLogin?.classList.toggle('active', showLogin);
+    tabReg?.classList.toggle('active', !showLogin);
+    // aria-current is set on the active control only, matching the profile hub.
+    // "page" would claim a navigation change that a dialog tab is not.
+    showLogin ? tabLogin?.setAttribute('aria-current', 'true') : tabLogin?.removeAttribute('aria-current');
+    showLogin ? tabReg?.removeAttribute('aria-current') : tabReg?.setAttribute('aria-current', 'true');
+
+    // Headings come from the dictionary so switching to Hindi re-labels the
+    // dialog instead of leaving an English title painted over a Hindi form.
+    const title = document.getElementById('authTitle');
+    const sub = document.getElementById('authSubtitle');
+    if (title) title.textContent = t(showLogin ? 'auth.signInTitle' : 'auth.signUpTitle');
+    if (sub) sub.textContent = t(showLogin ? 'auth.signInSub' : 'auth.signUpSub');
+    document.getElementById('authBadge').innerHTML = showLogin ? _authLockSVG : _authStarSVG;
 }
 
 function handleLogin(e) {
@@ -89,7 +89,7 @@ function handleLogin(e) {
             }).catch(err => {
                 if (err.code === 401) {
                     failedLoginAttempts++;
-                    setButtonLoading('loginSubmitBtn', false, 'Sign In to Account →');
+                    setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
                     triggerFormShake('loginForm');
                     if (failedLoginAttempts >= 3) startLockoutTimer();
                     else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
@@ -114,7 +114,7 @@ function finishLocalLogin(email, password) {
             loginSuccess({ name: found.name, email: found.email, mobile: found.mobile });
         } else {
             failedLoginAttempts++;
-            setButtonLoading('loginSubmitBtn', false, 'Sign In to Account →');
+            setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
             triggerFormShake('loginForm');
 
             if (failedLoginAttempts >= 3) {
@@ -196,12 +196,12 @@ function handleRegister(e) {
             .then(() => {
                 const users = getSafeStorage('gb_users', []);
                 if (!users.some(u => u.email === email)) { users.push({ name, mobile, email }); setSafeStorage('gb_users', users); }
-                setButtonLoading('registerSubmitBtn', false, 'Create Free Account →');
+                setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
                 loginSuccess({ name, mobile, email });
                 GBApi.flushOutbox();
             })
             .catch(err => {
-                setButtonLoading('registerSubmitBtn', false, 'Create Free Account →');
+                setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
                 if (err.code === 409) { showFieldError('regMobileErr', 'Mobile already registered — sign in instead'); triggerFormShake('registerForm'); return; }
                 if (err.code === 400) { showFieldError('regPasswordErr', err.message || 'Check the details and retry'); triggerFormShake('registerForm'); return; }
                 showToast('Server unreachable — account created offline on this device.', 'info');
@@ -216,7 +216,7 @@ function finishLocalRegister(name, mobile, email) {
     setTimeout(() => {
         const users = getSafeStorage('gb_users', []);
         if (users.some(u => u.email === email)) {
-            setButtonLoading('registerSubmitBtn', false, 'Create Free Account →');
+            setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
             showFieldError('regEmailErr', 'Email already registered');
             triggerFormShake('registerForm');
             return;
@@ -227,7 +227,7 @@ function finishLocalRegister(name, mobile, email) {
         setSafeStorage('gb_users', users);
 
         loginSuccess({ name, mobile, email });
-        setButtonLoading('registerSubmitBtn', false, 'Create Free Account →');
+        setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
         showToast(t('auth.created'), 'success');
     }, 1000);
 }
@@ -239,6 +239,24 @@ function logoutUser() {
     updateAuthUI();
     closeUserDropdown();
     showToast(t('auth.signedOut'));
+}
+
+/**
+ * Confirmed sign-out used by every "Sign Out" control in the storefront - the
+ * account dropdown, the drawer and the profile hub all route through here so
+ * there is exactly one confirmation, never two stacked dialogs.
+ * The account menu is closed first so the sheet is not left behind the overlay.
+ */
+function requestSignOut() {
+    closeUserDropdown();
+    if (!window.GBDialogs) { logoutUser(); return; }
+    GBDialogs.confirm({
+        title: 'Sign out of this account?',
+        message: 'Your cart, wishlist and saved sites stay on this device. You will need to sign in again to place an order.',
+        confirmLabel: 'Sign Out',
+        danger: true,
+        onConfirm: function () { logoutUser(); }
+    });
 }
 
 function updateAuthUI() {
@@ -329,7 +347,30 @@ function checkPwStrength(pw) {
     }
 }
 
-function handleForgotPw(e) {
-    e.preventDefault();
-    showToast(t('auth.resetSent'), 'info');
+/**
+ * Account recovery.
+ *
+ * There is no password-reset endpoint on the Platform API (see docs/PLATFORM-API.md:
+ * only /auth/register, /auth/login, /auth/dealer-register and /auth/me), and the
+ * storefront has no mail transport. The previous version of this function showed
+ * "Password reset link sent to your registered email!" without sending anything -
+ * a fabricated confirmation on a security flow. It now states the limitation and
+ * hands the customer to a channel that genuinely can reset the account.
+ */
+function handleForgotPw() {
+    if (!window.GBDialogs) {
+        showToast('Password reset is handled by our yard office. Please call +91 91989 23230.', 'info');
+        return;
+    }
+    GBDialogs.confirm({
+        title: 'Recover your account',
+        message: 'Gurukripa does not send automatic password-reset links yet, so we cannot email you one. Our yard office resets access by hand - call or WhatsApp +91 91989 23230 with the mobile number on your account and we will set your sign-in up again.',
+        confirmLabel: 'Call the Yard Office',
+        cancelLabel: 'Not now',
+        icon: 'warning'
+    }).then(function (go) {
+        if (!go) return;
+        if (window.Platform && Platform.openExternal) Platform.openExternal('tel:+919198923230');
+        else window.location.href = 'tel:+919198923230';
+    });
 }

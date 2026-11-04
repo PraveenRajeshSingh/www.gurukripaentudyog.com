@@ -1,15 +1,17 @@
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━ WISHLIST DRAWER ━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div class="cart-overlay wishlist-overlay" id="wishlistOverlay" onclick="closeWishlistDrawer()"></div>
-    <div class="cart-drawer wishlist-drawer" id="wishlistDrawer" role="dialog" aria-modal="true" aria-label="My Wishlist">
+    <div class="cart-drawer wishlist-drawer" id="wishlistDrawer" role="dialog" aria-modal="true" aria-labelledby="wishlistDrawerTitle">
         <div class="cart-head">
-            <div style="display:flex;align-items:center;gap:10px">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="var(--brand)" stroke="var(--brand)"/>
+            <div class="cart-head-title">
+                <svg width="20" height="20" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="var(--brand)"/>
                 </svg>
-                <h2>My Wishlist</h2>
+                <h2 id="wishlistDrawerTitle">My Wishlist</h2>
                 <span class="cart-head-count" id="wishlistHeadCount">0 items</span>
             </div>
-            <button class="cart-close" onclick="closeWishlistDrawer()" aria-label="Close wishlist">✕</button>
+            <button type="button" class="cart-close" onclick="closeWishlistDrawer()" aria-label="Close wishlist">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
         </div>
         <div class="cart-body" id="wishlistBody">
             <div class="cart-empty" id="wishlistEmpty">
@@ -20,13 +22,14 @@
                 </div>
                 <h3>Your Wishlist is Empty</h3>
                 <p>Save bricks you love by tapping the heart on any product card.</p>
-                <button class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeWishlistDrawer();scrollToSection('products')">Browse Products →</button>
+                <button type="button" class="btn btn-primary btn-sm cart-empty-cta" onclick="closeWishlistDrawer();scrollToSection('products')">Browse Products</button>
             </div>
-            <div id="wishlistItemsList" style="display:none"></div>
+            <div id="wishlistItemsList" hidden></div>
         </div>
-        <div class="cart-footer" id="wishlistFooter" style="display:none">
-            <button class="cart-checkout-btn" onclick="moveAllWishlistToCart()">
-                <span>Add All to Cart</span> →
+        <div class="cart-footer" id="wishlistFooter" hidden>
+            <button type="button" class="cart-checkout-btn" onclick="moveAllWishlistToCart()">
+                <span>Add All to Cart</span>
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
     </div>

@@ -173,7 +173,7 @@
     <!-- LIGHTBOX -->
     <div class="lb-overlay" id="lb" onclick="lbClose(event)">
         <img class="lb-img" id="lbImg" src="" alt="">
-        <button class="lb-close" onclick="lbClose()">✕</button>
+        <button type="button" class="lb-close" onclick="lbClose()">✕</button>
         <div class="lb-caption" id="lbCap"></div>
     </div>
 
@@ -196,8 +196,8 @@
                 <div class="topbar-right">
                     <span class="topbar-hours" data-i18n="topbar.hours">Mon–Sat | 8:00 AM – 6:00 PM</span>
                     <div class="topbar-controls">
-                        <button class="lang-btn active" onclick="setLang('en')" id="langEn" aria-label="Switch language to English">🇬🇧 EN</button>
-                        <button class="lang-btn" onclick="setLang('hi')" id="langHi" aria-label="हिंदी भाषा चुनें">🇮🇳 HI</button>
+                        <button type="button" class="lang-btn active" onclick="setLang('en')" id="langEn" aria-label="Switch language to English">🇬🇧 EN</button>
+                        <button type="button" class="lang-btn" onclick="setLang('hi')" id="langHi" aria-label="हिंदी भाषा चुनें">🇮🇳 HI</button>
                     </div>
                 </div>
             </div>
@@ -211,8 +211,11 @@
     <header class="nav" role="banner">
         <div class="container">
             <div class="nav-inner">
-                <!-- Brand Identity -->
-                <a href="#home" class="nav-brand" onclick="scrollToSection('home')" aria-label="Gurukripa Bricks Industry Home">
+                <!-- Brand identity. The href alone does the work: html has
+                     scroll-behavior:smooth and every section carries a
+                     scroll-margin-top for the sticky bar, so no JS scroll is
+                     needed - and the hash still lands in history for back/forward. -->
+                <a href="#home" class="nav-brand" onclick="setActiveNav(this)" aria-label="Gurukripa Bricks Industry Home">
                     <div class="nav-logo-mark">
                         <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks Logo" width="40" height="40">
                     </div>
@@ -223,26 +226,19 @@
                 </a>
 
                 <!-- Desktop Search + Voice Input -->
-                <div class="nav-search" role="search" style="position:relative">
+                <div class="nav-search" role="search">
                     <svg class="nav-search-icon" width="16" height="16" fill="none" stroke="currentColor"
                         stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <circle cx="11" cy="11" r="8" />
                         <path d="M21 21l-4.35-4.35" />
                     </svg>
                     <input type="search" class="nav-search-input" placeholder="Search bricks, prices... (Ctrl+K)" id="navSearch"
-                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices"
-                        style="padding-right:38px">
+                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices">
                     <!-- Voice search button -->
-                    <button id="voiceSearchBtn" onclick="toggleVoiceSearch()" type="button"
+                    <button id="voiceSearchBtn" type="button" class="nav-voice-btn"
+                        onclick="toggleVoiceSearch()"
                         aria-label="Voice search"
-                        title="Voice search (Hindi / English)"
-                        style="
-                            position:absolute;right:8px;top:50%;transform:translateY(-50%);
-                            background:none;border:none;cursor:pointer;padding:4px;
-                            color:var(--ink-3);border-radius:50%;
-                            display:flex;align-items:center;justify-content:center;
-                            transition:color .15s,background .15s;
-                            width:28px;height:28px">
+                        title="Voice search (Hindi / English)">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
                             <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -253,8 +249,8 @@
                 </div>
 
                 <!-- Primary Desktop Navigation -->
-                <nav class="nav-links" role="navigation" aria-label="Primary Navigation">
-                    <a href="#home" class="nav-link active" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
+                <nav class="nav-links" aria-label="Primary Navigation">
+                    <a href="#home" class="nav-link active" onclick="setActiveNav(this)" aria-current="true" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
                     <a href="#categories" class="nav-link" onclick="setActiveNav(this)">Categories</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
@@ -265,16 +261,16 @@
                 <!-- Actions: Alerts, Cart, Wishlist, Auth / Account, Mobile Toggle -->
                 <div class="nav-actions">
                     <!-- Order status & rate drop alerts -->
-                    <button class="nav-icon-btn nav-alert-btn" onclick="openNotificationCenter()" aria-label="Order and rate alerts" title="Order &amp; Rate Alerts">
+                    <button type="button" class="nav-icon-btn nav-alert-btn" onclick="openNotificationCenter()" aria-label="Order and rate alerts" title="Order &amp; Rate Alerts">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
                             <path d="M13.73 21a2 2 0 01-3.46 0" />
                         </svg>
-                        <span class="nav-badge alert-nav-badge" id="alertBadgeNav" style="display:none">0</span>
+                        <span class="nav-badge alert-nav-badge" id="alertBadgeNav" hidden>0</span>
                     </button>
 
                     <!-- Shopping Cart -->
-                    <button class="nav-icon-btn" onclick="openCart()" aria-label="Shopping Cart" title="Shopping Cart">
+                    <button type="button" class="nav-icon-btn" onclick="openCart()" aria-label="Shopping Cart" title="Shopping Cart">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
@@ -285,7 +281,7 @@
                     </button>
 
                     <!-- Wishlist -->
-                    <button class="nav-icon-btn" onclick="openWishlistDrawer()" aria-label="Wishlist" title="My Wishlist">
+                    <button type="button" class="nav-icon-btn" onclick="openWishlistDrawer()" aria-label="Wishlist" title="My Wishlist">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                         </svg>
@@ -294,13 +290,13 @@
 
                     <!-- Auth State: Logged Out -->
                     <div class="nav-auth" id="navAuthBtns">
-                        <button class="btn btn-outline btn-sm" onclick="openAuth('login')" data-i18n="auth.signIn">Sign In</button>
-                        <button class="btn btn-primary btn-sm" onclick="openAuth('register')" data-i18n="auth.signUp">Sign Up</button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="openAuth('login')" data-i18n="auth.signIn">Sign In</button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openAuth('register')" data-i18n="auth.signUp">Sign Up</button>
                     </div>
 
                     <!-- Auth State: Logged In User Dropdown -->
                     <div class="user-menu hidden" id="navUserMenu">
-                        <button class="user-btn" onclick="toggleUserDropdown()" id="userMenuBtn" aria-haspopup="true" aria-expanded="false" aria-label="Account Menu">
+                        <button type="button" class="user-btn" onclick="toggleUserDropdown()" id="userMenuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="userDropdown" aria-label="Account Menu">
                             <div class="user-avatar-sm" id="navAvatar"><span id="navAvatarInitial">P</span></div>
                             <span class="user-btn-name" id="navUserName">User</span>
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
@@ -320,23 +316,27 @@
                             </div>
                             <div class="ud-body">
                                 <div class="ud-grouplabel">Account</div>
-                                <button class="ud-item" onclick="openProfile()" role="menuitem">
+                                <button type="button" class="ud-item" onclick="openProfile()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                     <span data-i18n="auth.myProfile">My Profile</span>
                                 </button>
-                                <button class="ud-item" onclick="openProfileTab('address')" role="menuitem">
+                                <button type="button" class="ud-item" onclick="openProfileTab('sites')" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    <span>Saved Addresses</span>
+                                    <span>Saved Sites</span>
                                 </button>
                             </div>
                             <div class="ud-divider"></div>
                             <div class="ud-body">
                                 <div class="ud-grouplabel">Orders &amp; Delivery</div>
-                                <button class="ud-item" onclick="openProfileTab('orders')" role="menuitem">
+                                <button type="button" class="ud-item" onclick="openProfileTab('orders')" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                                     <span>My Orders &amp; Invoices</span>
                                 </button>
-                                <button class="ud-item" onclick="openTrackerModal();closeUserDropdown()" role="menuitem">
+                                <button type="button" class="ud-item" onclick="openProfileTab('enquiries')" role="menuitem">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                    <span>My Enquiries</span>
+                                </button>
+                                <button type="button" class="ud-item" onclick="openTrackerModal();closeUserDropdown()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                                     <span>Track Delivery</span>
                                 </button>
@@ -344,18 +344,18 @@
                             <div class="ud-divider"></div>
                             <div class="ud-body">
                                 <div class="ud-grouplabel">More</div>
-                                <button class="ud-item" onclick="openWishlistDrawer();closeUserDropdown()" role="menuitem">
+                                <button type="button" class="ud-item" onclick="openWishlistDrawer();closeUserDropdown()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                                     <span>Wishlist</span>
                                 </button>
-                                <button class="ud-item" onclick="scrollToSection('contact');closeUserDropdown()" role="menuitem">
+                                <button type="button" class="ud-item" onclick="scrollToSection('contact');closeUserDropdown()" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                                     <span>Help &amp; Support</span>
                                 </button>
                             </div>
                             <div class="ud-divider"></div>
                             <div class="ud-body">
-                                <button class="ud-item ud-logout" onclick="logoutUser()" role="menuitem">
+                                <button type="button" class="ud-item ud-logout" onclick="requestSignOut(this)" role="menuitem">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
                                     Sign Out
                                 </button>
@@ -364,7 +364,7 @@
                     </div>
 
                     <!-- Mobile Navigation Hamburger -->
-                    <button class="nav-toggle" onclick="toggleDrawer()" id="navToggle" aria-label="Open Navigation Menu" aria-expanded="false">
+                    <button type="button" class="nav-toggle" onclick="toggleDrawer()" id="navToggle" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobileDrawer">
                         <span></span><span></span><span></span>
                     </button>
                 </div>
@@ -385,26 +385,33 @@
                     <small>Bricks Industry</small>
                 </div>
             </div>
-            <button class="drawer-close" onclick="toggleDrawer()" aria-label="Close Navigation Menu">✕</button>
+            <button type="button" class="drawer-close" onclick="toggleDrawer()" aria-label="Close Navigation Menu">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
         </div>
 
         <!-- Quick Preference: Language (single light theme — no dark toggle) -->
         <div class="drawer-settings">
-            <button class="btn btn-outline btn-sm" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch Language">
-                🌐 <span id="drawerLangLabel">हिंदी / EN</span>
+            <button type="button" class="btn btn-outline btn-sm drawer-lang-btn" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch language to Hindi or English">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                <span id="drawerLangLabel">हिंदी / EN</span>
             </button>
         </div>
 
-        <!-- Navigation Links -->
-        <nav class="drawer-links" role="navigation" aria-label="Drawer Navigation">
-            <a href="#home" class="drawer-link active" onclick="toggleDrawer();setActiveNav(this)">
+        <!-- Navigation Links.
+             Anchors are used only for real in-page sections. Everything that opens
+             a modal or a drawer is a <button type="button">, so no control carries a
+             placeholder href and right-click / "copy link" can never offer a
+             meaningless destination. -->
+        <nav class="drawer-links" aria-label="Drawer Navigation">
+            <a href="#home" class="drawer-link active" aria-current="true" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
                 <span>Home</span>
             </a>
-            <a href="#products" class="drawer-link" onclick="toggleDrawer()">
+            <a href="#products" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                     <line x1="3" y1="6" x2="21" y2="6" />
@@ -412,7 +419,7 @@
                 </svg>
                 <span>Products</span>
             </a>
-            <a href="#calculator" class="drawer-link" onclick="toggleDrawer()">
+            <a href="#calculator" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="4" y="2" width="16" height="20" rx="3" />
                     <line x1="8" y1="6" x2="16" y2="6" />
@@ -421,7 +428,7 @@
                 </svg>
                 <span>Brick Estimator</span>
             </a>
-            <a href="#categories" class="drawer-link" onclick="toggleDrawer()">
+            <a href="#categories" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="3" y="3" width="7" height="7" />
                     <rect x="14" y="3" width="7" height="7" />
@@ -430,20 +437,21 @@
                 </svg>
                 <span>Categories</span>
             </a>
-            <a href="#" class="drawer-link" onclick="toggleDrawer();openBulkQuoteModal();return false">
+            <button type="button" class="drawer-link" onclick="toggleDrawer();openBulkQuoteModal()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                     <polyline points="14 2 14 8 20 8"/>
                 </svg>
                 <span>Get a Quote</span>
-            </a>
-            <a href="#" class="drawer-link" onclick="toggleDrawer();openWishlistDrawer();return false">
+            </button>
+            <button type="button" class="drawer-link" onclick="toggleDrawer();openWishlistDrawer()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                 </svg>
                 <span>My Wishlist</span>
-            </a>
-            <a href="#" class="drawer-link drawer-track-link" onclick="toggleDrawer();openTrackerModal();return false">
+                <span class="drawer-link__count" id="drawerWishCount" hidden>0</span>
+            </button>
+            <button type="button" class="drawer-link drawer-track-link" onclick="toggleDrawer();openTrackerModal()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="1" y="3" width="15" height="13" />
                     <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
@@ -451,22 +459,22 @@
                     <circle cx="18.5" cy="18.5" r="2.5" />
                 </svg>
                 <span>Live Trolley Tracker</span>
-            </a>
-            <a href="#" class="drawer-link" onclick="toggleDrawer();openNotificationCenter();return false">
+            </button>
+            <button type="button" class="drawer-link" onclick="toggleDrawer();openNotificationCenter()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
                     <path d="M13.73 21a2 2 0 01-3.46 0" />
                 </svg>
                 <span>Order &amp; Rate Alerts</span>
-            </a>
-            <a href="#" class="drawer-link" onclick="toggleDrawer();handleMobileProfile();return false">
+            </button>
+            <button type="button" class="drawer-link" onclick="toggleDrawer();handleMobileProfile()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                 </svg>
                 <span>My Account</span>
-            </a>
-            <a href="#about" class="drawer-link" onclick="toggleDrawer()">
+            </button>
+            <a href="#about" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="12" />
@@ -474,7 +482,7 @@
                 </svg>
                 <span>About Us</span>
             </a>
-            <a href="#cities" class="drawer-link" onclick="toggleDrawer()">
+            <a href="#cities" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="1" y="3" width="15" height="13" />
                     <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
@@ -483,14 +491,14 @@
                 </svg>
                 <span>Delivery Coverage</span>
             </a>
-            <a href="#" class="drawer-link" onclick="toggleDrawer();openAdminPortal();return false">
+            <button type="button" class="drawer-link" onclick="toggleDrawer();openAdminPortal()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="12" r="3"/>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                 </svg>
                 <span>Admin &amp; Yard Console</span>
-            </a>
-            <a href="#contact" class="drawer-link" onclick="toggleDrawer()">
+            </button>
+            <a href="#contact" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z" />
                 </svg>
@@ -506,13 +514,13 @@
 
         <!-- Account Controls -->
         <div class="drawer-auth" id="drawerAuthBtns">
-            <button class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up — Free</button>
-            <button class="btn btn-outline btn-full" onclick="openAuth('login');toggleDrawer()">Sign In</button>
+            <button type="button" class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up — Free</button>
+            <button type="button" class="btn btn-outline btn-full" onclick="openAuth('login');toggleDrawer()">Sign In</button>
         </div>
 
         <!-- Legal Link in Drawer -->
-        <div style="text-align:center;padding:12px 16px 20px;font-size:.76rem;color:var(--ink-3)">
-            <button class="footer-legal-link" onclick="toggleDrawer();openLegalModal('privacy')">Terms &amp; Privacy Policies</button>
+        <div class="drawer-legal">
+            <button type="button" class="footer-legal-link" onclick="toggleDrawer();openLegalModal('privacy')">Terms &amp; Privacy Policies</button>
         </div>
     </aside>
 
@@ -712,13 +720,13 @@
 
             <!-- Category Top Pills Navigation -->
             <div class="products-filters">
-                <button class="filter-btn active" onclick="filterProducts('all',this)">All Materials</button>
-                <button class="filter-btn" onclick="filterProducts('shiv-eent',this)">Shiv Eent (Grade-A)</button>
-                <button class="filter-btn" onclick="filterProducts('awwal',this)">Awwal ईंट (Heavy Duty)</button>
-                <button class="filter-btn" onclick="filterProducts('laal-peti',this)">Laal Peti (Popular)</button>
-                <button class="filter-btn" onclick="filterProducts('premium',this)">First Class Red</button>
-                <button class="filter-btn" onclick="filterProducts('machine-made',this)">Machine Wirecut</button>
-                <button class="filter-btn" onclick="filterProducts('standard',this)">Standard Bricks</button>
+                <button type="button" class="filter-btn active" onclick="filterProducts('all',this)">All Materials</button>
+                <button type="button" class="filter-btn" onclick="filterProducts('shiv-eent',this)">Shiv Eent (Grade-A)</button>
+                <button type="button" class="filter-btn" onclick="filterProducts('awwal',this)">Awwal ईंट (Heavy Duty)</button>
+                <button type="button" class="filter-btn" onclick="filterProducts('laal-peti',this)">Laal Peti (Popular)</button>
+                <button type="button" class="filter-btn" onclick="filterProducts('premium',this)">First Class Red</button>
+                <button type="button" class="filter-btn" onclick="filterProducts('machine-made',this)">Machine Wirecut</button>
+                <button type="button" class="filter-btn" onclick="filterProducts('standard',this)">Standard Bricks</button>
             </div>
 
             <!-- Industrial Bento Layout: Left Filter Sidebar + Right 3-Column Catalog -->
@@ -991,14 +999,17 @@
                     </div>
 
                     <!-- Pincode Delivery Checker -->
-                    <div style="margin-top:14px;padding:14px;background:var(--bg-subtle);border:1px solid var(--line);border-radius:10px">
-                        <div style="font-size:.75rem;font-weight:700;color:var(--ink-3);margin-bottom:8px;letter-spacing:.04em">🚚 DELIVERY PINCODE CHECKER</div>
-                        <div style="display:flex;gap:8px">
-                            <input type="tel" id="pincodeInput" maxlength="6" placeholder="Enter 6-digit pincode" inputmode="numeric"
-                                style="flex:1;padding:9px 12px;border:1.5px solid var(--line-mid);border-radius:8px;font-size:.85rem;outline:none">
-                            <button id="pincodeCheckBtn" class="btn btn-outline btn-sm" style="white-space:nowrap;min-height:38px">Check</button>
+                    <div class="calc-pin-checker">
+                        <div class="calc-pin-checker__title">Delivery Pincode Checker</div>
+                        <div class="calc-pin-checker__row">
+                            <label class="sr-only" for="pincodeInput">6-digit delivery pincode</label>
+                            <input type="tel" id="pincodeInput" class="calc-input" maxlength="6" placeholder="Enter 6-digit pincode"
+                                inputmode="numeric" autocomplete="postal-code"
+                                onkeydown="if(event.key==='Enter'){event.preventDefault();runEstimatorPincodeCheck()}">
+                            <button type="button" id="pincodeCheckBtn" class="btn btn-outline btn-sm"
+                                onclick="runEstimatorPincodeCheck()">Check</button>
                         </div>
-                        <div id="pincodeResult" style="margin-top:8px;font-size:.82rem"></div>
+                        <div id="pincodeResult" class="calc-pin-checker__result" role="status" aria-live="polite"></div>
                     </div>
 
                     <!-- Estimates saved to IndexedDB on this device -->
@@ -1020,7 +1031,7 @@
                     <div class="sec-tag" style="margin-bottom:6px">Quick Re-order</div>
                     <h3 style="font-size:1.1rem;font-weight:800;color:var(--ink);margin:0">🏗 Saved Construction Sites</h3>
                 </div>
-                <button class="btn btn-outline btn-sm" style="gap:6px;min-height:36px"
+                <button type="button" class="btn btn-outline btn-sm"
                     onclick="document.getElementById('saveSitePanel').classList.toggle('hidden')">
                     💾 Save Current Estimate
                 </button>
@@ -1036,7 +1047,7 @@
                 display:flex;gap:10px;flex-wrap:wrap;align-items:center">
                 <input type="text" id="siteNameInput" class="calc-input" placeholder='Site name e.g. "Jalalpur Site #2"'
                     style="flex:1;min-width:200px;margin:0" maxlength="40">
-                <button class="btn btn-primary" style="min-height:40px;white-space:nowrap;background:#16a34a"
+                <button type="button" class="btn btn-primary"
                     onclick="saveConstructionSite()">💾 Save Site</button>
             </div>
 
@@ -1329,7 +1340,7 @@
 
             <div class="faq-list">
                 <div class="faq-item">
-                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                    <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
                         <span>ईंट की कीमत क्या है? / What is the price of bricks?</span>
                         <div class="faq-icon">+</div>
                     </button>
@@ -1340,7 +1351,7 @@
                     </div>
                 </div>
                 <div class="faq-item">
-                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                    <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
                         <span>डिलीवरी कहां-कहां उपलब्ध है? / Where do you deliver?</span>
                         <div class="faq-icon">+</div>
                     </button>
@@ -1351,7 +1362,7 @@
                     </div>
                 </div>
                 <div class="faq-item">
-                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                    <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
                         <span>क्या आप छोटे ऑर्डर भी लेते हैं? / Do you accept small orders?</span>
                         <div class="faq-icon">+</div>
                     </button>
@@ -1361,7 +1372,7 @@
                     </div>
                 </div>
                 <div class="faq-item">
-                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                    <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
                         <span>पेमेंट के क्या तरीके हैं? / What payment methods do you accept?</span>
                         <div class="faq-icon">+</div>
                     </button>
@@ -1371,7 +1382,7 @@
                     </div>
                 </div>
                 <div class="faq-item">
-                    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+                    <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
                         <span>ईंट की गुणवत्ता की क्या गारंटी है? / What quality guarantee do you offer?</span>
                         <div class="faq-icon">+</div>
                     </button>
@@ -1425,7 +1436,7 @@
                             <div class="contact-item-value">Mon – Sat &nbsp;|&nbsp; 8:00 AM – 6:00 PM</div>
                         </div>
                     </div>
-                    <a href="https://wa.me/919198923230" target="_blank" class="btn btn-primary btn-full"
+                    <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="btn btn-primary btn-full"
                         style="gap:8px">
                         <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg> Chat on WhatsApp
                     </a>
@@ -1522,7 +1533,7 @@
                         </div>
                         <div class="footer-contact-row">
                             <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-                            <a href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
+                            <a class="footer-map-link" href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf" target="_blank" rel="noopener">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
                         </div>
                         <div class="footer-contact-row">
                             <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
@@ -1541,8 +1552,8 @@
                         <li><a href="#about">About Our Kiln</a></li>
                         <li><a href="#gallery">Kiln Factory Gallery</a></li>
                         <li><a href="#reviews">Customer Reviews</a></li>
-                        <li><a href="#" onclick="openLegalModal('quality');return false">Quality Standards</a></li>
-                        <li><a href="#" onclick="openTrackerModal();return false">Live Track Delivery</a></li>
+                        <li><button type="button" onclick="openLegalModal('quality')">Quality Standards</button></li>
+                        <li><button type="button" onclick="openTrackerModal()">Live Track Delivery</button></li>
                         <li><a href="#faq">FAQs</a></li>
                         <li><a href="#contact">Contact &amp; Location</a></li>
                     </ul>
@@ -1572,15 +1583,15 @@
                         <a href="tel:+919198923230" class="social-btn" aria-label="Call Kiln Direct" title="Call Kiln"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></a>
                     </div>
                     <div class="newsletter-wrap">
-                        <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:10px">Receive wholesale brick rate alerts &amp; seasonal offers:</p>
+                        <p class="newsletter-desc">Receive wholesale brick rate alerts &amp; seasonal offers:</p>
                         <form onsubmit="handleNewsletter(event)" class="newsletter-form">
                             <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Your email address">
                             <button type="submit" class="newsletter-submit">Subscribe</button>
                         </form>
                     </div>
-                    <div style="margin-top:16px;font-size:.78rem;color:var(--ink-3)">
+                    <p class="footer-delivery-note">
                         <strong>Same-Day Delivery:</strong> Jaunpur, Varanasi, Jalalpur, Trilochan, Shahganj, Mariahu &amp; surrounding sites.
-                    </div>
+                    </p>
                 </div>
             </div>
 
@@ -1601,13 +1612,13 @@
             <div class="footer-bottom">
                 <p class="footer-copy">© 2026 Gurukripa Bricks Industry (गुरुकृपा ईंट उद्योग). All rights reserved. | Handcrafted in Jaunpur, UP</p>
                 <div class="footer-bottom-links">
-                    <button class="footer-legal-link" onclick="openLegalModal('privacy')">Privacy Policy</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('privacy')">Privacy Policy</button>
                     <span class="footer-legal-dot">•</span>
-                    <button class="footer-legal-link" onclick="openLegalModal('terms')">Terms of Sale</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')">Terms of Sale</button>
                     <span class="footer-legal-dot">•</span>
-                    <button class="footer-legal-link" onclick="openLegalModal('shipping')">Shipping &amp; Delivery</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('shipping')">Shipping &amp; Delivery</button>
                     <span class="footer-legal-dot">•</span>
-                    <button class="footer-legal-link" onclick="openLegalModal('quality')">Quality Standards</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('quality')">Quality Standards</button>
                 </div>
             </div>
         </div>
@@ -1621,7 +1632,7 @@
                 <h2 data-i18n="cart.title">My Cart</h2>
                 <span class="cart-head-count" id="cartHeadCount">0 items</span>
             </div>
-            <button class="cart-close" onclick="closeCart()" aria-label="Close cart">✕</button>
+            <button type="button" class="cart-close" onclick="closeCart()" aria-label="Close cart">✕</button>
         </div>
         <!-- Free Delivery Progress Bar -->
         <div class="cart-delivery-progress" id="cartDeliveryProgress">
@@ -1656,14 +1667,14 @@
                 </div>
                 <h3 data-i18n="cart.emptyTitle">Your Cart is Empty</h3>
                 <p data-i18n="cart.emptyText">Add Grade-A bricks to calculate project cost and delivery.</p>
-                <button class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeCart();scrollToSection('products')" data-i18n="cart.browse">Browse Products →</button>
+                <button type="button" class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeCart();scrollToSection('products')" data-i18n="cart.browse">Browse Products →</button>
             </div>
             <div id="cartItemsList" style="display:none"></div>
             <!-- Coupon -->
             <div id="cartCouponSection" style="display:none;margin-top:16px">
                 <div class="cart-coupon">
                     <input type="text" class="cart-coupon-input" id="couponInput" data-i18n="cart.couponPh" placeholder="Enter coupon code (e.g. GURU10)">
-                    <button class="cart-coupon-btn" onclick="applyCoupon()" data-i18n="cart.apply">Apply</button>
+                    <button type="button" class="cart-coupon-btn" onclick="applyCoupon()" data-i18n="cart.apply">Apply</button>
                 </div>
                 <div id="couponMsg" class="cart-coupon-msg"></div>
             </div>
@@ -1701,7 +1712,7 @@
         <div class="cart-footer" id="cartFooter" style="display:none">
             <!-- Offline orders waiting for a WhatsApp handoff -->
             <div class="cart-outbox-notice" id="cartOutboxNotice" style="display:none"></div>
-            <button class="cart-checkout-btn" onclick="openCheckout()" id="checkoutBtn">
+            <button type="button" class="cart-checkout-btn" onclick="openCheckout()" id="checkoutBtn">
                 <span data-i18n="cart.checkout">Proceed to Checkout</span> →
             </button>
             <button type="button" class="cart-wa-btn" onclick="WhatsAppOrder.orderFromCart()">
@@ -1718,16 +1729,18 @@
 
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━ WISHLIST DRAWER ━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div class="cart-overlay wishlist-overlay" id="wishlistOverlay" onclick="closeWishlistDrawer()"></div>
-    <div class="cart-drawer wishlist-drawer" id="wishlistDrawer" role="dialog" aria-modal="true" aria-label="My Wishlist">
+    <div class="cart-drawer wishlist-drawer" id="wishlistDrawer" role="dialog" aria-modal="true" aria-labelledby="wishlistDrawerTitle">
         <div class="cart-head">
-            <div style="display:flex;align-items:center;gap:10px">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="var(--brand)" stroke="var(--brand)"/>
+            <div class="cart-head-title">
+                <svg width="20" height="20" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="var(--brand)"/>
                 </svg>
-                <h2>My Wishlist</h2>
+                <h2 id="wishlistDrawerTitle">My Wishlist</h2>
                 <span class="cart-head-count" id="wishlistHeadCount">0 items</span>
             </div>
-            <button class="cart-close" onclick="closeWishlistDrawer()" aria-label="Close wishlist">✕</button>
+            <button type="button" class="cart-close" onclick="closeWishlistDrawer()" aria-label="Close wishlist">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
         </div>
         <div class="cart-body" id="wishlistBody">
             <div class="cart-empty" id="wishlistEmpty">
@@ -1738,13 +1751,14 @@
                 </div>
                 <h3>Your Wishlist is Empty</h3>
                 <p>Save bricks you love by tapping the heart on any product card.</p>
-                <button class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeWishlistDrawer();scrollToSection('products')">Browse Products →</button>
+                <button type="button" class="btn btn-primary btn-sm cart-empty-cta" onclick="closeWishlistDrawer();scrollToSection('products')">Browse Products</button>
             </div>
-            <div id="wishlistItemsList" style="display:none"></div>
+            <div id="wishlistItemsList" hidden></div>
         </div>
-        <div class="cart-footer" id="wishlistFooter" style="display:none">
-            <button class="cart-checkout-btn" onclick="moveAllWishlistToCart()">
-                <span>Add All to Cart</span> →
+        <div class="cart-footer" id="wishlistFooter" hidden>
+            <button type="button" class="cart-checkout-btn" onclick="moveAllWishlistToCart()">
+                <span>Add All to Cart</span>
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
     </div>
@@ -1755,28 +1769,35 @@
             <div class="auth-modal-brand">
                 <div class="auth-brand-icon"><svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="17"/><line x1="16" y1="7" x2="16" y2="17"/></svg></div>
             </div>
-            <div class="modal-head" style="padding-top:8px">
+            <div class="modal-head modal-head-tight">
                 <div>
                     <div class="modal-badge" id="authBadge"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
                     <div class="modal-title" id="authTitle">Sign In</div>
                     <div class="modal-subtitle" id="authSubtitle">Welcome back!</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeAuth()">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeAuth()" aria-label="Close sign in">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             </div>
             <div class="modal-body">
                 <!-- Rate Limit Lockout Warning -->
-                <div class="auth-lockout" id="authLockoutAlert">
-                    ⚠️ Too many failed attempts. Try again in <strong id="lockoutTimer">30</strong>s.
+                <div class="auth-lockout" id="authLockoutAlert" role="alert">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span>Too many failed attempts. Try again in <strong id="lockoutTimer">30</strong>s.</span>
                 </div>
 
-                <!-- Tabs -->
-                <div class="auth-tabs">
-                    <button class="auth-tab active" onclick="switchAuthTab('login',this)" id="tabLogin">Sign In</button>
-                    <button class="auth-tab" onclick="switchAuthTab('register',this)" id="tabRegister">Sign Up</button>
+                <!-- Tabs.
+                     Plain buttons with aria-current rather than role="tab": the
+                     inactive panel is removed from the a11y tree by `hidden`, so
+                     every panel is reachable with Tab and no tabpanel/aria-selected
+                     contract has to be maintained by hand. Matches the profile hub. -->
+                <div class="auth-tabs" role="group" aria-label="Sign in or create an account">
+                    <button type="button" class="auth-tab active" onclick="switchAuthTab('login',this)" id="tabLogin" aria-controls="loginPanel" aria-current="true">Sign In</button>
+                    <button type="button" class="auth-tab" onclick="switchAuthTab('register',this)" id="tabRegister" aria-controls="registerPanel">Sign Up</button>
                 </div>
 
                 <!-- Login Panel -->
-                <div id="loginPanel">
+                <div id="loginPanel" class="auth-panel">
                     <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
                         <div class="auth-field">
                             <label class="auth-label" for="loginEmail">Email Address</label>
@@ -1791,9 +1812,8 @@
                             <label class="auth-label" for="loginPassword">Password</label>
                             <div class="auth-input-wrap">
                                 <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-                                <input type="password" id="loginPassword" name="password" class="auth-input"
-                                    placeholder="Enter password" required autocomplete="current-password"
-                                    style="padding-right:44px">
+                                <input type="password" id="loginPassword" name="password" class="auth-input auth-input-pw"
+                                    placeholder="Enter password" required autocomplete="current-password">
                                 <button type="button" class="auth-pw-toggle"
                                     onclick="togglePw('loginPassword','loginPwEye')" id="loginPwEye"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                                 <span class="auth-error-msg" id="loginPasswordErr"></span>
@@ -1801,10 +1821,11 @@
                         </div>
                         <div class="auth-options">
                             <label class="auth-check"><input type="checkbox" id="rememberMe" checked> Remember me</label>
-                            <a href="#" class="auth-forgot" onclick="handleForgotPw(event)">Forgot password?</a>
+                            <button type="button" class="auth-forgot" onclick="handleForgotPw()">Forgot password?</button>
                         </div>
                         <button type="submit" class="auth-submit" id="loginSubmitBtn">
-                            <span>Sign In to Account</span> →
+                            <span>Sign In to Account</span>
+                            <svg class="auth-submit-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                         </button>
                         <div class="auth-divider"><span data-i18n="auth.orContinue">or continue with</span></div>
                         <div id="googleGsiBtn" class="google-gsi-mount" style="display:none;justify-content:center;margin-bottom:10px"></div>
@@ -1827,38 +1848,15 @@
                                 </svg>
                                 Google
                             </button>
-                            <button type="button" class="auth-social-btn"
-                                onclick="openOtpPanel()">
-                                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
-                                    <path
-                                        d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
-                                        fill="#6366F1" />
-                                </svg>
-                                OTP Code
-                            </button>
                         </div>
-                        <p class="auth-switch">Don't have an account? <a href="#"
-                                onclick="switchAuthTab('register');return false">Sign Up →</a></p>
+                        <p class="auth-switch">Don't have an account?
+                            <button type="button" class="auth-switch-link" onclick="switchAuthTab('register')">Sign Up</button>
+                        </p>
                     </form>
                 </div>
 
-                <!-- OTP Verification Panel -->
-                <div id="otpPanel" style="display:none;text-align:center;padding:12px 0">
-                    <p style="font-size:.86rem;color:var(--ink-2);margin-bottom:8px">Enter the 6-digit OTP code sent to your mobile number:</p>
-                    <div class="otp-row">
-                        <input type="text" maxlength="1" class="otp-digit" data-idx="0" pattern="[0-9]" inputmode="numeric">
-                        <input type="text" maxlength="1" class="otp-digit" data-idx="1" pattern="[0-9]" inputmode="numeric">
-                        <input type="text" maxlength="1" class="otp-digit" data-idx="2" pattern="[0-9]" inputmode="numeric">
-                        <input type="text" maxlength="1" class="otp-digit" data-idx="3" pattern="[0-9]" inputmode="numeric">
-                        <input type="text" maxlength="1" class="otp-digit" data-idx="4" pattern="[0-9]" inputmode="numeric">
-                        <input type="text" maxlength="1" class="otp-digit" data-idx="5" pattern="[0-9]" inputmode="numeric">
-                    </div>
-                    <button class="auth-submit" onclick="verifyOtp()" id="otpSubmitBtn" style="margin-top:14px">Verify OTP Code →</button>
-                    <button class="btn btn-ghost btn-full" onclick="closeOtpPanel()" style="margin-top:8px">← Back to Password Sign In</button>
-                </div>
-
                 <!-- Register Panel -->
-                <div id="registerPanel" style="display:none">
+                <div id="registerPanel" class="auth-panel" hidden>
                     <form id="registerForm" onsubmit="handleRegister(event)" novalidate>
                         <div class="auth-row">
                             <div class="auth-field">
@@ -1875,7 +1873,8 @@
                                 <div class="auth-input-wrap">
                                     <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg></span>
                                     <input type="tel" id="regMobile" name="mobile" class="auth-input"
-                                        placeholder="10-digit number" pattern="[0-9]{10}" required inputmode="numeric">
+                                        placeholder="10-digit number" pattern="[0-9]{10}" required inputmode="numeric"
+                                        autocomplete="tel">
                                     <span class="auth-error-msg" id="regMobileErr"></span>
                                 </div>
                             </div>
@@ -1894,9 +1893,9 @@
                                 <label class="auth-label" for="regPassword">Password</label>
                                 <div class="auth-input-wrap">
                                     <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-                                    <input type="password" id="regPassword" name="password" class="auth-input"
+                                    <input type="password" id="regPassword" name="password" class="auth-input auth-input-pw"
                                         placeholder="Min 6 characters" required autocomplete="new-password"
-                                        oninput="checkPwStrength(this.value)" style="padding-right:44px">
+                                        oninput="checkPwStrength(this.value)">
                                     <button type="button" class="auth-pw-toggle"
                                         onclick="togglePw('regPassword','regPwEye')" id="regPwEye"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                                     <span class="auth-error-msg" id="regPasswordErr"></span>
@@ -1913,9 +1912,8 @@
                                 <label class="auth-label" for="regConfirm">Confirm Password</label>
                                 <div class="auth-input-wrap">
                                     <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-                                    <input type="password" id="regConfirm" name="confirmPassword" class="auth-input"
-                                        placeholder="Repeat password" required autocomplete="new-password"
-                                        style="padding-right:44px">
+                                    <input type="password" id="regConfirm" name="confirmPassword" class="auth-input auth-input-pw"
+                                        placeholder="Repeat password" required autocomplete="new-password">
                                     <button type="button" class="auth-pw-toggle"
                                         onclick="togglePw('regConfirm','regConfirmEye')" id="regConfirmEye"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                                     <span class="auth-error-msg" id="regConfirmErr"></span>
@@ -1925,13 +1923,14 @@
                         <label class="auth-check auth-terms-check">
                             <input type="checkbox" id="regTerms">
                             <span data-i18n="auth.iAgree">I agree to the</span>
-                            <a href="#" onclick="showToast(t('footer.termsSoon'));return false" data-i18n="auth.terms">Terms</a>
+                            <button type="button" class="auth-inline-link" onclick="openLegalModal('terms')" data-i18n="auth.terms">Terms</button>
                             <span>&amp;</span>
-                            <a href="#" onclick="showToast(t('footer.privacySoon'));return false" data-i18n="auth.privacy">Privacy Policy</a>
+                            <button type="button" class="auth-inline-link" onclick="openLegalModal('privacy')" data-i18n="auth.privacy">Privacy Policy</button>
                         </label>
                         <div class="auth-error-msg auth-terms-err" id="regTermsErr"></div>
                         <button type="submit" class="auth-submit" id="registerSubmitBtn">
-                            <span>Create Free Account</span> →
+                            <span>Create Free Account</span>
+                            <svg class="auth-submit-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                         </button>
                         <div class="auth-divider"><span data-i18n="auth.orContinue">or continue with</span></div>
                         <div id="googleGsiBtnReg" class="google-gsi-mount" style="display:none;justify-content:center;margin-bottom:10px"></div>
@@ -1955,8 +1954,9 @@
                                 Google
                             </button>
                         </div>
-                        <p class="auth-switch">Already have an account? <a href="#"
-                                onclick="switchAuthTab('login');return false">Sign In →</a></p>
+                        <p class="auth-switch">Already have an account?
+                            <button type="button" class="auth-switch-link" onclick="switchAuthTab('login')">Sign In</button>
+                        </p>
                     </form>
                 </div>
             </div>
@@ -1964,14 +1964,21 @@
     </div>
 
 
-    <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
-    <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-label="My profile" onclick="handleProfileOverlayClick(event)">
-        <div class="modal-box profile-modal-box" style="padding:0;overflow:hidden">
+    <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━
+         Mobile: bottom sheet (grab handle, sticky header + tabs, scrolling
+         body, safe-area aware). Desktop: centred 620px dialog.
+         All geometry lives in refinements.css / overlays.css - no inline styles,
+         because inline styles cannot respond to viewport or open mobile keyboard.
+    -->
+    <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileHeaderName" onclick="handleProfileOverlayClick(event)">
+        <div class="modal-box profile-modal-box">
             <!-- Compact header card: who is buying + what proof is on file -->
             <div class="profile-header">
-                <button class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close Profile Modal" style="position:absolute;top:12px;right:12px;color:#fff;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:50%;min-width:48px;min-height:48px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;z-index:25;pointer-events:auto">✕</button>
+                <button type="button" class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close profile">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
                 <div class="profile-header-inner">
-                    <div class="profile-avatar-large" id="profileAvatarLg" style="background:var(--brand)">
+                    <div class="profile-avatar-large" id="profileAvatarLg" aria-hidden="true">
                         <span id="profileAvatarLetter">U</span>
                     </div>
                     <div class="profile-header-info">
@@ -1983,7 +1990,7 @@
                             <span id="profileBuyerBadgeText">Retail Buyer</span>
                         </span>
                     </div>
-                    <button class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()">Edit</button>
+                    <button type="button" class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()">Edit</button>
                 </div>
             </div>
 
@@ -2007,9 +2014,9 @@
                 </div>
             </div>
 
-            <!-- Quick access grid (2×2) -->
+            <!-- Quick access grid (2x2) -->
             <div class="hub-quick">
-                <button class="hub-tile" onclick="openProfileTab('orders')">
+                <button type="button" class="hub-tile" onclick="openProfileTab('orders')">
                     <span class="hub-tile__top">
                         <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
                         <span class="hub-tile__badge" id="hubOrdersBadge">0</span>
@@ -2017,7 +2024,7 @@
                     <span class="hub-tile__label">My Orders &amp; Invoices</span>
                     <span class="hub-tile__meta" id="hubOrdersMeta">Track, reorder &amp; download bills</span>
                 </button>
-                <button class="hub-tile" onclick="openProfileTab('sites')">
+                <button type="button" class="hub-tile" onclick="openProfileTab('sites')">
                     <span class="hub-tile__top">
                         <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
                         <span class="hub-tile__badge" id="hubSitesBadge">0</span>
@@ -2025,7 +2032,7 @@
                     <span class="hub-tile__label">Saved Construction Sites</span>
                     <span class="hub-tile__meta" id="hubSitesMeta">None yet</span>
                 </button>
-                <button class="hub-tile" onclick="openProfileTab('wishlist')">
+                <button type="button" class="hub-tile" onclick="openProfileTab('wishlist')">
                     <span class="hub-tile__top">
                         <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
                         <span class="hub-tile__badge" id="hubWishlistBadge">0</span>
@@ -2033,96 +2040,132 @@
                     <span class="hub-tile__label">Wishlist</span>
                     <span class="hub-tile__meta">Bricks &amp; rates you are watching</span>
                 </button>
-                <button class="hub-tile" onclick="openProfileTab('gst')">
+                <button type="button" class="hub-tile" onclick="openProfileTab('enquiries')">
                     <span class="hub-tile__top">
-                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>
-                        <span class="hub-tile__badge" id="hubGstBadge">—</span>
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+                        <span class="hub-tile__badge" id="hubEnquiryBadge">0</span>
                     </span>
-                    <span class="hub-tile__label">GSTIN &amp; Business Info</span>
-                    <span class="hub-tile__meta" id="hubGstMeta">Not on file</span>
+                    <span class="hub-tile__label">Enquiries &amp; Quotations</span>
+                    <span class="hub-tile__meta" id="hubEnquiryMeta">RFQs logged on this device</span>
                 </button>
             </div>
 
-            <!-- Profile Navigation Tabs -->
-            <div class="profile-tabs">
-                <button class="profile-tab active" onclick="switchProfileTab('info',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Account Info</button>
-                <button class="profile-tab" onclick="switchProfileTab('orders',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> My Orders</button>
-                <button class="profile-tab" onclick="switchProfileTab('sites',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Sites</button>
-                <button class="profile-tab" onclick="switchProfileTab('wishlist',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Wishlist</button>
-                <button class="profile-tab" onclick="switchProfileTab('gst',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> GST Business</button>
+            <!-- Profile Navigation Tabs. These WRAP - a sideways-scrolling tab
+                 rail hid "Sites", "Wishlist" and "GST" completely on a phone.
+                 Plain buttons with aria-current rather than role="tab": every
+                 panel is reachable by Tab and the inactive ones are removed from
+                 the a11y tree with display:none, which is what the markup does. -->
+            <div class="profile-tabs" role="group" aria-label="Account sections">
+                <button type="button" aria-current="true" class="profile-tab active" onclick="switchProfileTab('info',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Account</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('orders',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Orders</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('enquiries',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> Enquiries</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('sites',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Sites</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('wishlist',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Wishlist</button>
+                <button type="button" class="profile-tab" onclick="switchProfileTab('gst',this)"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> GST</button>
             </div>
 
-            <div class="modal-body" style="padding:0">
+            <div class="modal-body profile-modal-body">
                 <!-- Tab 1: Account Info -->
                 <div class="profile-tab-panel active" id="pTabInfo">
                     <!-- View Mode -->
                     <div id="profileViewMode">
-                        <div class="profile-info-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
-                                <div class="profile-info-label" id="profileNameLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">FULL NAME</div>
-                                <div class="profile-info-value" id="profileViewName" style="font-weight:700;color:var(--ink)">—</div>
+                        <div class="profile-info-grid">
+                            <div class="profile-info-card">
+                                <div class="profile-info-label" id="profileNameLabel">FULL NAME</div>
+                                <div class="profile-info-value" id="profileViewName">—</div>
                             </div>
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
-                                <div class="profile-info-label" id="profileEmailLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">EMAIL ADDRESS</div>
-                                <div class="profile-info-value" id="profileViewEmail" style="font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis">—</div>
+                            <div class="profile-info-card">
+                                <div class="profile-info-label" id="profileEmailLabel">EMAIL ADDRESS</div>
+                                <div class="profile-info-value profile-info-value--break" id="profileViewEmail">—</div>
                             </div>
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
-                                <div class="profile-info-label" id="profileMobileLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">MOBILE NUMBER</div>
-                                <div class="profile-info-value" id="profileViewMobile" style="font-weight:700;color:var(--ink)">—</div>
+                            <div class="profile-info-card">
+                                <div class="profile-info-label" id="profileMobileLabel">MOBILE NUMBER</div>
+                                <div class="profile-info-value" id="profileViewMobile">—</div>
                             </div>
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm)">
-                                <div class="profile-info-label" id="profileRefLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">CUSTOMER ID</div>
-                                <div class="profile-info-value" id="profileViewRef" style="font-weight:700;color:var(--ink)">—</div>
+                            <div class="profile-info-card">
+                                <div class="profile-info-label" id="profileRefLabel">CUSTOMER ID</div>
+                                <div class="profile-info-value" id="profileViewRef">—</div>
                             </div>
-                            <div class="profile-info-card" style="background:var(--bg-subtle);padding:12px;border-radius:var(--r-sm);grid-column:1/-1">
-                                <div class="profile-info-label" id="profileAddressLabel" style="font-size:.7rem;color:var(--ink-3);font-weight:600">DEFAULT DELIVERY ADDRESS</div>
-                                <div class="profile-info-value" id="profileViewAddress" style="font-weight:700;color:var(--ink)">—</div>
+                            <div class="profile-info-card profile-info-card--wide">
+                                <div class="profile-info-label" id="profileAddressLabel">DEFAULT DELIVERY ADDRESS</div>
+                                <div class="profile-info-value" id="profileViewAddress">—</div>
                             </div>
                         </div>
-                        <div style="display:flex;gap:10px">
-                            <button class="btn btn-primary btn-full" onclick="switchToEditProfile()" id="profileEditBtn">Edit Profile</button>
-                            <button class="btn btn-outline btn-full" onclick="logoutUser();closeProfile()">Sign Out</button>
+                        <div class="profile-view-actions">
+                            <button type="button" class="btn btn-primary btn-full" onclick="switchToEditProfile()" id="profileEditBtn">Edit Profile</button>
                         </div>
 
-                        <!-- Direct links for the two account surfaces buyers look for -->
-                        <nav class="hub-nav" style="padding:16px 0 0">
+                        <!-- Every account surface a buyer looks for, wired to what
+                             actually exists on this build. -->
+                        <nav class="hub-nav" aria-label="Account shortcuts">
                             <div class="hub-section-title">Account Shortcuts</div>
-                            <button class="hub-nav__row" onclick="openProfileTab('orders')">
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('orders')">
                                 <span>My Orders &amp; Invoices</span>
                                 <span class="hub-nav__aside" id="hubNavOrders">0 orders</span>
                             </button>
-                            <button class="hub-nav__row" onclick="openProfileTab('sites')">
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('enquiries')">
+                                <span>My Enquiries &amp; Quotations</span>
+                                <span class="hub-nav__aside" id="hubNavEnquiries">0 RFQs</span>
+                            </button>
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('sites')">
                                 <span>Saved Construction Sites</span>
                                 <span class="hub-nav__aside" id="hubNavSites">0 sites</span>
                             </button>
-                            <button class="hub-nav__row" onclick="openProfileTab('gst')">
-                                <span>GSTIN &amp; Business Info</span>
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('gst')">
+                                <span>Account Settings — GSTIN &amp; Business Info</span>
                                 <span class="hub-nav__aside" id="hubNavGst">Not on file</span>
                             </button>
+                            <button type="button" class="hub-nav__row" onclick="openNotificationCenter()">
+                                <span>Notifications</span>
+                                <span class="hub-nav__aside" id="hubNavAlerts">Order &amp; rate alerts</span>
+                            </button>
+                            <button type="button" class="hub-nav__row" onclick="openProfileTab('wishlist')">
+                                <span>Wishlist</span>
+                                <span class="hub-nav__aside" id="hubNavWishlist">0 items</span>
+                            </button>
                         </nav>
+
+                        <div class="hub-support">
+                            <a class="hub-support__btn" href="tel:+919198923230">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z"/></svg>
+                                Call the Yard
+                            </a>
+                            <a class="hub-support__btn hub-support__btn--wa" href="https://wa.me/919198923230" target="_blank" rel="noopener">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+                                Help &amp; Support
+                            </a>
+                        </div>
+
+                        <div class="profile-view-footer">
+                            <button type="button" class="btn btn-outline btn-full" onclick="requestProfileSignOut()">Sign Out</button>
+                        </div>
                     </div>
+
                     <!-- Edit Mode -->
-                    <div id="profileEditMode" style="display:none">
-                        <form id="profileEditForm" onsubmit="saveProfile(event)">
+                    <div id="profileEditMode" hidden>
+                        <form id="profileEditForm" onsubmit="saveProfile(event)" novalidate>
                             <div class="auth-field">
-                                <label class="co-form-label" id="editNameLabel">Full Name</label>
-                                <input type="text" class="co-input" id="editName" required>
+                                <label class="co-form-label" for="editName" id="editNameLabel">Full Name</label>
+                                <input type="text" class="co-input" id="editName" autocomplete="name" required>
+                                <p class="field-error" id="errEditName"></p>
                             </div>
-                            <div class="auth-field" style="margin-top:10px">
-                                <label class="co-form-label" id="editEmailLabel">Email Address</label>
-                                <input type="email" class="co-input" id="editEmail" required>
+                            <div class="auth-field">
+                                <label class="co-form-label" for="editEmail" id="editEmailLabel">Email Address</label>
+                                <input type="email" class="co-input" id="editEmail" autocomplete="email" inputmode="email" required>
+                                <p class="field-error" id="errEditEmail"></p>
                             </div>
-                            <div class="auth-field" style="margin-top:10px">
-                                <label class="co-form-label" id="editMobileLabel">Mobile Number</label>
-                                <input type="tel" class="co-input" id="editMobile" pattern="[0-9]{10}">
+                            <div class="auth-field">
+                                <label class="co-form-label" for="editMobile" id="editMobileLabel">Mobile Number</label>
+                                <input type="tel" class="co-input" id="editMobile" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10">
+                                <p class="field-error" id="errEditMobile"></p>
                             </div>
-                            <div class="auth-field" style="margin-top:10px">
-                                <label class="co-form-label" id="editAddressLabel">Delivery Address</label>
-                                <input type="text" class="co-input" id="editAddress" placeholder="Enter default delivery address">
+                            <div class="auth-field">
+                                <label class="co-form-label" for="editAddress" id="editAddressLabel">Delivery Address</label>
+                                <input type="text" class="co-input" id="editAddress" autocomplete="street-address" placeholder="Enter default delivery address">
                             </div>
-                            <div class="profile-edit-actions" style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-                                <button type="submit" class="btn btn-primary btn-full" id="profileSaveBtn" style="flex:1;min-width:120px;min-height:44px">Save Changes</button>
-                                <button type="button" class="btn btn-outline btn-full" onclick="cancelEditProfile()" id="profileCancelEditBtn" style="flex:1;min-width:100px;min-height:44px;cursor:pointer">Cancel</button>
+                            <div class="profile-edit-actions">
+                                <button type="submit" class="btn btn-primary btn-full" id="profileSaveBtn">Save Changes</button>
+                                <button type="button" class="btn btn-outline btn-full" onclick="cancelEditProfile()" id="profileCancelEditBtn">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -2133,27 +2176,36 @@
                     <div id="orderHistoryList"></div>
                 </div>
 
-                <!-- Tab 3: Saved construction sites + address book -->
+                <!-- Tab 3: Enquiries & bulk quotation requests (gb_quotations ledger) -->
+                <div class="profile-tab-panel" id="pTabEnquiries">
+                    <div id="enquiryList"></div>
+                    <div class="profile-view-actions">
+                        <button type="button" class="btn btn-primary btn-full" onclick="openBulkQuoteModal()">Raise a New Quotation Request</button>
+                    </div>
+                    <p class="gst-note">Enquiries and RFQs raised from this app are listed from this device's log. A Bhatta Manager reviews each one and replies on WhatsApp; the yard backend does not yet mirror them to your other devices.</p>
+                </div>
+
+                <!-- Tab 4: Saved construction sites + address book -->
                 <div class="profile-tab-panel" id="pTabSites">
                     <div class="order-success-box">
-                        <div style="font-weight:700;color:var(--ink);font-size:.9rem;margin-bottom:4px;display:inline-flex;align-items:center;gap:6px"><svg width="15" height="15" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Default Delivery Address</div>
-                        <div id="profileAddressDisplay" style="font-size:.84rem;color:var(--ink-2)">No saved address yet.</div>
+                        <div class="sites-default-label"><svg width="15" height="15" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Default Delivery Address</div>
+                        <div id="profileAddressDisplay">No saved address yet.</div>
                     </div>
-                    <div class="hub-section-title" style="margin-top:16px">Saved Sites &amp; Delivery Pincodes</div>
+                    <div class="hub-section-title">Saved Sites &amp; Delivery Pincodes</div>
                     <div id="pTabSitesList"></div>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-                        <button class="btn btn-primary btn-full" onclick="addSiteFromProfile()" style="flex:1;min-width:140px">+ Save a Site</button>
-                        <button class="btn btn-outline btn-full" onclick="switchProfileTab('info');switchToEditProfile()" style="flex:1;min-width:140px">Edit Default Address</button>
+                    <div class="profile-view-actions profile-view-actions--pair">
+                        <button type="button" class="btn btn-primary btn-full" onclick="addSiteFromProfile()">+ Save a Site</button>
+                        <button type="button" class="btn btn-outline btn-full" onclick="switchProfileTab('info');switchToEditProfile()">Edit Default Address</button>
                     </div>
                     <p class="gst-note">Each site keeps its own nickname, delivery pincode and road access, so checkout can fill the whole address block in one tap. Saved on this device — the yard backend does not sync them between your phone and your desk yet.</p>
                 </div>
 
-                <!-- Tab 4: Wishlist -->
+                <!-- Tab 5: Wishlist -->
                 <div class="profile-tab-panel" id="pTabWishlist">
                     <div class="wishlist-grid" id="profileWishlistGrid"></div>
                 </div>
 
-                <!-- Tab 5: GSTIN & business info -->
+                <!-- Tab 6: GSTIN & business info (account settings) -->
                 <div class="profile-tab-panel" id="pTabGst">
                     <div class="gst-state gst-state--neutral" id="gstState">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -2181,16 +2233,16 @@
                         <label class="co-form-label" for="editBusinessName">Business / Firm Name</label>
                         <input type="text" class="co-input" id="editBusinessName" placeholder="e.g. Singh Construction Co.">
                     </div>
-                    <div class="auth-field" style="margin-top:10px">
+                    <div class="auth-field">
                         <label class="co-form-label" for="editGstin">GSTIN</label>
-                        <input type="text" class="co-input" id="editGstin" maxlength="15" placeholder="09AAACG1234A1Z5" style="text-transform:uppercase;font-family:ui-monospace,Menlo,monospace" oninput="renderGstState()">
+                        <input type="text" class="co-input input-mono input-upper" id="editGstin" maxlength="15" placeholder="09AAACG1234A1Z5" oninput="renderGstState()">
                     </div>
-                    <div class="auth-field" style="margin-top:10px">
+                    <div class="auth-field">
                         <label class="co-form-label" for="editPan">PAN (optional)</label>
-                        <input type="text" class="co-input" id="editPan" maxlength="10" placeholder="AAACG1234A" style="text-transform:uppercase;font-family:ui-monospace,Menlo,monospace">
+                        <input type="text" class="co-input input-mono input-upper" id="editPan" maxlength="10" placeholder="AAACG1234A">
                     </div>
 
-                    <button class="btn btn-primary btn-full" onclick="saveBuyerProfileType()" style="margin-top:14px;min-height:44px">Save Business Info</button>
+                    <button type="button" class="btn btn-primary btn-full" onclick="saveBuyerProfileType()">Save Business Info</button>
 
                     <p class="gst-note"><strong>What the tick means:</strong> the number is checked on this device against the Indian GSTIN structure (state code, 5 letters, 4 digits, check digit, entity, Z, checksum). It is not a government verification — the yard confirms the registration on the GST portal before a tax invoice with CGST/SGST or IGST is issued.</p>
                     <p class="gst-note">With a GST business on file, invoices print your firm name and GSTIN, and inter-state loads are billed as IGST instead of CGST + SGST.</p>
@@ -2212,7 +2264,7 @@
                     <div class="co-sheet__title" id="coSheetTitle">Checkout &amp; Order Summary</div>
                     <div class="co-sheet__sub">The yard confirms the loading slot after the order reaches it.</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeCheckout()" aria-label="Close Checkout">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeCheckout()" aria-label="Close Checkout">✕</button>
             </div>
 
             <!-- Numbered Step Bar -->
@@ -2430,7 +2482,7 @@
 
                     <div class="checkout-order-summary" id="checkoutSummary2" style="margin-top:14px"></div>
                     <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap" id="checkoutPayBtns">
-                        <button class="btn btn-ghost" onclick="backToDetails()" style="flex:1">← Back to details</button>
+                        <button type="button" class="btn btn-ghost" onclick="backToDetails()" style="flex:1">← Back to details</button>
                     </div>
                 </div>
 
@@ -2453,10 +2505,10 @@
                         </div>
 
                         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px">
-                            <a href="https://wa.me/919198923230" id="orderWaBtn" target="_blank" class="btn btn-primary" style="background:#16a34a">
+                            <a href="https://wa.me/919198923230" id="orderWaBtn" target="_blank" rel="noopener" class="btn btn-primary" style="background:#16a34a">
                                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg> Track on WhatsApp
                             </a>
-                            <button class="btn btn-outline" onclick="closeCheckout()">Continue Shopping</button>
+                            <button type="button" class="btn btn-outline" onclick="closeCheckout()">Continue Shopping</button>
                         </div>
                     </div>
                 </div>
@@ -2491,7 +2543,7 @@
                     <span class="sec-tag" style="margin-bottom:4px">B2B &amp; Wholesale</span>
                     <h3 class="modal-title" id="rfqTitle">Request Bulk Project Quotation</h3>
                 </div>
-                <button class="modal-close-btn" onclick="closeBulkQuoteModal()" aria-label="Close dialog">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeBulkQuoteModal()" aria-label="Close dialog">✕</button>
             </div>
             <div class="modal-body" style="padding:20px">
                 <form id="bulkQuoteForm" onsubmit="handleBulkQuoteSubmit(event)">
@@ -2590,7 +2642,7 @@
                 </div>
                 <div class="admin-header-right">
                     <span class="admin-station">Kiln Station: Jaunpur Unit 1</span>
-                    <button class="modal-close-btn admin-close" onclick="closeAdminPortal()" aria-label="Close Admin Portal">✕</button>
+                    <button type="button" class="modal-close-btn admin-close" onclick="closeAdminPortal()" aria-label="Close Admin Portal">✕</button>
                 </div>
             </div>
 
@@ -2598,35 +2650,35 @@
             <div class="admin-workspace">
                 <!-- Sidebar Nav -->
                 <nav class="admin-sidebar" aria-label="Operations sections">
-                    <button class="admin-nav-item active" onclick="switchAdminTab('overview', this)">
+                    <button type="button" class="admin-nav-item active" onclick="switchAdminTab('overview', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                         <span>Dashboard Overview</span>
                     </button>
-                    <button class="admin-nav-item" onclick="switchAdminTab('quotations', this)">
+                    <button type="button" class="admin-nav-item" onclick="switchAdminTab('quotations', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         <span>B2B Quotations</span>
                     </button>
-                    <button class="admin-nav-item" onclick="switchAdminTab('orders', this)">
+                    <button type="button" class="admin-nav-item" onclick="switchAdminTab('orders', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         <span>Customer Orders</span>
                     </button>
-                    <button class="admin-nav-item" onclick="switchAdminTab('inventory', this)">
+                    <button type="button" class="admin-nav-item" onclick="switchAdminTab('inventory', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                         <span>Yard Stock &amp; Batches</span>
                     </button>
-                    <button class="admin-nav-item" onclick="switchAdminTab('dispatch', this)">
+                    <button type="button" class="admin-nav-item" onclick="switchAdminTab('dispatch', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                         <span>Dispatch &amp; Drivers</span>
                     </button>
-                    <button class="admin-nav-item" onclick="switchAdminTab('invoices', this)">
+                    <button type="button" class="admin-nav-item" onclick="switchAdminTab('invoices', this)">
                                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
                                             <span>Invoices &amp; PDFs</span>
                                         </button>
-                    <button class="admin-nav-item" onclick="switchAdminTab('financials', this)">
+                    <button type="button" class="admin-nav-item" onclick="switchAdminTab('financials', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="21" x2="21" y2="21"/><rect x="5" y="11" width="3" height="10"/><rect x="10.5" y="6" width="3" height="15"/><rect x="16" y="13" width="3" height="8"/></svg>
                         <span>Finance &amp; Reports</span>
                     </button>
-<button class="admin-nav-item" onclick="switchAdminTab('company', this)">
+<button type="button" class="admin-nav-item" onclick="switchAdminTab('company', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><line x1="9" y1="21" x2="9" y2="12"/><line x1="15" y1="21" x2="15" y2="12"/></svg>
                         <span>Company Profile</span>
                     </button>
@@ -2645,7 +2697,7 @@
         <div class="modal-box" id="productModalBox">
             <div class="modal-head">
                 <div></div>
-                <button class="modal-close-btn" onclick="closeProductModal()">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeProductModal()">✕</button>
             </div>
             <div class="modal-body" style="padding-top:8px">
                 <div class="pd-grid" id="pdContent"></div>
@@ -2739,15 +2791,15 @@
                     <div class="modal-title">Live Delivery Tracker</div>
                     <div class="modal-subtitle">Track your brick trolley / truck dispatch status</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeTrackerModal()">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeTrackerModal()">✕</button>
             </div>
             <div class="modal-body" style="padding-top:12px">
                 <div class="tracker-search-wrap">
                     <input type="text" class="tracker-input" id="trackerSearchInput" placeholder="Enter Order ID (e.g. GBI-89241) or Mobile..." value="GBI-20260728-4912">
-                    <button class="btn btn-primary" onclick="trackOrderSubmit()">Search</button>
+                    <button type="button" class="btn btn-primary" onclick="trackOrderSubmit()">Search</button>
                 </div>
                 <div style="text-align:right;margin-top:-12px;margin-bottom:14px">
-                    <button class="btn btn-ghost btn-sm" style="font-size:.76rem;color:var(--brand)" onclick="demoTrackerOrder()">✨ Test Demo Active Dispatch</button>
+                    <button type="button" class="btn btn-ghost btn-sm" style="font-size:.76rem;color:var(--brand)" onclick="demoTrackerOrder()">✨ Test Demo Active Dispatch</button>
                 </div>
 
                 <!-- Google Maps Route Container -->
@@ -2768,7 +2820,7 @@
                     <div class="modal-title" style="font-size:1.1rem">📄 Tax Invoice / Cash Memo</div>
                     <div class="modal-subtitle">Gurukripa Bricks Industry Official GST Invoice</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeGstInvoice()">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeGstInvoice()">✕</button>
             </div>
             <div class="modal-body" style="padding:0;max-height:75vh;overflow-y:auto">
                 <div class="gst-invoice-paper" id="gstInvoicePrintArea">
@@ -2776,8 +2828,8 @@
                 </div>
             </div>
             <div style="padding:12px 20px;background:var(--bg-subtle);border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px">
-                <button class="btn btn-outline btn-sm" onclick="closeGstInvoice()">Close</button>
-                <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="closeGstInvoice()">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
             </div>
         </div>
     </div>
@@ -2790,17 +2842,17 @@
                     <div class="modal-title" style="font-size:1.05rem">Invoice &amp; PDF</div>
                     <div class="modal-subtitle" id="invPdfSubtitle">Preview, download or print a GST invoice</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close">✕</button>
             </div>
             <div class="modal-body inv-pdf-body">
                 <iframe id="invPdfFrame" class="inv-pdf-frame" title="Invoice preview"></iframe>
             </div>
             <div class="inv-pdf-actions">
-                <button class="btn btn-outline btn-sm" onclick="printCurrentInvoice()">🖨️ Print / Save PDF</button>
-                <button class="btn btn-outline btn-sm" onclick="downloadCurrentInvoice()">⬇️ Download</button>
-                <button class="btn btn-outline btn-sm" onclick="shareCurrentInvoice()">🔗 Share</button>
-                <button class="btn btn-outline btn-sm" onclick="resendCurrentInvoice()">✉️ Resend</button>
-                <button class="btn btn-primary btn-sm" onclick="closeInvoicePdf()">Close</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="printCurrentInvoice()">🖨️ Print / Save PDF</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="downloadCurrentInvoice()">⬇️ Download</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="shareCurrentInvoice()">🔗 Share</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="resendCurrentInvoice()">✉️ Resend</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="closeInvoicePdf()">Close</button>
             </div>
         </div>
     </div>
@@ -2813,7 +2865,7 @@
                     <div class="modal-title" style="font-size:1.05rem">🏢 Company Profile</div>
                     <div class="modal-subtitle">These details appear on every generated invoice</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close">✕</button>
             </div>
             <div class="modal-body cp-body">
                 <form id="companyProfileForm" onsubmit="return false" autocomplete="off">
@@ -2907,10 +2959,10 @@
                 </form>
             </div>
             <div class="cp-actions">
-                <button class="btn btn-outline btn-sm" onclick="resetCompanyProfileForm()">Reset to defaults</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="resetCompanyProfileForm()">Reset to defaults</button>
                 <div style="flex:1"></div>
-                <button class="btn btn-outline btn-sm" onclick="closeCompanyProfile()">Cancel</button>
-                <button class="btn btn-primary btn-sm" onclick="saveCompanyProfileForm()">Save profile</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="closeCompanyProfile()">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="saveCompanyProfileForm()">Save profile</button>
             </div>
         </div>
     </div>
@@ -2923,15 +2975,15 @@
                     <span class="sec-tag" style="margin-bottom:6px">Official Compliance</span>
                     <h3 class="modal-title" id="legalModalTitle">Terms &amp; Policies</h3>
                 </div>
-                <button class="modal-close" onclick="closeLegalModal()" aria-label="Close modal">✕</button>
+                <button type="button" class="modal-close" onclick="closeLegalModal()" aria-label="Close modal">✕</button>
             </div>
 
             <!-- Tab Navigation -->
             <div class="legal-tabs" role="tablist">
-                <button class="legal-tab active" id="legalTabPrivacy" onclick="switchLegalTab('privacy')">🔒 Privacy Policy</button>
-                <button class="legal-tab" id="legalTabTerms" onclick="switchLegalTab('terms')">⚖️ Terms of Sale</button>
-                <button class="legal-tab" id="legalTabShipping" onclick="switchLegalTab('shipping')">🚚 Shipping &amp; Delivery</button>
-                <button class="legal-tab" id="legalTabQuality" onclick="switchLegalTab('quality')">🏆 Quality Standards</button>
+                <button type="button" class="legal-tab active" id="legalTabPrivacy" onclick="switchLegalTab('privacy')">🔒 Privacy Policy</button>
+                <button type="button" class="legal-tab" id="legalTabTerms" onclick="switchLegalTab('terms')">⚖️ Terms of Sale</button>
+                <button type="button" class="legal-tab" id="legalTabShipping" onclick="switchLegalTab('shipping')">🚚 Shipping &amp; Delivery</button>
+                <button type="button" class="legal-tab" id="legalTabQuality" onclick="switchLegalTab('quality')">🏆 Quality Standards</button>
             </div>
 
             <div class="modal-body legal-modal-body">
@@ -2979,7 +3031,7 @@
             </div>
 
             <div class="modal-foot" style="display:flex;justify-content:flex-end">
-                <button class="btn btn-primary btn-sm" onclick="closeLegalModal()">Understood &amp; Close</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="closeLegalModal()">Understood &amp; Close</button>
             </div>
         </div>
     </div>
@@ -2998,7 +3050,7 @@
                     <div class="modal-title">Order &amp; Rate Alerts</div>
                     <div class="modal-subtitle" id="alertUnreadCount">All caught up</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeNotificationCenter()" aria-label="Close alerts">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeNotificationCenter()" aria-label="Close alerts">✕</button>
             </div>
 
             <div class="modal-body">
@@ -3082,11 +3134,11 @@
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z"/></svg>
                 <span>Call Kiln</span>
             </a>
-            <a href="https://wa.me/919198923230" target="_blank" class="mq-item highlight">
+            <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="mq-item highlight">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                 <span>WhatsApp</span>
             </a>
-            <button class="mq-item" onclick="openTrackerModal()">
+            <button type="button" class="mq-item" onclick="openTrackerModal()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 <span>Live Track</span>
             </button>
@@ -3106,7 +3158,7 @@
                     <h4>Gurukripa Kiln Assistant</h4>
                     <p><span class="chatbot-online-dot"></span> Online · AI Construction Support</p>
                 </div>
-                <button class="chatbot-head-close" onclick="toggleChatbot()" aria-label="Close chat">✕</button>
+                <button type="button" class="chatbot-head-close" onclick="toggleChatbot()" aria-label="Close chat">✕</button>
             </div>
             <div class="chatbot-messages" id="chatMessages">
                 <div class="chat-msg bot">Namaste! 🙏 I'm your Gurukripa Kiln Assistant. How can I help you today? Check live brick prices, delivery coverage, or calculate wall requirements below.</div>
@@ -3131,11 +3183,11 @@
         <div class="fab-actions" id="fabActions">
             <div class="fab-action-btn">
                 <span class="fab-label">Chat with us</span>
-                <button class="fab-icon-btn fab-chat-btn" onclick="toggleChatbot()" title="Chat" aria-label="Chat"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></button>
+                <button type="button" class="fab-icon-btn fab-chat-btn" onclick="toggleChatbot()" title="Chat" aria-label="Chat with our assistant"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></button>
             </div>
             <div class="fab-action-btn">
                 <span class="fab-label">WhatsApp</span>
-                <a class="fab-icon-btn fab-wa-btn" href="https://wa.me/919198923230" target="_blank" title="WhatsApp">
+                <a class="fab-icon-btn fab-wa-btn" href="https://wa.me/919198923230" target="_blank" rel="noopener" title="WhatsApp" aria-label="Order on WhatsApp">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
                 </a>
             </div>
@@ -3144,21 +3196,24 @@
                 <a class="fab-icon-btn fab-call-btn" href="tel:+919198923230" title="Call" aria-label="Call Gurukripa"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></a>
             </div>
         </div>
-        <button class="fab-main-btn" id="fabMainBtn" onclick="toggleFab()" aria-label="Support">❓</button>
+        <button type="button" class="fab-main-btn" id="fabMainBtn" onclick="toggleFab()" aria-expanded="false" aria-label="Support options">
+            <svg class="fab-icon-help" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <svg class="fab-icon-close" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
     </div>
 
     <!-- Scroll to Top -->
-    <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-        aria-label="Back to top" title="Back to top">↑</button>
+    <button type="button" class="scroll-top" id="scrollTopBtn" onclick="scrollDocumentTop()"
+        aria-label="Back to top" title="Back to top"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 
     <!-- ━━━━━━━━━━━━━━━━━ MOBILE BOTTOM NAVIGATION BAR ━━━━━━━━━━━━━━━━━ -->
     <!-- Five flat, native-style destinations. Everything secondary (wishlist,
          account, alerts, language) lives in the slide-in drawer so the bar
          never grows past five targets on a narrow phone. -->
-    <nav class="mobile-nav" role="navigation" aria-label="Mobile Navigation Bar">
+    <nav class="mobile-nav" aria-label="Mobile Navigation Bar">
         <div class="mobile-nav-inner">
             <!-- 1. Home -->
-            <a href="#home" class="mn-item active" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate(30)" aria-label="Home">
+            <a href="#home" class="mn-item active" aria-current="true" onclick="setMNActive(this);mnFeedback()" aria-label="Home">
                 <span class="mn-icon-wrap">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -3169,7 +3224,7 @@
             </a>
 
             <!-- 2. Products -->
-            <a href="#products" class="mn-item" onclick="setMNActive(this);if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate(30)" aria-label="Product catalog">
+            <a href="#products" class="mn-item" onclick="setMNActive(this);mnFeedback()" aria-label="Product catalog">
                 <span class="mn-icon-wrap">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <rect x="3" y="3" width="7" height="7" rx="1.5" />
@@ -3195,7 +3250,7 @@
             </button>
 
             <!-- 4. Cart -->
-            <button type="button" class="mn-item mn-item-cart" onclick="setMNActive(this);openCart();if(window.Platform)Platform.haptic('light');if(navigator.vibrate)navigator.vibrate([30,15,30])" aria-label="Shopping cart">
+            <button type="button" class="mn-item mn-item-cart" onclick="setMNActive(this, false);openCart();mnFeedback()" aria-label="Shopping cart">
                 <span class="mn-icon-wrap">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
@@ -3251,7 +3306,6 @@
     <script src="src/js/cart.js" defer></script>
     <script src="src/js/wishlist-drawer.js" defer></script>
     <script src="src/js/auth-modal.js" defer></script>
-    <script src="src/js/otp-panel.js" defer></script>
     <script src="src/js/profile-modal.js" defer></script>
     <script src="src/js/google-auth.js" defer></script>
     <script src="src/js/checkout.js" defer></script>

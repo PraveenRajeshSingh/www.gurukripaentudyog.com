@@ -161,6 +161,11 @@ html[data-theme="dark"] {
 html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* `clip` rather than `hidden`: hidden on the root propagates to the
+       viewport and creates a scroll container, which breaks position:sticky
+       and iOS momentum scrolling. See refinements.css global reset. */
+    overflow-x: clip;
+    scrollbar-gutter: stable;
 }
 
 body {
@@ -170,9 +175,15 @@ body {
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
+    overflow-x: clip;
     padding-top: var(--sat);
 }
+
+/* JS toggles `el.hidden` across the storefront (wishlist drawer lists, tab
+   panels, empty states). Author `display` rules always beat the UA's
+   [hidden]{display:none}, so promote it once, globally, instead of
+   scattering !important through every component. */
+[hidden] { display: none !important; }
 
 img { max-width: 100%; display: block; height: auto; }
 a { color: inherit; text-decoration: none; }

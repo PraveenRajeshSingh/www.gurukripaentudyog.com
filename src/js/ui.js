@@ -84,8 +84,16 @@ function initNavHighlight() {
 }
 
 function setActiveNav(el) {
-    document.querySelectorAll('.nav-link, .drawer-link').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.nav-link, .drawer-link').forEach(l => {
+        l.classList.remove('active');
+        l.removeAttribute('aria-current');
+    });
+    if (!el) return;
     el.classList.add('active');
+    // Tell assistive tech which control is the current location, not just which
+    // one happens to be painted in brand colour. This is a one-page site, so the
+    // value is "true" (current item in a set) rather than "page".
+    el.setAttribute('aria-current', 'true');
 }
 
 function initCounters() {
@@ -115,28 +123,64 @@ function initCounters() {
 }
 
 function scrollToSection(id) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const el = document.getElementById(id);
+    if (!el) return;
+    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // scroll-margin-top on `main section[id]` keeps the sticky bar from covering
+    // the heading, so no manual offset arithmetic is needed here.
+    el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    // Reflect the destination in the URL without pushing an entry per tap, so
+    // browser Back still returns to where the reader came from.
+    if (history.replaceState) history.replaceState(null, '', '#' + id);
 }
 
-function setMNActive(el) {
-    document.querySelectorAll('.mn-item').forEach(i => i.classList.remove('active'));
-    if (el) el.classList.add('active');
+/**
+ * Back-to-top for the floating scroll button.
+ * Same reduced-motion contract as scrollToSection(): readers who ask the
+ * browser not to animate get an instant jump instead of a glide.
+ */
+function scrollDocumentTop() {
+    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    // Clear any section hash left by scrollToSection() so browser Back is not
+    // an apparent no-op that just re-anchors to the same section.
+    if (history.replaceState && location.hash) history.replaceState(null, '', location.pathname + location.search);
+}
+
+// One haptic pulse per bottom-nav tap. Platform.haptic() already falls back to
+// navigator.vibrate() on the web, so calling both made every tap buzz twice.
+function mnFeedback() {
+    if (window.Platform) Platform.haptic('light');
+}
+
+function setMNActive(el, markCurrent) {
+    document.querySelectorAll('.mn-item').forEach(i => {
+        i.classList.remove('active');
+        i.removeAttribute('aria-current');
+    });
+    if (!el) return;
+    el.classList.add('active');
+    // Cart and Track open overlays, not destinations, so they get the painted
+    // active state without claiming to be the current location.
+    if (markCurrent !== false) el.setAttribute('aria-current', 'true');
 }
 
 // Bottom-nav shortcuts that open in-page sections or overlays rather than
 // navigating to a hash. Kept next to setMNActive so the active state always
 // follows the tapped item.
 function openMobileEstimator(el) {
+    // The estimator is a real section on this page, so it does become the
+    // current location - unlike Cart and Track, which open overlays.
     setMNActive(el);
     scrollToSection('calculator');
-    if (window.Platform) Platform.haptic('light');
+    mnFeedback();
 }
 
 function openMobileTrack(el) {
-    setMNActive(el);
+    setMNActive(el, false);
     const latest = (typeof orders !== 'undefined' && orders.length) ? orders[0].id : undefined;
     if (typeof openTrackerModal === 'function') openTrackerModal(latest);
-    if (window.Platform) Platform.haptic('light');
+    mnFeedback();
 }
 
 // ══════════════════════════════════════════
@@ -172,6 +216,15 @@ function toggleDrawer() {
     const isOpen = d.classList.toggle('open');
     o.classList.toggle('open', isOpen);
     t.classList.toggle('open', isOpen);
+    t.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    t.setAttribute('aria-label', isOpen ? 'Close Navigation Menu' : 'Open Navigation Menu');
+    // aria-hidden keeps the off-screen panel out of the accessibility tree while
+    // it is closed; visibility:hidden alone does not remove it from the tree.
+    d.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    if (isOpen) {
+        // Land the first Tab press inside the menu instead of behind it.
+        setTimeout(() => d.querySelector('.drawer-close')?.focus({ preventScroll: true }), 120);
+    }
     isOpen ? overlayLock() : overlayUnlock();
 }
 
@@ -209,7 +262,11 @@ function toggleFab() {
     if (!btn || !actions) return;
     const isOpen = btn.classList.toggle('open');
     actions.classList.toggle('open', isOpen);
-    btn.textContent = isOpen ? '✕' : '❓';
+    // The glyph swap lives in CSS (.fab-main-btn.open .fab-icon-close), so the
+    // button keeps a stable accessible name instead of being read as "question
+    // mark" / "cross mark" emoji.
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    btn.setAttribute('aria-label', isOpen ? 'Close support menu' : 'Support options');
 }
 
 // ══════════════════════════════════════════
@@ -229,6 +286,33 @@ function t(key, vars) {
     return val;
 }
 
+/**
+ * Translate every [data-i18n] node inside `root` (defaults to the document).
+ * Scoped so dynamically built surfaces - the profile hub, cart drawer, product
+ * modal - can re-localise themselves after they are re-rendered without paying
+ * for a full-document pass.
+ */
+function applyTranslations(root) {
+    const scope = root && root.querySelectorAll ? root : document;
+    const dict = TRANSLATIONS[currentLang] || {};
+    scope.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = dict[key];
+        if (!val) return;
+
+        const tag = el.tagName.toUpperCase();
+        if (tag === 'INPUT' || tag === 'TEXTAREA') {
+            if (el.type !== 'submit' && el.type !== 'button') {
+                el.placeholder = val;
+            }
+        } else if (tag === 'BUTTON' && el.type === 'submit') {
+            el.innerHTML = val;
+        } else {
+            el.innerHTML = val;
+        }
+    });
+}
+
 function setLang(lang) {
     // Guard: only 'en' or 'hi'
     if (lang !== 'en' && lang !== 'hi') lang = 'en';
@@ -246,25 +330,8 @@ function setLang(lang) {
     const docTitle = (TRANSLATIONS[lang] || {})['doc.title'] || (TRANSLATIONS.en || {})['doc.title'];
     if (docTitle) document.title = docTitle;
 
-    const dict = TRANSLATIONS[lang] || {};
-
     // Apply translations to all [data-i18n] elements
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        const val = dict[key];
-        if (!val) return;
-
-        const tag = el.tagName.toUpperCase();
-        if (tag === 'INPUT' || tag === 'TEXTAREA') {
-            if (el.type !== 'submit' && el.type !== 'button') {
-                el.placeholder = val;
-            }
-        } else if (tag === 'BUTTON' && el.type === 'submit') {
-            el.innerHTML = val;
-        } else {
-            el.innerHTML = val;
-        }
-    });
+    applyTranslations(document);
 
     // Re-render dynamic vendors section if present
     if (typeof renderVendors === 'function') renderVendors();
@@ -273,7 +340,7 @@ function setLang(lang) {
     if (typeof updateCartUI === 'function') updateCartUI();
 
     // Toast language notification
-    showToast(lang === 'hi' ? '🇮🇳 हिंदी भाषा चुनी गई' : '🇬🇧 English selected');
+    showToast(lang === 'hi' ? 'भाषा हिंदी में बदली गई' : 'Language switched to English');
 }
 
 // ══════════════════════════════════════════

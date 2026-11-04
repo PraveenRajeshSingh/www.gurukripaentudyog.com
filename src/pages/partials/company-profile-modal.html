@@ -6,7 +6,7 @@
                     <div class="modal-title" style="font-size:1.05rem">🏢 Company Profile</div>
                     <div class="modal-subtitle">These details appear on every generated invoice</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close">✕</button>
             </div>
             <div class="modal-body cp-body">
                 <form id="companyProfileForm" onsubmit="return false" autocomplete="off">
@@ -100,10 +100,10 @@
                 </form>
             </div>
             <div class="cp-actions">
-                <button class="btn btn-outline btn-sm" onclick="resetCompanyProfileForm()">Reset to defaults</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="resetCompanyProfileForm()">Reset to defaults</button>
                 <div style="flex:1"></div>
-                <button class="btn btn-outline btn-sm" onclick="closeCompanyProfile()">Cancel</button>
-                <button class="btn btn-primary btn-sm" onclick="saveCompanyProfileForm()">Save profile</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="closeCompanyProfile()">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="saveCompanyProfileForm()">Save profile</button>
             </div>
         </div>
     </div>

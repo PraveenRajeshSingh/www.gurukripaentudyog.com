@@ -399,7 +399,7 @@ const PushNotifications = (function () {
         if (!badge) return;
         const count = unreadCount();
         badge.textContent = count > 9 ? '9+' : String(count);
-        badge.style.display = count ? 'inline-flex' : 'none';
+        badge.hidden = !count;
     }
 
     function renderSettings() {

@@ -503,11 +503,9 @@ html {
 }
 
 /* 鈹€鈹€ 7. Product Cards 鈥� App Store-Style 2-Column Grid 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* Product-card density for phones. Grid column counts live only in
+   refinements.css (.products-grid) so a single layer owns the layout. */
 @media (max-width: 640px) {
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
     .product-card {
         border-radius: var(--app-card-radius);
     }
@@ -542,16 +540,12 @@ html {
     .filter-btn {
         padding: 6px 14px;
         font-size: .76rem;
-        min-height: 36px;
+        min-height: 44px;
         border-radius: 50px;
     }
 }
 
 @media (max-width: 380px) {
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
     .product-card-body {
         padding: 10px 10px 12px;
     }

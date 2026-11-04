@@ -6,7 +6,7 @@
                 <h2 data-i18n="cart.title">My Cart</h2>
                 <span class="cart-head-count" id="cartHeadCount">0 items</span>
             </div>
-            <button class="cart-close" onclick="closeCart()" aria-label="Close cart">✕</button>
+            <button type="button" class="cart-close" onclick="closeCart()" aria-label="Close cart">✕</button>
         </div>
         <!-- Free Delivery Progress Bar -->
         <div class="cart-delivery-progress" id="cartDeliveryProgress">
@@ -41,14 +41,14 @@
                 </div>
                 <h3 data-i18n="cart.emptyTitle">Your Cart is Empty</h3>
                 <p data-i18n="cart.emptyText">Add Grade-A bricks to calculate project cost and delivery.</p>
-                <button class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeCart();scrollToSection('products')" data-i18n="cart.browse">Browse Products →</button>
+                <button type="button" class="btn btn-primary btn-sm" style="margin-top:16px" onclick="closeCart();scrollToSection('products')" data-i18n="cart.browse">Browse Products →</button>
             </div>
             <div id="cartItemsList" style="display:none"></div>
             <!-- Coupon -->
             <div id="cartCouponSection" style="display:none;margin-top:16px">
                 <div class="cart-coupon">
                     <input type="text" class="cart-coupon-input" id="couponInput" data-i18n="cart.couponPh" placeholder="Enter coupon code (e.g. GURU10)">
-                    <button class="cart-coupon-btn" onclick="applyCoupon()" data-i18n="cart.apply">Apply</button>
+                    <button type="button" class="cart-coupon-btn" onclick="applyCoupon()" data-i18n="cart.apply">Apply</button>
                 </div>
                 <div id="couponMsg" class="cart-coupon-msg"></div>
             </div>
@@ -86,7 +86,7 @@
         <div class="cart-footer" id="cartFooter" style="display:none">
             <!-- Offline orders waiting for a WhatsApp handoff -->
             <div class="cart-outbox-notice" id="cartOutboxNotice" style="display:none"></div>
-            <button class="cart-checkout-btn" onclick="openCheckout()" id="checkoutBtn">
+            <button type="button" class="cart-checkout-btn" onclick="openCheckout()" id="checkoutBtn">
                 <span data-i18n="cart.checkout">Proceed to Checkout</span> →
             </button>
             <button type="button" class="cart-wa-btn" onclick="WhatsAppOrder.orderFromCart()">

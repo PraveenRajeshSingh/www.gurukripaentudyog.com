@@ -349,7 +349,7 @@
         }
 
         /* Quick-view overlay */
-        .product-card-img-wrap {
+        .product-card-media {
             position: relative;
             overflow: hidden;
         }
@@ -1157,11 +1157,13 @@
         }
 
         /* Product grid 鈥� better minmax on small screens */
+        /* Product grid columns are owned by refinements.css (.products-grid).
+           Only card density lives here so two files cannot disagree. */
         @media(max-width:520px) {
-            .products-grid { grid-template-columns: repeat(auto-fill, minmax(min(250px,45vw),1fr)) }
-        }
-        @media(max-width:380px) {
-            .products-grid { grid-template-columns: 1fr }
+            .product-card-body { padding: 14px }
+            .product-card-name { font-size: .9rem }
+            .product-add-btn { padding: 9px 10px; font-size: .78rem }
+            .product-price-current { font-size: 1.1rem }
         }
 
         /* Profile modal responsive */
@@ -1606,7 +1608,6 @@
 
         /* 鈹€鈹€ Products Grid on Mobile 鈹€鈹€ */
         @media(max-width:640px) {
-            .products-grid { grid-template-columns: repeat(auto-fill, minmax(min(240px,45vw),1fr)) }
             .product-card-body { padding: 14px }
             .product-card-name { font-size: .9rem }
             .product-card-desc { font-size: .76rem }
@@ -1614,7 +1615,6 @@
             .product-price-current { font-size: 1.1rem }
         }
         @media(max-width:400px) {
-            .products-grid { grid-template-columns: 1fr }
             .products-filters { gap: 6px }
             .filter-btn { padding: 6px 12px; font-size: .76rem }
         }
@@ -1847,14 +1847,15 @@ body { overscroll-behavior-y: contain; }
 
 /* -- E. Product grid � legible at 326px ----------------------------- */
 @media (max-width: 360px) {
-    .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
     .product-card-body { padding: 8px 8px 10px !important; }
     .product-card-name { font-size: .76rem !important; }
     .product-card-desc { font-size: .7rem !important; -webkit-line-clamp: 2 !important; display: -webkit-box !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
     .product-price-current { font-size: 1rem !important; }
     .product-add-btn { font-size: .7rem !important; padding: 7px 6px !important; min-height: 40px !important; }
-    .products-filters { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; -webkit-overflow-scrolling: touch; gap: 5px !important; }
-    .filter-btn { white-space: nowrap; flex-shrink: 0; padding: 5px 10px !important; font-size: .72rem !important; }
+    /* Filter chips WRAP rather than forming a sideways-scrolling rail, which
+       hid the 4th+ filter completely on a phone. */
+    .products-filters { gap: 5px !important; }
+    .filter-btn { padding: 5px 10px !important; font-size: .72rem !important; }
 }
 
 /* -- F. Hero � extra compact at 326px ------------------------------- */
@@ -2532,7 +2533,7 @@ button:active,
 }
 
 /* ── 3. Image Aspect Ratios (CLS Layout Shift Prevention) ── */
-.product-card-img-wrap,
+.product-card-media,
 .cat-card-img-wrap,
 .gallery-item-wrap {
     aspect-ratio: 4 / 3;
@@ -2550,81 +2551,37 @@ button:active,
 }
 
 /* ── 4. Responsive Product Grid System ── */
-/* Desktop (> 1024px): 4 Columns */
-@media (min-width: 1024px) {
-    .catalog-main .products-grid,
-    #productsGrid {
-        display: grid !important;
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 20px !important;
-    }
-}
+/* Column counts, gaps and the catalog sidebar / filter-sheet breakpoints are
+   owned by refinements.css (.products-grid, .catalog-sidebar, .mobile-filter-
+   toggle). The rules below used to re-declare them with !important at DIFFERENT
+   breakpoints, which made `.catalog-sidebar { display:none !important }` kill
+   the filter bottom sheet on every phone - the "Filters" button opened nothing.
+   Only card density overrides remain, and they stay !important-free where the
+   later layer already agrees. */
 
-/* Tablet & Foldable (640px – 1023px): 3 Columns */
-@media (min-width: 640px) and (max-width: 1023px) {
-    .catalog-main .products-grid,
-    #productsGrid {
-        display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 16px !important;
-    }
-    .catalog-layout-grid {
-        display: block !important;
-    }
-    .catalog-sidebar {
-        display: none !important;
-    }
-    .mobile-filter-toggle {
-        display: inline-flex !important;
-    }
-}
-
-/* Standard Mobile (< 640px): 2 Columns Compact with High-Contrast Chips */
+/* Standard Mobile (< 640px): compact card density */
 @media (max-width: 639px) {
-    .catalog-main .products-grid,
-    #productsGrid {
-        display: grid !important;
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 10px !important;
-    }
-    .catalog-layout-grid {
-        display: block !important;
-    }
-    .catalog-sidebar {
-        display: none !important;
-    }
-    .mobile-filter-toggle {
-        display: inline-flex !important;
-    }
     .product-card {
-        border-radius: 14px !important;
-        overflow: hidden !important;
+        border-radius: 14px;
+        overflow: hidden;
     }
     .product-card-body {
-        padding: 10px 10px 12px !important;
+        padding: 10px 10px 12px;
     }
     .product-card-name {
-        font-size: 0.85rem !important;
-        line-height: 1.25 !important;
-        margin-bottom: 4px !important;
+        font-size: 0.85rem;
+        line-height: 1.25;
+        margin-bottom: 4px;
     }
     .product-price-current {
-        font-size: 1.15rem !important;
+        font-size: 1.15rem;
     }
     .product-trolley-badge {
-        font-size: 0.7rem !important;
-        padding: 4px 6px !important;
+        font-size: 0.7rem;
+        padding: 4px 6px;
     }
 }
 
-/* Ultra Compact Mobile (< 380px) */
-@media (max-width: 379px) {
-    .catalog-main .products-grid,
-    #productsGrid {
-        grid-template-columns: 1fr !important;
-        gap: 12px !important;
-    }
-}
 
 /* ── 5. Estimator Mobile Sticky Summary Footer (< 768px) ── */
 .estimator-mobile-sticky {
