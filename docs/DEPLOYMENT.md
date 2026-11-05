@@ -1,46 +1,51 @@
 # Production Deployment Guide
 
-## 1. Web Deployment (Vercel — `apps/web`)
+## Production host (authoritative)
 
-The Next.js website is engineered for deployment on Vercel as a monorepo project.
+**GitHub Pages is the single production host** for the public site
+(`www.gurukripaentudyog.com`), published by `.github/workflows/deploy.yml` from the
+legacy `www/` bundle. There is exactly one production deployment path — Vercel is
+**not** a production host. GitHub Actions (`web-ci-deploy.yml`) only tests and builds;
+it never auto-deploys. Do not add a second publish target without retiring `deploy.yml`
+first, so the two never conflict.
 
-### One-time Vercel project setup
-1. Import this GitHub repository into Vercel.
+## 1. Web CI (GitHub Actions) — no auto-deploy
+
+The Next.js app under `apps/web` builds in CI but is **not** deployed by CI. To run
+a manual preview/deploy of the Next.js app on Vercel (optional, not the live site):
+1. Import this GitHub repository into Vercel as a separate project.
 2. Set **Root Directory** to `apps/web` (Project Settings → General). Without this, Vercel would
    build the legacy static storefront instead of the Next.js app.
 3. Add the environment variable `BACKEND_API_URL` (Production/Preview) pointing at the NestJS
    platform API, e.g. `https://api.gurukripaentudyog.com`. It is read only by the server-side
    proxies under `apps/web/src/app/api/*`; if it is missing, those routes answer a truthful `503`.
-4. Copy the Project ID and Org ID from **Project Settings → Other** into GitHub secrets.
+4. `vercel --prod` (with `VERCEL_ORG_ID` / `VERCEL_PROJECT_ID` / token) deploys a preview host.
+   This host must NOT be pointed at `www.gurukripaentudyog.com` while GitHub Pages serves it.
 
-### Continuous Deployment via GitHub Actions
-The workflow `.github/workflows/web-ci-deploy.yml` triggers on push to the `main` branch:
+### What CI verifies on every push/PR to `main`
+`.github/workflows/web-ci-deploy.yml` (name: **Web CI**) runs, and must pass, before merge:
 1. `npm ci` installs every workspace from the root lockfile.
 2. Compiles and tests `packages/api-contracts` (schemas, GST math, estimator).
 3. Runs the `apps/web` structural route tests and the legacy regression suite (`npm test`).
-4. Runs a real `next build` so a broken page can never reach the deploy job.
-5. `vercel build --prod` + `vercel deploy --prebuilt --prod` publishes the Next.js app.
+4. `npm run www` assembles the legacy static `www/` bundle that GitHub Pages publishes.
+5. A real `next build` of `apps/web` so a broken page is caught in CI.
 
-### Required GitHub Repository Secrets
-To enable automated Vercel deployment, configure these secrets under **Settings > Secrets and variables > Actions**:
-- `VERCEL_TOKEN`: Your Vercel Personal Access Token.
-- `VERCEL_ORG_ID`: Your Vercel Team / Account ID.
-- `VERCEL_PROJECT_ID`: The Project ID of the `apps/web` project created above.
+There are **no required Vercel secrets** for CI. Vercel secrets are only needed if an
+operator intentionally creates a manual `apps/web` preview project.
 
 ### Custom Domain Configuration
-- Primary domain: `www.gurukripaentudyog.com`
-- Configure CNAME record pointing to `cname.vercel-dns.com` in your DNS registrar.
+- Primary domain: `www.gurukripaentudyog.com` → served by GitHub Pages.
 
 ### Cutover Status (important)
-The apex domain is **currently served by GitHub Pages** through `.github/workflows/deploy.yml`,
-which publishes the legacy `www/` bundle. Publishing `apps/web` from CI does not move traffic by
-itself. To cut the Next.js app over to `www.gurukripaentudyog.com`:
+The apex domain is **served by GitHub Pages** through `.github/workflows/deploy.yml`,
+which publishes the legacy `www/` bundle. Treat any Vercel `apps/web` deployment as a
+**preview host only**. To ever cut the Next.js app over to `www.gurukripaentudyog.com`:
 1. Add the domain to the Vercel `apps/web` project and verify DNS ownership.
 2. Point the registrar CNAME at `cname.vercel-dns.com` (allow TTL to expire).
 3. Disable or delete `deploy.yml` so GitHub Pages stops serving the old bundle, and re-issue
    `.well-known/assetlinks.json` / `apple-app-site-association` from the Next.js app if the native
    shells rely on them.
-Until that is done, treat the Vercel deployment as the preview host for `apps/web`.
+Until all three are done, GitHub Pages remains the production host and Vercel stays preview-only.
 
 ### Legacy Static Storefront
 The repository root still ships the static PWA (`npm run www` → `www/`, configured by the root

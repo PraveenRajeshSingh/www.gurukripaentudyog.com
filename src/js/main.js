@@ -78,29 +78,72 @@ function toggleFaq(btn) {
 }
 
 // Contact Form Handler
+// The static storefront has no message server, so this form must NOT pretend a
+// send happened. It validates the enquiry, then hands the details to the kiln's
+// real, always-working channel (WhatsApp) and tells the user the truth. Mirrors
+// the honest handoff used by the estimator, cart and pincode checker.
 function handleContactSubmit(e) {
     e.preventDefault();
+    const form = e.target;
     const btn = document.getElementById('contactSubmitBtn');
     if (!btn) return;
+
+    const val = (id) => {
+        const el = document.getElementById(id);
+        return el && typeof el.value === 'string' ? el.value.trim() : '';
+    };
+    const name = val('cName');
+    const email = val('cEmail');
+    const phone = val('cPhone');
+    const subjectEl = document.getElementById('cSubject');
+    const subject = (subjectEl && subjectEl.selectedOptions && subjectEl.selectedOptions[0]
+        ? subjectEl.selectedOptions[0].text : val('cSubject')) || 'General Inquiry';
+    const message = val('cMessage');
+
+    // Validation mirrors the visible required fields (see enquiry form rules).
+    const problems = [];
+    if (name.length < 2) problems.push('your full name');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) problems.push('a valid email address');
+    if (!/^[6-9]\d{9}$/.test(phone.replace(/\D/g, '').slice(-10))) problems.push('a valid 10-digit mobile number');
+    if (message.length < 5) problems.push('a short message');
+    if (problems.length) { showToast('Please provide ' + problems.join(', ') + '.', 'error'); return; }
+
+    const text = encodeURIComponent(
+        'Website enquiry\n' +
+        'Name: ' + name + '\n' +
+        'Phone: ' + phone + '\n' +
+        'Email: ' + email + '\n' +
+        'Subject: ' + subject + '\n' +
+        'Message: ' + message
+    );
+
     btn.disabled = true;
-    btn.textContent = t('contact.sending');
-    setTimeout(() => {
-        btn.disabled = false;
-        btn.textContent = t('contact.sendBtn');
-        e.target.reset();
-        showToast(t('toast.msgSent'), 'success');
-    }, 1200);
+    btn.textContent = t('contact.opening');
+    try {
+        window.open('https://wa.me/919198923230?text=' + text, '_blank', 'noopener');
+        showToast(t('contact.handedOff'), 'success');
+        form.reset();
+    } catch (err) {
+        // Pop-up blocked or WebView cannot open externally: be honest, offer mailto.
+        showToast(t('contact.handoffFailed'), 'error');
+    }
+    btn.disabled = false;
+    btn.textContent = t('contact.sendBtn');
 }
 
-// Newsletter Handler
+// Newsletter: there is no mailing backend on the static site, so instead of a
+// fake "subscribed" toast we open the visitor's mail app addressed to the yard
+// office. Honest, and the request genuinely reaches the business.
 function handleNewsletter(e) {
     e.preventDefault();
     const input = e.target.querySelector('input');
     if (!input) return;
     const email = input.value.trim();
     if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast(t('toast.invalidEmail'), 'error'); return; }
-    input.value = '';
-    showToast(t('toast.subscribed'), 'success');
+    window.location.href = 'mailto:info@gurukripaentudyog.com?subject=' +
+        encodeURIComponent('Newsletter signup request') +
+        '&body=' + encodeURIComponent('Please add ' + email + ' to your offers & new-rate alerts.');
+    showToast(t('toast.newsletterHandoff'), 'info');
 }
 
 // Bulk RFQ Modal Handlers

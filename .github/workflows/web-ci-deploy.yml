@@ -1,4 +1,10 @@
-name: Web CI & Vercel Deployment
+name: Web CI
+
+# Continuous-integration only. This workflow VALIDATES every push/PR to main.
+# The production site is deployed by "Deploy to GitHub Pages" (deploy.yml),
+# which is the single deployment target for this project. Vercel is NOT a
+# production host, so there is no Vercel deploy job here (kept deliberately
+# to avoid two conflicting production deployment processes).
 
 on:
   push:
@@ -36,39 +42,9 @@ jobs:
       - name: Run Legacy Production Regression Suite
         run: npm test
 
+      - name: Assemble Legacy Static Site (GitHub Pages artifact source)
+        # deploy.yml publishes www/; verify it builds here so CI catches breakage.
+        run: npm run www
+
       - name: Build Next.js Production Bundle
         run: npm run build:web
-
-  deploy-vercel:
-    name: Deploy Next.js Web App to Vercel
-    needs: test-and-build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install Monorepo Dependencies
-        run: npm ci
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Build Next.js App for Vercel
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Deploy Prebuilt Output to Production
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
