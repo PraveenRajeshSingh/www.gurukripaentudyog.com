@@ -470,21 +470,29 @@ describe('Service worker push + notification handlers', () => {
 // ── Mobile navigation contract ───────────────────────────────────────
 describe('Mobile bottom navigation', () => {
     const partial = read('src/pages/partials/mobile-bottom-nav.html');
+    const drawer = read('src/pages/partials/mobile-drawer.html');
 
     test('exposes exactly the five primary destinations in order', () => {
         const labels = [...partial.matchAll(/class="mn-label"[^>]*>([^<]+)</g)].map(m => m[1].trim());
-        assert.deepEqual(labels, ['Home', 'Products', 'Estimator', 'Cart', 'Track']);
+        // Phase 3/4 IA: Account (profile) is the consistent mobile profile entry;
+        // Live Track lives in the drawer so the bar never exceeds five targets.
+        assert.deepEqual(labels, ['Home', 'Products', 'Estimator', 'Cart', 'Account']);
     });
 
-    test('drops the elevated cart FAB and the profile shortcut', () => {
+    test('drops the elevated cart FAB and the legacy profile FAB shortcut', () => {
         assert.ok(!partial.includes('mn-cart-fab'));
         assert.ok(!partial.includes('mnProfileLabel'));
         assert.equal((partial.match(/class="mn-item/g) || []).length, 5);
     });
 
-    test('estimator and track open overlays instead of bare hash hops', () => {
+    test('estimator and account open overlays, not bare hash hops', () => {
         assert.ok(partial.includes('openMobileEstimator(this)'));
-        assert.ok(partial.includes('openMobileTrack(this)'));
+        assert.ok(partial.includes('handleMobileProfile()'));
         assert.ok(partial.includes('id="mobileCartBadge"'));
+    });
+
+    test('track and account remain reachable from the drawer', () => {
+        assert.ok(drawer.includes('openTrackerModal()'));
+        assert.ok(drawer.includes('handleMobileProfile()'));
     });
 });
