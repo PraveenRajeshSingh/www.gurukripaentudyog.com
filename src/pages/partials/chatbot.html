@@ -1,28 +1,33 @@
-    <!-- ━━━━━━━━━━━━━━━━━ CHATBOT ━━━━━━━━━━━━━━━━━ -->
-    <div class="chatbot-wrap" id="chatbotWrap">
+    <!-- ━━━━━━━━━━━━━━━━━ KILN ASSISTANT (bilingual helper) ━━━━━━━━━━━━━━━━━ -->
+    <div class="chatbot-wrap" id="chatbotWrap" role="dialog" aria-label="Kiln Assistant" aria-hidden="true">
         <div class="chatbot-box" id="chatbotBox">
             <div class="chatbot-head">
-                <div class="chatbot-avatar">🧱</div>
+                <div class="chatbot-avatar" aria-hidden="true">🧱</div>
                 <div class="chatbot-info">
-                    <h4>Gurukripa Kiln Assistant</h4>
-                    <p><span class="chatbot-online-dot"></span> Online · AI Construction Support</p>
+                    <h4>Kiln Assistant</h4>
+                    <p>Automated helper · हिंदी &amp; English</p>
                 </div>
-                <button type="button" class="chatbot-head-close" onclick="toggleChatbot()" aria-label="Close chat">✕</button>
+                <button type="button" class="chatbot-head-min" onclick="minimizeChatbot()" aria-label="Minimize chat" title="Minimize">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14"/></svg>
+                </button>
+                <button type="button" class="chatbot-head-close" onclick="toggleChatbot(false)" aria-label="Close chat" title="Close">✕</button>
             </div>
-            <div class="chatbot-messages" id="chatMessages">
-                <div class="chat-msg bot">Namaste! 🙏 I'm your Gurukripa Kiln Assistant. How can I help you today? Check live brick prices, delivery coverage, or calculate wall requirements below.</div>
+            <div class="chatbot-messages" id="chatMessages" role="log" aria-live="polite">
+                <div class="chat-msg bot">Namaste! 🙏 I'm the Gurukripa Kiln helper. I can share brick rates, delivery &amp; tracking info, and help you estimate material. Tap a topic below, or ask in Hindi / English.</div>
             </div>
             <!-- Quick Action Chips -->
             <div class="chatbot-chips">
-                <button type="button" class="chat-chip" onclick="sendChatChip('🧱 Check Brick Prices')">🧱 Check Brick Prices</button>
-                <button type="button" class="chat-chip" onclick="sendChatChip('🚚 Track My Trolley')">🚚 Track My Trolley</button>
-                <button type="button" class="chat-chip" onclick="sendChatChip('📐 Calculate Wall Need')">📐 Calculate Wall Need</button>
-                <button type="button" class="chat-chip" onclick="openWhatsAppBhattaManager()">💬 Talk to Bhatta Manager</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('Brick prices')">🧱 Brick Prices</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('Delivery &amp; trolley tracking')">🚚 Delivery</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('Calculate wall bricks')">📐 Estimate</button>
+                <button type="button" class="chat-chip chat-chip--wa" onclick="openWhatsAppBhattaManager()">💬 Talk to Manager</button>
             </div>
             <div class="chatbot-input-row">
-                <input type="text" class="chatbot-input" id="chatInput" placeholder="Ask in Hindi or English..."
-                    autocomplete="off" onkeydown="if(event.key==='Enter')sendChat()">
-                <button type="button" class="chatbot-send" onclick="sendChat()" aria-label="Send">➤</button>
+                <label class="sr-only" for="chatInput">Message the Kiln Assistant</label>
+                <input type="text" class="chatbot-input" id="chatInput" placeholder="Ask in Hindi or English…"
+                    autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat()}">
+                <button type="button" class="chatbot-send" id="chatSendBtn" onclick="sendChat()" aria-label="Send message">➤</button>
             </div>
+            <p class="chatbot-disclaimer">Automated answers from our published information — not a live chat agent. A Bhatta Manager replies on WhatsApp.</p>
         </div>
     </div>

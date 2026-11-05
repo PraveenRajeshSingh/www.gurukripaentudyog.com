@@ -318,7 +318,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            height: 64px
+            min-height: 64px
         }
 
         .nav-brand {

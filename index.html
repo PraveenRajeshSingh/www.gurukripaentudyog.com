@@ -49,6 +49,11 @@
          Set to your deployed API base, e.g. https://api.gurukripaentudyog.com/api/v1
          Leave empty to keep the app in local-only mode (no server calls). -->
     <meta name="gb-api-base" content="">
+    <!-- Kiln Assistant chat backend (optional). Paste a server endpoint that accepts
+         { message, history, language } and returns { reply: "text" } to enable real AI.
+         Keep provider credentials on THAT server — never in the client.
+         Leave empty to run the honest offline helper (published facts only, clearly labelled). -->
+    <meta name="gb-chat-endpoint" content="">
     <!-- Razorpay & Google Maps Integration Meta Tags -->
     <meta name="razorpay-key-id" content="">
     <meta name="google-maps-api-key" content="">
@@ -1057,18 +1062,6 @@
             </div>
         </div>
 
-        <!-- Sticky Summary Footer on Mobile (<768px) -->
-        <div class="estimator-mobile-sticky" id="estimatorMobileSticky">
-            <div class="est-sticky-inner">
-                <div class="est-sticky-left">
-                    <div class="est-sticky-label">Estimated Total Budget</div>
-                    <div class="est-sticky-val">₹41,280 <small>(3,440 bricks)</small></div>
-                </div>
-                <button type="button" class="btn btn-primary btn-sm est-sticky-btn" onclick="sendWhatsAppQuote('Wall (20x10ft)', 3440, 41280)" style="background:#16a34a">
-                    💬 Instant Quote
-                </button>
-            </div>
-        </div>
     </section>
 
     <!-- ━━━━━━━━━━━━━━━━━ ABOUT ━━━━━━━━━━━━━━━━━ -->
@@ -1244,10 +1237,9 @@
 
             <!-- Submit Review Action -->
             <div style="text-align:center;margin-top:24px">
-                <button type="button" class="btn btn-outline" style="border-radius:50px;font-weight:700;padding:10px 24px" onclick="openBulkQuoteModal()">
+                <button type="button" class="btn btn-outline" style="border-radius:50px;font-weight:700;padding:10px 24px;max-width:100%;white-space:normal;line-height:1.35" onclick="openBulkQuoteModal()">
                     ✍️ Submit Construction Review or Project Inquiry
                 </button>
-            </div>
             </div>
         </div>
     </section>
@@ -3127,54 +3119,40 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ MOBILE FLOATING QUICK ACTION BAR ━━━━━━━━━━━━━━━━━ -->
-    <div class="mobile-quick-bar" id="mobileQuickBar">
-        <div class="mobile-quick-inner">
-            <a href="tel:+919198923230" class="mq-item">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v2.92z"/></svg>
-                <span>Call Kiln</span>
-            </a>
-            <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="mq-item highlight">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-                <span>WhatsApp</span>
-            </a>
-            <button type="button" class="mq-item" onclick="openTrackerModal()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                <span>Live Track</span>
-            </button>
-            <a href="#calculator" class="mq-item">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
-                <span>Estimator</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- ━━━━━━━━━━━━━━━━━ CHATBOT ━━━━━━━━━━━━━━━━━ -->
-    <div class="chatbot-wrap" id="chatbotWrap">
+<!-- Phase 3: mobile-floating-quick-action-bar removed — every control it held
+     (Call, WhatsApp, Live Track, Estimator) already lives in the help FAB,
+     the bottom nav and the drawer, so it only duplicated floating actions. -->
+    <!-- ━━━━━━━━━━━━━━━━━ KILN ASSISTANT (bilingual helper) ━━━━━━━━━━━━━━━━━ -->
+    <div class="chatbot-wrap" id="chatbotWrap" role="dialog" aria-label="Kiln Assistant" aria-hidden="true">
         <div class="chatbot-box" id="chatbotBox">
             <div class="chatbot-head">
-                <div class="chatbot-avatar">🧱</div>
+                <div class="chatbot-avatar" aria-hidden="true">🧱</div>
                 <div class="chatbot-info">
-                    <h4>Gurukripa Kiln Assistant</h4>
-                    <p><span class="chatbot-online-dot"></span> Online · AI Construction Support</p>
+                    <h4>Kiln Assistant</h4>
+                    <p>Automated helper · हिंदी &amp; English</p>
                 </div>
-                <button type="button" class="chatbot-head-close" onclick="toggleChatbot()" aria-label="Close chat">✕</button>
+                <button type="button" class="chatbot-head-min" onclick="minimizeChatbot()" aria-label="Minimize chat" title="Minimize">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14"/></svg>
+                </button>
+                <button type="button" class="chatbot-head-close" onclick="toggleChatbot(false)" aria-label="Close chat" title="Close">✕</button>
             </div>
-            <div class="chatbot-messages" id="chatMessages">
-                <div class="chat-msg bot">Namaste! 🙏 I'm your Gurukripa Kiln Assistant. How can I help you today? Check live brick prices, delivery coverage, or calculate wall requirements below.</div>
+            <div class="chatbot-messages" id="chatMessages" role="log" aria-live="polite">
+                <div class="chat-msg bot">Namaste! 🙏 I'm the Gurukripa Kiln helper. I can share brick rates, delivery &amp; tracking info, and help you estimate material. Tap a topic below, or ask in Hindi / English.</div>
             </div>
             <!-- Quick Action Chips -->
             <div class="chatbot-chips">
-                <button type="button" class="chat-chip" onclick="sendChatChip('🧱 Check Brick Prices')">🧱 Check Brick Prices</button>
-                <button type="button" class="chat-chip" onclick="sendChatChip('🚚 Track My Trolley')">🚚 Track My Trolley</button>
-                <button type="button" class="chat-chip" onclick="sendChatChip('📐 Calculate Wall Need')">📐 Calculate Wall Need</button>
-                <button type="button" class="chat-chip" onclick="openWhatsAppBhattaManager()">💬 Talk to Bhatta Manager</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('Brick prices')">🧱 Brick Prices</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('Delivery &amp; trolley tracking')">🚚 Delivery</button>
+                <button type="button" class="chat-chip" onclick="sendChatChip('Calculate wall bricks')">📐 Estimate</button>
+                <button type="button" class="chat-chip chat-chip--wa" onclick="openWhatsAppBhattaManager()">💬 Talk to Manager</button>
             </div>
             <div class="chatbot-input-row">
-                <input type="text" class="chatbot-input" id="chatInput" placeholder="Ask in Hindi or English..."
-                    autocomplete="off" onkeydown="if(event.key==='Enter')sendChat()">
-                <button type="button" class="chatbot-send" onclick="sendChat()" aria-label="Send">➤</button>
+                <label class="sr-only" for="chatInput">Message the Kiln Assistant</label>
+                <input type="text" class="chatbot-input" id="chatInput" placeholder="Ask in Hindi or English…"
+                    autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat()}">
+                <button type="button" class="chatbot-send" id="chatSendBtn" onclick="sendChat()" aria-label="Send message">➤</button>
             </div>
+            <p class="chatbot-disclaimer">Automated answers from our published information — not a live chat agent. A Bhatta Manager replies on WhatsApp.</p>
         </div>
     </div>
 
@@ -3262,17 +3240,15 @@
                 <span class="mn-label">Cart</span>
             </button>
 
-            <!-- 5. Track orders -->
-            <button type="button" class="mn-item" onclick="openMobileTrack(this)" aria-label="Track orders">
+            <!-- 5. Account (single, consistent profile entry — Track lives in the drawer) -->
+            <button type="button" class="mn-item" onclick="handleMobileProfile();mnFeedback()" aria-label="My account and profile">
                 <span class="mn-icon-wrap">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M1 3h15v13H1z" />
-                        <path d="M16 8h4l3 3v5h-7z" />
-                        <circle cx="5.5" cy="18.5" r="2.5" />
-                        <circle cx="18.5" cy="18.5" r="2.5" />
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
                     </svg>
                 </span>
-                <span class="mn-label">Track</span>
+                <span class="mn-label">Account</span>
             </button>
         </div>
     </nav>

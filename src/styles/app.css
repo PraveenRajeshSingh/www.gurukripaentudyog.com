@@ -19,7 +19,7 @@
     /* App-specific spacing */
     --nav-h: 56px;          /* compact app nav height */
     --bottom-nav-h: 68px;   /* taller bottom nav for comfortable thumb tap */
-    --quick-bar-h: 52px;    /* stacked quick-contact strip (鈮�768px) */
+    --quick-bar-h: 0px;    /* stacked quick-contact strip (鈮�768px) */
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-left: env(safe-area-inset-left, 0px);
@@ -87,7 +87,7 @@ html {
         box-shadow: 0 1px 20px rgba(28, 16, 9, 0.08);
     }
     .nav-inner {
-        height: 56px;
+        min-height: 56px;
         gap: 12px;
     }
     .nav-logo-mark {
@@ -105,7 +105,7 @@ html {
 
 @media (max-width: 480px) {
     .nav-inner {
-        height: 52px;
+        min-height: 52px;
         padding: 0 4px;
     }
     /* On very small screens, hide the subtitle text under brand name */
@@ -894,10 +894,15 @@ html {
 
 /* 鈹€鈹€ 24. App-Wide Quality of Life 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
-/* Prevent horizontal overflow everywhere */
+/* Prevent sideways overflow WITHOUT turning each block into a scroll
+   container. `overflow-x:hidden` + `overflow-y:visible` makes the browser
+   compute overflow-y to `auto`, so every <section>, .container, header and
+   footer grew its own vertical scrollbar (the duplicate-scrollbar bug).
+   `overflow-x:clip` hides sideways paint but leaves overflow-y:visible, so
+   page content flows naturally in the single document scrollbar. */
 section, .container, header, footer {
-    max-width: 100vw;
-    overflow-x: hidden;
+    max-width: 100%;
+    overflow-x: clip;
 }
 
 /* Smooth momentum scrolling on iOS */

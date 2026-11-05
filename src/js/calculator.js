@@ -78,7 +78,6 @@ function calculateBricks() {
         </div>`;
 
     if (window.drawWallPreview) window.drawWallPreview(len, ht, thick);
-    updateMobileStickySummary(`Wall (${len}x${ht}ft)`, bricks, totalCost);
     if (navigator.vibrate) navigator.vibrate(30);
 }
 
@@ -131,8 +130,7 @@ function calculateHouseMaterial() {
             <button class="btn btn-outline btn-full" style="flex:1" onclick="addCalcToCart('House Construction Bricks', ${bricks}, ${price})">🛒 Add Bricks to Cart</button>
         </div>`;
 
-    updateMobileStickySummary(`House (${sqft}sqft, ${floors}fl)`, bricks, totalCost);
-    if (navigator.vibrate) navigator.vibrate(30);
+        if (navigator.vibrate) navigator.vibrate(30);
 }
 
 function calculateBoundaryMaterial() {
@@ -179,23 +177,7 @@ function calculateBoundaryMaterial() {
         </div>`;
 
     if (window.drawWallPreview) window.drawWallPreview(len, ht, 9);
-    updateMobileStickySummary(`Boundary (${len}ft)`, bricks, totalCost);
     if (navigator.vibrate) navigator.vibrate(30);
-}
-
-function updateMobileStickySummary(projName, brickCount, totalCost) {
-    const el = document.getElementById('estimatorMobileSticky');
-    if (!el) return;
-    el.innerHTML = `
-        <div class="est-sticky-inner">
-            <div class="est-sticky-left">
-                <div class="est-sticky-label">Estimated Budget (${projName.split('(')[0].trim()})</div>
-                <div class="est-sticky-val">${formatINR(totalCost)} <small>(${formatNum(brickCount)} bricks)</small></div>
-            </div>
-            <button class="btn btn-primary btn-sm est-sticky-btn" onclick="sendWhatsAppQuote('${projName}', ${brickCount}, ${totalCost})">
-                💬 WhatsApp Quote
-            </button>
-        </div>`;
 }
 
 function sendWhatsAppQuote(projName, brickCount, totalCost) {

@@ -1203,13 +1203,12 @@ main [id].cta-banner {
     line-height: 1.15 !important;
 }
 
-/* Balanced, compact hero on large screens — caps height so the
-   product/catalog content enters the viewport earlier and the
-   banner no longer dominates the first screen. */
+/* Balanced, compact hero on large screens. Height is content-driven (no
+   hard max-height): a fixed cap clipped the lower CTA/trust content and
+   forced an inner scrollbar once the copy grew past it. */
 @media (min-width: 900px) {
     .hero-compact {
-        min-height: clamp(320px, 42vh, 440px) !important;
-        max-height: 480px !important;
+        min-height: clamp(360px, 46vh, 540px) !important;
         align-items: stretch;
     }
     .hero-compact .hero-img {
@@ -2043,6 +2042,22 @@ main [id].cta-banner {
     .profile-info-grid { grid-template-columns: 1fr }
     .enquiry-row__top { flex-direction: column; align-items: flex-start; gap: 4px }
     .enquiry-row__status { text-align: left }
+    /* The 2x2 quick-access grid links to the same places as the tab strip
+       and the in-body "Account Shortcuts" nav, so on phones it is hidden.
+       Leaving it in (with the flex-shrink:0 header + metrics + tabs above the
+       scroll body) squeezed the tab panel down to a few unreadable pixels. */
+    .hub-quick { display: none }
+}
+
+/* Short viewports (small phones, landscape, 200% zoom): the fixed chrome can
+   still outgrow the sheet, and the shell gives .modal-box overflow:hidden, so a
+   shrinking body would clip content. Here the whole sheet scrolls instead, with
+   the identity header (and its close button) pinned, so no account content is
+   ever unreachable. */
+@media (max-height: 700px) {
+    .profile-modal-box { overflow-y: auto !important }
+    .profile-modal-body { flex: none !important; min-height: 0 !important; overflow: visible !important }
+    .profile-header { position: sticky; top: 0; z-index: 5 }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -2089,6 +2104,138 @@ main [id].cta-banner {
 @keyframes gbVoicePulse {
     0%, 100% { box-shadow: 0 0 0 0 var(--brand-glow) }
     60%      { box-shadow: 0 0 0 7px rgba(200, 62, 10, 0) }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 3 · KILN ASSISTANT — responsive chat (authoritative)
+   Desktop: compact floating window near the bottom-right corner
+   (base overlays.css design, hardened here).
+   Mobile ≤640: the .chatbot-wrap ITSELF becomes the fixed full-screen
+   sheet. We never rely on a position:fixed descendant, so the old
+   translateZ() containing-block trap that pushed the popup off-screen
+   cannot happen. The messages region scrolls independently; the input
+   row and disclaimer stay pinned above the device safe area, and the
+   layout shrinks with the on-screen keyboard via --gb-chat-vh (chatbot.js).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Head: minimize + close share the round-button look */
+.chatbot-head-min,
+.chatbot-head-close {
+    flex-shrink: 0;
+    border: none;
+    font-family: inherit;
+}
+.chatbot-head-min {
+    background: rgba(255, 255, 255, .15);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--t);
+}
+.chatbot-head-min:hover { background: rgba(255, 255, 255, .28) }
+.chatbot-head-min:focus-visible,
+.chatbot-head-close:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 1px;
+}
+
+/* Honest disclaimer under the composer */
+.chatbot-disclaimer {
+    margin: 0;
+    padding: 6px 14px 10px;
+    font-size: .66rem;
+    line-height: 1.35;
+    color: var(--ink-3);
+    text-align: center;
+    border-top: 1px solid var(--line);
+    background: var(--bg-card);
+}
+
+/* WhatsApp-handoff chip variant */
+.chat-chip--wa {
+    background: #dcfce7;
+    border-color: #16a34a33;
+    color: #15803d;
+}
+.chat-chip--wa:hover { background: #16a34a; color: #fff }
+
+/* Error / handoff bubble */
+.chat-msg--error {
+    align-self: flex-start;
+    max-width: 90%;
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 4px var(--r-md) var(--r-md) var(--r-md);
+}
+
+/* Disabled send while a reply is in flight (prevents duplicate submit) */
+.chatbot-send:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    filter: grayscale(.2);
+}
+
+/* Minimize: collapse to the launcher without losing conversation state */
+.chatbot-box.minimized .chatbot-messages,
+.chatbot-box.minimized .chatbot-chips,
+.chatbot-box.minimized .chatbot-input-row,
+.chatbot-box.minimized .chatbot-disclaimer { display: none }
+
+/* Desktop: raise above the help FAB launcher while keeping it a compact window */
+.chatbot-wrap.open { z-index: 900 }
+
+@media (max-width: 640px) {
+    .chatbot-wrap,
+    .chatbot-wrap.open {
+        position: fixed;
+        inset: 0;
+        margin: 0;
+        width: 100%;
+        border-radius: 0;
+        transform: none;            /* defeat the containing-block trap */
+        opacity: 0;
+        visibility: hidden;
+        z-index: 10000;
+        transition: opacity .2s var(--ease);
+    }
+    .chatbot-wrap.open {
+        opacity: 1;
+        visibility: visible;
+        /* shrink with the on-screen keyboard when chatbot.js provides it */
+        height: 100dvh;
+        height: var(--gb-chat-vh, 100dvh);
+    }
+    .chatbot-box,
+    .chatbot-box.open {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .chatbot-head { padding-top: calc(14px + env(safe-area-inset-top, 0px)) }
+    .chatbot-messages {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .chatbot-input-row {
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+    .chatbot-disclaimer {
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    }
+    /* Keep the launcher FAB clear while the sheet is open */
+    body.gb-chat-open .fab-wrap,
+    body.gb-chat-open .scroll-top {
+        opacity: 0;
+        pointer-events: none;
+    }
 }
 
 /* Typed text must stop short of the mic, and a section heading must clear

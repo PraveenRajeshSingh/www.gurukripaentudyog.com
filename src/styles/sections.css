@@ -10,8 +10,7 @@
         .hero {
             display: grid;
             grid-template-columns: 42% 1fr;
-            min-height: calc(100dvh - 100px);
-            max-height: 860px
+            min-height: 480px
         }
 
         .hero-img {
