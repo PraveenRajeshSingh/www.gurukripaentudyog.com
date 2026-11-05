@@ -109,8 +109,8 @@ function renderProductCard(p) {
         </div>
 
         <div class="product-card-actions">
-          <button type="button" class="product-add-btn btn-full" onclick="triggerCartBounce(this);addToCart(${p.id});if(navigator.vibrate)navigator.vibrate(30)">
-            ${_cartSVG} Add to Cart
+          <button type="button" class="product-add-btn btn-full" aria-label="Add ${name} to cart" onclick="handleAddToCart(this, ${p.id})">
+            ${_cartSVG}<span class="pa-btn-full">Add to Cart</span><span class="pa-btn-short">Add</span>
           </button>
           <a class="product-wa-btn" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" aria-label="Order ${name} on WhatsApp" title="Order on WhatsApp">${_waSVG}</a>
         </div>
@@ -183,6 +183,22 @@ function sortProducts(sortBy) {
 function triggerCartBounce(btn) {
     btn.classList.add('cart-bounce');
     setTimeout(() => btn.classList.remove('cart-bounce'), 500);
+}
+
+// Single entry point for the card "Add to Cart" tap. Guards against rapid
+// duplicate taps (which would silently add extra pieces), keeps the cart-count
+// update immediate (addToCart -> updateCartUI) and gives haptic + bounce feedback.
+function handleAddToCart(btn, id) {
+    if (btn.dataset.busy === '1') return;
+    btn.dataset.busy = '1';
+    btn.setAttribute('aria-disabled', 'true');
+    triggerCartBounce(btn);
+    addToCart(id);
+    if (navigator.vibrate) navigator.vibrate(30);
+    setTimeout(function () {
+        btn.dataset.busy = '0';
+        btn.removeAttribute('aria-disabled');
+    }, 450);
 }
 
 // Mobile/app filter bottom sheet — the desktop sidebar becomes a slide-up sheet
