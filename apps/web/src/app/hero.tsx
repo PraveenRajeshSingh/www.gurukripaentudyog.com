@@ -4,83 +4,103 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MessageIcon } from '../components/ui/icons';
+import { WHATSAPP_BASE } from '../lib/validation';
 
-const WHATSAPP_HERO =
-  'https://wa.me/919198923230?text=Hello%20Gurukripa%20Ent%20Udyog,%20I%20would%20like%20to%20inquire%20about%20current%20brick%20rates.';
+const WHATSAPP_HERO = `${WHATSAPP_BASE}?text=${encodeURIComponent(
+  'Hello Gurukripa Ent Udyog, I would like to inquire about current brick rates.'
+)}`;
 
+/**
+ * First viewport: brand + one headline + one support line + CTA group + full-bleed visual.
+ * Supporting stats live below the primary CTA row so phones stay uncluttered.
+ */
 export default function HeroSection() {
   return (
-    <section className="bg-[#8B2E05] text-white border-b-4 border-[#C8460A]" aria-labelledby="hero-heading">
-      <div className="container mx-auto px-4 py-10 sm:py-14 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        <div className="lg:col-span-7 space-y-5">
-          <p className="inline-block bg-[#FAFAF9] text-[#8B2E05] text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded">
-            Direct Kiln Manufacturer · Jaunpur–Varanasi Highway
-          </p>
-          <h1 id="hero-heading" className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            Gurukripa Ent Udyog
-            <span className="block text-amber-300">गुरुकृपा ईंट उद्योग</span>
-          </h1>
-          <p className="text-sm sm:text-base text-neutral-200 leading-relaxed max-w-2xl">
-            Double-fired red clay bricks, high-load Awwal bricks and machine-made wirecut bricks —
-            supplied straight from our bhatta to sites across Eastern Uttar Pradesh, with
-            count-verified 4,000-brick trolley loads and 5% GST invoicing.
+    <section
+      className="relative overflow-hidden border-b-4 border-brand text-white"
+      aria-labelledby="hero-heading"
+    >
+      {/* Full-bleed kiln atmosphere */}
+      <div className="absolute inset-0">
+        <Image
+          src="/images/trolley_brick.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center scale-105"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-brand-dark/95 via-brand-dark/88 to-brand-dark/55"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-brand-dark/30"
+          aria-hidden
+        />
+      </div>
+
+      <div className="relative container mx-auto px-4 py-14 sm:py-16 md:py-20 lg:py-24 min-h-[min(88vh,640px)] flex flex-col justify-center">
+        <div className="max-w-2xl space-y-5">
+          <p className="inline-flex items-center bg-white/95 text-brand-dark text-[11px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-md shadow-sm">
+            Direct Kiln · Jaunpur–Varanasi Highway
           </p>
 
-          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 pt-2">
+          <h1
+            id="hero-heading"
+            className="font-display text-4xl xs:text-5xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.05] text-balance"
+          >
+            Gurukripa Ent Udyog
+            <span className="block mt-1 text-brand-amber text-2xl xs:text-3xl sm:text-4xl font-extrabold">
+              गुरुकृपा ईंट उद्योग
+            </span>
+          </h1>
+
+          <p className="text-sm sm:text-base text-white/85 leading-relaxed max-w-xl text-pretty">
+            Double-fired red clay bricks with count-verified 4,000-brick trolley loads and honest
+            5% GST invoicing — straight from the bhatta to your site.
+          </p>
+
+          <div className="flex flex-col xs:flex-row flex-wrap gap-3 pt-1">
             <a
               href="#estimator"
-              className="bg-[#F5A623] hover:bg-amber-400 text-[#1C1009] font-bold text-sm px-6 py-3.5 rounded-lg transition min-h-[48px] inline-flex items-center justify-center"
+              className="inline-flex items-center justify-center min-h-[48px] px-6 py-3.5 rounded-lg font-bold text-sm bg-brand-amber text-ink-primary hover:brightness-105 transition shadow-sm"
             >
               Estimate Bricks &amp; Trolleys
             </a>
             <Link
               href="/products"
-              className="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-6 py-3.5 rounded-lg border border-white/30 transition min-h-[48px] inline-flex items-center justify-center"
+              className="inline-flex items-center justify-center min-h-[48px] px-6 py-3.5 rounded-lg font-bold text-sm bg-white/10 hover:bg-white/20 text-white border border-white/35 transition"
             >
-              Catalog &amp; Trolley Rates
+              View Catalog
             </Link>
             <a
               href={WHATSAPP_HERO}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#16a34a] hover:bg-[#15803d] text-white font-bold text-sm px-5 py-3.5 rounded-lg transition min-h-[48px] inline-flex items-center justify-center gap-2"
+              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-5 py-3.5 rounded-lg font-bold text-sm bg-[#16a34a] hover:bg-[#15803d] text-white transition"
             >
               <MessageIcon className="w-4 h-4" />
-              +91 91989 23230
+              WhatsApp Quote
             </a>
           </div>
-
-          <dl className="pt-6 border-t border-white/20 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-neutral-200">
-            <div>
-              <dt className="text-white font-bold">Standard trolley</dt>
-              <dd>4,000 bricks per full load</dd>
-            </div>
-            <div>
-              <dt className="text-white font-bold">GST compliance</dt>
-              <dd>5% (2.5% CGST + 2.5% SGST)</dd>
-            </div>
-            <div>
-              <dt className="text-white font-bold">Kiln technology</dt>
-              <dd>Double-fired alluvial clay</dd>
-            </div>
-          </dl>
         </div>
 
-        <div className="lg:col-span-5">
-          <figure className="border-4 border-white/20 rounded-lg overflow-hidden bg-neutral-900">
-            <Image
-              src="/images/trolley_brick.png"
-              alt="Brick-loaded tractor trolley at the Gurukripa kiln yard"
-              width={900}
-              height={640}
-              priority
-              className="w-full h-auto object-cover"
-            />
-            <figcaption className="text-[11px] text-neutral-300 px-3 py-2">
-              Trolley dispatch at the Jaunpur kiln.
-            </figcaption>
-          </figure>
-        </div>
+        {/* Secondary facts — below hero CTAs, still in first fold on large screens */}
+        <dl className="relative mt-10 pt-6 border-t border-white/20 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-white/80 max-w-3xl">
+          <div>
+            <dt className="text-white font-bold font-display">Standard trolley</dt>
+            <dd>4,000 bricks per full load</dd>
+          </div>
+          <div>
+            <dt className="text-white font-bold font-display">GST compliance</dt>
+            <dd>5% (2.5% CGST + 2.5% SGST)</dd>
+          </div>
+          <div>
+            <dt className="text-white font-bold font-display">Kiln technology</dt>
+            <dd>Double-fired alluvial clay</dd>
+          </div>
+        </dl>
       </div>
     </section>
   );

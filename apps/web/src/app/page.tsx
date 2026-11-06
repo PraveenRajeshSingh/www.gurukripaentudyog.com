@@ -22,7 +22,7 @@ export default function HomePage() {
       <ProductCardGrid />
 
       {/* 3-in-1 Estimator */}
-      <section className="py-6 sm:py-10 bg-[#F5F0EC] border-y border-neutral-300" aria-labelledby="estimator-heading">
+      <section className="py-6 sm:py-10 bg-surface-subtle border-y border-neutral-300" aria-labelledby="estimator-heading">
         <div className="container mx-auto px-4">
           <EstimatorStudio />
         </div>
@@ -31,11 +31,11 @@ export default function HomePage() {
       {/* Manufacturing process */}
       <section className="py-10 sm:py-14 container mx-auto px-4" aria-labelledby="process-heading">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-6 space-y-4 text-sm text-[#4A3728] leading-relaxed">
-            <span className="text-xs font-bold text-[#C8460A] uppercase tracking-wider block">
+          <div className="lg:col-span-6 space-y-4 text-sm text-ink-secondary leading-relaxed">
+            <span className="section-eyebrow block">
               Kiln Engineering
             </span>
-            <h2 id="process-heading" className="text-2xl sm:text-3xl font-black text-[#1C1009]">
+            <h2 id="process-heading" className="font-display text-2xl sm:text-3xl font-black text-ink-primary">
               The Double-Fired Brick Advantage
             </h2>
             <p>
@@ -45,22 +45,22 @@ export default function HomePage() {
               charge at high temperature a second time before cooling.
             </p>
             <div className="space-y-3 pt-2">
-              <div className="p-3 bg-white border-l-4 border-[#C8460A] border-t border-r border-b border-neutral-200">
-                <strong className="block text-[#1C1009] text-sm">1. Alluvial clay preparation</strong>
+              <div className="p-3 bg-white border-l-4 border-brand border-t border-r border-b border-neutral-200 rounded-r-md">
+                <strong className="block text-ink-primary text-sm">1. Alluvial clay preparation</strong>
                 <span className="text-xs">
                   Desilted clay with uniform plasticity gives sharp edges and minimal dimensional
                   distortion during firing.
                 </span>
               </div>
-              <div className="p-3 bg-white border-l-4 border-[#C8460A] border-t border-r border-b border-neutral-200">
-                <strong className="block text-[#1C1009] text-sm">2. Double-firing heat soak</strong>
+              <div className="p-3 bg-white border-l-4 border-brand border-t border-r border-b border-neutral-200 rounded-r-md">
+                <strong className="block text-ink-primary text-sm">2. Double-firing heat soak</strong>
                 <span className="text-xs">
                   High-temperature curing produces the characteristic ringing tone when two bricks
                   are struck together and keeps water absorption low.
                 </span>
               </div>
-              <div className="p-3 bg-white border-l-4 border-[#C8460A] border-t border-r border-b border-neutral-200">
-                <strong className="block text-[#1C1009] text-sm">3. Count-verified trolley loads</strong>
+              <div className="p-3 bg-white border-l-4 border-brand border-t border-r border-b border-neutral-200 rounded-r-md">
+                <strong className="block text-ink-primary text-sm">3. Count-verified trolley loads</strong>
                 <span className="text-xs">
                   Standard loads are stacked in count-verifiable rows of 4,000 bricks so contractors
                   receive exactly what they pay for.
@@ -70,15 +70,15 @@ export default function HomePage() {
           </div>
 
           <div className="lg:col-span-6">
-            <figure className="border border-neutral-300 rounded-lg overflow-hidden bg-white p-4">
+            <figure className="border border-neutral-300 rounded-xl overflow-hidden bg-white shadow-card">
               <Image
                 src="/images/gurukripaEnt.jpg"
                 alt="Gurukripa Ent Udyog kiln yard on the Jaunpur–Varanasi Highway"
                 width={900}
                 height={600}
-                className="w-full h-auto rounded"
+                className="w-full h-auto"
               />
-              <figcaption className="text-xs text-[#6B5545] mt-2">
+              <figcaption className="text-xs text-ink-tertiary px-4 py-2">
                 Off-highway loading yard at the Gurukripa bhatta, Jaunpur–Varanasi Highway.
               </figcaption>
             </figure>
@@ -90,21 +90,21 @@ export default function HomePage() {
       <section className="py-12 bg-white border-t border-neutral-200" aria-labelledby="logistics-heading">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mb-8">
-            <span className="text-xs font-bold text-[#C8460A] uppercase tracking-wider block">
+            <span className="section-eyebrow block">
               Logistics Network
             </span>
-            <h2 id="logistics-heading" className="text-2xl font-black text-[#1C1009]">
+            <h2 id="logistics-heading" className="font-display text-2xl font-black text-ink-primary mt-1">
               Site Delivery Across Eastern Uttar Pradesh
             </h2>
-            <p className="text-sm text-[#6B5545] mt-1">
+            <p className="text-sm text-ink-tertiary mt-1">
               Regular routes from the kiln gate. Delivery scheduling and freight are confirmed per
               order — ask the dispatch desk for your site pincode.
             </p>
           </div>
 
-          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 text-sm text-center font-bold text-[#1C1009] list-none">
+          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 text-sm text-center font-bold text-ink-primary list-none">
             {['Jaunpur City', 'Varanasi (Lanka)', 'Jalalpur', 'Trilochan', 'Shahganj', 'Sultanpur'].map((c) => (
-              <li key={c} className="p-3 sm:p-4 bg-[#FAFAF9] border border-neutral-200 rounded">
+              <li key={c} className="p-3 sm:p-4 bg-surface-subtle border border-neutral-200 rounded-lg">
                 {c}
               </li>
             ))}
@@ -113,7 +113,7 @@ export default function HomePage() {
           <div className="mt-8">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 bg-[#C8460A] hover:bg-[#8B2E05] text-white text-sm font-bold px-6 py-3.5 rounded-lg transition min-h-[48px]"
+              className="brand-btn-primary"
             >
               <MessageIcon className="w-4 h-4" />
               Request a delivery quote for your site

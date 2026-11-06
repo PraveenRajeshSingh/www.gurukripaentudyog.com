@@ -15,13 +15,13 @@ export default function AboutPage() {
   return (
     <div className="py-10 sm:py-12 container mx-auto px-4 max-w-4xl">
       <div className="mb-10 text-center">
-        <span className="text-xs font-extrabold uppercase tracking-wider text-[#C8460A] bg-[rgba(200,70,10,0.08)] px-3 py-1 rounded-full">
+        <span className="section-eyebrow inline-block bg-brand-glow px-3 py-1 rounded-md">
           Kiln Heritage & Craftsmanship
         </span>
-        <h1 className="text-3xl sm:text-4xl font-black text-[#1C1009] mt-3">
+        <h1 className="font-display text-3xl sm:text-4xl font-black text-ink-primary mt-3 text-balance">
           About Gurukripa Ent Udyog (गुरुकृपा ईंट उद्योग)
         </h1>
-        <p className="text-sm text-[#6B5545] mt-2 max-w-2xl mx-auto">
+        <p className="text-sm text-ink-tertiary mt-2 max-w-2xl mx-auto text-pretty">
           On the Jaunpur–Varanasi Highway in Eastern Uttar Pradesh, Gurukripa Ent Udyog has
           manufactured red clay bricks since 1998 for homes, contractors and public projects.
         </p>

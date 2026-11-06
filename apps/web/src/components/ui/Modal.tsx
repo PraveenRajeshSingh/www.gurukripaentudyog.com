@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { CloseIcon } from './icons';
+import Button from './Button';
 
 interface ModalProps {
   isOpen: boolean;
@@ -17,6 +18,8 @@ interface ModalProps {
   isDirty?: boolean;
   /** While true (async save in flight) all dismissal paths are blocked. */
   busy?: boolean;
+  /** Optional sticky footer (actions) outside the scroll region. */
+  footer?: React.ReactNode;
 }
 
 const FOCUSABLE =
@@ -24,10 +27,8 @@ const FOCUSABLE =
 
 /**
  * Single responsive dialog primitive used app-wide.
- * - Mobile (<640px): full-width bottom sheet; desktop: centered, max 896px.
- * - Safe-area insets for notches / gesture bars; internal scrolling.
- * - Focus is trapped, moves into the dialog on open, and returns to the
- *   trigger on close (WCAG 2.2 AA).
+ * - Mobile (<640px): full-width bottom sheet; desktop: centered.
+ * - Safe-area insets; internal scrolling; focus trap; Escape + dirty guard.
  */
 export default function Modal({
   isOpen,
@@ -40,16 +41,17 @@ export default function Modal({
   showCloseButton = true,
   isDirty = false,
   busy = false,
+  footer,
 }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const restoreRef = useRef<HTMLElement | null>(null);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
-  const titleId = useRef(`modal-title-${Math.random().toString(36).slice(2, 9)}`).current;
-  const descId = useRef(`modal-desc-${Math.random().toString(36).slice(2, 9)}`).current;
+  const reactId = useId();
+  const titleId = `${reactId}-title`;
+  const descId = `${reactId}-desc`;
 
-  // Keep latest guards without re-running the mount effect.
-  const guards = useRef({ isDirty, busy });
-  guards.current = { isDirty, busy };
+  const guards = useRef({ isDirty, busy, confirmDiscard });
+  guards.current = { isDirty, busy, confirmDiscard };
 
   const requestDismiss = useCallback(() => {
     if (guards.current.busy) return;
@@ -60,6 +62,9 @@ export default function Modal({
     onClose();
   }, [onClose]);
 
+  const requestDismissRef = useRef(requestDismiss);
+  requestDismissRef.current = requestDismiss;
+
   useEffect(() => {
     if (!isOpen) return;
     setConfirmDiscard(false);
@@ -68,19 +73,19 @@ export default function Modal({
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    // Move focus into the dialog (autofocus target or the panel itself).
     const focusTimer = window.setTimeout(() => {
-      const el = panelRef.current?.querySelector<HTMLElement>('[data-autofocus]')
-        ?? panelRef.current?.querySelector<HTMLElement>(FOCUSABLE)
-        ?? panelRef.current;
+      const el =
+        panelRef.current?.querySelector<HTMLElement>('[data-autofocus]') ??
+        panelRef.current?.querySelector<HTMLElement>(FOCUSABLE) ??
+        panelRef.current;
       el?.focus({ preventScroll: true });
     }, 30);
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation();
-        if (confirmDiscard) setConfirmDiscard(false);
-        else requestDismiss();
+        if (guards.current.confirmDiscard) setConfirmDiscard(false);
+        else requestDismissRef.current();
         return;
       }
       if (e.key === 'Tab' && panelRef.current) {
@@ -110,10 +115,8 @@ export default function Modal({
       window.clearTimeout(focusTimer);
       document.removeEventListener('keydown', onKey, true);
       document.body.style.overflow = prevOverflow;
-      // Restore focus to the element that opened the popup.
       restoreRef.current?.focus({ preventScroll: true });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -127,7 +130,7 @@ export default function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 sm:pt-[max(1rem,env(safe-area-inset-top))] bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 sm:pt-[max(1rem,env(safe-area-inset-top))] bg-black/60 backdrop-blur-sm animate-fadeIn"
       onClick={(e) => {
         if (e.target === e.currentTarget) requestDismiss();
       }}
@@ -139,25 +142,18 @@ export default function Modal({
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
-        className={`w-full ${maxWidthClass} bg-white rounded-t-2xl sm:rounded-xl border border-neutral-200 shadow-lg overflow-hidden max-h-[92dvh] sm:max-h-[85vh] flex flex-col animate-slideUp outline-none focus-visible:ring-2 focus-visible:ring-[#C8460A]`}
-        style={{
-          paddingBottom: 'env(safe-area-inset-bottom)',
-        }}
+        className={`w-full ${maxWidthClass} bg-surface-card rounded-t-2xl sm:rounded-xl border border-neutral-200 shadow-modal overflow-hidden max-h-[min(92dvh,100%)] sm:max-h-[85vh] flex flex-col animate-slideUp outline-none`}
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        {/* Mobile tactile drag handle (visual affordance only) */}
-        <div
-          className="w-10 h-1 bg-neutral-300 rounded-full mx-auto mt-2.5 sm:hidden shrink-0"
-          aria-hidden="true"
-        />
+        <div className="sheet-handle" aria-hidden="true" />
 
-        {/* Header */}
-        <div className="px-5 py-4 border-b border-neutral-100 flex items-start justify-between gap-3 shrink-0 bg-[#FAFAF9]">
+        <div className="px-5 py-4 border-b border-neutral-100 flex items-start justify-between gap-3 shrink-0 bg-surface-subtle">
           <div className="min-w-0">
-            <h2 id={titleId} className="font-bold text-base text-[#1C1009] tracking-tight">
+            <h2 id={titleId} className="font-display font-bold text-base text-ink-primary tracking-tight">
               {title}
             </h2>
             {description && (
-              <p id={descId} className="text-xs text-[#6B5545] mt-0.5">
+              <p id={descId} className="text-xs text-ink-tertiary mt-0.5">
                 {description}
               </p>
             )}
@@ -166,7 +162,7 @@ export default function Modal({
           {showCloseButton && !busy && (
             <button
               onClick={requestDismiss}
-              className="w-10 h-10 -mr-1.5 shrink-0 rounded-full flex items-center justify-center text-neutral-500 hover:text-black hover:bg-neutral-200 transition"
+              className="w-11 h-11 -mr-1.5 shrink-0 rounded-full flex items-center justify-center text-neutral-500 hover:text-ink-primary hover:bg-neutral-200 transition"
               aria-label="Close dialog"
             >
               <CloseIcon className="w-5 h-5" />
@@ -174,40 +170,49 @@ export default function Modal({
           )}
         </div>
 
-        {/* Scrollable content */}
-        <div className="p-5 overflow-y-auto overscroll-contain flex-1 text-sm text-[#4A3728]">
+        <div className="p-5 overflow-y-auto overscroll-contain flex-1 text-sm text-ink-secondary">
           {children}
 
-          {/* In-dialog discard guard (no native window.confirm). */}
           {confirmDiscard && (
             <div
-              className="mt-5 p-4 rounded-lg border border-amber-300 bg-amber-50 text-[#7c4a03]"
+              className="mt-5 p-4 rounded-lg border border-amber-300 bg-amber-50 text-amber-950"
               role="alert"
             >
               <p className="text-xs font-semibold">
                 You have unsaved changes. Discard them and close this dialog?
               </p>
-              <div className="flex gap-2 mt-3">
-                <button
+              <div className="flex flex-col xs:flex-row gap-2 mt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  fullWidth
                   onClick={() => setConfirmDiscard(false)}
-                  className="flex-1 min-h-[44px] rounded-lg border border-neutral-300 bg-white text-xs font-bold text-[#1C1009] hover:bg-neutral-100"
                   data-autofocus
+                  className="!border-neutral-300 !text-ink-primary"
                 >
                   Keep editing
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  fullWidth
                   onClick={() => {
                     setConfirmDiscard(false);
                     onClose();
                   }}
-                  className="flex-1 min-h-[44px] rounded-lg bg-[#B91C1C] text-xs font-bold text-white hover:bg-red-800"
                 >
                   Discard changes
-                </button>
+                </Button>
               </div>
             </div>
           )}
         </div>
+
+        {footer && (
+          <div className="px-5 py-4 border-t border-neutral-100 bg-surface-subtle shrink-0 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

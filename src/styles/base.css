@@ -5,56 +5,10 @@
    defined by the original src/styles/main.css.
    ==========================================================================
 
-/* tokens.css is loaded via <link> in <head> */
+/* tokens.css is loaded via <link> in <head> — single source of design tokens.
+   Do not re-declare :root brand/surface variables here (avoids palette drift). */
 
-        /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
-   DESIGN TOKENS
-   鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
-        :root {
-            /* Brand */
-            --brand: #C8460A;
-            --brand-dark: #8B2E05;
-            --brand-amber: #F5A623;
-            --brand-glow: rgba(200, 70, 10, 0.15);
-
-            /* Surface */
-            --bg: #FAFAF9;
-            --bg-card: #FFFFFF;
-            --bg-subtle: #F5F0EC;
-            --bg-muted: #EDE5DF;
-
-            /* Text */
-            --ink: #1C1009;
-            --ink-2: #4A3728;
-            --ink-3: #9A8070;
-
-            /* Border */
-            --line: rgba(200, 70, 10, 0.10);
-            --line-mid: rgba(200, 70, 10, 0.20);
-
-            /* Radius */
-            --r-sm: 8px;
-            --r-md: 14px;
-            --r-lg: 22px;
-            --r-xl: 32px;
-
-            /* Shadow */
-            --sh-card: 0 2px 16px rgba(28, 16, 9, 0.07);
-            --sh-hover: 0 10px 40px rgba(200, 70, 10, 0.14);
-            --sh-modal: 0 32px 80px rgba(0, 0, 0, 0.22);
-
-            /* Type */
-            --display: 'Fraunces', Georgia, serif;
-            --body: 'Plus Jakarta Sans', system-ui, sans-serif;
-
-            /* Motion */
-            --ease: cubic-bezier(0.4, 0, 0.2, 1);
-            --t: 0.22s;
-        }
-
-        /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
-   RESET & BASE
-   鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
+        /* ─── RESET & BASE ─── */
         *,
         *::before,
         *::after {

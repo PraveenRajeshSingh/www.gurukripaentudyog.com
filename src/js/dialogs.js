@@ -212,7 +212,10 @@
             }
         }
         if (!pair) { if (overlayEl) overlayEl.classList.remove('open'); return; }
-        confirm({
+        // Must call the local GBDialogs confirm path — bare confirm() is window.confirm
+        // and would coerce the options object to "[object Object]".
+        show({
+            mode: 'confirm',
             title: 'Discard changes?',
             message: 'You have information that has not been submitted. Close anyway?',
             confirmLabel: 'Discard',

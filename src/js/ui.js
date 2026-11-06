@@ -386,6 +386,8 @@ const OVERLAY_STACK = [
     ['checkoutModal',    () => typeof closeCheckout       === 'function' && closeCheckout()],
     ['adminPortalModal', () => typeof closeAdminPortal    === 'function' && closeAdminPortal()],
     ['gstInvoiceModal',  () => typeof closeGstInvoice     === 'function' && closeGstInvoice()],
+    ['invoicePdfModal',  () => typeof closeInvoicePdf     === 'function' && closeInvoicePdf()],
+    ['companyProfileModal', () => typeof closeCompanyProfile === 'function' && closeCompanyProfile()],
     ['productModal',     () => typeof closeProductModal   === 'function' && closeProductModal()],
     ['profileModal',     () => typeof closeProfile        === 'function' && closeProfile()],
     ['authModal',        () => typeof closeAuth           === 'function' && closeAuth()],

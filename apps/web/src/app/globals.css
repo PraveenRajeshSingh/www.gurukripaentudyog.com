@@ -3,43 +3,140 @@
 @tailwind utilities;
 
 :root {
+  /* Brand — aligned with legacy theme-color / Capacitor shells */
   --brand: #C8460A;
   --brand-dark: #8B2E05;
   --brand-amber: #F5A623;
+  --brand-light: #FBEAE0;
   --brand-glow: rgba(200, 70, 10, 0.08);
+  --brand-glow-strong: rgba(200, 70, 10, 0.18);
+
+  /* Surfaces */
   --bg: #FAFAF9;
   --bg-card: #FFFFFF;
   --bg-subtle: #F5F0EC;
+  --bg-muted: #ECE5DE;
+
+  /* Ink */
   --ink: #1C1009;
   --ink-2: #4A3728;
   --ink-3: #6B5545;
+  --ink-inverse: #FFFFFF;
+
+  /* Lines */
   --line: rgba(200, 70, 10, 0.12);
   --line-mid: rgba(200, 70, 10, 0.22);
+
+  /* Semantic */
+  --success: #15803D;
+  --warning: #B45309;
+  --danger: #B91C1C;
+  --info: #0369A1;
+
+  /* Elevation */
+  --sh-sm: 0 1px 3px rgba(28, 16, 9, 0.06);
+  --sh-card: 0 2px 16px rgba(28, 16, 9, 0.07);
+  --sh-hover: 0 10px 36px rgba(200, 70, 10, 0.14);
+  --sh-modal: 0 28px 72px rgba(0, 0, 0, 0.22);
+
+  /* Radii */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+
+  /* Layout */
+  --header-offset: 5.5rem;
+  --content-max: 72rem;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+
+  /* Type stacks — loaded via Google Fonts stylesheet in layout.tsx */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-body {
-  background-color: var(--bg);
-  color: var(--ink);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  overflow-x: clip;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-offset) + var(--sat));
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow-x: clip;
+    padding-left: var(--sal);
+    padding-right: var(--sar);
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    letter-spacing: -0.02em;
+  }
+
+  a,
+  button,
+  [role='button'] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  /* Comfortable form controls on iOS (avoids zoom-on-focus) */
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1rem);
+  }
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
-  /* Stop iOS Safari inflating body text on portrait phones. */
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+@layer components {
+  .brand-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg font-bold text-sm text-white bg-brand hover:bg-brand-dark transition shadow-sm;
+  }
+
+  .brand-btn-outline {
+    @apply inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg font-bold text-sm border-2 border-brand text-brand hover:bg-brand-glow transition;
+  }
+
+  .surface-card {
+    @apply bg-surface-card border border-neutral-200 rounded-xl shadow-sm;
+  }
+
+  .page-shell {
+    @apply container mx-auto px-4 py-8 sm:py-10 md:py-12;
+    max-width: min(100%, var(--content-max));
+  }
+
+  .section-eyebrow {
+    @apply text-xs font-bold text-brand uppercase tracking-wider;
+  }
+
+  /* Mobile bottom-sheet drag affordance */
+  .sheet-handle {
+    @apply w-10 h-1 bg-neutral-300 rounded-full mx-auto mt-2.5 sm:hidden shrink-0;
+  }
 }
 
-/* Remove the grey flash on tap for a cleaner native feel. */
-a,
-button,
-[role="button"] {
-  -webkit-tap-highlight-color: transparent;
+/* Ultrawide: keep content readable, avoid stretched chrome */
+@media (min-width: 1920px) {
+  :root {
+    --content-max: 80rem;
+  }
 }
 
-/* Respect user motion preferences (WCAG 2.3.3) */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -51,30 +148,4 @@ button,
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Consistent, visible keyboard focus across the app */
-:focus-visible {
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
-}
-
-/* Custom utility components */
-.brand-btn-primary {
-  background-color: var(--brand);
-  color: #FFFFFF;
-  transition: all 0.2s ease-in-out;
-}
-.brand-btn-primary:hover {
-  background-color: var(--brand-dark);
-  transform: translateY(-1px);
-}
-
-.brand-btn-outline {
-  border: 1.5px solid var(--brand);
-  color: var(--brand);
-  transition: all 0.2s ease-in-out;
-}
-.brand-btn-outline:hover {
-  background-color: var(--brand-glow);
 }

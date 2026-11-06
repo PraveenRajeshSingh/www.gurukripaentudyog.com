@@ -62,6 +62,7 @@ export const viewport: Viewport = {
   themeColor: '#C8460A',
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -71,16 +72,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col bg-[#FAFAF9] text-[#1C1009] antialiased">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* App Router root layout — fonts apply site-wide (rule targets pages/_document). */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-screen flex flex-col bg-surface-bg text-ink-primary font-body antialiased">
         <ClientProviders>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:bg-white focus:text-[#C8460A] focus:font-bold focus:px-4 focus:py-3 focus:rounded-b-lg focus:shadow-md"
+            className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:bg-white focus:text-brand focus:font-bold focus:px-4 focus:py-3 focus:rounded-b-lg focus:shadow-md"
           >
             Skip to main content
           </a>
           <Navbar />
-          <main id="main-content" className="flex-1">
+          <main id="main-content" className="flex-1 w-full">
             {children}
           </main>
           <Footer />

@@ -40,13 +40,13 @@ export default function ServicesPage() {
   return (
     <div className="py-10 sm:py-12 container mx-auto px-4 max-w-4xl">
       <div className="mb-10 text-center">
-        <span className="text-xs font-extrabold uppercase tracking-wider text-[#C8460A] bg-[rgba(200,70,10,0.08)] px-3 py-1 rounded-full">
+        <span className="section-eyebrow inline-block bg-brand-glow px-3 py-1 rounded-md">
           Kiln Supply Services
         </span>
-        <h1 className="text-3xl sm:text-4xl font-black text-[#1C1009] mt-3">
+        <h1 className="font-display text-3xl sm:text-4xl font-black text-ink-primary mt-3 text-balance">
           Manufacturing, Logistics &amp; Estimation Services
         </h1>
-        <p className="text-sm text-[#6B5545] mt-2 max-w-2xl mx-auto">
+        <p className="text-sm text-ink-tertiary mt-2 max-w-2xl mx-auto text-pretty">
           From a single residential trolley to multi-trolley institutional supply across Eastern
           Uttar Pradesh.
         </p>

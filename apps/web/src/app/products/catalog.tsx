@@ -43,10 +43,10 @@ export default function ProductsCatalog() {
   return (
     <div className="py-10 sm:py-12 container mx-auto px-4">
       <div className="max-w-3xl mb-6">
-        <span className="text-xs font-extrabold uppercase tracking-wider text-[#C8460A] bg-[rgba(200,70,10,0.08)] px-3 py-1 rounded-full">
+        <span className="section-eyebrow inline-block bg-brand-glow px-3 py-1 rounded-md">
           Direct From Kiln
         </span>
-        <h1 className="text-3xl sm:text-4xl font-black text-[#1C1009] mt-2">
+        <h1 className="font-display text-3xl sm:text-4xl font-black text-ink-primary mt-2">
           Verified Brick Catalog &amp; Pricing
         </h1>
         <p className="text-sm text-[#6B5545] mt-2">

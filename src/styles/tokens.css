@@ -7,27 +7,28 @@
 
 :root {
     /* ─── 1. Brand Palette ─── */
-    --brand: #C83E0A;                   /* Primary terracotta — main CTAs */
-    --brand-dark: #992E08;              /* Hover / active states */
-    --brand-light: #FCE8DF;             /* Soft brand backgrounds */
-    --brand-amber: #D6A34D;             /* Accent Gold — premium highlights */
+    /* Canonical brand hex = theme-color / apps/web / Capacitor shells */
+    --brand: #C8460A;                   /* Primary terracotta — main CTAs */
+    --brand-dark: #8B2E05;              /* Hover / active states */
+    --brand-light: #FBEAE0;             /* Soft brand backgrounds */
+    --brand-amber: #F5A623;             /* Accent amber — premium highlights */
     --brand-secondary: #7D3523;         /* Supporting industrial accent */
-    --brand-glow: rgba(200, 62, 10, 0.15);
-    --brand-glow-strong: rgba(200, 62, 10, 0.30);
+    --brand-glow: rgba(200, 70, 10, 0.15);
+    --brand-glow-strong: rgba(200, 70, 10, 0.30);
 
     /* ─── 2. Surface & Backgrounds (Light Default) ─── */
-    --bg: #FCFAF7;                      /* Main page background */
+    --bg: #FAFAF9;                      /* Main page background */
     --bg-card: #FFFFFF;                 /* Cards, dialogs, forms */
     --bg-elevated: #FFFFFF;             /* Floating modal / sheet */
-    --bg-subtle: #F5EFE6;               /* Alternating content sections */
-    --bg-muted: #EDE5DF;                /* Input / pill neutral */
+    --bg-subtle: #F5F0EC;               /* Alternating content sections */
+    --bg-muted: #ECE5DE;                /* Input / pill neutral */
     --nav-glass: rgba(252, 250, 247, 0.94);
     --bottom-nav-glass: rgba(252, 250, 247, 0.96);
 
     /* ─── 3. Typography & Contrast (WCAG AA >= 4.5:1) ─── */
-    --ink: #202124;                     /* Headlines / high emphasis */
-    --ink-2: #3D3B38;                   /* Primary body text */
-    --ink-3: #64666B;                   /* Helper / secondary text */
+    --ink: #1C1009;                     /* Headlines / high emphasis */
+    --ink-2: #4A3728;                   /* Primary body text */
+    --ink-3: #6B5545;                   /* Helper / secondary text */
     --ink-inverse: #FFFFFF;             /* Text on brand/dark surfaces */
 
     /* ─── 4. Borders & Dividers ─── */
