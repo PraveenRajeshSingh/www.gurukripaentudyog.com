@@ -22,6 +22,7 @@ const guards_1 = require("./platform/guards");
 const auth_controller_1 = require("./platform/auth.controller");
 const me_controller_1 = require("./platform/me.controller");
 const staff_controller_1 = require("./platform/staff.controller");
+const health_controller_1 = require("./platform/health.controller");
 const jwtSecret = process.env.JWT_SECRET ||
     (() => {
         console.warn('[auth] JWT_SECRET is not set - using a random per-process secret. Set JWT_SECRET before deploying!');
@@ -39,7 +40,7 @@ exports.AppModule = AppModule = __decorate([
                 signOptions: { expiresIn: process.env.JWT_EXPIRATION || '12h' },
             }),
         ],
-        controllers: [api_controller_1.ApiController, auth_controller_1.AuthController, auth_controller_1.PublicController, me_controller_1.MeController, staff_controller_1.StaffController],
+        controllers: [api_controller_1.ApiController, auth_controller_1.AuthController, auth_controller_1.PublicController, me_controller_1.MeController, staff_controller_1.StaffController, health_controller_1.HealthController],
         providers: [
             pricing_service_1.PricingEngineService, mock_db_service_1.MockDatabaseService, tenant_guard_1.TenantIsolationGuard,
             store_service_1.PlatformStoreService, auth_service_1.AuthService, notify_service_1.NotifyService, workflow_service_1.WorkflowService,
