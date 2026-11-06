@@ -1450,7 +1450,8 @@ main [id].cta-banner {
    Styles the rebuilt #userDropdown markup (navbar.html): avatar + name +
    derived customer reference at the top, section labels, and a viewport
    clamp so the menu is never clipped on short screens. */
-.user-dropdown { width: 268px; max-height: calc(100vh - 84px); overflow-y: auto; overscroll-behavior: contain; }
+/* Account popup uses fixed/portaled layout in account.css — do not clamp here. */
+.user-dropdown:not(.account-popup) { width: 268px; max-height: calc(100vh - 84px); overflow-y: auto; overscroll-behavior: contain; }
 .ud-identity { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .ud-avatar {
     width: 36px; height: 36px; border-radius: 50%;

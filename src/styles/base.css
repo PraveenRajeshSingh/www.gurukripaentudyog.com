@@ -655,7 +655,8 @@
             white-space: nowrap
         }
 
-        .user-dropdown {
+        /* Legacy absolute menu — account popup (.account-popup) overrides in account.css */
+        .user-dropdown:not(.account-popup) {
             position: absolute;
             top: calc(100% + 8px);
             right: 0;
@@ -672,7 +673,7 @@
             pointer-events: none
         }
 
-        .user-dropdown.open {
+        .user-dropdown:not(.account-popup).open {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);

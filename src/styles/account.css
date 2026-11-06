@@ -1,20 +1,55 @@
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ACCOUNT SYSTEM — My Account popup, auth polish, profile hub
-   Tokens from tokens.css (--brand #A83226, surfaces, radii)
+   ACCOUNT SYSTEM — My Profile popup (portaled, fixed)
+   Fixes: navbar clipping, overflow conflicts, z-index stacking
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* Semantic color aliases live in tokens.css (--color-primary, etc.) */
+/* Kill conflicting absolute/overflow rules from base + refinements */
+.user-menu .user-dropdown.account-popup,
+.user-dropdown.account-popup {
+    position: fixed !important;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    width: min(340px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border-radius: var(--radius-large, 18px);
+    border: 1px solid var(--color-border, var(--line));
+    background: var(--color-surface, var(--bg-card));
+    box-shadow: var(--shadow-modal, var(--sh-modal));
+    z-index: var(--z-modal, 1100);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: none;
+    transition: opacity var(--transition-fast, 180ms ease),
+                visibility 0s linear 180ms;
+}
 
-/* ── Backdrop (mobile sheet) ── */
+.user-dropdown.account-popup.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity var(--transition-fast, 180ms ease), visibility 0s;
+}
+
+/* Backdrop — always above sticky header, below the popup */
 .account-popup-backdrop {
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 940;
-    background: rgba(37, 37, 37, 0.45);
+    z-index: calc(var(--z-modal, 1100) - 1);
+    background: rgba(37, 37, 37, 0.42);
     opacity: 0;
-    transition: opacity var(--transition-fast);
+    transition: opacity var(--transition-fast, 180ms ease);
     pointer-events: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 .account-popup-backdrop.is-open {
     display: block;
@@ -22,24 +57,16 @@
     pointer-events: auto;
 }
 
-/* ── My Account popup shell ── */
-.user-dropdown.account-popup {
-    width: min(320px, calc(100vw - 24px));
-    max-height: min(520px, calc(100vh - 88px));
-    padding: 0;
-    overflow: hidden;
-    border-radius: var(--radius-large);
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    box-shadow: var(--shadow-modal);
-    z-index: 950;
-}
 .account-popup__sheet {
     display: flex;
     flex-direction: column;
     max-height: inherit;
+    max-height: var(--account-popup-max-h, min(560px, calc(100vh - 24px)));
     overflow: hidden;
+    border-radius: inherit;
+    background: inherit;
 }
+
 .account-popup__grab {
     display: none;
     width: 40px;
@@ -47,33 +74,39 @@
     margin: 10px auto 0;
     border-radius: 99px;
     background: var(--line-mid);
+    flex-shrink: 0;
 }
+
 .account-popup__header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
     padding: 16px 16px 14px;
-    background: linear-gradient(180deg, var(--brand-light) 0%, var(--color-surface) 100%);
-    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(180deg, var(--brand-light) 0%, var(--color-surface, #fff) 100%);
+    border-bottom: 1px solid var(--color-border, var(--line));
+    flex-shrink: 0;
 }
+
 .account-popup__avatar {
-    width: 48px;
-    height: 48px;
-    font-size: 1.05rem;
+    width: 52px;
+    height: 52px;
+    font-size: 1.1rem;
     box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--brand-glow);
 }
+
 .account-popup__close {
-    display: none;
+    display: inline-flex;
     flex-shrink: 0;
     width: 40px;
     height: 40px;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    color: var(--color-muted);
+    color: var(--color-muted, var(--ink-3));
     background: var(--bg-subtle);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border, var(--line));
+    cursor: pointer;
     transition: background var(--transition-fast), color var(--transition-fast);
 }
 .account-popup__close:hover {
@@ -85,30 +118,60 @@
     box-shadow: var(--focus-ring);
 }
 
+.ud-identity { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
+.ud-idtext { min-width: 0; }
+.ud-name {
+    font-family: var(--display);
+    font-weight: 700;
+    color: var(--color-text, var(--ink));
+    font-size: 1.05rem;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .ud-email,
 .ud-phone {
     font-size: 0.78rem;
-    color: var(--color-muted);
+    color: var(--color-muted, var(--ink-3));
     margin-top: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 200px;
 }
 .ud-phone { font-variant-numeric: tabular-nums; }
 .ud-ref {
     font-size: 0.7rem;
-    color: var(--color-muted);
+    color: var(--color-muted, var(--ink-3));
     margin-top: 2px;
     font-variant-numeric: tabular-nums;
+}
+.account-popup__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill, 50px);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: var(--brand-glow);
+    color: var(--brand);
+    border: 1px solid var(--line-mid);
+}
+.account-popup__badge.is-verified {
+    background: var(--success-bg);
+    color: var(--success);
+    border-color: var(--success-border);
 }
 
 .account-popup__metrics {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border, var(--line));
     background: var(--bg-subtle);
+    flex-shrink: 0;
 }
 .account-popup__metric {
     display: flex;
@@ -117,14 +180,14 @@
     justify-content: center;
     gap: 2px;
     padding: 12px 8px;
-    border-right: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border, var(--line));
 }
 .account-popup__metric:last-child { border-right: none; }
 .account-popup__metric-val {
     font-family: var(--display);
     font-weight: 700;
     font-size: 1.05rem;
-    color: var(--color-text);
+    color: var(--color-text, var(--ink));
     line-height: 1.1;
 }
 .account-popup__metric-label {
@@ -132,21 +195,51 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--color-muted, var(--ink-3));
 }
 
 .account-popup__nav {
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 8px;
+    padding: 4px 0 10px;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.ud-grouplabel {
+    padding: 10px 14px 4px;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-muted, var(--ink-3));
+}
+.ud-body { padding: 0 8px; }
+.ud-divider {
+    height: 1px;
+    background: var(--color-border, var(--line));
+    margin: 6px 14px;
 }
 
 .ud-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
     min-height: 48px;
     padding: 10px 12px;
-    gap: 12px;
-    border-radius: var(--radius-small);
+    border-radius: var(--radius-small, 6px);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--transition-fast);
+}
+.ud-item:hover { background: var(--bg-subtle); }
+.ud-item:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: -2px;
 }
 .ud-item__icon {
     display: inline-flex;
@@ -155,31 +248,28 @@
     width: 34px;
     height: 34px;
     flex-shrink: 0;
-    border-radius: var(--radius-small);
+    border-radius: var(--radius-small, 6px);
     background: var(--bg-subtle);
     color: var(--brand);
 }
-.ud-item__icon svg { opacity: 1; width: 16px; height: 16px; }
-.ud-item:hover .ud-item__icon {
-    background: var(--brand-glow);
-}
+.ud-item:hover .ud-item__icon { background: var(--brand-glow); }
+.ud-item__icon svg { width: 16px; height: 16px; opacity: 1; }
 .ud-item__text {
     display: flex;
     flex-direction: column;
     gap: 1px;
     min-width: 0;
     flex: 1;
-    text-align: left;
 }
 .ud-item__title {
     font-size: 0.88rem;
     font-weight: 600;
-    color: var(--color-text);
+    color: var(--color-text, var(--ink));
     line-height: 1.25;
 }
 .ud-item__hint {
     font-size: 0.72rem;
-    color: var(--color-muted);
+    color: var(--color-muted, var(--ink-3));
     line-height: 1.3;
 }
 .ud-item:hover .ud-item__title { color: var(--brand); }
@@ -204,148 +294,85 @@
     color: var(--danger);
 }
 .ud-logout .ud-item__title { color: var(--danger); }
-.ud-logout:hover {
-    background: var(--danger-bg) !important;
-}
+.ud-logout:hover { background: var(--danger-bg) !important; }
 .ud-logout:hover .ud-item__title { color: var(--danger); }
 
 .account-popup__footer { padding-bottom: 4px; }
 
-/* ── Mobile / tablet: bottom sheet ── */
-@media (max-width: 768px) {
-    .user-dropdown.account-popup {
-        position: fixed;
-        top: auto;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        max-width: none;
-        max-height: min(88vh, 640px);
-        border-radius: var(--radius-large) var(--radius-large) 0 0;
-        transform: translateY(110%);
-        opacity: 1;
-        visibility: hidden;
-        pointer-events: none;
-        z-index: 960;
-        transition: transform var(--transition-normal), visibility 0s linear 0.28s;
-    }
-    .user-dropdown.account-popup.open {
-        transform: translateY(0);
-        visibility: visible;
-        pointer-events: auto;
-        transition: transform var(--transition-normal), visibility 0s;
-    }
-    .account-popup__grab { display: block; }
-    .account-popup__close { display: inline-flex; }
-    .account-popup__header { padding-top: 4px; }
-    .ud-email { max-width: none; }
+/* Mobile / narrow: bottom sheet above bottom nav */
+.user-dropdown.account-popup.is-sheet {
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    border-radius: var(--radius-large, 18px) var(--radius-large, 18px) 0 0;
+    transform: translateY(110%);
+    opacity: 1;
+    visibility: hidden;
+    transition: transform var(--transition-normal, 280ms ease), visibility 0s linear 280ms;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    z-index: var(--z-modal, 1100);
+}
+.user-dropdown.account-popup.is-sheet.open {
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform var(--transition-normal, 280ms ease), visibility 0s;
+}
+.user-dropdown.account-popup.is-sheet .account-popup__grab { display: block; }
+.user-dropdown.account-popup.is-sheet .account-popup__sheet {
+    max-height: min(82vh, 640px);
 }
 
-body.account-popup-open {
-    overflow: hidden;
-}
+body.account-popup-open { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
     .user-dropdown.account-popup,
+    .user-dropdown.account-popup.is-sheet,
     .account-popup-backdrop {
         transition: none !important;
     }
 }
 
-/* ── Auth modal polish ── */
+/* Auth + profile hub polish (unchanged intent) */
 #authModal .modal-box {
     max-width: 440px;
-    border-radius: var(--radius-large);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-modal);
+    border-radius: var(--radius-large, 18px);
+    border: 1px solid var(--color-border, var(--line));
+    box-shadow: var(--shadow-modal, var(--sh-modal));
     overflow: hidden;
 }
 #authModal .auth-modal-brand {
     background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
 }
-#authModal .auth-tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px;
-    background: var(--bg-subtle);
-    border-radius: var(--radius-pill);
-    padding: 4px;
-    margin-bottom: 18px;
-}
-#authModal .auth-tab {
-    min-height: 42px;
-    border-radius: var(--radius-pill);
-    font-weight: 700;
-    font-size: 0.86rem;
-    color: var(--color-muted);
-    transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
-}
-#authModal .auth-tab.active {
-    background: var(--color-surface);
-    color: var(--brand);
-    box-shadow: var(--shadow-card);
-}
-#authModal .auth-label {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--color-text);
-    margin-bottom: 6px;
-    display: block;
-}
-#authModal .auth-input {
-    min-height: 48px;
-    border-radius: var(--radius-small);
-    border: 1.5px solid var(--color-border);
-    background: var(--bg-subtle);
-}
-#authModal .auth-input:focus {
-    border-color: var(--brand);
-    background: #fff;
-    box-shadow: var(--focus-ring);
-}
-#authModal .auth-submit {
-    min-height: 48px;
-    border-radius: var(--radius-medium);
-    background: var(--brand);
-    font-weight: 700;
-}
 #authModal .auth-device-note {
     font-size: 0.72rem;
-    color: var(--color-muted);
+    color: var(--color-muted, var(--ink-3));
     line-height: 1.45;
     margin: 0 0 12px;
     padding: 8px 10px;
     background: var(--bg-subtle);
-    border-radius: var(--radius-small);
-    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-small, 6px);
+    border: 1px dashed var(--color-border, var(--line));
 }
-
 @media (max-width: 560px) {
     #authModal .modal-box {
         width: 100%;
         max-width: 100%;
         margin: 0;
-        border-radius: var(--radius-large) var(--radius-large) 0 0;
+        border-radius: var(--radius-large, 18px) var(--radius-large, 18px) 0 0;
         max-height: min(92vh, 720px);
         align-self: flex-end;
     }
-    #authModal.modal-overlay {
-        align-items: flex-end;
-    }
+    #authModal.modal-overlay { align-items: flex-end; }
 }
 
-/* ── Profile hub header polish ── */
 .profile-modal-box .profile-header {
     background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
 }
-.profile-header-edit {
-    min-height: 40px;
-    border-radius: var(--radius-pill);
-    font-weight: 700;
-}
 .hub-tile {
-    border-radius: var(--radius-medium);
+    border-radius: var(--radius-medium, 12px);
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 .hub-tile:hover {

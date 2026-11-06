@@ -12,6 +12,9 @@
                                             <div class="ud-email" id="udEmail">—</div>
                                             <div class="ud-phone" id="udPhone">—</div>
                                             <div class="ud-ref" id="udRef">—</div>
+                                            <span class="account-popup__badge" id="udRoleBadge">
+                                                <span id="udRoleBadgeText">Account</span>
+                                            </span>
                                         </div>
                                     </div>
                                     <button type="button" class="account-popup__close" onclick="closeUserDropdown()" aria-label="Close account menu">
@@ -68,8 +71,8 @@
                                         <button type="button" class="ud-item" onclick="closeUserDropdown();handleForgotPw()" role="menuitem">
                                             <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
                                             <span class="ud-item__text">
-                                                <span class="ud-item__title">Recover Access</span>
-                                                <span class="ud-item__hint">Yard resets passwords (no in-app change)</span>
+                                                <span class="ud-item__title">Change Password</span>
+                                                <span class="ud-item__hint">Request a yard password reset</span>
                                             </span>
                                         </button>
                                     </div>
@@ -102,6 +105,13 @@
                                     <div class="ud-divider" role="separator"></div>
                                     <div class="ud-body">
                                         <div class="ud-grouplabel">More</div>
+                                        <button type="button" class="ud-item" onclick="openNotificationCenter();closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Notification Settings</span>
+                                                <span class="ud-item__hint">Order &amp; rate alerts</span>
+                                            </span>
+                                        </button>
                                         <button type="button" class="ud-item" onclick="openWishlistDrawer();closeUserDropdown()" role="menuitem">
                                             <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
                                             <span class="ud-item__text">

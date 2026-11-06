@@ -33,6 +33,34 @@
         }
     }
 
+    function fillRoleBadge(u) {
+        const badge = document.getElementById('udRoleBadge');
+        const text = document.getElementById('udRoleBadgeText');
+        if (!badge || !text) return;
+
+        let label = 'Signed in';
+        let verified = false;
+
+        if (global.BuyerProfile && typeof global.BuyerProfile.badge === 'function') {
+            try {
+                const b = global.BuyerProfile.badge();
+                if (b && b.label) {
+                    label = b.label;
+                    verified = b.tone === 'verified';
+                }
+            } catch (_) { /* ignore */ }
+        } else if (u && u.role) {
+            label = String(u.role);
+        } else if (u && u.verified) {
+            label = 'Verified buyer';
+            verified = true;
+        }
+
+        text.textContent = label;
+        badge.classList.toggle('is-verified', !!verified);
+        badge.hidden = false;
+    }
+
     function fillAccountPopupIdentity(u) {
         if (!u) return;
         const initial = (u.name && u.name[0] ? u.name[0] : 'U').toUpperCase();
@@ -50,6 +78,7 @@
         if (udAvatar && typeof global.getAvatarBg === 'function') {
             udAvatar.style.background = global.getAvatarBg(u.name);
         }
+        fillRoleBadge(u);
         refreshAccountPopupStats();
     }
 

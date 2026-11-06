@@ -51,9 +51,11 @@ describe('My Account popup architecture', () => {
         assert.match(head, /account\.css/);
         assert.ok(fs.existsSync(path.join(root, 'src/styles/account.css')));
         const css = read('src/styles/account.css');
-        assert.match(css, /@media \(max-width:\s*768px\)/);
+        assert.match(css, /position:\s*fixed/);
+        assert.match(css, /\.is-sheet/);
         assert.match(css, /account-popup-backdrop/);
         assert.match(css, /\.ud-phone/);
+        assert.match(css, /z-index:\s*var\(--z-modal/);
     });
 
     test('local auth never persists password material', () => {
@@ -64,10 +66,29 @@ describe('My Account popup architecture', () => {
         assert.match(auth, /fillAccountPopupIdentity/);
     });
 
-    test('dropdown open/close manages mobile sheet chrome', () => {
+    test('dropdown open/close portals fixed popup and manages sheet chrome', () => {
         const ui = read('src/js/ui.js');
         assert.match(ui, /syncAccountPopupChrome/);
         assert.match(ui, /isAccountSheetMode/);
+        assert.match(ui, /ensureAccountPopupPortaled/);
+        assert.match(ui, /positionAccountPopup/);
+        assert.match(ui, /openUserDropdown/);
         assert.match(ui, /account-popup-open/);
+        assert.match(ui, /max-width:\s*1024px/);
+    });
+
+    test('mobile profile opens account popup when signed in', () => {
+        const auth = read('src/js/auth-modal.js');
+        assert.match(auth, /function handleMobileProfile/);
+        assert.match(auth, /openUserDropdown/);
+    });
+
+    test('change password uses real recovery flow, not a dummy form', () => {
+        const menu = read('src/pages/partials/account-menu.html');
+        assert.match(menu, /Change Password/);
+        assert.match(menu, /handleForgotPw/);
+        assert.match(menu, /Notification Settings/);
+        assert.match(menu, /openNotificationCenter/);
+        assert.match(menu, /udRoleBadge/);
     });
 });

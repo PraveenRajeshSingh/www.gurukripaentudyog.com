@@ -229,54 +229,172 @@ function toggleDrawer() {
 }
 
 // ══════════════════════════════════════════
-// USER DROPDOWN
+// USER DROPDOWN (portaled fixed popup — avoids sticky-nav clipping)
 // ══════════════════════════════════════════
 function isAccountSheetMode() {
-    return typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)').matches;
+    // Match mobile-fixes: #navUserMenu hidden ≤1024px — use bottom sheet there.
+    return typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 1024px)').matches;
+}
+
+function ensureAccountPopupPortaled() {
+    const dd = document.getElementById('userDropdown');
+    const backdrop = document.getElementById('accountPopupBackdrop');
+    if (backdrop && backdrop.parentElement !== document.body) {
+        document.body.appendChild(backdrop);
+    }
+    if (dd && dd.parentElement !== document.body) {
+        document.body.appendChild(dd);
+    }
+}
+
+function clearAccountPopupPosition(dd) {
+    if (!dd) return;
+    dd.style.top = '';
+    dd.style.left = '';
+    dd.style.right = '';
+    dd.style.bottom = '';
+    dd.style.width = '';
+    dd.style.maxHeight = '';
+    dd.style.setProperty('--account-popup-max-h', '');
+}
+
+function positionAccountPopup() {
+    const dd = document.getElementById('userDropdown');
+    if (!dd) return;
+    ensureAccountPopupPortaled();
+
+    const sheet = isAccountSheetMode();
+    dd.classList.toggle('is-sheet', sheet);
+
+    if (sheet) {
+        clearAccountPopupPosition(dd);
+        return;
+    }
+
+    const btn = document.getElementById('userMenuBtn');
+    const margin = 12;
+    const gap = 8;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const width = Math.min(340, vw - margin * 2);
+    const wasOpen = dd.classList.contains('open');
+
+    // Keep layout measurable without flashing when already open.
+    if (!wasOpen) {
+        dd.style.visibility = 'hidden';
+        dd.style.opacity = '0';
+        dd.style.pointerEvents = 'none';
+    }
+    dd.style.width = width + 'px';
+    dd.style.left = '0';
+    dd.style.top = '0';
+    const panelH = Math.min(dd.scrollHeight || 480, vh - margin * 2);
+    dd.style.maxHeight = panelH + 'px';
+    dd.style.setProperty('--account-popup-max-h', panelH + 'px');
+
+    let top;
+    let left;
+    if (btn) {
+        const r = btn.getBoundingClientRect();
+        const spaceBelow = vh - r.bottom - gap - margin;
+        const spaceAbove = r.top - gap - margin;
+        const openUp = spaceBelow < Math.min(panelH, 320) && spaceAbove > spaceBelow;
+        top = openUp
+            ? Math.max(margin, r.top - gap - panelH)
+            : Math.min(r.bottom + gap, vh - margin - Math.min(panelH, spaceBelow + gap));
+        left = Math.min(Math.max(margin, r.right - width), vw - width - margin);
+    } else {
+        top = margin;
+        left = vw - width - margin;
+    }
+
+    dd.style.top = Math.round(top) + 'px';
+    dd.style.left = Math.round(left) + 'px';
+    dd.style.right = 'auto';
+    dd.style.bottom = 'auto';
+    if (wasOpen) {
+        dd.style.visibility = '';
+        dd.style.opacity = '';
+        dd.style.pointerEvents = '';
+    }
 }
 
 function syncAccountPopupChrome(open) {
     const backdrop = document.getElementById('accountPopupBackdrop');
+    const sheet = isAccountSheetMode();
     if (backdrop) {
-        backdrop.classList.toggle('is-open', !!open && isAccountSheetMode());
-        backdrop.setAttribute('aria-hidden', open && isAccountSheetMode() ? 'false' : 'true');
+        // Desktop also gets a light dismiss layer so clicks outside never miss.
+        backdrop.classList.toggle('is-open', !!open);
+        backdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+        backdrop.style.background = sheet ? '' : 'transparent';
     }
-    document.body.classList.toggle('account-popup-open', !!open && isAccountSheetMode());
+    document.body.classList.toggle('account-popup-open', !!open && sheet);
+}
+
+function openUserDropdown() {
+    const dd = document.getElementById('userDropdown');
+    if (!dd || dd.classList.contains('open')) return;
+    ensureAccountPopupPortaled();
+    if (typeof refreshAccountPopupStats === 'function') refreshAccountPopupStats();
+    if (typeof fillAccountPopupIdentity === 'function' && typeof user !== 'undefined' && user) {
+        fillAccountPopupIdentity(user);
+    }
+    positionAccountPopup();
+    dd.classList.add('open');
+    // Reposition after paint so max-height matches real content.
+    requestAnimationFrame(() => {
+        positionAccountPopup();
+        if (dd.classList.contains('open')) {
+            dd.style.visibility = '';
+            dd.style.opacity = '';
+            dd.style.pointerEvents = '';
+        }
+    });
+    document.getElementById('userMenuBtn')?.setAttribute('aria-expanded', 'true');
+    syncAccountPopupChrome(true);
+    const first = dd.querySelector('.account-popup__close, .ud-item');
+    if (first && typeof first.focus === 'function') {
+        setTimeout(() => first.focus({ preventScroll: true }), 40);
+    }
 }
 
 function toggleUserDropdown() {
     const dd = document.getElementById('userDropdown');
     if (!dd) return;
-    const open = !dd.classList.contains('open');
-    if (open) {
-        dd.classList.add('open');
-        if (typeof refreshAccountPopupStats === 'function') refreshAccountPopupStats();
-        const first = dd.querySelector('.ud-item, .account-popup__close');
-        if (first && typeof first.focus === 'function') {
-            setTimeout(() => first.focus(), 30);
-        }
-    } else {
-        dd.classList.remove('open');
-    }
-    document.getElementById('userMenuBtn')?.setAttribute('aria-expanded', open ? 'true' : 'false');
-    syncAccountPopupChrome(open);
+    if (dd.classList.contains('open')) closeUserDropdown();
+    else openUserDropdown();
 }
 
 function closeUserDropdown() {
-    document.getElementById('userDropdown')?.classList.remove('open');
+    const dd = document.getElementById('userDropdown');
+    if (dd) {
+        dd.classList.remove('open');
+        dd.classList.remove('is-sheet');
+        clearAccountPopupPosition(dd);
+        dd.style.visibility = '';
+        dd.style.opacity = '';
+        dd.style.pointerEvents = '';
+        dd.style.width = '';
+    }
     document.getElementById('userMenuBtn')?.setAttribute('aria-expanded', 'false');
     syncAccountPopupChrome(false);
 }
 
 document.addEventListener('click', e => {
-    const um = document.getElementById('navUserMenu');
+    const dd = document.getElementById('userDropdown');
+    if (!dd || !dd.classList.contains('open')) return;
+    const btn = document.getElementById('userMenuBtn');
     const backdrop = document.getElementById('accountPopupBackdrop');
-    if (backdrop && backdrop.contains(e.target)) return; // backdrop has its own handler
-    if (um && !um.contains(e.target) && !isAccountSheetMode()) closeUserDropdown();
-    if (um && !um.contains(e.target) && isAccountSheetMode() && !(backdrop && backdrop.classList.contains('is-open'))) {
-        closeUserDropdown();
-    }
+    if (backdrop && (e.target === backdrop || backdrop.contains(e.target))) return;
+    if (dd.contains(e.target)) return;
+    if (btn && btn.contains(e.target)) return;
+    closeUserDropdown();
 });
+
+window.addEventListener('resize', () => {
+    const dd = document.getElementById('userDropdown');
+    if (dd && dd.classList.contains('open')) positionAccountPopup();
+}, { passive: true });
 
 // Desktop: close on scroll so the menu never floats over moving content.
 // Mobile sheet stays open while the page behind is locked.
@@ -463,7 +581,10 @@ document.addEventListener('keydown', e => {
         const dd = document.getElementById('userDropdown');
         if (dd && dd.classList.contains('open')) {
             closeUserDropdown();
-            document.getElementById('userMenuBtn')?.focus();
+            const btn = document.getElementById('userMenuBtn');
+            // Prefer navbar trigger; on ≤1024 it is hidden — return focus to mobile profile tab.
+            if (btn && btn.offsetParent !== null) btn.focus();
+            else document.querySelector('.mn-item[onclick*="handleMobileProfile"]')?.focus();
             e.preventDefault();
             return;
         }

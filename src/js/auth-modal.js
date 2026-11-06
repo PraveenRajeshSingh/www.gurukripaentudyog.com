@@ -331,7 +331,21 @@ function updateAuthUI() {
     }
 }
 
-function handleMobileProfile() { user ? openProfile() : openAuth('login'); }
+function handleMobileProfile() {
+    if (!user) {
+        openAuth('login');
+        return;
+    }
+    // Toggle the account sheet (portaled) — works even when #navUserMenu is display:none.
+    const dd = document.getElementById('userDropdown');
+    if (dd && dd.classList.contains('open')) {
+        closeUserDropdown();
+        return;
+    }
+    if (typeof openUserDropdown === 'function') openUserDropdown();
+    else if (typeof toggleUserDropdown === 'function') toggleUserDropdown();
+    else openProfile();
+}
 
 function clearAuthErrors() {
     document.querySelectorAll('.auth-error-msg').forEach(e => e.textContent = '');
