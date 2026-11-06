@@ -1,34 +1,51 @@
-version: '3.8'
+# Local / staging stack for NestJS API + PostgreSQL.
+# Copy backend/.env.example → backend/.env and set real values before `docker compose up`.
+# Never commit real production passwords. The defaults below are LOCAL DEV ONLY.
 
 services:
   postgres:
     image: postgres:15-alpine
     container_name: brick_saas_postgres
-    restart: always
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: brick_admin
-      POSTGRES_PASSWORD: brick_secure_password
-      POSTGRES_DB: brick_supply_saas
+      POSTGRES_USER: ${POSTGRES_USER:-brick_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local_dev_only_change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-brick_supply_saas}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./backend/src/database/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-brick_admin} -d ${POSTGRES_DB:-brick_supply_saas}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: brick_saas_backend
-    restart: always
+    restart: unless-stopped
     environment:
-      PORT: 3000
-      DATABASE_URL: postgresql://brick_admin:brick_secure_password@postgres:5432/brick_supply_saas
-      JWT_SECRET: super_secure_brick_saas_jwt_secret_key_2026
+      PORT: ${BACKEND_PORT:-3000}
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://brick_admin:local_dev_only_change_me@postgres:5432/brick_supply_saas}
+      JWT_SECRET: ${JWT_SECRET:-local_dev_super_secret_jwt_key_not_for_prod}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-12h}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:8080,https://www.gurukripaentudyog.com}
     ports:
-      - "3000:3000"
+      - "${BACKEND_PORT:-3000}:3000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
 volumes:
   pgdata:

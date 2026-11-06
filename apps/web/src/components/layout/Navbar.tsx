@@ -2,13 +2,13 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useCart } from '../providers/CartProvider';
 import { translations } from '../../lib/translations';
 import { getSiteLang, setSiteLang, LANG_EVENT, type SiteLang } from '../../lib/lang';
 import { SESSION_EVENT, notifySessionChange } from '../../lib/session';
 import { WHATSAPP_BASE } from '../../lib/validation';
+import BrandLogo from '../ui/BrandLogo';
 import {
   CartIcon,
   PhoneIcon,
@@ -188,16 +188,7 @@ export default function Navbar() {
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand/12 shadow-sm">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-3">
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <span className="relative w-10 h-10 shrink-0 rounded-lg overflow-hidden bg-brand text-white flex items-center justify-center font-black text-xl" aria-hidden>
-              <Image
-                src="/images/logo-new.svg"
-                alt=""
-                width={40}
-                height={40}
-                className="object-contain"
-                priority
-              />
-            </span>
+            <BrandLogo size={40} />
             <div className="min-w-0">
               <span className="font-display font-extrabold text-sm sm:text-base text-ink-primary tracking-tight block leading-tight truncate">
                 {t.companyName}

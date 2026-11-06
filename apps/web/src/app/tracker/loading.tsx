@@ -1,5 +1,5 @@
-import { PageSkeleton } from '@/components/ui/Skeleton';
+import PageLoader from '@/components/ui/PageLoader';
 
 export default function TrackerLoading() {
-  return <PageSkeleton />;
+  return <PageLoader label="Loading trolley tracker…" variant="full" />;
 }

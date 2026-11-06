@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import BrandLogo from '../ui/BrandLogo';
 import {
   MapPinIcon,
   PhoneIcon,
@@ -15,15 +15,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8 sm:mb-10">
         <div>
           <div className="flex items-center gap-3 mb-4">
-            <span className="relative w-10 h-10 rounded-lg bg-brand overflow-hidden flex items-center justify-center shrink-0">
-              <Image
-                src="/images/logo-new.svg"
-                alt=""
-                width={40}
-                height={40}
-                className="object-contain"
-              />
-            </span>
+            <BrandLogo size={44} />
             <div>
               <span className="font-display font-bold text-lg tracking-tight block">Gurukripa Ent Udyog</span>
               <span className="text-xs text-neutral-400 block">गुरुकृपा ईंट उद्योग</span>

@@ -1,5 +1,5 @@
-import { PageSkeleton } from '@/components/ui/Skeleton';
+import PageLoader from '@/components/ui/PageLoader';
 
 export default function Loading() {
-  return <PageSkeleton />;
+  return <PageLoader label="Loading Gurukripa…" variant="full" />;
 }

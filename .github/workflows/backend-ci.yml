@@ -1,0 +1,48 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'backend/**'
+  workflow_dispatch:
+
+jobs:
+  test-and-build:
+    name: Build & Test NestJS Backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript build
+        run: npm run build
+
+      - name: Unit / isolation tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          JWT_SECRET: ci_test_jwt_secret_not_for_production
+
+      - name: Smoke health module present
+        run: |
+          node -e "const fs=require('fs'); const p='dist/src/platform/health.controller.js'; if(!fs.existsSync(p)) { console.error('missing', p); process.exit(1); } console.log('health controller built');"

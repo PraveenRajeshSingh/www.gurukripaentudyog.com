@@ -13,6 +13,8 @@ import { JwtAuthGuard, RolesGuard, RateLimitGuard } from './platform/guards';
 import { AuthController, PublicController } from './platform/auth.controller';
 import { MeController } from './platform/me.controller';
 import { StaffController } from './platform/staff.controller';
+import { HealthController } from './platform/health.controller';
+
 
 // JWT secret must come from the environment in production. A per-process
 // random secret is generated as a dev fallback (sessions then do not survive
@@ -32,7 +34,7 @@ const jwtSecret =
       signOptions: { expiresIn: process.env.JWT_EXPIRATION || '12h' },
     }),
   ],
-  controllers: [ApiController, AuthController, PublicController, MeController, StaffController],
+  controllers: [ApiController, AuthController, PublicController, MeController, StaffController, HealthController],
   providers: [
     PricingEngineService, MockDatabaseService, TenantIsolationGuard,
     PlatformStoreService, AuthService, NotifyService, WorkflowService,

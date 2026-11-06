@@ -1,7 +1,7 @@
 # Gurukripa Ent Udyog (गुरुकृपा ईंट उद्योग) — Enterprise Monorepo Architecture
 
 **Project:** Gurukripa Ent Udyog Digital Platform  
-**Target Environments:** Web (Next.js 14/15 on Vercel), Android (Native Kotlin Jetpack Compose), Backend REST API (NestJS/PostgreSQL).
+**Target Environments:** Web (legacy PWA on GitHub Pages production + Next.js 14 in `apps/web` for CI/preview), Android (Capacitor shell + native Kotlin Jetpack Compose), iOS (Capacitor), Backend REST API (NestJS/PostgreSQL).
 
 ---
 
@@ -19,16 +19,18 @@ Gurukripa Ent Udyog is a heavy-industry brick manufacturing and logistics enterp
 ┌───────────────────────────┐      ┌───────────────────────────┐      ┌───────────────────────────┐
 │         apps/web          │      │   packages/api-contracts  │      │       apps/android        │
 │   Next.js 14 App Router   │◄────►│  (Zod Schemas, GST Math,  │◄────►│    Kotlin Jetpack Compose │
-│   Tailwind CSS & Server   │      │   Estimator Engine, Data, │      │    Material 3, Room DB    │
-│   Components (Vercel)     │      │   Brand Tokens)           │      │    (Google Play Store)    │
+│   Tailwind + API proxies  │      │   Estimator Engine, Data, │      │    Material 3, Room DB    │
+│   (CI / optional Vercel)  │      │   Brand Tokens)           │      │    applicationId entudyog │
 └───────────────────────────┘      └─────────────┬─────────────┘      └───────────────────────────┘
-                                                 ▼
-                                   ┌───────────────────────────┐
-                                   │          backend          │
-                                   │   NestJS REST API,        │
-                                   │   Postgres, Order Journal │
+          ▲                                      ▼
+          │                        ┌───────────────────────────┐
+   GitHub Pages                    │          backend          │
+   legacy www/ (production)        │   NestJS REST API,        │
+   + Capacitor android/ios         │   Postgres, /health       │
                                    └───────────────────────────┘
 ```
+
+Authoritative hosting rules: [DEPLOYMENT.md](DEPLOYMENT.md) and root [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md).
 
 ---
 

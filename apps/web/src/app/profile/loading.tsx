@@ -1,5 +1,5 @@
-import { PageSkeleton } from '@/components/ui/Skeleton';
+import PageLoader from '@/components/ui/PageLoader';
 
 export default function ProfileLoading() {
-  return <PageSkeleton />;
+  return <PageLoader label="Opening your account…" variant="full" />;
 }

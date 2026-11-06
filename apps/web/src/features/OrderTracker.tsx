@@ -7,7 +7,13 @@ import { api, formatDateTime } from '@/lib/client-api';
 import type { MeOrder } from '@/types/account';
 import { ORDER_STEPS } from '@/types/account';
 import StatusPill from '@/components/ui/StatusPill';
-import { Spinner, TruckIcon, PhoneIcon, MessageIcon, UserIcon, AlertIcon } from '@/components/ui/icons';
+import Button from '@/components/ui/Button';
+import Alert from '@/components/ui/Alert';
+import Card from '@/components/ui/Card';
+import EmptyState from '@/components/ui/EmptyState';
+import PageLoader from '@/components/ui/PageLoader';
+import { SelectField } from '@/components/ui/Field';
+import { TruckIcon, PhoneIcon, MessageIcon, UserIcon } from '@/components/ui/icons';
 
 interface TimelineEvent {
   fromStatus: string;
@@ -17,11 +23,6 @@ interface TimelineEvent {
   at: string;
 }
 
-const btnGhost =
-  'inline-flex items-center justify-center gap-2 border border-neutral-300 hover:bg-neutral-100 text-[#1C1009] text-sm font-bold min-h-[44px] px-4 rounded-lg transition';
-const btnPrimary =
-  'inline-flex items-center justify-center gap-2 bg-[#C8460A] hover:bg-[#8B2E05] text-white text-sm font-bold min-h-[44px] px-4 rounded-lg transition';
-
 const STEP_LABELS: Record<string, string> = {
   CONFIRMED: 'Order confirmed',
   PRODUCTION: 'In kiln production',
@@ -29,6 +30,10 @@ const STEP_LABELS: Record<string, string> = {
   DELIVERED: 'Delivered to site',
 };
 
+/**
+ * Auth-gated order timeline. Does not invent GPS/map positions —
+ * on-road location still requires a dispatch call with the order number.
+ */
 export default function OrderTracker() {
   const [auth, setAuth] = useState<'checking' | 'anon' | 'authed' | 'unavailable'>('checking');
   const [orders, setOrders] = useState<MeOrder[]>([]);
@@ -36,8 +41,8 @@ export default function OrderTracker() {
   const [detail, setDetail] = useState<(MeOrder & { timeline?: TimelineEvent[] }) | null>(null);
   const [detailBusy, setDetailBusy] = useState(false);
   const [listError, setListError] = useState('');
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
 
-  // Deep link from the account dashboard: /tracker?id=<order id>
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('id');
     if (id) setSelectedId(id);
@@ -50,11 +55,12 @@ export default function OrderTracker() {
       if (r.status === 503) return setAuth('unavailable');
       if (!r.ok) {
         setAuth('authed');
-        setListError(r.message || 'Could not load your orders.');
+        setListError(r.error?.message || r.message || 'Could not load your orders.');
         return;
       }
       setAuth('authed');
-      const list = ((r.json as any)?.data ?? []) as MeOrder[];
+      setUpdatedAt(new Date().toISOString());
+      const list = ((r.json as { data?: MeOrder[] })?.data ?? []) as MeOrder[];
       setOrders(list);
       setSelectedId((cur) => cur || list[0]?.id || '');
     });
@@ -72,114 +78,123 @@ export default function OrderTracker() {
     setDetailBusy(true);
     api(`me/orders/${encodeURIComponent(selectedId)}`).then((r) => {
       setDetailBusy(false);
-      if (r.ok && (r.json as any)?.data) setDetail((r.json as any).data);
-      else setDetail(null);
+      if (r.ok && (r.json as { data?: MeOrder })?.data) {
+        setDetail((r.json as { data: MeOrder & { timeline?: TimelineEvent[] } }).data);
+        setUpdatedAt(new Date().toISOString());
+      } else setDetail(null);
     });
   }, [selectedId]);
 
-  // ------------------------------------------------------------- guest view
   if (auth === 'checking') {
-    return (
-      <div className="flex items-center justify-center gap-2 py-16 text-[#6B5545]" role="status">
-        <Spinner className="w-5 h-5 animate-spin" /> Loading your orders…
-      </div>
-    );
+    return <PageLoader label="Loading your orders…" variant="inline" />;
   }
 
   if (auth !== 'authed') {
     return (
-      <div className="bg-white rounded-xl border border-neutral-200 p-6 sm:p-8 max-w-xl mx-auto text-center space-y-4">
-        <TruckIcon className="w-9 h-9 text-[#C8460A] mx-auto" />
-        <h2 className="text-lg font-black text-[#1C1009]">
+      <Card padding="lg" className="max-w-xl mx-auto text-center space-y-4">
+        <TruckIcon className="w-9 h-9 text-brand mx-auto" />
+        <h2 className="text-lg font-display font-black text-ink-primary">
           {auth === 'unavailable' ? 'Tracking service unavailable' : 'Sign in to track your orders'}
         </h2>
-        <p className="text-sm text-[#6B5545]">
+        <p className="text-sm text-ink-tertiary">
           {auth === 'unavailable'
             ? 'The kiln service is not reachable right now, so live order status cannot be shown.'
             : 'Order status comes straight from the kiln workflow — it is tied to your account, so a quick sign-in is required.'}
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           {auth === 'unavailable' ? (
-            <button onClick={loadOrders} className={btnPrimary}>Try again</button>
+            <Button variant="primary" onClick={loadOrders}>
+              Try again
+            </Button>
           ) : (
-            <Link href="/profile" className={btnPrimary}>
+            <Link href="/profile" className="brand-btn-primary">
               <UserIcon className="w-4 h-4" /> Sign in
             </Link>
           )}
-          <a href="tel:+919198923230" className={btnGhost}>
+          <a href="tel:+919198923230" className="brand-btn-outline">
             <PhoneIcon className="w-4 h-4" /> Ask dispatch: +91 91989 23230
           </a>
         </div>
-      </div>
+      </Card>
     );
   }
 
   if (listError) {
     return (
-      <div role="alert" className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg p-4 flex flex-wrap items-center gap-3 max-w-xl mx-auto">
-        <AlertIcon className="w-5 h-5 shrink-0" />
-        <span className="flex-1">{listError}</span>
-        <button onClick={loadOrders} className={btnGhost}>Retry</button>
+      <div className="max-w-xl mx-auto">
+        <Alert tone="error" title="Could not load orders">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="flex-1">{listError}</span>
+            <Button variant="outline" size="sm" onClick={loadOrders}>
+              Retry
+            </Button>
+          </div>
+        </Alert>
       </div>
     );
   }
 
   if (orders.length === 0) {
     return (
-      <div className="border border-dashed border-neutral-300 rounded-lg p-8 text-center max-w-xl mx-auto">
-        <p className="text-sm text-[#4A3728] mb-3">
-          No orders on this account yet. Orders are created automatically when you approve a
-          quotation prepared by the kiln team.
-        </p>
-        <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/profile" className={btnPrimary}>View quotations</Link>
-          <Link href="/contact" className={btnGhost}>
-            <MessageIcon className="w-4 h-4" /> Start an enquiry
-          </Link>
-        </div>
-      </div>
+      <EmptyState
+        icon={<TruckIcon className="w-5 h-5" />}
+        title="No orders on this account yet"
+        description="Orders are created automatically when you approve a quotation prepared by the kiln team."
+        action={
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link href="/profile" className="brand-btn-primary">
+              View quotations
+            </Link>
+            <Link href="/contact" className="brand-btn-outline">
+              <MessageIcon className="w-4 h-4" /> Start an enquiry
+            </Link>
+          </div>
+        }
+      />
     );
   }
 
   return (
     <div className="max-w-3xl mx-auto space-y-4">
-      {/* Order picker */}
-      <div className="bg-white rounded-xl border border-neutral-200 p-4">
-        <label htmlFor="ot-order" className="block text-sm font-bold text-[#4A3728] mb-1">
-          Select order
-        </label>
-        <select
+      <Card padding="sm" className="!p-4">
+        <SelectField
           id="ot-order"
+          label="Select order"
           value={selectedId}
           onChange={(e) => setSelectedId(e.target.value)}
-          className="w-full min-h-[48px] px-3 py-2.5 border border-neutral-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#C8460A] bg-white"
         >
           {orders.map((o) => (
             <option key={o.id} value={o.id}>
               {o.number} — {formatDateShort(o.createdAt)} — {o.status}
             </option>
           ))}
-        </select>
-      </div>
+        </SelectField>
+        {updatedAt && (
+          <p className="text-[11px] text-ink-tertiary mt-2" role="status">
+            Last refreshed {formatDateTime(updatedAt)}. Status is staff-recorded — not a live GPS map.
+          </p>
+        )}
+      </Card>
 
-      {/* Detail */}
       {detailBusy || !detail ? (
-        <div className="flex items-center justify-center gap-2 py-10 text-[#6B5545]" role="status">
-          <Spinner className="w-4 h-4 animate-spin" /> Loading order status…
-        </div>
+        <PageLoader label="Loading order status…" variant="inline" />
       ) : (
-        <div className="bg-white rounded-xl border border-neutral-200 p-5 space-y-5">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-black text-lg text-[#1C1009]">{detail.number}</h2>
+        <Card padding="md" className="space-y-5 !p-0 overflow-hidden">
+          <div className="h-1.5 w-full bg-gradient-to-r from-brand via-brand-amber to-brand-dark" aria-hidden />
+          <div className="px-5 pt-4 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-display font-black text-lg text-ink-primary">{detail.number}</h2>
             <StatusPill status={detail.status} />
           </div>
+          <div className="px-5 pb-5 space-y-5">
 
           {detail.status === 'CANCELLED' ? (
-            <div role="alert" className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg p-4">
-              This order was cancelled. Contact dispatch before planning any reload:
-              {' '}
-              <a href="tel:+919198923230" className="underline font-bold">+91 91989 23230</a>.
-            </div>
+            <Alert tone="error" title="Order cancelled">
+              Contact dispatch before planning any reload:{' '}
+              <a href="tel:+919198923230" className="underline font-bold">
+                +91 91989 23230
+              </a>
+              .
+            </Alert>
           ) : (
             <ol className="relative space-y-6 list-none p-0 m-0" aria-label="Order progress">
               {ORDER_STEPS.map((step, idx) => {
@@ -192,22 +207,25 @@ export default function OrderTracker() {
                       <span
                         aria-hidden
                         className={`w-4 h-4 rounded-full border-2 shrink-0 ${
-                          done ? 'bg-[#C8460A] border-[#C8460A]' : 'bg-white border-neutral-300'
+                          done ? 'bg-brand border-brand' : 'bg-white border-neutral-300'
                         }`}
                       />
                       {idx < ORDER_STEPS.length - 1 && (
-                        <span aria-hidden className={`w-0.5 flex-1 min-h-[24px] ${done ? 'bg-[#C8460A]' : 'bg-neutral-200'}`} />
+                        <span
+                          aria-hidden
+                          className={`w-0.5 flex-1 min-h-[24px] ${done ? 'bg-brand' : 'bg-neutral-200'}`}
+                        />
                       )}
                     </div>
                     <div className="pb-1">
-                      <p className={`text-sm font-bold ${done ? 'text-[#1C1009]' : 'text-neutral-400'}`}>
+                      <p className={`text-sm font-bold ${done ? 'text-ink-primary' : 'text-neutral-400'}`}>
                         {STEP_LABELS[step]}
-                        {isCurrent && <span className="ml-2 text-[11px] font-bold text-[#C8460A] uppercase">current</span>}
+                        {isCurrent && (
+                          <span className="ml-2 text-[11px] font-bold text-brand uppercase">current</span>
+                        )}
                       </p>
                       {done && (
-                        <p className="text-xs text-[#6B5545]">
-                          {stepEventTime(detail.timeline, step)}
-                        </p>
+                        <p className="text-xs text-ink-tertiary">{stepEventTime(detail.timeline, step)}</p>
                       )}
                     </div>
                   </li>
@@ -216,66 +234,88 @@ export default function OrderTracker() {
             </ol>
           )}
 
-          {/* Order facts from the backend */}
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm m-0">
-            <div className="p-3 bg-[#FAFAF9] rounded-lg">
+            <div className="p-3 bg-surface-subtle rounded-lg">
               <dt className="text-[11px] font-bold text-neutral-500 uppercase">Deliver to</dt>
-              <dd className="font-bold text-[#1C1009] mt-0.5">{detail.deliveryAddress}, {detail.deliveryCity}</dd>
-            </div>
-            <div className="p-3 bg-[#FAFAF9] rounded-lg">
-              <dt className="text-[11px] font-bold text-neutral-500 uppercase">Expected delivery</dt>
-              <dd className="font-bold text-[#1C1009] mt-0.5">
-                {detail.expectedDelivery ? formatDateShort(detail.expectedDelivery) : 'Being confirmed by dispatch'}
+              <dd className="font-bold text-ink-primary mt-0.5">
+                {detail.deliveryAddress}, {detail.deliveryCity}
               </dd>
             </div>
-            <div className="p-3 bg-[#FAFAF9] rounded-lg">
-              <dt className="text-[11px] font-bold text-neutral-500 uppercase">Payment</dt>
-              <dd className="font-bold text-[#1C1009] mt-0.5">{detail.paymentMethod}</dd>
+            <div className="p-3 bg-surface-subtle rounded-lg">
+              <dt className="text-[11px] font-bold text-neutral-500 uppercase">Expected delivery</dt>
+              <dd className="font-bold text-ink-primary mt-0.5">
+                {detail.expectedDelivery
+                  ? formatDateShort(detail.expectedDelivery)
+                  : 'Being confirmed by dispatch'}
+              </dd>
             </div>
-            <div className="p-3 bg-[#FAFAF9] rounded-lg">
+            <div className="p-3 bg-surface-subtle rounded-lg">
+              <dt className="text-[11px] font-bold text-neutral-500 uppercase">Payment</dt>
+              <dd className="font-bold text-ink-primary mt-0.5">{detail.paymentMethod}</dd>
+            </div>
+            <div className="p-3 bg-surface-subtle rounded-lg">
               <dt className="text-[11px] font-bold text-neutral-500 uppercase">Order total (incl. GST)</dt>
-              <dd className="font-bold text-[#C8460A] mt-0.5">{formatINR(detail.total)}</dd>
+              <dd className="font-bold text-brand mt-0.5">{formatINR(detail.total)}</dd>
             </div>
           </dl>
 
           <div>
-            <h3 className="text-xs font-extrabold text-[#1C1009] uppercase tracking-wider mb-2">Items</h3>
-            <ul className="text-xs text-[#4A3728] space-y-1 list-none p-0 m-0">
+            <h3 className="text-xs font-extrabold text-ink-primary uppercase tracking-wider mb-2">Items</h3>
+            <ul className="text-xs text-ink-secondary space-y-1 list-none p-0 m-0">
               {detail.lines.map((l, i) => (
-                <li key={i}>• {formatNum(l.quantity)} {l.unit} — {l.name} ({formatINR(l.unitPrice)}/{l.unit.replace(/s$/, '')})</li>
+                <li key={i}>
+                  • {formatNum(l.quantity)} {l.unit} — {l.name} (
+                  {formatINR(l.unitPrice)}/{l.unit.replace(/s$/, '')})
+                </li>
               ))}
             </ul>
           </div>
 
           {detail.timeline && detail.timeline.length > 0 && (
             <div>
-              <h3 className="text-xs font-extrabold text-[#1C1009] uppercase tracking-wider mb-2">
+              <h3 className="text-xs font-extrabold text-ink-primary uppercase tracking-wider mb-2">
                 Activity log
               </h3>
               <ul className="space-y-2 text-xs list-none p-0 m-0">
                 {detail.timeline.map((t, i) => (
                   <li key={i} className="border-l-2 border-neutral-200 pl-3 py-0.5">
-                    <span className="font-bold text-[#1C1009]">{formatDateTime(t.at)}</span>{' '}
-                    — {t.fromStatus !== 'NEW' && t.fromStatus !== '' ? `${t.fromStatus} → ` : ''}{t.toStatus}
-                    <span className="text-neutral-500 block">by {t.actorName}{t.note ? ` · ${t.note}` : ''}</span>
+                    <span className="font-bold text-ink-primary">{formatDateTime(t.at)}</span> —{' '}
+                    {t.fromStatus !== 'NEW' && t.fromStatus !== '' ? `${t.fromStatus} → ` : ''}
+                    {t.toStatus}
+                    <span className="text-neutral-500 block">
+                      by {t.actorName}
+                      {t.note ? ` · ${t.note}` : ''}
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
           )}
 
+          <div className="flex flex-col sm:flex-row gap-3 pt-1">
+            <Button variant="outline" size="sm" onClick={loadOrders}>
+              Refresh status
+            </Button>
+            <a href="tel:+919198923230" className="brand-btn-outline !min-h-[40px] !text-xs">
+              <PhoneIcon className="w-4 h-4" /> Call dispatch for trolley position
+            </a>
+          </div>
+
           <p className="text-xs text-neutral-500">
-            Status updates are recorded by kiln staff at each step. For on-road position of your
-            trolley, call dispatch with the order number.
+            Status updates are recorded by kiln staff at each step. This screen does not fabricate
+            map coordinates or ETA — ask dispatch with your order number for on-road position.
           </p>
-        </div>
+          </div>
+        </Card>
       )}
     </div>
   );
 }
 
 function formatDateShort(iso?: string) {
-  return iso ? new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+  return iso
+    ? new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    : '—';
 }
 
 function stepEventTime(timeline: TimelineEvent[] | undefined, step: string): string {

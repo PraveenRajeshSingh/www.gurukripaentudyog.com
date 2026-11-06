@@ -9,6 +9,11 @@ import { SESSION_EVENT, notifySessionChange } from '@/lib/session';
 import type { MeUser, MeAddress, MeEnquiry, MeQuotation, MeOrder } from '@/types/account';
 import Modal from '@/components/ui/Modal';
 import StatusPill from '@/components/ui/StatusPill';
+import PageLoader from '@/components/ui/PageLoader';
+import { PanelSkeleton } from '@/components/ui/Skeleton';
+import EmptyState from '@/components/ui/EmptyState';
+import Button from '@/components/ui/Button';
+import BrandLogo from '@/components/ui/BrandLogo';
 import AuthCard from './auth-card';
 import {
   Spinner, EditIcon, LogoutIcon, TrashIcon, TruckIcon, MessageIcon,
@@ -61,18 +66,16 @@ function ListState({ loading, error, onRetry }: {
   error: string;
   onRetry: () => void;
 }) {
-  if (loading)
-    return (
-      <div className="flex items-center gap-2 text-sm text-[#6B5545] p-6 justify-center">
-        <Spinner className="w-4 h-4 animate-spin" /> Loading…
-      </div>
-    );
+  if (loading) return <PanelSkeleton />;
   if (error)
     return (
       <div role="alert" className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg p-4 flex flex-wrap items-center gap-3">
-        <AlertIcon className="w-5 h-5 shrink-0" />
-        <span className="flex-1">{error}</span>
-        <button onClick={onRetry} className={btnGhost}>Retry</button>
+        <AlertIcon className="w-5 h-5 shrink-0" aria-hidden />
+        <div className="flex-1 min-w-0">
+          <strong className="block font-bold">Could not load this section</strong>
+          <span>{error}</span>
+        </div>
+        <button type="button" onClick={onRetry} className={btnGhost}>Retry</button>
       </div>
     );
   return null;
@@ -124,11 +127,7 @@ export default function AccountPortal() {
 
   // --------------------------------------------------------------- rendering
   if (session === 'loading') {
-    return (
-      <div className="flex items-center justify-center gap-2 py-20 text-[#6B5545]" role="status">
-        <Spinner className="w-5 h-5 animate-spin" /> Checking your session…
-      </div>
-    );
+    return <PageLoader label="Checking your session…" variant="inline" />;
   }
 
   if (session === 'unavailable') {
@@ -157,12 +156,18 @@ export default function AccountPortal() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-xl border border-neutral-200 p-5 flex flex-wrap items-center gap-4">
-        <div className="w-14 h-14 rounded-full bg-[#8B2E05] text-white flex items-center justify-center font-black text-lg shrink-0" aria-hidden>
-          {user.name.split(' ').map((p) => p[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()}
+      <div className="bg-white rounded-xl border border-neutral-200 p-5 flex flex-wrap items-center gap-4 shadow-sm">
+        <div className="relative shrink-0">
+          <BrandLogo size={52} />
+          <span
+            className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-brand-dark text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white"
+            aria-hidden
+          >
+            {user.name.split(' ').map((p) => p[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()}
+          </span>
         </div>
         <div className="flex-1 min-w-[180px]">
-          <h1 className="text-lg sm:text-xl font-black text-[#1C1009]">{user.name}</h1>
+          <h1 className="text-lg sm:text-xl font-display font-black text-ink-primary">{user.name}</h1>
           <p className="text-xs text-[#6B5545]">
             {user.role === 'DEALER' ? 'Dealer account' : 'Customer account'} · +91 {user.phone} ·
             since {formatDate(user.createdAt)}
@@ -558,52 +563,102 @@ function OrdersTab({ onActioned }: { onActioned: (msg: string) => void }) {
   };
 
   return (
-    <section aria-label="My orders">
+    <section aria-label="My orders" className="space-y-3">
       <ListState loading={loading} error={error} onRetry={reload} />
       {actionError && (
-        <div role="alert" className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg p-3 mb-3">{actionError}</div>
+        <div role="alert" className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg p-3">
+          {actionError}
+        </div>
       )}
       {!loading && !error && items && (
         items.length === 0 ? (
-          <p className="text-sm text-[#6B5545] border border-dashed border-neutral-300 rounded-lg p-6 text-center">
-            No orders yet. Approving a quotation creates a confirmed order here.
-          </p>
+          <EmptyState
+            icon={<TruckIcon className="w-5 h-5" />}
+            title="No orders yet"
+            description="Approving a quotation creates a confirmed kiln order here."
+            action={
+              <Link href="/contact" className="brand-btn-primary">
+                <MessageIcon className="w-4 h-4" /> Start an enquiry
+              </Link>
+            }
+          />
         ) : (
           <ul className="space-y-3 list-none p-0 m-0">
             {items.map((o) => (
-              <li key={o.id} className="bg-white rounded-xl border border-neutral-200 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                  <h3 className="font-bold text-sm text-[#1C1009]">{o.number}</h3>
-                  <StatusPill status={o.status} />
-                </div>
-                <p className="text-xs text-[#6B5545]">
-                  {formatDate(o.createdAt)} · {o.deliveryAddress}, {o.deliveryCity}
-                </p>
-                <p className="text-xs text-[#6B5545] mb-2">
-                  {o.expectedDelivery ? `Expected delivery: ${formatDate(o.expectedDelivery)}` : 'Delivery date being confirmed by dispatch'} · {o.paymentMethod}
-                </p>
-                <p className="text-base font-black text-[#C8460A] mb-3">{formatINR(o.total)}</p>
-                <div className="flex flex-wrap gap-2">
-                  <Link href={`/tracker?id=${encodeURIComponent(o.id)}`} className={btnGhost}>
-                    <TruckIcon className="w-4 h-4" /> Track
-                  </Link>
-                  <button
-                    onClick={() => act(o, 'reorder')}
-                    disabled={busyId === o.id}
-                    className={btnPrimary}
-                  >
-                    {busyId === o.id ? <Spinner className="w-4 h-4 animate-spin" /> : null}
-                    Reorder
-                  </button>
-                  {CANCELLABLE.includes(o.status) && (
-                    <button
-                      onClick={() => setCancelling(o)}
-                      disabled={busyId === o.id}
-                      className={btnGhost + ' text-red-700 border-red-200 hover:bg-red-50'}
-                    >
-                      Cancel
-                    </button>
-                  )}
+              <li
+                key={o.id}
+                className="bg-white rounded-xl border border-neutral-200 overflow-hidden shadow-sm hover:shadow-card transition"
+              >
+                <div className="h-1.5 w-full bg-gradient-to-r from-brand via-brand-amber to-brand-dark" aria-hidden />
+                <div className="p-4 sm:p-5">
+                  <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-ink-tertiary">Order</p>
+                      <h3 className="font-display font-black text-base sm:text-lg text-ink-primary truncate">
+                        {o.number}
+                      </h3>
+                    </div>
+                    <StatusPill status={o.status} />
+                  </div>
+
+                  <dl className="grid grid-cols-1 xs:grid-cols-2 gap-2 text-xs text-ink-secondary mb-4">
+                    <div className="rounded-lg bg-surface-subtle px-3 py-2">
+                      <dt className="text-[10px] font-bold uppercase text-ink-tertiary">Placed</dt>
+                      <dd className="font-semibold text-ink-primary mt-0.5">{formatDate(o.createdAt)}</dd>
+                    </div>
+                    <div className="rounded-lg bg-surface-subtle px-3 py-2">
+                      <dt className="text-[10px] font-bold uppercase text-ink-tertiary">Payment</dt>
+                      <dd className="font-semibold text-ink-primary mt-0.5">{o.paymentMethod}</dd>
+                    </div>
+                    <div className="rounded-lg bg-surface-subtle px-3 py-2 xs:col-span-2">
+                      <dt className="text-[10px] font-bold uppercase text-ink-tertiary">Deliver to</dt>
+                      <dd className="font-semibold text-ink-primary mt-0.5">
+                        {o.deliveryAddress}, {o.deliveryCity}
+                      </dd>
+                    </div>
+                    <div className="rounded-lg bg-surface-subtle px-3 py-2 xs:col-span-2">
+                      <dt className="text-[10px] font-bold uppercase text-ink-tertiary">Expected delivery</dt>
+                      <dd className="font-semibold text-ink-primary mt-0.5">
+                        {o.expectedDelivery
+                          ? formatDate(o.expectedDelivery)
+                          : 'Being confirmed by dispatch'}
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <div className="flex flex-wrap items-end justify-between gap-3 border-t border-neutral-100 pt-3">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase text-ink-tertiary">Total (incl. GST)</p>
+                      <p className="text-xl font-display font-black text-brand">{formatINR(o.total)}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                      <Link
+                        href={`/tracker?id=${encodeURIComponent(o.id)}`}
+                        className={`${btnGhost} flex-1 sm:flex-none justify-center min-h-[44px]`}
+                      >
+                        <TruckIcon className="w-4 h-4" /> Track
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => act(o, 'reorder')}
+                        disabled={busyId === o.id}
+                        className={`${btnPrimary} flex-1 sm:flex-none justify-center`}
+                      >
+                        {busyId === o.id ? <Spinner className="w-4 h-4 animate-spin" /> : null}
+                        Reorder
+                      </button>
+                      {CANCELLABLE.includes(o.status) && (
+                        <button
+                          type="button"
+                          onClick={() => setCancelling(o)}
+                          disabled={busyId === o.id}
+                          className={`${btnGhost} flex-1 sm:flex-none justify-center text-red-700 border-red-200 hover:bg-red-50`}
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </li>
             ))}
@@ -620,15 +675,18 @@ function OrdersTab({ onActioned }: { onActioned: (msg: string) => void }) {
         busy={busyId === cancelling?.id}
         maxWidth="sm"
       >
-        <div className="flex gap-3 pt-2">
-          <button onClick={() => setCancelling(null)} className={`${btnGhost} flex-1`} data-autofocus>Keep order</button>
-          <button
+        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+          <Button variant="outline" fullWidth onClick={() => setCancelling(null)} data-autofocus>
+            Keep order
+          </Button>
+          <Button
+            variant="danger"
+            fullWidth
+            loading={busyId === cancelling?.id}
             onClick={() => cancelling && act(cancelling, 'cancel')}
-            disabled={busyId === cancelling?.id}
-            className="flex-1 inline-flex items-center justify-center bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-bold min-h-[44px] px-4 rounded-lg transition"
           >
             Cancel order
-          </button>
+          </Button>
         </div>
       </Modal>
     </section>
