@@ -252,6 +252,28 @@
             color: var(--ink)
         }
 
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+            border-color: var(--danger)
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            filter: brightness(0.94);
+            transform: translateY(-1px)
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+            border-color: var(--success)
+        }
+
+        .btn-success:hover:not(:disabled) {
+            filter: brightness(0.96);
+            transform: translateY(-1px)
+        }
+
         .btn-text {
             background: transparent;
             color: var(--brand);

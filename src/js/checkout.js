@@ -242,18 +242,41 @@ function syncCardVisual() {
 function placeOrder() {
     const btnsRow = document.getElementById('checkoutPayBtns');
     const procState = document.getElementById('paymentProcessingState');
+    const method = selectedPayMethod || 'cod';
+
+    // Card / UPI gateways are not configured on the static storefront.
+    // Never claim "payment verified" — steer to WhatsApp confirmation or COD.
+    if (method === 'upi' || method === 'card') {
+        showToast(t('checkout.onlinePayUnavailable') || 'Online card/UPI checkout is not connected yet. Use Cash on Delivery or confirm on WhatsApp.', 'warning');
+        const title = document.querySelector('#paymentProcessingState .processing-title');
+        const sub = document.querySelector('#paymentProcessingState .processing-sub');
+        if (title) title.textContent = 'Online payment unavailable';
+        if (sub) sub.textContent = 'No payment gateway is configured. Choose Cash on Delivery, or confirm the order on WhatsApp.';
+        if (procState) procState.style.display = 'block';
+        if (btnsRow) btnsRow.style.display = 'flex';
+        setCheckoutBusy(false);
+        return;
+    }
 
     if (btnsRow) btnsRow.style.display = 'none';
-    if (procState) procState.style.display = 'block';
+    if (procState) {
+        const title = procState.querySelector('.processing-title');
+        const sub = procState.querySelector('.processing-sub');
+        if (title) title.textContent = 'Recording COD order…';
+        if (sub) sub.textContent = 'Saving your order token on this device. The yard confirms by phone or WhatsApp — no online payment is charged.';
+        procState.style.display = 'block';
+    }
     setCheckoutBusy(true);
 
     setTimeout(() => {
         const orderId = makeLocalOrderRef();
         const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
         const total = Math.max(0, subtotal - couponDiscount);
-        const order = recordOrder(orderId, total, navigator.onLine ? 'Processing' : 'Queued (offline)');
+        const status = navigator.onLine
+            ? 'COD — awaiting yard confirmation'
+            : 'COD queued (offline)';
+        const order = recordOrder(orderId, total, status);
 
-        // Snapshot the order for the offline outbox before the cart is cleared.
         const offlinePayload = !navigator.onLine && window.WhatsAppOrder
             ? WhatsAppOrder.buildCheckoutOrder(orderId)
             : null;
@@ -262,7 +285,7 @@ function placeOrder() {
         if (orderIdDisp) orderIdDisp.textContent = orderId;
         const waBtn = document.getElementById('orderWaBtn');
         if (waBtn) {
-            waBtn.href = `https://wa.me/919198923230?text=${encodeURIComponent(`Namaste! My Order ID is ${orderId}. Please confirm delivery.`)}`;
+            waBtn.href = `https://wa.me/919198923230?text=${encodeURIComponent(`Namaste! My COD Order ID is ${orderId}. Please confirm delivery.`)}`;
         }
 
         cart = [];
@@ -273,6 +296,9 @@ function placeOrder() {
 
         if (offlinePayload) WhatsAppOrder.queueOffline(offlinePayload);
         if (window.PushNotifications) PushNotifications.notifyOrderStatus(order, 'token');
+        if (window.DispatchOps && typeof DispatchOps.setStage === 'function') {
+            try { DispatchOps.setStage(orderId, 'queued', { force: true }); } catch (_e) { /* ignore */ }
+        }
 
         if (procState) procState.style.display = 'none';
         if (btnsRow) btnsRow.style.display = 'flex';
@@ -280,8 +306,10 @@ function placeOrder() {
 
         showCheckoutStep(3);
         triggerConfetti();
-        showToast(navigator.onLine ? t('checkout.orderPlaced') : 'Order saved offline and queued for WhatsApp.', 'success');
-    }, 1800);
+        showToast(navigator.onLine
+            ? (t('checkout.codPlaced') || 'COD order token saved. Confirm with the yard on WhatsApp or phone.')
+            : 'Order saved offline — send it on WhatsApp when you are back online.', 'success');
+    }, 900);
 }
 
 function makeLocalOrderRef() {

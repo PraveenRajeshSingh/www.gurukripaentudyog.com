@@ -22,7 +22,7 @@ const BOT_KNOWLEDGE_BASE = {
     rates: "🧱 Kiln wholesale rates (per piece):\n• Shiv Eent Grade-A: ₹12\n• Machine Wirecut: ₹11\n• Premium Red: ₹10\n• Standard: ₹8\n• Awwal (आव्वल): ₹7.05  (₹28,200 / 4,000-brick trolley)\n• Laal Peti (लाल पेटी): ₹6.25  (₹25,000 / 4,000-brick trolley)\n\nBulk discounts apply — ask our manager for a live quote.",
     delivery: "🚚 Delivery coverage:\n• Jaunpur district (Jalalpur, Trilochan, Kerakat, Badlapur): same-day for orders placed before 12 noon.\n• Varanasi & Sultanpur: 24–48 hours direct site dispatch.\n• We deliver across 15+ cities in Eastern UP.",
     estimator: "📐 Use the 3-in-1 Estimator (bottom tab or the Estimate section) to size a wall, a full house, or a boundary — it calculates bricks, cement and sand from your dimensions and can send the estimate straight to WhatsApp.",
-    contact: "📞 Gurukripa Bhatta — Sales Office\n• Phone: +91 91989 23230\n• WhatsApp: wa.me/919198923230\n• Yard: Nevada, Jalalpur, Jaunpur, UP\n• Mon–Sat, 8 AM – 6 PM"
+    contact: "📞 Gurukripa Bhatta — Sales Office\n• Phone: +91 91989 23230\n• WhatsApp: wa.me/919198923230\n• Yard: Newada, Jalalpur, Jaunpur, UP\n• Mon–Sat, 8 AM – 6 PM"
 };
 
 const GBChat = {

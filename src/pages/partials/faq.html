@@ -7,12 +7,13 @@
                 <p class="sec-sub" data-i18n="faq.desc">Everything you need to know about Gurukripa Bricks</p>
             </div>
             <!-- Quick FAQ Category Filter Tags -->
-            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 24px">
-                <button type="button" class="btn btn-outline btn-sm active" style="border-radius:20px;font-size:0.75rem;padding:5px 12px">All Questions</button>
-                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[0]?.scrollIntoView({behavior:'smooth'})">💰 Pricing &amp; Rates</button>
-                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[1]?.scrollIntoView({behavior:'smooth'})">🚚 Trolley Delivery</button>
-                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[2]?.scrollIntoView({behavior:'smooth'})">🧱 Replacement &amp; Breakage</button>
-                <button type="button" class="btn btn-outline btn-sm" style="border-radius:20px;font-size:0.75rem;padding:5px 12px" onclick="document.querySelectorAll('.faq-item')[3]?.scrollIntoView({behavior:'smooth'})">📄 GST Invoicing</button>
+            <div class="faq-jump" role="navigation" aria-label="FAQ shortcuts">
+                <button type="button" class="btn btn-outline btn-sm faq-jump-btn" onclick="document.getElementById('faq')?.scrollIntoView({behavior:'smooth'})">All Questions</button>
+                <button type="button" class="btn btn-outline btn-sm faq-jump-btn" onclick="document.querySelectorAll('.faq-item')[0]?.scrollIntoView({behavior:'smooth',block:'nearest'})">Pricing &amp; Rates</button>
+                <button type="button" class="btn btn-outline btn-sm faq-jump-btn" onclick="document.querySelectorAll('.faq-item')[1]?.scrollIntoView({behavior:'smooth',block:'nearest'})">Delivery</button>
+                <button type="button" class="btn btn-outline btn-sm faq-jump-btn" onclick="document.querySelectorAll('.faq-item')[2]?.scrollIntoView({behavior:'smooth',block:'nearest'})">Small Orders</button>
+                <button type="button" class="btn btn-outline btn-sm faq-jump-btn" onclick="document.querySelectorAll('.faq-item')[3]?.scrollIntoView({behavior:'smooth',block:'nearest'})">Payment</button>
+                <button type="button" class="btn btn-outline btn-sm faq-jump-btn" onclick="document.querySelectorAll('.faq-item')[4]?.scrollIntoView({behavior:'smooth',block:'nearest'})">Quality</button>
             </div>
 
             <div class="faq-list">

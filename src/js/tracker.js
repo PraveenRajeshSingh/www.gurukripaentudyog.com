@@ -1,5 +1,8 @@
 // ══════════════════════════════════════════
-// LIVE ORDER & DELIVERY TRACKER
+// ORDER & DELIVERY TRACKER
+// Uses local orders + DispatchOps stages only.
+// No fabricated GPS / driver / trolley positions.
+// Map shows the verified yard location (embed or Maps JS).
 // ══════════════════════════════════════════
 const _trPackageSVG = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`;
 const _trTruckSVG = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
@@ -11,13 +14,19 @@ const _trWaSVG = `<svg width="15" height="15" fill="currentColor" viewBox="0 0 2
 function openTrackerModal(orderId) {
     const modal = document.getElementById('trackerModal');
     if (!modal) return;
-    if (orderId) {
-        const inp = document.getElementById('trackerSearchInput');
-        if (inp) inp.value = orderId;
+    const inp = document.getElementById('trackerSearchInput');
+    if (inp) {
+        if (orderId) inp.value = orderId;
+        else if (!inp.value || /^GBI-20260728-4912$/i.test(inp.value.trim())) inp.value = '';
     }
     modal.classList.add('open');
     overlayLock();
-    renderTrackerDetails(orderId || 'GBI-20260728-4912');
+    mountTrackerYardMap();
+    if (orderId || (inp && inp.value.trim())) {
+        renderTrackerDetails((orderId || inp.value).trim());
+    } else {
+        renderTrackerEmpty();
+    }
 }
 
 function closeTrackerModal() {
@@ -25,58 +34,165 @@ function closeTrackerModal() {
     overlayUnlock();
 }
 
-function demoTrackerOrder() {
-    document.getElementById('trackerSearchInput').value = 'GBI-20260728-4912';
-    renderTrackerDetails('GBI-20260728-4912');
-    showToast(t('tracker.demoLoaded'), 'info');
+function mountTrackerYardMap() {
+    if (!window.GurukripaMaps || typeof GurukripaMaps.initMapElement !== 'function') return;
+    const coords = GurukripaMaps.BhattaCoords || { lat: 25.6041031, lng: 82.7939421 };
+    GurukripaMaps.initMapElement('trackerMapContainer', coords, {
+        title: 'Gurukripa Yard — Newada, Jalalpur',
+        note: 'This map shows the kiln yard. Live trolley GPS is not available — status comes from yard dispatch records only.',
+        zoom: 15
+    });
+}
+
+function refreshTracker() {
+    const id = (document.getElementById('trackerSearchInput')?.value || '').trim();
+    mountTrackerYardMap();
+    if (!id) { renderTrackerEmpty(); return; }
+    renderTrackerDetails(id);
+    showToast(typeof t === 'function' ? t('tracker.refreshed') : 'Status refreshed from this device.', 'info');
 }
 
 function trackOrderSubmit() {
-    const id = document.getElementById('trackerSearchInput').value.trim();
-    if (!id) { showToast(t('tracker.enterId'), 'error'); return; }
+    const id = document.getElementById('trackerSearchInput')?.value.trim();
+    if (!id) {
+        showToast(typeof t === 'function' ? t('tracker.enterId') : 'Please enter an Order ID or Mobile', 'error');
+        renderTrackerEmpty();
+        return;
+    }
     renderTrackerDetails(id);
+}
+
+function findTrackedOrder(query) {
+    const q = String(query || '').trim().toLowerCase();
+    if (!q || !Array.isArray(orders)) return null;
+    const byId = orders.find((o) => String(o.id || '').toLowerCase() === q);
+    if (byId) return byId;
+    const digits = q.replace(/\D/g, '');
+    if (digits.length >= 10) {
+        return orders.find((o) => {
+            const phone = String(o.customerPhone || (o.customer && o.customer.phone) || '').replace(/\D/g, '');
+            return phone && (phone === digits || phone.endsWith(digits.slice(-10)));
+        }) || null;
+    }
+    return null;
+}
+
+function formatStageTime(ts) {
+    if (!ts) return '—';
+    try {
+        return new Date(ts).toLocaleString(undefined, { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+    } catch (_e) {
+        return '—';
+    }
+}
+
+function renderTrackerEmpty() {
+    const container = document.getElementById('trackerDisplayContent');
+    if (!container) return;
+    container.innerHTML = `
+        <div class="tracker-empty">
+            <div class="tracker-empty__title">Enter an order ID or mobile</div>
+            <p class="tracker-empty__text">Tracking uses orders saved on this device and yard dispatch updates. Live GPS trolley positions are not available.</p>
+            <div class="tracker-empty__actions">
+                <a href="tel:+919198923230" class="btn btn-primary btn-sm">${_trPhoneSVG} Call Yard</a>
+                <a href="https://wa.me/919198923230?text=${encodeURIComponent('Namaste! I need help tracking my brick order.')}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">${_trWaSVG} WhatsApp</a>
+            </div>
+        </div>`;
 }
 
 function renderTrackerDetails(orderId) {
     const container = document.getElementById('trackerDisplayContent');
     if (!container) return;
-    const matched  = orders.find(o => o.id.toLowerCase() === orderId.toLowerCase());
-    const displayId = matched ? matched.id : orderId;
 
-    if (window.GurukripaMaps && typeof window.GurukripaMaps.initMapElement === 'function') {
-        window.GurukripaMaps.initMapElement('trackerMapContainer', { lat: 25.7476, lng: 82.6837 }, {
-            title: 'Trolley UP-62-BT-9412 En Route to Site'
-        });
+    const matched = findTrackedOrder(orderId);
+    if (!matched) {
+        container.innerHTML = `
+            <div class="tracker-empty tracker-empty--warn">
+                <div class="tracker-empty__title">No order found for “${sanitizeHTML(orderId)}”</div>
+                <p class="tracker-empty__text">Orders placed on this browser appear here. If you ordered on another device, call or WhatsApp the yard with your reference.</p>
+                <div class="tracker-empty__actions">
+                    <a href="tel:+919198923230" class="btn btn-primary btn-sm">${_trPhoneSVG} Call +91 91989 23230</a>
+                    <a href="https://wa.me/919198923230?text=${encodeURIComponent('Namaste! Please help track order ' + orderId)}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">${_trWaSVG} WhatsApp Yard</a>
+                </div>
+            </div>`;
+        return;
     }
+
+    const stages = (window.DispatchOps && DispatchOps.STAGES) ? DispatchOps.STAGES : [
+        { key: 'queued', label: 'Order Logged' },
+        { key: 'firing', label: 'Kiln Firing' },
+        { key: 'loading', label: 'Loading' },
+        { key: 'enroute', label: 'En-Route' },
+        { key: 'delivered', label: 'Delivered' }
+    ];
+    const rec = (window.DispatchOps && typeof DispatchOps.forOrder === 'function')
+        ? DispatchOps.forOrder(matched.id)
+        : { stage: 'queued', driver: '', phone: '', trolleyNo: '', vehicle: '', history: [] };
+    const stageKey = rec.stage || 'queued';
+    const stageIdx = stages.findIndex((s) => s.key === stageKey);
+    const activeIdx = stageIdx < 0 ? 0 : stageIdx;
+    const progressPct = stages.length <= 1 ? 0 : Math.round((activeIdx / (stages.length - 1)) * 100);
+    const stageDef = stages[activeIdx] || stages[0];
+    const historyMap = {};
+    (rec.history || []).forEach((h) => { if (h && h.stage) historyMap[h.stage] = h.at; });
+
+    const badgeClass = stageKey === 'delivered' ? 'delivered' : (stageKey === 'enroute' ? 'dispatched' : 'queued');
+    const badgeLabel = stageDef.label || matched.status || 'Logged';
+    const hasCrew = !!(rec.driver || rec.trolleyNo || rec.vehicle);
+    const callHref = rec.phone
+        ? ('tel:+' + String(rec.phone).replace(/\D/g, '').replace(/^/, (d) => d.startsWith('91') ? d : '91' + d))
+        : 'tel:+919198923230';
+    const waText = encodeURIComponent('Namaste! Regarding order ' + matched.id + ' — please share dispatch status.');
+
+    const stepsHtml = stages.map((s, i) => {
+        const done = i < activeIdx;
+        const active = i === activeIdx;
+        const cls = done ? 'completed' : (active ? 'active' : '');
+        const icon = done ? '✓' : (active ? _trTruckSVG : (i === stages.length - 1 ? _trPinSVG : String(i + 1)));
+        const time = formatStageTime(historyMap[s.key]);
+        return `<div class="tracker-step ${cls}"><div class="tracker-step-icon">${icon}</div><div class="tracker-step-title">${sanitizeHTML(s.label)}</div><div class="tracker-step-time">${time}</div></div>`;
+    }).join('');
 
     container.innerHTML = `
         <div class="tracker-status-card">
             <div class="tracker-order-meta">
                 <div>
-                    <div class="tracker-order-id">${_trPackageSVG} Order ${sanitizeHTML(displayId)}</div>
-                    <div style="font-size:.76rem;color:var(--ink-3);margin-top:2px">Dispatch Point: Gurukripa Bhatta Yard, Jaunpur</div>
+                    <div class="tracker-order-id">${_trPackageSVG} Order ${sanitizeHTML(matched.id)}</div>
+                    <div class="tracker-order-sub">Dispatch point: Newada yard, Jalalpur · Status from yard records (not live GPS)</div>
                 </div>
-                <div class="tracker-badge dispatched">${_trTruckSVG} In-Transit (On Road)</div>
+                <div class="tracker-badge ${badgeClass}">${_trTruckSVG} ${sanitizeHTML(badgeLabel)}</div>
             </div>
             <div class="tracker-stepper">
-                <div class="tracker-stepper-progress" style="width:70%"></div>
-                <div class="tracker-step completed"><div class="tracker-step-icon">✓</div><div class="tracker-step-title">Order Token</div><div class="tracker-step-time">09:15 AM</div></div>
-                <div class="tracker-step completed"><div class="tracker-step-icon">✓</div><div class="tracker-step-title">Bhatta Loading</div><div class="tracker-step-time">11:30 AM</div></div>
-                <div class="tracker-step active"><div class="tracker-step-icon">${_trTruckSVG}</div><div class="tracker-step-title">Dispatched</div><div class="tracker-step-time">01:45 PM</div></div>
-                <div class="tracker-step"><div class="tracker-step-icon">${_trPinSVG}</div><div class="tracker-step-title">Site Unloaded</div><div class="tracker-step-time">Est. 45 mins</div></div>
+                <div class="tracker-stepper-progress" style="width:${progressPct}%"></div>
+                ${stepsHtml}
             </div>
+            ${hasCrew ? `
             <div class="tracker-driver-card">
                 <div class="tracker-driver-info">
                     <div class="tracker-driver-avatar">${_trUserSVG}</div>
                     <div>
-                        <div style="font-weight:700;font-size:.9rem;color:var(--ink)">Ram Singh (Trolley Driver)</div>
-                        <div style="font-size:.76rem;color:var(--ink-3)">Trolley #: <strong>UP-62-BT-9412</strong> (Power Tractor)</div>
+                        <div class="tracker-driver-name">${sanitizeHTML(rec.driver || 'Yard crew')}</div>
+                        <div class="tracker-driver-meta">${rec.trolleyNo || rec.vehicle
+                            ? ('Trolley / vehicle: <strong>' + sanitizeHTML(rec.trolleyNo || rec.vehicle) + '</strong>')
+                            : 'Assigned at yard — GPS position not published'}</div>
                     </div>
                 </div>
                 <div class="tracker-driver-actions">
-                    <a href="tel:+919198923230" class="btn btn-primary btn-sm" style="background:#16a34a">${_trPhoneSVG} Call Driver</a>
-                    <a href="${typeof waOrderURL === 'function' ? waOrderURL('Order ' + displayId) : 'https://wa.me/919198923230'}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">${_trWaSVG} Chat</a>
+                    <a href="${callHref}" class="btn btn-primary btn-sm tracker-call-btn">${_trPhoneSVG} Call</a>
+                    <a href="https://wa.me/919198923230?text=${waText}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">${_trWaSVG} Chat</a>
                 </div>
+            </div>` : `
+            <div class="tracker-unavailable">
+                <strong>No live trolley location</strong>
+                <span>Driver and GPS are assigned by the yard when the load leaves. Call or WhatsApp for the latest update.</span>
+                <div class="tracker-driver-actions" style="margin-top:10px">
+                    <a href="tel:+919198923230" class="btn btn-primary btn-sm">${_trPhoneSVG} Call Yard</a>
+                    <a href="https://wa.me/919198923230?text=${waText}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">${_trWaSVG} WhatsApp</a>
+                </div>
+            </div>`}
+            <div class="tracker-toolbar">
+                <button type="button" class="btn btn-ghost btn-sm" onclick="refreshTracker()">Refresh status</button>
+                ${matched.site ? `<span class="tracker-site">Site: ${sanitizeHTML(matched.site)}${matched.city ? ', ' + sanitizeHTML(matched.city) : ''}</span>` : ''}
             </div>
         </div>`;
 }

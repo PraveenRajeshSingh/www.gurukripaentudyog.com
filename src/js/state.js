@@ -58,7 +58,7 @@ let orders       = getSafeStorage('gb_orders', []);
 let couponDiscount   = 0;
 let appliedCoupon    = '';
 let currentFilter    = 'all';
-let selectedPayMethod = 'upi';
+let selectedPayMethod = 'cod';
 let currentLang      = localStorage.getItem('gb_lang') || 'hi'; // Hindi default; English fallback
 
 // AUTH RATE LIMITING STATE

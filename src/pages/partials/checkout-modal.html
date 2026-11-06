@@ -120,32 +120,34 @@
                 <div class="step-panel" id="checkoutStep2">
                     <div style="font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:8px">Select Payment Method:</div>
                     <div class="payment-methods-grid">
-                        <div class="pay-method selected" data-method="upi" onclick="selectPayMethod(this)">
+                        <div class="pay-method selected" data-method="cod" onclick="selectPayMethod(this)">
+                            <span class="pay-method-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></span>
+                            <span>Cash on Delivery</span>
+                        </div>
+                        <div class="pay-method" data-method="upi" onclick="selectPayMethod(this)">
                             <span class="pay-method-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
-                            <span>UPI QR</span>
+                            <span>UPI (manual)</span>
                         </div>
                         <div class="pay-method" data-method="card" onclick="selectPayMethod(this)">
                             <span class="pay-method-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
-                            <span>Debit/Credit</span>
-                        </div>
-                        <div class="pay-method" data-method="cod" onclick="selectPayMethod(this)">
-                            <span class="pay-method-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></span>
-                            <span>Cash on Delivery</span>
+                            <span>Card (unavailable)</span>
                         </div>
                     </div>
 
                     <!-- Panel 1: UPI Sub-Panel -->
-                    <div class="payment-panel visible" id="panelUpi">
+                    <div class="payment-panel" id="panelUpi">
                         <div class="upi-qr-box">
                             <div style="font-size:.78rem;color:var(--ink-3);margin-bottom:8px">Scan with GPay, PhonePe, Paytm or Any UPI App</div>
-                            <div class="upi-qr-placeholder">
+                            <div class="upi-qr-placeholder upi-qr-placeholder--notice" role="status">
                                 <div class="upi-qr-logo"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg></div>
+                                <p class="upi-unavailable-msg">UPI QR checkout is not connected on this website. Copy the ID only if the yard has confirmed it, or confirm the order on WhatsApp / COD.</p>
                             </div>
-                            <div style="font-size:.76rem;color:var(--ink-2);font-weight:600;margin-bottom:8px">Gurukripa Bricks Industry Official UPI</div>
+                            <div style="font-size:.76rem;color:var(--ink-2);font-weight:600;margin-bottom:8px">UPI ID (confirm with yard before paying)</div>
                             <div class="upi-id-row">
-                                <input type="text" class="upi-id-input" id="officialUpiId" value="gurukripa@upi" readonly>
+                                <input type="text" class="upi-id-input" id="officialUpiId" value="gurukripa@upi" readonly aria-describedby="upiPayNote">
                                 <button class="upi-copy-btn" type="button" onclick="copyUpiId()">Copy ID</button>
                             </div>
+                            <p id="upiPayNote" style="font-size:.72rem;color:var(--ink-3);margin-top:8px">Copying the ID does not complete payment on this site.</p>
                         </div>
                     </div>
 
@@ -182,8 +184,8 @@
                         </div>
                     </div>
 
-                    <!-- Panel 3: COD Sub-Panel -->
-                    <div class="payment-panel" id="panelCod">
+                    <!-- Panel 3: COD Sub-Panel (default — works without a payment gateway) -->
+                    <div class="payment-panel visible" id="panelCod">
                         <div class="cod-box">
                             <div class="cod-icon-row">
                                 <div class="cod-icon"><svg width="26" height="26" fill="none" stroke="var(--brand)" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg></div>
@@ -225,8 +227,8 @@
                             <div class="processing-dot"></div>
                             <div class="processing-dot"></div>
                         </div>
-                        <div class="processing-title">Verifying Payment...</div>
-                        <div class="processing-sub">Communicating with banking gateway. Please do not close this window.</div>
+                        <div class="processing-title">Recording order…</div>
+                        <div class="processing-sub">Saving your order token. No online payment is charged on this site.</div>
                     </div>
 
                     <div class="checkout-order-summary" id="checkoutSummary2" style="margin-top:14px"></div>

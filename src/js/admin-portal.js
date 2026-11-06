@@ -4,6 +4,28 @@
 
 let currentAdminTab = 'overview';
 
+/** Open WhatsApp with a quotation follow-up — does not claim a PDF was emailed. */
+function shareQuotationOnWhatsApp(quoteId) {
+    const list = (window.GurukripaServices && GurukripaServices.QuotationService
+        && typeof GurukripaServices.QuotationService.getAllQuotations === 'function')
+        ? GurukripaServices.QuotationService.getAllQuotations()
+        : (typeof getSafeStorage === 'function' ? getSafeStorage('gb_quotations', []) : []);
+    const q = (list || []).find((item) => String(item.id) === String(quoteId));
+    if (!q) {
+        showToast('Quotation not found on this device.', 'warning');
+        return;
+    }
+    const phone = String(q.phone || '').replace(/\D/g, '');
+    if (phone.length < 10) {
+        showToast('This RFQ has no valid mobile number for WhatsApp.', 'warning');
+        return;
+    }
+    const target = phone.length === 10 ? '91' + phone : phone;
+    const msg = `Namaste ${q.name || ''}, regarding your quotation ${q.id} for ${q.qty || ''} ${q.product || 'bricks'} from Gurukripa Bricks Industry (Newada, Jalalpur). Please reply to confirm.`;
+    window.open('https://wa.me/' + target + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    showToast('Opening WhatsApp to share this quotation.', 'info');
+}
+
 function openAdminPortal() {
     const modal = document.getElementById('adminPortalModal');
     if (modal) {
@@ -177,7 +199,7 @@ function renderAdminTab(tab) {
                         </div>
                         <div style="display:flex;gap:8px">
                             <a href="https://wa.me/${q.phone.replace(/[^0-9]/g, '')}?text=Namaste ${encodeURIComponent(q.name)}, regarding your quotation ${q.id} for ${q.qty} bricks from Gurukripa Bricks Industry..." target="_blank" class="btn btn-outline btn-sm">💬 WhatsApp Call</a>
-                            <button class="btn btn-primary btn-sm" onclick="showToast('Quotation PDF generated and sent to customer')">Send Final PDF</button>
+                            <button class="btn btn-primary btn-sm" type="button" onclick="shareQuotationOnWhatsApp('${sanitizeHTML(q.id)}')">Share on WhatsApp</button>
                         </div>
                     </div>
                 `).join('') : '<p style="text-align:center;padding:30px;color:var(--ink-3)">No active quotes found.</p>'}

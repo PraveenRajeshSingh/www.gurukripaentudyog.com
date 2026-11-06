@@ -183,7 +183,11 @@ const TRANSLATIONS = {
         'contact.handedOff': 'Opening WhatsApp so the kiln team receives your message \u2014 tap Send there to deliver it.',
         'contact.handoffFailed': 'Could not open WhatsApp. Please call +91 91989 23230 or use the WhatsApp button.',
         'contact.directions': 'Get Directions — Open in Google Maps',
+        'contact.openMaps': 'Open in Google Maps',
         'contact.provideFields': 'Please provide {fields}.',
+        'checkout.onlinePayUnavailable': 'Online card/UPI checkout is not connected yet. Use Cash on Delivery or confirm on WhatsApp.',
+        'checkout.codPlaced': 'COD order token saved. Confirm with the yard on WhatsApp or phone.',
+        'tracker.refreshed': 'Status refreshed from this device.',
         'toast.newsletterHandoff': 'Opening your email app to send the signup request.',
         // Dynamic messages & document title
         'toast.addedToCart': '✅ {name} added to cart!',
@@ -475,7 +479,11 @@ const TRANSLATIONS = {
         'contact.handedOff': 'WhatsApp \u0916\u0941\u0932 \u0930\u0939\u093e \u0939\u0948 \u0924\u093e\u0915\u093f \u092d\u091f\u094d\u091f\u0947 \u0915\u0940 \u091f\u0940\u092e \u0906\u092a\u0915\u093e \u0938\u0902\u0926\u0947\u0936 \u092a\u093e \u0938\u0915\u0947 \u2014 \u0935\u0939\u093e\u0902 Send \u0926\u092c\u093e\u0915\u0930 \u092d\u0947\u091c\u0947\u0902\u0964',
         'contact.handoffFailed': 'WhatsApp \u0928\u0939\u0940\u0902 \u0916\u0941\u0932 \u0938\u0915\u093e\u0964 \u0915\u0943\u092a\u092f\u093e +91 91989 23230 \u092a\u0930 \u0915\u0949\u0932 \u0915\u0930\u0947\u0902 \u092f\u093e WhatsApp \u092c\u091f\u0928 \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902\u0964',
         'contact.directions': '\u0926\u093f\u0936\u093e \u0928\u093f\u0930\u094d\u0926\u0947\u0936 \u2014 Google Maps \u092e\u0947\u0902 \u0916\u094b\u0932\u0947\u0902',
+        'contact.openMaps': 'Google Maps \u092e\u0947\u0902 \u0916\u094b\u0932\u0947\u0902',
         'contact.provideFields': '\u0915\u0943\u092a\u092f\u093e {fields} \u0926\u0947\u0902\u0964',
+        'checkout.onlinePayUnavailable': '\u0911\u0928\u0932\u093e\u0907\u0928 \u0915\u093e\u0930\u094d\u0921/UPI \u091a\u0947\u0915\u0906\u0909\u091f \u0905\u092d\u0940 \u091c\u0941\u0921\u093c\u093e \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 COD \u092f\u093e WhatsApp \u0938\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964',
+        'checkout.codPlaced': 'COD \u0911\u0930\u094d\u0921\u0930 \u091f\u094b\u0915\u0928 \u0938\u0947\u0935 \u0939\u094b \u0917\u092f\u093e\u0964 WhatsApp \u092f\u093e \u0915\u0949\u0932 \u0938\u0947 \u092f\u093e\u0930\u094d\u0921 \u0938\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964',
+        'tracker.refreshed': '\u0907\u0938 \u0921\u093f\u0935\u093e\u0907\u0938 \u0938\u0947 \u0938\u094d\u0925\u093f\u0924\u093f \u0924\u093e\u091c\u093e \u0915\u0940 \u0917\u0908\u0964',
         'toast.newsletterHandoff': '\u0938\u093e\u0907\u0928-\u0905\u092a \u0905\u0928\u0941\u0930\u094b\u0927 \u092d\u0947\u091c\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0906\u092a\u0915\u093e \u0908\u092e\u0947\u0932 \u090f\u092a \u0916\u0941\u0932 \u0930\u0939\u093e \u0939\u0948\u0964',
         // Dynamic messages & document title
         'toast.addedToCart': '\u2705 {name} \u0915\u093e\u0930\u094d\u091f \u092e\u0947\u0902 \u091c\u094b\u0921\u093c\u093e \u0917\u092f\u093e!',

@@ -1,22 +1,30 @@
 'use strict';
 // ══════════════════════════════════════════
 // GOOGLE MAPS PLATFORM & LOGISTICS ENGINE
-// Provides official Geocoding, Distance Matrix, Route estimation & Serviceability
+// Geocoding helpers, distance, serviceability & map mount
+// Canonical kiln coords = Google Place "Guru Kripa Eant Udyog, Newada, Jalalpur"
 // ══════════════════════════════════════════
 
 window.GurukripaMaps = window.GurukripaMaps || {};
 
 (function(exports) {
-    // Kiln Base Station: Nevada, Jalalpur-Chavri Road, Jaunpur UP (222001)
-    const BHATTA_COORDS = { lat: 25.7476, lng: 82.6837 };
-    const MAX_SERVICEABLE_KM = 120; // 120 km delivery radius around Jaunpur Bhatta
+    // Verified Place coordinates (contact embed / Get Directions share this pair)
+    const BHATTA_COORDS = { lat: 25.6041031, lng: 82.7939421 };
+    const BHATTA_ADDRESS = 'Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001';
+    const PLACE_URL = 'https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf';
+    const EMBED_URL = 'https://maps.google.com/maps?q=25.6041031,82.7939421&z=16&output=embed';
+    const DIRECTIONS_URL = 'https://www.google.com/maps/dir/?api=1&destination=25.6041031,82.7939421';
+    const MAX_SERVICEABLE_KM = 120;
 
     exports.BhattaCoords = BHATTA_COORDS;
+    exports.BhattaAddress = BHATTA_ADDRESS;
+    exports.PlaceUrl = PLACE_URL;
+    exports.EmbedUrl = EMBED_URL;
+    exports.DirectionsUrl = DIRECTIONS_URL;
     exports.MaxServiceableKm = MAX_SERVICEABLE_KM;
 
-    // Haversine formula fallback for calculating straight-line distance in km
     exports.calculateDistanceKm = function(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Radius of earth in km
+        const R = 6371;
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLon = (lon2 - lon1) * Math.PI / 180;
         const a =
@@ -27,17 +35,12 @@ window.GurukripaMaps = window.GurukripaMaps || {};
         return Math.round(R * c * 10) / 10;
     };
 
-    // Calculate delivery transport tariff based on road distance
     exports.calculateTransportCharge = function(distanceKm, trolleyCount = 1) {
-        if (distanceKm <= 10) {
-            return 500 * trolleyCount; // Local Jaunpur base flat unloading
-        }
-        // Base ₹500 + ₹25 per km for distance beyond 10 km
+        if (distanceKm <= 10) return 500 * trolleyCount;
         const perKmCharge = Math.round((distanceKm - 10) * 25);
         return (500 + perKmCharge) * trolleyCount;
     };
 
-    // Check if site PIN code or city is within delivery service area
     exports.checkServiceability = function(cityNameOrPincode) {
         const query = (cityNameOrPincode || '').toLowerCase().trim();
         const primaryZones = [
@@ -45,24 +48,50 @@ window.GurukripaMaps = window.GurukripaMaps || {};
             'badlapur', 'machhalishahar', 'mariahu', 'shahganj', 'saidpur',
             'varanasi', '221001', '221002', 'mughalsarai', 'sultanpur', 'azamgarh'
         ];
-
         const isServiceable = primaryZones.some(zone => query.includes(zone));
         return {
             serviceable: isServiceable,
-            estimatedDays: query.includes('jaunpur') || query.includes('222001') ? 'Same-Day Dispatch (under 12 hrs)' : 'Scheduled (24-48 hrs)',
+            estimatedDays: query.includes('jaunpur') || query.includes('222001') || query.includes('jalalpur')
+                ? 'Same-Day Dispatch (under 12 hrs)'
+                : 'Scheduled (24-48 hrs)',
             baseZone: isServiceable ? 'Eastern UP Core Kiln Grid' : 'Extended Zone (Requires Custom Freight Quote)'
         };
     };
 
-    // Initialize interactive Google Maps instance
-    exports.initMapElement = function(elementId, initialMarkerCoords, options = {}) {
+    /** Embed iframe (no API key). Used when Maps JS SDK is not configured. */
+    exports.renderEmbedFallback = function(mapEl, options) {
+        if (!mapEl) return;
+        const title = (options && options.title) || 'Gurukripa Bricks — Newada Yard';
+        const note = (options && options.note) || 'Yard location on Google Maps. Live trolley GPS is not available on this site.';
+        mapEl.innerHTML =
+            '<div class="gb-map-fallback">' +
+              '<div class="gb-map-fallback__frame-wrap">' +
+                '<iframe class="gb-map-fallback__frame" src="' + EMBED_URL + '" title="' + title.replace(/"/g, '') + '" ' +
+                  'loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>' +
+              '</div>' +
+              '<div class="gb-map-fallback__meta">' +
+                '<strong>' + title + '</strong>' +
+                '<span>' + BHATTA_ADDRESS + '</span>' +
+                '<span class="gb-map-fallback__note">' + note + '</span>' +
+                '<div class="gb-map-fallback__actions">' +
+                  '<a class="btn btn-primary btn-sm" href="' + DIRECTIONS_URL + '" target="_blank" rel="noopener">Get Directions</a>' +
+                  '<a class="btn btn-outline btn-sm" href="' + PLACE_URL + '" target="_blank" rel="noopener">Open in Google Maps</a>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+    };
+
+    exports.initMapElement = function(elementId, initialMarkerCoords, options) {
+        options = options || {};
         const mapEl = document.getElementById(elementId);
         if (!mapEl) return null;
 
+        const center = initialMarkerCoords || BHATTA_COORDS;
+
         if (typeof google !== 'undefined' && google.maps) {
             const map = new google.maps.Map(mapEl, {
-                center: initialMarkerCoords || BHATTA_COORDS,
-                zoom: options.zoom || 13,
+                center: center,
+                zoom: options.zoom || 15,
                 mapTypeControl: false,
                 streetViewControl: false,
                 styles: [
@@ -70,25 +99,15 @@ window.GurukripaMaps = window.GurukripaMaps || {};
                     { featureType: 'transit', stylers: [{ visibility: 'simplified' }] }
                 ]
             });
-
             const marker = new google.maps.Marker({
-                position: initialMarkerCoords || BHATTA_COORDS,
+                position: center,
                 map: map,
-                title: options.title || 'Gurukripa Bricks Kiln Base Station',
-                icon: options.icon || undefined
+                title: options.title || 'Gurukripa Bricks Kiln — Newada, Jalalpur'
             });
-
             return { map, marker };
-        } else {
-            // Graceful fallback when Google Maps API key is waiting to be configured
-            mapEl.innerHTML = `
-                <div style="height:100%;min-height:180px;background:var(--bg-subtle,#F5EFE6);border:1px dashed var(--line,#E7E1DA);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center">
-                    <span style="font-size:1.6rem;margin-bottom:6px">🗺️</span>
-                    <strong style="font-size:0.86rem;color:var(--ink,#202124)">Google Maps Live Route &amp; GPS</strong>
-                    <span style="font-size:0.75rem;color:var(--ink-3,#64666B);margin-top:2px">Kiln Base: Nevada, Jalalpur-Chavri Rd, Jaunpur (25.7476° N, 82.6837° E)</span>
-                    <span style="font-size:0.72rem;background:var(--brand-glow);color:var(--brand);padding:2px 8px;border-radius:10px;margin-top:6px">Service Radius: 120 km Active</span>
-                </div>`;
-            return null;
         }
+
+        exports.renderEmbedFallback(mapEl, options);
+        return null;
     };
 })(window.GurukripaMaps);

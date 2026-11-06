@@ -104,25 +104,42 @@ function handleLogin(e) {
     finishLocalLogin(email, password);
 }
 
+/** Device-only password fingerprint (not a substitute for server auth). */
+function localPwHash(email, password) {
+    const s = String(email || '').toLowerCase() + '|' + String(password || '') + '|gb-local';
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+    }
+    return 'gbh:' + (h >>> 0).toString(16);
+}
+
 function finishLocalLogin(email, password) {
     setTimeout(() => {
         const users = getSafeStorage('gb_users', []);
         const found = users.find(u => u.email === email);
-
-        if (found) {
-            failedLoginAttempts = 0;
-            loginSuccess({ name: found.name, email: found.email, mobile: found.mobile });
-        } else {
+        const fail = () => {
             failedLoginAttempts++;
             setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
             triggerFormShake('loginForm');
+            if (failedLoginAttempts >= 3) startLockoutTimer();
+            else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
+        };
 
-            if (failedLoginAttempts >= 3) {
-                startLockoutTimer();
-            } else {
-                showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
-            }
+        if (!found) { fail(); return; }
+
+        const hash = localPwHash(email, password);
+        if (found.passwordHash) {
+            if (found.passwordHash !== hash) { fail(); return; }
+        } else {
+            // Migration: bind password on first login after upgrade
+            found.passwordHash = hash;
+            setSafeStorage('gb_users', users);
         }
+
+        failedLoginAttempts = 0;
+        loginSuccess({ name: found.name, email: found.email, mobile: found.mobile });
     }, 1000);
 }
 
@@ -195,7 +212,10 @@ function handleRegister(e) {
         GBApi.register({ name, phone: mobile.replace(/\D/g, ''), password, email })
             .then(() => {
                 const users = getSafeStorage('gb_users', []);
-                if (!users.some(u => u.email === email)) { users.push({ name, mobile, email }); setSafeStorage('gb_users', users); }
+                if (!users.some(u => u.email === email)) {
+                    users.push({ name, mobile, email, passwordHash: localPwHash(email, password) });
+                    setSafeStorage('gb_users', users);
+                }
                 setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
                 loginSuccess({ name, mobile, email });
                 GBApi.flushOutbox();
@@ -205,14 +225,14 @@ function handleRegister(e) {
                 if (err.code === 409) { showFieldError('regMobileErr', 'Mobile already registered — sign in instead'); triggerFormShake('registerForm'); return; }
                 if (err.code === 400) { showFieldError('regPasswordErr', err.message || 'Check the details and retry'); triggerFormShake('registerForm'); return; }
                 showToast('Server unreachable — account created offline on this device.', 'info');
-                finishLocalRegister(name, mobile, email);
+                finishLocalRegister(name, mobile, email, password);
             });
         return;
     }
-    finishLocalRegister(name, mobile, email);
+    finishLocalRegister(name, mobile, email, password);
 }
 
-function finishLocalRegister(name, mobile, email) {
+function finishLocalRegister(name, mobile, email, password) {
     setTimeout(() => {
         const users = getSafeStorage('gb_users', []);
         if (users.some(u => u.email === email)) {
@@ -222,7 +242,7 @@ function finishLocalRegister(name, mobile, email) {
             return;
         }
 
-        const newUser = { name, mobile, email };
+        const newUser = { name, mobile, email, passwordHash: localPwHash(email, password) };
         users.push(newUser);
         setSafeStorage('gb_users', users);
 

@@ -33,7 +33,7 @@ window.GurukripaERP = window.GurukripaERP || {};
         tradeName: 'Gurukripa Bricks',
         logo: null,                       // data URL (set via admin upload)
         address: {
-            line1: 'Bhatta Yard, Jaunpur–Varanasi Highway',
+            line1: 'Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur',
             line2: 'Jaunpur', state: 'Uttar Pradesh', stateCode: '09', pincode: '', country: 'India'
         },
         contact: { phone: '+91 91989 23230', email: 'info@gurukripaentudyog.com', website: 'www.gurukripaentudyog.com' },

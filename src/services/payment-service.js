@@ -71,16 +71,12 @@ window.GurukripaPayment = window.GurukripaPayment || {};
             const rzpInstance = new Razorpay(options);
             rzpInstance.open();
         } else {
-            // Simulated gateway flow for environments pending Razorpay script key injection
-            console.warn('Razorpay SDK not loaded in DOM. Executing safe authenticated fallback.');
-            if (callbacks && typeof callbacks.onSuccess === 'function') {
-                setTimeout(() => {
-                    callbacks.onSuccess({
-                        razorpay_payment_id: 'pay_' + Math.random().toString(36).substring(2, 14),
-                        razorpay_order_id: orderPayload.id,
-                        razorpay_signature: 'sig_verified_mock_' + Date.now()
-                    });
-                }, 1000);
+            // No Razorpay SDK / key — never fabricate a successful payment.
+            console.warn('Razorpay SDK not loaded. Online payment is unavailable.');
+            if (callbacks && typeof callbacks.onError === 'function') {
+                callbacks.onError(new Error('Online payment is not configured. Use COD or WhatsApp confirmation.'));
+            } else if (callbacks && typeof callbacks.onDismiss === 'function') {
+                callbacks.onDismiss();
             }
         }
     };

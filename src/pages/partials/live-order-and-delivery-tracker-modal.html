@@ -1,25 +1,21 @@
-﻿    <!-- ━━━━━━━━━━━━━━━━━ LIVE ORDER & DELIVERY TRACKER MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ ORDER & DELIVERY TRACKER MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="trackerModal" role="dialog" aria-modal="true" aria-label="Order and delivery tracker" onclick="if(event.target.id==='trackerModal')closeTrackerModal()">
         <div class="modal-box modal-box--lg tracker-modal-box">
             <div class="modal-head">
                 <div>
                     <div class="modal-badge"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
-                    <div class="modal-title">Live Delivery Tracker</div>
-                    <div class="modal-subtitle">Track your brick trolley / truck dispatch status</div>
+                    <div class="modal-title">Delivery Tracker</div>
+                    <div class="modal-subtitle">Yard dispatch status for orders on this device — not live GPS</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeTrackerModal()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                <button type="button" class="modal-close-btn" onclick="closeTrackerModal()" aria-label="Close tracker"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
-            <div class="modal-body" style="padding-top:12px">
+            <div class="modal-body tracker-modal-body">
                 <div class="tracker-search-wrap">
-                    <input type="text" class="tracker-input" id="trackerSearchInput" placeholder="Enter Order ID (e.g. GBI-89241) or Mobile..." value="GBI-20260728-4912">
+                    <input type="text" class="tracker-input" id="trackerSearchInput" placeholder="Enter Order ID (e.g. GBI-…) or 10-digit mobile" autocomplete="off" inputmode="text">
                     <button type="button" class="btn btn-primary" onclick="trackOrderSubmit()">Search</button>
                 </div>
-                <div style="text-align:right;margin-top:-12px;margin-bottom:14px">
-                    <button type="button" class="btn btn-ghost btn-sm" style="font-size:.76rem;color:var(--brand)" onclick="demoTrackerOrder()">✨ Test Demo Active Dispatch</button>
-                </div>
 
-                <!-- Google Maps Route Container -->
-                <div id="trackerMapContainer" style="height:190px;width:100%;border-radius:10px;overflow:hidden;margin-bottom:14px"></div>
+                <div id="trackerMapContainer" class="tracker-map-container" role="region" aria-label="Yard location map"></div>
 
                 <div id="trackerDisplayContent">
                     <!-- Populated dynamically via JS -->
