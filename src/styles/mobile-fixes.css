@@ -2299,37 +2299,21 @@ body { overscroll-behavior-y: contain; }
     scroll-behavior: smooth !important;
 }
 
-/* Kiln Gallery Status Chips */
-.gallery-status-chip {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(18, 10, 5, 0.78);
-    backdrop-filter: blur(6px);
-    color: #FFF;
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 20px;
-    z-index: 2;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
 /* Verified Review Badge */
 .review-badge-verified {
-    background: rgba(22, 163, 74, 0.12);
-    color: #16a34a;
+    background: var(--success-bg);
+    color: var(--success);
     font-size: 0.7rem;
     font-weight: 700;
     padding: 3px 8px;
-    border-radius: 12px;
+    border-radius: var(--r-sm);
 }
 
 /* Modern AI Chatbot Styling */
 .chatbot-box {
     border-radius: 20px !important;
     box-shadow: 0 20px 50px rgba(28, 16, 9, 0.3) !important;
-    border: 1px solid rgba(200, 70, 10, 0.15) !important;
+    border: 1px solid var(--line-mid) !important;
 }
 
 /* Mobile chat is handled authoritatively in refinements.css: the .chatbot-wrap

@@ -106,7 +106,10 @@ function handleContactSubmit(e) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) problems.push('a valid email address');
     if (!/^[6-9]\d{9}$/.test(phone.replace(/\D/g, '').slice(-10))) problems.push('a valid 10-digit mobile number');
     if (message.length < 5) problems.push('a short message');
-    if (problems.length) { showToast('Please provide ' + problems.join(', ') + '.', 'error'); return; }
+    if (problems.length) {
+        showToast(t('contact.provideFields', { fields: problems.join(', ') }), 'error');
+        return;
+    }
 
     const text = encodeURIComponent(
         'Website enquiry\n' +

@@ -1,87 +1,58 @@
-    <!-- ━━━━━━━━━━━━━━━━━ MINIMAL COMPACT HERO ━━━━━━━━━━━━━━━━━ -->
+    <!-- ━━━━━━━━━━━━━━━━━ HERO ━━━━━━━━━━━━━━━━━ -->
     <section id="home" class="hero hero-compact">
-        <!-- Left: Image Panel -->
         <div class="hero-img">
-            <img src="src/assets/images/hero-banner.png" alt="Premium Red Clay Bricks — Gurukripa Bricks Industry" width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async">
+            <img src="src/assets/images/hero-banner.png" alt="Premium red clay bricks at Gurukripa Bricks Industry kiln" width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async">
             <div class="hero-img-overlay"></div>
-            <!-- Verified Quality Badge -->
             <div class="hero-cert">
-                <div class="hero-cert-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg></div>
+                <div class="hero-cert-icon" aria-hidden="true"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg></div>
                 <div class="hero-cert-text">
-                    <strong>Grade-A Double-Fired</strong>
-                    <span>Direct Bhatta Wholesale</span>
+                    <strong data-i18n="hero.certTitle">Grade-A Double-Fired</strong>
+                    <span data-i18n="hero.certSub">Direct Bhatta Wholesale</span>
                 </div>
             </div>
             <div class="hero-img-badge">
                 <div class="year">1998</div>
-                <div class="since">Est. Jaunpur</div>
+                <div class="since" data-i18n="hero.since">Est. Jaunpur</div>
             </div>
         </div>
 
-        <!-- Right: Content & Quick Conversion Panel -->
         <div class="hero-content">
             <div class="hero-copy">
-                <!-- Eyebrow -->
+                <p class="hero-brand" aria-label="Gurukripa Bricks Industry">Gurukripa Bricks Industry</p>
                 <div class="hero-eyebrow">
-                    <span class="hero-eyebrow-dot"></span>
-                    Jaunpur's Direct Kiln Manufacturer · Est. 1998
+                    <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+                    <span data-i18n="hero.eyebrow">Jaunpur's Direct Kiln Manufacturer · Est. 1998</span>
                 </div>
 
-                <!-- Headline -->
                 <h1 class="hero-h1" data-i18n="hero.title">Quality Bricks.<br><em>Reliable Supply.</em></h1>
-                <p class="hero-subh" data-i18n="hero.titleHi" style="font-size:1rem;color:var(--ink-3);font-style:italic;margin-top:-6px;margin-bottom:12px">मजबूत नींव, भरोसेमंद ईंटें।</p>
 
-                <p class="hero-lead" data-i18n="hero.subtitle" style="margin-bottom:20px">
+                <p class="hero-lead" data-i18n="hero.subtitle">
                     Wholesale Grade-A bricks for homes, commercial infrastructure &amp; contractor projects across Jaunpur, Varanasi &amp; Eastern UP.
                 </p>
 
-                <!-- High-Impact Direct Conversion CTAs -->
-                <div class="hero-cta" style="margin-bottom:20px">
-                    <a href="#products" class="btn btn-primary" data-i18n="hero.cta1">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                            <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                            <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                            <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                        </svg>
-                        Explore Products
-                    </a>
-                    <button type="button" class="btn btn-outline" onclick="openBulkQuoteModal()" style="display:inline-flex;align-items:center;gap:8px">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                        </svg>
-                        Request Bulk Quote
-                    </button>
+                <div class="hero-cta">
+                    <a href="#products" class="btn btn-primary btn-lg" data-i18n="hero.cta1">Explore Products</a>
+                    <button type="button" class="btn btn-outline btn-lg" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
                 </div>
 
-                <!-- Essential Trust Highlights -->
-                <div class="hero-chips" style="margin-bottom:0">
+                <div class="hero-chips">
                     <span class="hero-chip">
                         <span class="hero-chip-icon" aria-hidden="true">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                            </svg>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                         </span>
-                        Same-Day Trolley Delivery
+                        <span data-i18n="hero.chip1">Same-Day Delivery</span>
                     </span>
                     <span class="hero-chip">
                         <span class="hero-chip-icon" aria-hidden="true">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                         </span>
-                        ISI Standard Certified
+                        <span data-i18n="hero.chip3">ISI Certified</span>
                     </span>
                     <span class="hero-chip">
                         <span class="hero-chip-icon" aria-hidden="true">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M12 2c0 6-6 8-6 13a6 6 0 0012 0c0-5-6-7-6-13z"/>
-                            </svg>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2c0 6-6 8-6 13a6 6 0 0012 0c0-5-6-7-6-13z"/></svg>
                         </span>
-                        Double-Fired Weather Resistance
+                        <span data-i18n="hero.chip2">Weather-Resistant</span>
                     </span>
                 </div>
             </div>

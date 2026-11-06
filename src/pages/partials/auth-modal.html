@@ -27,8 +27,8 @@
                      every panel is reachable with Tab and no tabpanel/aria-selected
                      contract has to be maintained by hand. Matches the profile hub. -->
                 <div class="auth-tabs" role="group" aria-label="Sign in or create an account">
-                    <button type="button" class="auth-tab active" onclick="switchAuthTab('login',this)" id="tabLogin" aria-controls="loginPanel" aria-current="true">Sign In</button>
-                    <button type="button" class="auth-tab" onclick="switchAuthTab('register',this)" id="tabRegister" aria-controls="registerPanel">Sign Up</button>
+                    <button type="button" class="auth-tab active" onclick="switchAuthTab('login',this)" id="tabLogin" aria-controls="loginPanel" aria-current="true" data-i18n="auth.signIn">Sign In</button>
+                    <button type="button" class="auth-tab" onclick="switchAuthTab('register',this)" id="tabRegister" aria-controls="registerPanel" data-i18n="auth.signUp">Sign Up</button>
                 </div>
 
                 <!-- Login Panel -->
@@ -55,11 +55,11 @@
                             </div>
                         </div>
                         <div class="auth-options">
-                            <label class="auth-check"><input type="checkbox" id="rememberMe" checked> Remember me</label>
-                            <button type="button" class="auth-forgot" onclick="handleForgotPw()">Forgot password?</button>
+                            <label class="auth-check"><input type="checkbox" id="rememberMe" checked> <span data-i18n="auth.remember">Remember me</span></label>
+                            <button type="button" class="auth-forgot" onclick="handleForgotPw()" data-i18n="auth.forgot">Forgot password?</button>
                         </div>
                         <button type="submit" class="auth-submit" id="loginSubmitBtn">
-                            <span>Sign In to Account</span>
+                            <span data-i18n="auth.submitLogin">Sign In to Account</span>
                             <svg class="auth-submit-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                         </button>
                         <div class="auth-divider"><span data-i18n="auth.orContinue">or continue with</span></div>
@@ -164,7 +164,7 @@
                         </label>
                         <div class="auth-error-msg auth-terms-err" id="regTermsErr"></div>
                         <button type="submit" class="auth-submit" id="registerSubmitBtn">
-                            <span>Create Free Account</span>
+                            <span data-i18n="auth.submitRegister">Create Account</span>
                             <svg class="auth-submit-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                         </button>
                         <div class="auth-divider"><span data-i18n="auth.orContinue">or continue with</span></div>

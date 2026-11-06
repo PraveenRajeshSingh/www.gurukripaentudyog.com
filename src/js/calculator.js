@@ -265,7 +265,7 @@ function printEstimate() {
         body{font-family:Arial,Helvetica,sans-serif;color:#1f1b16;margin:24px}
         h1{font-size:18px;margin:0 0 2px} .sub{font-size:12px;color:#7a7267;margin-bottom:14px}
         .p-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #eee;font-size:14px}
-        .p-row b{font-weight:700} .tot{margin-top:12px;font-size:16px;color:#C8460A}
+        .p-row b{font-weight:700} .tot{margin-top:12px;font-size:16px;color:#A83226}
         .disc{margin-top:16px;font-size:11px;color:#7a7267}</style></head><body>
         <h1>${t('calculator.title')} — Gurukripa Ent Udyog</h1>
         <div class="sub">${r.dims}${r.thickLabel ? ' · ' + r.thickLabel : ''} · ${new Date().toLocaleDateString('en-IN')}</div>

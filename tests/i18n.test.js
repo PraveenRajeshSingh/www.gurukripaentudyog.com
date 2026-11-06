@@ -44,4 +44,26 @@ describe('Localization & Language Completeness', () => {
             );
         }
     });
+
+    test('Critical storefront partials wire key i18n attributes', () => {
+        const read = (rel) => fs.readFileSync(path.resolve(__dirname, '..', rel), 'utf8');
+        const checks = [
+            ['src/pages/partials/navbar.html', 'nav.categories'],
+            ['src/pages/partials/hero.html', 'hero.cta1'],
+            ['src/pages/partials/contact.html', 'contact.title'],
+            ['src/pages/partials/footer.html', 'footer.quickLinks'],
+            ['src/pages/partials/mobile-bottom-nav.html', 'mobile.home'],
+            ['src/pages/partials/about.html', 'about.desc'],
+            ['src/pages/partials/cta-banner.html', 'cta.title'],
+            ['src/pages/partials/faq.html', 'faq.desc'],
+            ['src/pages/partials/cities.html', 'cities.desc'],
+            ['src/pages/partials/wishlist-drawer.html', 'wishlist.title'],
+            ['src/pages/partials/checkout-modal.html', 'checkout.title'],
+        ];
+        for (const [file, key] of checks) {
+            assert.match(read(file), new RegExp(`data-i18n="${key}"`), `${file} must wire ${key}`);
+        }
+        assert.ok(TRANSLATIONS.en['hero.cta1'] && TRANSLATIONS.hi['hero.cta1']);
+        assert.ok(TRANSLATIONS.en['about.desc'] && TRANSLATIONS.hi['about.desc']);
+    });
 });

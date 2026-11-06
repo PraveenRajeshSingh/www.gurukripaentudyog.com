@@ -121,7 +121,7 @@ function moveAllWishlistToCart() {
         return;
     }
     wishlist.forEach(id => addToCart(id));
-    showToast('All wishlist items added to cart!', 'success');
+    showToast(t('wishlist.addAllToast'), 'success');
     closeWishlistDrawer();
 }
 

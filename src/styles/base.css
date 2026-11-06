@@ -90,18 +90,18 @@
    UTILITIES
    鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
         .container {
-            max-width: 1200px;
+            max-width: var(--container-max);
             margin: 0 auto;
-            padding: 0 clamp(16px, 4vw, 32px)
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-6))
         }
 
         .sec {
-            padding: clamp(56px, 8vw, 100px) 0
+            padding: clamp(var(--space-7), 8vw, var(--space-8)) 0
         }
 
         .sec-tag {
             display: inline-block;
-            background: rgba(200, 70, 10, .10);
+            background: var(--brand-glow);
             color: var(--brand);
             font-size: .7rem;
             font-weight: 700;
@@ -146,54 +146,152 @@
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            justify-content: center;
+            gap: var(--space-2);
+            min-height: 44px;
             padding: 11px 22px;
             border-radius: var(--r-md);
-            font-weight: 600;
-            font-size: .88rem;
-            transition: all var(--t) var(--ease);
+            border: 1.5px solid transparent;
+            font-family: var(--body);
+            font-weight: 700;
+            font-size: var(--fs-small);
+            letter-spacing: 0.01em;
+            line-height: 1.2;
             white-space: nowrap;
-            line-height: 1
+            cursor: pointer;
+            transition: background var(--t) var(--ease), color var(--t) var(--ease), border-color var(--t) var(--ease), box-shadow var(--t) var(--ease), transform var(--t-fast) var(--ease), opacity var(--t) var(--ease);
+            -webkit-tap-highlight-color: transparent
+        }
+
+        .btn:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring)
+        }
+
+        .btn:disabled,
+        .btn.is-disabled {
+            opacity: var(--disabled-opacity);
+            cursor: not-allowed;
+            transform: none !important;
+            pointer-events: none
+        }
+
+        .btn.is-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none
+        }
+
+        .btn.is-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: gbSpin 0.7s linear infinite
+        }
+
+        .btn-outline.is-loading::after,
+        .btn-ghost.is-loading::after,
+        .btn-text.is-loading::after {
+            border-color: rgba(37, 37, 37, 0.2);
+            border-top-color: var(--brand)
         }
 
         .btn-primary {
             background: var(--brand);
-            color: #fff;
-            box-shadow: 0 4px 18px rgba(200, 70, 10, .25)
+            color: var(--ink-inverse);
+            box-shadow: 0 4px 16px rgba(168, 50, 38, 0.22)
         }
 
-        .btn-primary:hover {
-            background: var(--brand-dark);
+        .btn-primary:hover:not(:disabled) {
+            background: var(--btn-primary-hover);
             transform: translateY(-1px);
-            box-shadow: 0 8px 28px rgba(200, 70, 10, .35)
+            box-shadow: var(--sh-hover)
+        }
+
+        .btn-primary:active:not(:disabled) {
+            background: var(--btn-primary-active);
+            transform: translateY(0) scale(0.98)
+        }
+
+        .btn-secondary {
+            background: var(--brand-amber);
+            color: var(--ink-inverse);
+            box-shadow: 0 4px 14px rgba(214, 106, 69, 0.22)
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            filter: brightness(0.96);
+            transform: translateY(-1px)
         }
 
         .btn-outline {
             background: transparent;
-            color: var(--ink);
-            border: 1.5px solid var(--line-mid)
+            color: var(--brand);
+            border-color: var(--brand)
         }
 
-        .btn-outline:hover {
-            border-color: var(--brand);
-            color: var(--brand);
-            background: var(--brand-glow)
+        .btn-outline:hover:not(:disabled) {
+            background: var(--brand-glow);
+            border-color: var(--brand-dark);
+            color: var(--brand-dark)
         }
 
         .btn-ghost {
             background: var(--bg-subtle);
             color: var(--ink-2);
-            border: 1.5px solid var(--line)
+            border-color: var(--line)
         }
 
-        .btn-ghost:hover {
+        .btn-ghost:hover:not(:disabled) {
             background: var(--bg-muted);
+            border-color: var(--line-mid);
+            color: var(--ink)
+        }
+
+        .btn-text {
+            background: transparent;
+            color: var(--brand);
+            border-color: transparent;
+            min-height: 40px;
+            padding: 8px 12px;
+            box-shadow: none
+        }
+
+        .btn-text:hover:not(:disabled) {
+            background: var(--brand-glow);
+            color: var(--brand-dark)
+        }
+
+        .btn-icon {
+            width: 44px;
+            min-height: 44px;
+            padding: 0;
+            border-radius: 50%;
+            background: var(--bg-subtle);
+            color: var(--ink-2);
+            border-color: var(--line)
+        }
+
+        .btn-icon:hover:not(:disabled) {
+            background: var(--brand-light);
+            color: var(--brand);
             border-color: var(--line-mid)
         }
 
         .btn-sm {
+            min-height: 40px;
             padding: 8px 16px;
-            font-size: .8rem
+            font-size: 0.8rem
+        }
+
+        .btn-lg {
+            min-height: 48px;
+            padding: 14px 28px;
+            font-size: 0.95rem
         }
 
         .btn-full {
@@ -205,9 +303,46 @@
    TOPBAR
    鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
         .topbar {
-            background: var(--ink);
-            padding: 7px 0;
-            font-size: .75rem
+            background: var(--brand-secondary);
+            padding: 8px 0;
+            font-size: var(--fs-caption)
+        }
+
+        .topbar-ops-btn {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 4px 10px;
+            border-radius: var(--r-xs);
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            transition: background var(--t)
+        }
+
+        .topbar-ops-btn:hover {
+            background: rgba(255, 255, 255, 0.2)
+        }
+
+        .lang-btn {
+            min-width: 40px;
+            min-height: 32px;
+            padding: 4px 10px;
+            border-radius: var(--r-xs);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: background var(--t), color var(--t), border-color var(--t)
+        }
+
+        .lang-btn.active,
+        .lang-btn[aria-pressed="true"] {
+            background: var(--brand);
+            border-color: var(--brand);
+            color: #fff
         }
 
         .topbar-inner {
@@ -237,23 +372,6 @@
         .topbar-icon {
             margin-right: 4px;
             opacity: .7
-        }
-
-        .lang-btn {
-            background: none;
-            border: 1px solid rgba(255, 255, 255, .2);
-            color: rgba(255, 255, 255, .7);
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: .72rem;
-            cursor: pointer;
-            transition: all var(--t)
-        }
-
-        .lang-btn:hover,
-        .lang-btn.active {
-            border-color: var(--brand-amber);
-            color: var(--brand-amber)
         }
 
         /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�

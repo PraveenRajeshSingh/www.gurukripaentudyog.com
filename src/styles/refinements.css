@@ -325,76 +325,11 @@
 .pricing-price .currency { font-size: .55em; vertical-align: top; margin-top: .3em; color: var(--ink-3) }
 .pricing-price .unit { font-size: .42em; color: var(--ink-3); font-family: var(--body); font-weight: 500 }
 
-/* ── R9. Button system ──────────────────────────────────────────── */
-.btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 28px;
-    border-radius: var(--radius-pill);
-    font-weight: 700;
-    font-size: .92rem;
-    letter-spacing: .01em;
-    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
-    color: #FFFFFF;
-    box-shadow: 0 8px 24px -6px rgba(200, 62, 10, .45);
-    transition: transform .18s var(--ease), box-shadow .18s var(--ease), filter .18s var(--ease);
-    cursor: pointer;
-    border: none;
-}
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 32px -8px rgba(200, 62, 10, .55);
-    filter: brightness(1.06);
-}
-.btn-primary:active { transform: translateY(0) scale(.98); filter: brightness(.97) }
-.btn-primary:disabled { opacity: var(--disabled-opacity); cursor: not-allowed; transform: none; filter: none }
-
-.btn-outline {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 11px 27px;
-    border-radius: var(--radius-pill);
-    font-weight: 700;
-    font-size: .92rem;
-    letter-spacing: .01em;
-    background: transparent;
-    color: var(--brand);
-    border: 2px solid var(--brand);
-    transition: background .18s var(--ease), color .18s var(--ease), box-shadow .18s var(--ease), transform .18s var(--ease);
-    cursor: pointer;
-}
-.btn-outline:hover {
-    background: var(--brand);
-    color: #FFFFFF;
-    box-shadow: 0 8px 20px -6px rgba(200, 62, 10, .4);
-    transform: translateY(-1px);
-}
-.btn-outline:active { transform: translateY(0) scale(.98) }
-.btn-outline:disabled { opacity: var(--disabled-opacity); cursor: not-allowed; transform: none }
-
-.btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: var(--r-md);
-    font-weight: 600;
-    font-size: .88rem;
-    background: transparent;
-    color: var(--ink-2);
-    border: 1px solid transparent;
-    transition: background .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease);
-    cursor: pointer;
-}
-.btn-ghost:hover {
-    background: var(--bg-subtle);
-    border-color: var(--line);
-    color: var(--ink);
+/* ── R9. Button system — canonical variants live in base.css.
+   Keep only contextual sizing so refinements do not fight the design system. */
+.nav .btn-primary,
+.hero-cta .btn-primary {
+    box-shadow: 0 6px 20px rgba(168, 50, 38, 0.28);
 }
 
 /* ── R10. Footer — dark charcoal, accessible light text ─────────── */
@@ -1106,7 +1041,7 @@ button.mn-item:focus-visible {
 }
 
 .industrial-card .product-add-btn {
-    background: #C8460A;
+    background: var(--brand);
     color: #fff;
     padding: 12px 16px;
     border-radius: 8px;
@@ -1398,7 +1333,7 @@ main [id].cta-banner {
 .admin-header-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .admin-header-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 .admin-badge {
-    background: var(--brand, #B7432E);
+    background: var(--brand);
     color: #fff;
     font-size: 0.7rem;
     font-weight: 700;
@@ -1456,14 +1391,14 @@ main [id].cta-banner {
     transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
 }
 .admin-nav-item svg { flex: 0 0 auto; opacity: 0.8; }
-.admin-nav-item:hover { background: rgba(183, 67, 46, 0.08); color: var(--brand, #B7432E); }
+.admin-nav-item:hover { background: var(--brand-glow); color: var(--brand); }
 .admin-nav-item.active {
-    background: var(--brand, #B7432E);
+    background: var(--brand);
     color: #fff;
     box-shadow: 0 6px 16px -7px rgba(183, 67, 46, 0.6);
 }
 .admin-nav-item.active svg { opacity: 1; }
-.admin-nav-item:focus-visible { outline: 2px solid var(--brand, #B7432E); outline-offset: 2px; }
+.admin-nav-item:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
 .admin-stage {
     padding: 24px;

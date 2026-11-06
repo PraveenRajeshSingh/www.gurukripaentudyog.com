@@ -110,7 +110,7 @@ function renderProductCard(p) {
 
         <div class="product-card-actions">
           <button type="button" class="product-add-btn btn-full" aria-label="Add ${name} to cart" onclick="handleAddToCart(this, ${p.id})">
-            ${_cartSVG}<span class="pa-btn-full">Add to Cart</span><span class="pa-btn-short">Add</span>
+            ${_cartSVG}<span class="pa-btn-full">${typeof t === 'function' ? t('products.addToCart') : 'Add to Cart'}</span><span class="pa-btn-short">${typeof t === 'function' ? t('product.add') : 'Add'}</span>
           </button>
           <a class="product-wa-btn" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" aria-label="Order ${name} on WhatsApp" title="Order on WhatsApp">${_waSVG}</a>
         </div>
@@ -157,7 +157,8 @@ function renderProducts(filter) {
     const filtered = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
     const count = document.getElementById('productsCount');
     if (!filtered.length) {
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-3)">No products found in this category.</div>';
+        const emptyMsg = typeof t === 'function' ? t('products.empty') : 'No products found in this category.';
+        grid.innerHTML = `<div class="products-empty" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-3)">${emptyMsg}</div>`;
         if (count) count.textContent = '0 products';
         return;
     }

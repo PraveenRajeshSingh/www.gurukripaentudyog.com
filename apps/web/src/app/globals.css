@@ -4,39 +4,39 @@
 
 :root {
   /* Brand — aligned with legacy theme-color / Capacitor shells */
-  --brand: #C8460A;
-  --brand-dark: #8B2E05;
-  --brand-amber: #F5A623;
-  --brand-light: #FBEAE0;
-  --brand-glow: rgba(200, 70, 10, 0.08);
-  --brand-glow-strong: rgba(200, 70, 10, 0.18);
+  --brand: #A83226;
+  --brand-dark: #7F241C;
+  --brand-amber: #D66A45;
+  --brand-light: #F6E8E5;
+  --brand-glow: rgba(168, 50, 38, 0.08);
+  --brand-glow-strong: rgba(168, 50, 38, 0.18);
 
   /* Surfaces */
-  --bg: #FAFAF9;
+  --bg: #F8F7F4;
   --bg-card: #FFFFFF;
-  --bg-subtle: #F5F0EC;
-  --bg-muted: #ECE5DE;
+  --bg-subtle: #F1EEE8;
+  --bg-muted: #E8E4DD;
 
   /* Ink */
-  --ink: #1C1009;
-  --ink-2: #4A3728;
-  --ink-3: #6B5545;
+  --ink: #252525;
+  --ink-2: #3F3F46;
+  --ink-3: #6B7280;
   --ink-inverse: #FFFFFF;
 
   /* Lines */
-  --line: rgba(200, 70, 10, 0.12);
-  --line-mid: rgba(200, 70, 10, 0.22);
+  --line: #E5E1DC;
+  --line-mid: rgba(168, 50, 38, 0.22);
 
   /* Semantic */
-  --success: #15803D;
-  --warning: #B45309;
-  --danger: #B91C1C;
+  --success: #198754;
+  --warning: #E6A23C;
+  --danger: #DC3545;
   --info: #0369A1;
 
   /* Elevation */
-  --sh-sm: 0 1px 3px rgba(28, 16, 9, 0.06);
-  --sh-card: 0 2px 16px rgba(28, 16, 9, 0.07);
-  --sh-hover: 0 10px 36px rgba(200, 70, 10, 0.14);
+  --sh-sm: 0 1px 3px rgba(37, 37, 37, 0.06);
+  --sh-card: 0 2px 16px rgba(37, 37, 37, 0.07);
+  --sh-hover: 0 10px 36px rgba(168, 50, 38, 0.14);
   --sh-modal: 0 28px 72px rgba(0, 0, 0, 0.22);
 
   /* Radii */

@@ -52,7 +52,7 @@ window.GurukripaPayment = window.GurukripaPayment || {};
                     email: customerInfo.email || ''
                 },
                 theme: {
-                    color: '#B7432E' // Master industrial brick-red color
+                    color: '#A83226' // Master industrial brick-red color
                 },
                 handler: function(response) {
                     // response contains razorpay_payment_id, razorpay_order_id, razorpay_signature

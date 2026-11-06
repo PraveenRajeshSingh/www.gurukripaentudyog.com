@@ -2,102 +2,121 @@
    GURUKRIPA BRICKS — UNIFIED DESIGN TOKENS & SYSTEM BASE
    Platform: Web · Android · iOS
    WCAG 2.1 AA Compliant Contrast & Responsive Typography
-   Master Palette v4.0 — Oct 2026
+   Master Palette v5.0 — Industrial redesign Nov 2026
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 :root {
     /* ─── 1. Brand Palette ─── */
     /* Canonical brand hex = theme-color / apps/web / Capacitor shells */
-    --brand: #C8460A;                   /* Primary terracotta — main CTAs */
-    --brand-dark: #8B2E05;              /* Hover / active states */
-    --brand-light: #FBEAE0;             /* Soft brand backgrounds */
-    --brand-amber: #F5A623;             /* Accent amber — premium highlights */
-    --brand-secondary: #7D3523;         /* Supporting industrial accent */
-    --brand-glow: rgba(200, 70, 10, 0.15);
-    --brand-glow-strong: rgba(200, 70, 10, 0.30);
+    --brand: #A83226;                   /* Deep brick red — primary CTAs */
+    --brand-dark: #7F241C;              /* Hover / active states */
+    --brand-light: #F6E8E5;             /* Soft brand backgrounds */
+    --brand-amber: #D66A45;             /* Warm terracotta accent */
+    --brand-secondary: #252525;         /* Charcoal supporting accent */
+    --brand-glow: rgba(168, 50, 38, 0.15);
+    --brand-glow-strong: rgba(168, 50, 38, 0.30);
 
     /* ─── 2. Surface & Backgrounds (Light Default) ─── */
-    --bg: #FAFAF9;                      /* Main page background */
+    --bg: #F8F7F4;                      /* Main page background */
     --bg-card: #FFFFFF;                 /* Cards, dialogs, forms */
     --bg-elevated: #FFFFFF;             /* Floating modal / sheet */
-    --bg-subtle: #F5F0EC;               /* Alternating content sections */
-    --bg-muted: #ECE5DE;                /* Input / pill neutral */
-    --nav-glass: rgba(252, 250, 247, 0.94);
-    --bottom-nav-glass: rgba(252, 250, 247, 0.96);
+    --bg-subtle: #F1EEE8;               /* Alternating content sections */
+    --bg-muted: #E8E4DD;                /* Input / pill neutral */
+    --nav-glass: rgba(248, 247, 244, 0.94);
+    --bottom-nav-glass: rgba(248, 247, 244, 0.96);
 
     /* ─── 3. Typography & Contrast (WCAG AA >= 4.5:1) ─── */
-    --ink: #1C1009;                     /* Headlines / high emphasis */
-    --ink-2: #4A3728;                   /* Primary body text */
-    --ink-3: #6B5545;                   /* Helper / secondary text */
+    --ink: #252525;                     /* Headlines / high emphasis */
+    --ink-2: #3F3F46;                   /* Primary body text */
+    --ink-3: #6B7280;                   /* Helper / secondary text */
     --ink-inverse: #FFFFFF;             /* Text on brand/dark surfaces */
 
     /* ─── 4. Borders & Dividers ─── */
-    --line: #E7E1DA;                    /* Card borders / dividers */
-    --line-mid: rgba(200, 62, 10, 0.18);
-    --line-strong: rgba(200, 62, 10, 0.35);
+    --line: #E5E1DC;                    /* Card borders / dividers */
+    --line-mid: rgba(168, 50, 38, 0.18);
+    --line-strong: rgba(168, 50, 38, 0.35);
 
     /* ─── 5. Semantic Feedback States ─── */
-    --success: #218653;
-    --success-bg: rgba(33, 134, 83, 0.10);
-    --success-border: rgba(33, 134, 83, 0.25);
+    --success: #198754;
+    --success-bg: rgba(25, 135, 84, 0.10);
+    --success-border: rgba(25, 135, 84, 0.25);
 
-    --warning: #B76B08;
-    --warning-bg: rgba(183, 107, 8, 0.10);
-    --warning-border: rgba(183, 107, 8, 0.25);
+    --warning: #E6A23C;
+    --warning-bg: rgba(230, 162, 60, 0.12);
+    --warning-border: rgba(230, 162, 60, 0.28);
 
-    --danger: #C62828;
-    --danger-bg: rgba(198, 40, 40, 0.10);
-    --danger-border: rgba(198, 40, 40, 0.25);
+    --danger: #DC3545;
+    --danger-bg: rgba(220, 53, 69, 0.10);
+    --danger-border: rgba(220, 53, 69, 0.25);
 
     --info: #0369a1;
     --info-bg: rgba(3, 105, 161, 0.10);
     --info-border: rgba(3, 105, 161, 0.25);
 
     /* ─── 6. Footer ─── */
-    --footer-bg: #202428;               /* Footer / dark sections */
+    --footer-bg: #252525;               /* Footer / dark sections */
 
     /* ─── 7. Interactive States & Accessibility ─── */
-    --focus-ring: 0 0 0 3px rgba(200, 62, 10, 0.35);
+    --focus-ring: 0 0 0 3px rgba(168, 50, 38, 0.35);
     --focus-ring-offset: 2px;
     --disabled-opacity: 0.55;
-    --btn-primary-hover: #B03508;
-    --btn-primary-active: #992E08;
+    --btn-primary-hover: #8F2A20;
+    --btn-primary-active: #7F241C;
 
     /* ─── 8. Radii Scale ─── */
     --r-xs: 4px;
     --r-sm: 8px;
-    --r-md: 14px;
-    --r-lg: 22px;
-    --r-xl: 32px;
+    --r-md: 12px;
+    --r-lg: 18px;
+    --r-xl: 24px;
     --radius-pill: 50px;
 
     /* ─── 9. Shadows & Elevation ─── */
-    --sh-sm: 0 1px 3px rgba(32, 33, 36, 0.06);
-    --sh-card: 0 2px 16px rgba(32, 33, 36, 0.07);
-    --sh-hover: 0 10px 40px rgba(200, 62, 10, 0.14);
+    --sh-sm: 0 1px 3px rgba(37, 37, 37, 0.06);
+    --sh-card: 0 2px 16px rgba(37, 37, 37, 0.07);
+    --sh-hover: 0 10px 40px rgba(168, 50, 38, 0.14);
     --sh-modal: 0 32px 80px rgba(0, 0, 0, 0.22);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 
-    /* ─── 10. Typography Stacks ─── */
+    /* ─── 10. Typography Stacks & Scale ─── */
     --display: 'Fraunces', Georgia, serif;
     --body: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --fs-h1: clamp(2rem, 4.5vw, 3.25rem);
+    --fs-h2: clamp(1.65rem, 3.2vw, 2.5rem);
+    --fs-h3: clamp(1.2rem, 2vw, 1.45rem);
+    --fs-body: clamp(0.95rem, 1.2vw, 1.05rem);
+    --fs-small: 0.875rem;
+    --fs-caption: 0.75rem;
+    --lh-tight: 1.2;
+    --lh-body: 1.65;
 
-    /* ─── 11. Motion & Transitions ─── */
+    /* ─── 11. Spacing & Layout Scale ─── */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 72px;
+    --container-max: 1200px;
+
+    /* ─── 12. Motion & Transitions ─── */
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
     --t: 0.22s;
     --t-fast: 0.15s;
 
-    /* ─── 12. Glassmorphism Tokens ─── */
+    /* ─── 13. Glassmorphism Tokens ─── */
     --glass-bg: rgba(255, 255, 255, 0.15);
     --glass-border: rgba(255, 255, 255, 0.25);
 
-    /* ─── 13. Safe Area Insets (iOS notch, Android navigation bar) ─── */
+    /* ─── 14. Safe Area Insets (iOS notch, Android navigation bar) ─── */
     --sat: env(safe-area-inset-top, 0px);
     --sab: env(safe-area-inset-bottom, 0px);
     --sal: env(safe-area-inset-left, 0px);
     --sar: env(safe-area-inset-right, 0px);
 
-    /* ─── 14. Z-Index Scale ───
+    /* ─── 15. Z-Index Scale ───
        The sticky navbar is z:900. Every popup surface (search overlay,
        drawers, modals, lightbox) MUST stack above it; transient toasts
        stack above everything. Values below were mis-scaled, which caused
@@ -146,8 +165,8 @@ html[data-theme="dark"] {
     --footer-bg: #0F0D0B;
 
     --sh-card: 0 4px 20px rgba(0, 0, 0, 0.45);
-    --sh-hover: 0 12px 40px rgba(200, 62, 10, 0.22);
-    --focus-ring: 0 0 0 3px rgba(214, 163, 77, 0.45);
+    --sh-hover: 0 12px 40px rgba(168, 50, 38, 0.22);
+    --focus-ring: 0 0 0 3px rgba(214, 106, 69, 0.45);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -238,42 +257,43 @@ svg { display: block; }
 }
 
 .container {
-    max-width: 1200px;
+    max-width: var(--container-max);
     margin: 0 auto;
-    padding: 0 clamp(16px, 4vw, 32px);
+    padding: 0 clamp(var(--space-4), 4vw, var(--space-6));
 }
 
 .sec {
-    padding: clamp(56px, 8vw, 100px) 0;
+    padding: clamp(var(--space-7), 8vw, var(--space-8)) 0;
 }
 
 .sec-tag {
     display: inline-block;
-    background: rgba(200, 62, 10, .10);
+    background: var(--brand-glow);
     color: var(--brand);
-    font-size: .7rem;
+    font-size: var(--fs-caption);
     font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
     padding: 5px 14px;
     border-radius: var(--radius-pill);
-    margin-bottom: 14px;
+    margin-bottom: var(--space-3);
 }
 
 .sec-title {
     font-family: var(--display);
-    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-size: var(--fs-h2);
     font-weight: 700;
     color: var(--ink);
-    line-height: 1.2;
-    margin-bottom: 14px;
+    line-height: var(--lh-tight);
+    margin-bottom: var(--space-3);
 }
 
 .sec-sub {
-    font-size: clamp(.9rem, 1.8vw, 1.05rem);
+    font-size: var(--fs-body);
     color: var(--ink-3);
     max-width: 600px;
-    margin: 0 auto 48px;
+    margin: 0 auto var(--space-7);
+    line-height: var(--lh-body);
 }
 
 .text-center { text-align: center; }

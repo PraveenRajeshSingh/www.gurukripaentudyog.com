@@ -6,7 +6,7 @@
                 <svg width="20" height="20" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="var(--brand)"/>
                 </svg>
-                <h2 id="wishlistDrawerTitle">My Wishlist</h2>
+                <h2 id="wishlistDrawerTitle" data-i18n="wishlist.title">My Wishlist</h2>
                 <span class="cart-head-count" id="wishlistHeadCount">0 items</span>
             </div>
             <button type="button" class="cart-close" onclick="closeWishlistDrawer()" aria-label="Close wishlist">
@@ -20,15 +20,15 @@
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                     </svg>
                 </div>
-                <h3>Your Wishlist is Empty</h3>
-                <p>Save bricks you love by tapping the heart on any product card.</p>
-                <button type="button" class="btn btn-primary btn-sm cart-empty-cta" onclick="closeWishlistDrawer();scrollToSection('products')">Browse Products</button>
+                <h3 data-i18n="wishlist.emptyTitle">Your Wishlist is Empty</h3>
+                <p data-i18n="wishlist.emptyText">Save bricks you love by tapping the heart on any product card.</p>
+                <button type="button" class="btn btn-primary btn-sm cart-empty-cta" onclick="closeWishlistDrawer();scrollToSection('products')" data-i18n="wishlist.browse">Browse Products</button>
             </div>
             <div id="wishlistItemsList" hidden></div>
         </div>
         <div class="cart-footer" id="wishlistFooter" hidden>
             <button type="button" class="cart-checkout-btn" onclick="moveAllWishlistToCart()">
-                <span>Add All to Cart</span>
+                <span data-i18n="wishlist.addAll">Add All to Cart</span>
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>

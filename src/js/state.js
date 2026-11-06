@@ -13,7 +13,7 @@ function sanitizeHTML(str) {
 
 // Generate deterministic gradient background for user avatar
 function getAvatarBg(name) {
-    if (!name) return 'linear-gradient(135deg, #C8460A, #8B2E05)';
+    if (!name) return 'linear-gradient(135deg, #A83226, #7F241C)';
     let hash = 0;
     for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
     const h = Math.abs(hash) % 360;

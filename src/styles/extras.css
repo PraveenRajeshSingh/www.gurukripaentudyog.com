@@ -532,15 +532,40 @@
             display: grid;
             grid-template-columns: 1.65fr 1fr 1fr;
             grid-template-rows: 255px 255px;
-            gap: 12px;
-            margin-top: 40px
+            gap: var(--space-3);
+            margin-top: var(--space-6)
         }
 
         .gallery-item {
             border-radius: var(--r-lg);
             overflow: hidden;
             position: relative;
-            cursor: pointer
+            cursor: pointer;
+            min-height: 0
+        }
+
+        .gallery-status-chip {
+            position: absolute;
+            top: var(--space-3);
+            left: var(--space-3);
+            z-index: 2;
+            background: var(--brand);
+            color: #fff;
+            font-size: var(--fs-caption);
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            letter-spacing: .02em;
+            border: 1px solid rgba(255, 255, 255, 0.2)
+        }
+
+        .gallery-status-chip.is-success {
+            background: var(--success)
+        }
+
+        .gallery-sec-tag {
+            background: rgba(214, 106, 69, 0.18) !important;
+            color: var(--brand-amber) !important;
         }
 
         .gallery-item:first-child {
@@ -634,7 +659,8 @@
             }
 
             .gallery-item {
-                height: 210px
+                aspect-ratio: 3 / 2;
+                height: auto
             }
         }
 

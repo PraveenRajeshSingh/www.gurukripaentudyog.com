@@ -718,7 +718,7 @@ html {
     transition: background .18s ease;
 }
 .contact-directions:hover { background: var(--brand-glow, rgba(200, 70, 10, .08)); }
-.contact-directions:focus-visible { outline: 2px solid var(--brand, #C8460A); outline-offset: -2px; }
+.contact-directions:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
 .contact-directions svg { flex-shrink: 0; }
 
 @media (max-width: 640px) {

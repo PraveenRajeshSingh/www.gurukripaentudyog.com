@@ -104,10 +104,11 @@
         else el.classList.remove('is-danger');
 
         okBtn.className = 'btn ' + (opts.danger ? 'gb-btn-danger' : 'btn-primary');
-        okBtn.textContent = opts.confirmLabel || (mode === 'prompt' ? 'Save' : 'Confirm');
+        var tFn = typeof t === 'function' ? t : function (k) { return k; };
+        okBtn.textContent = opts.confirmLabel || (mode === 'prompt' ? tFn('dialog.save') : (mode === 'alert' ? tFn('dialog.ok') : tFn('dialog.confirm')));
         okBtn.disabled = false;
         cancelBtn.hidden = mode === 'alert';
-        cancelBtn.textContent = opts.cancelLabel || 'Cancel';
+        cancelBtn.textContent = opts.cancelLabel || tFn('dialog.cancel');
 
         var pending = null;
         var promise = new Promise(function (res) { pending = res; });
@@ -145,7 +146,10 @@
         var ctx = el._gb || {};
         if (ctx.promptMode) {
             var v = inputEl.value.trim();
-            if (!v && inputEl.dataset.gbRequired === '1') { showError('This field is required.'); return; }
+            if (!v && inputEl.dataset.gbRequired === '1') {
+                showError(typeof t === 'function' ? t('dialog.fieldRequired') : 'This field is required.');
+                return;
+            }
             settle(v);
             return;
         }
@@ -155,14 +159,14 @@
         if (!out || typeof out.then !== 'function') { settle(true); return; }
         busy = true;
         okBtn.disabled = true; cancelBtn.disabled = true;
-        okBtn.innerHTML = '<span class="gb-spin" aria-hidden="true"></span> Working…';
+        okBtn.innerHTML = '<span class="gb-spin" aria-hidden="true"></span> ' + (typeof t === 'function' ? t('dialog.working') : 'Working\u2026');
         out.then(function () {
             busy = false; okBtn.disabled = false; cancelBtn.disabled = false;
             settle(true);
         }, function (err) {
             busy = false; okBtn.disabled = false; cancelBtn.disabled = false;
-            okBtn.textContent = (el._gb && el._gb.retryLabel) || 'Try again';
-            errEl.textContent = (err && err.message) || 'Something went wrong. Please try again.';
+            okBtn.textContent = (el._gb && el._gb.retryLabel) || (typeof t === 'function' ? t('dialog.tryAgain') : 'Try again');
+            errEl.textContent = (err && err.message) || (typeof t === 'function' ? t('dialog.genericError') : 'Something went wrong. Please try again.');
             errEl.hidden = false;
         });
     }
@@ -219,12 +223,13 @@
         if (!pair) { if (overlayEl) overlayEl.classList.remove('open'); return; }
         // Must call the local GBDialogs confirm path — bare confirm() is window.confirm
         // and would coerce the options object to "[object Object]".
+        var td = typeof t === 'function' ? t : function (k) { return k; };
         show({
             mode: 'confirm',
-            title: 'Discard changes?',
-            message: 'You have information that has not been submitted. Close anyway?',
-            confirmLabel: 'Discard',
-            cancelLabel: 'Keep editing',
+            title: td('dialog.discardTitle'),
+            message: td('dialog.discardMsg'),
+            confirmLabel: td('dialog.discard'),
+            cancelLabel: td('dialog.keepEditing'),
             danger: true
         }).then(function (go) { if (go) pair[1](); });
     }

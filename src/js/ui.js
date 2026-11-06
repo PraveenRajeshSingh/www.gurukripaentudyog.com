@@ -305,6 +305,8 @@ function applyTranslations(root) {
             if (el.type !== 'submit' && el.type !== 'button') {
                 el.placeholder = val;
             }
+        } else if (tag === 'OPTION') {
+            el.textContent = val;
         } else if (tag === 'BUTTON' && el.type === 'submit') {
             el.innerHTML = val;
         } else {
@@ -320,8 +322,18 @@ function setLang(lang) {
     localStorage.setItem('gb_lang', lang);
 
     // Update language toggle button active states
-    document.getElementById('langEn')?.classList.toggle('active', lang === 'en');
-    document.getElementById('langHi')?.classList.toggle('active', lang === 'hi');
+    const langEn = document.getElementById('langEn');
+    const langHi = document.getElementById('langHi');
+    langEn?.classList.toggle('active', lang === 'en');
+    langHi?.classList.toggle('active', lang === 'hi');
+    langEn?.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+    langHi?.setAttribute('aria-pressed', lang === 'hi' ? 'true' : 'false');
+
+    // Mobile drawer language label stays in sync with desktop
+    const drawerLang = document.getElementById('drawerLangLabel');
+    if (drawerLang) {
+        drawerLang.textContent = lang === 'hi' ? 'English / हिंदी' : 'हिंदी / EN';
+    }
 
     // Update html lang attribute for accessibility
     document.documentElement.setAttribute('lang', lang === 'hi' ? 'hi' : 'en');
@@ -340,7 +352,7 @@ function setLang(lang) {
     if (typeof updateCartUI === 'function') updateCartUI();
 
     // Toast language notification
-    showToast(lang === 'hi' ? 'भाषा हिंदी में बदली गई' : 'Language switched to English');
+    showToast(lang === 'hi' ? t('toast.langChangedHi') : t('toast.langChanged'));
 }
 
 // ══════════════════════════════════════════

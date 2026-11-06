@@ -28,7 +28,7 @@
         .hero-img-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(28, 16, 9, .7) 0%, rgba(200, 70, 10, .25) 100%)
+            background: linear-gradient(135deg, rgba(37, 37, 37, .72) 0%, rgba(168, 50, 38, .28) 100%)
         }
 
         .hero-img-badge {
@@ -101,6 +101,16 @@
             justify-content: center
         }
 
+        .hero-brand {
+            font-family: var(--display);
+            font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin: 0 0 var(--space-3);
+        }
+
         .hero-eyebrow {
             display: inline-flex;
             align-items: center;
@@ -114,8 +124,21 @@
             color: var(--brand);
             letter-spacing: .08em;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             width: fit-content
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-3);
+            margin: var(--space-5) 0;
+        }
+
+        .hero-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
         }
 
         .hero-eyebrow-dot {
@@ -465,12 +488,16 @@
             background: var(--bg-subtle)
         }
 
+        .products-intro {
+            margin-bottom: var(--space-5)
+        }
+
         .products-filters {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-2);
             flex-wrap: wrap;
-            margin: 28px 0
+            margin: var(--space-5) 0
         }
 
         .filter-btn {
@@ -722,8 +749,38 @@
         .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: clamp(var(--space-6), 5vw, 60px);
             align-items: center
+        }
+
+        .about-title {
+            text-align: left;
+            margin-bottom: var(--space-4);
+        }
+
+        .about-title em {
+            font-family: var(--display);
+            color: var(--brand);
+            font-style: italic;
+        }
+
+        .about-lead {
+            color: var(--ink-3);
+            line-height: var(--lh-body);
+            margin-bottom: var(--space-5);
+            font-size: var(--fs-body);
+        }
+
+        .about-feat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--r-sm);
+            background: var(--brand-light);
+            color: var(--brand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .about-img-wrap {
@@ -926,6 +983,20 @@
             .reviews-grid {
                 grid-template-columns: 1fr
             }
+        }
+
+        .reviews-cta {
+            text-align: center;
+            margin-top: var(--space-5)
+        }
+
+        .reviews-cta-btn {
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            padding: 10px 24px;
+            max-width: 100%;
+            white-space: normal;
+            line-height: 1.35
         }
 
         /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
@@ -1319,22 +1390,36 @@
         .form-select,
         .form-textarea {
             width: 100%;
+            min-height: 44px;
             padding: 11px 14px;
             border: 1.5px solid var(--line);
             border-radius: var(--r-sm);
-            font-size: .88rem;
+            font-size: max(16px, 0.88rem);
             color: var(--ink);
             background: var(--bg-subtle);
-            transition: all var(--t)
+            transition: border-color var(--t), box-shadow var(--t), background var(--t)
         }
 
         .form-input:focus,
         .form-select:focus,
-        .form-textarea:focus {
+        .form-textarea:focus,
+        .form-input:focus-visible,
+        .form-select:focus-visible,
+        .form-textarea:focus-visible {
             outline: none;
             border-color: var(--brand);
             background: #fff;
-            box-shadow: 0 0 0 3px var(--brand-glow)
+            box-shadow: var(--focus-ring)
+        }
+
+        .form-input:user-invalid,
+        .form-select:user-invalid,
+        .form-textarea:user-invalid,
+        .form-input.is-invalid,
+        .form-select.is-invalid,
+        .form-textarea.is-invalid {
+            border-color: var(--danger);
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2)
         }
 
         .form-textarea {
@@ -1352,8 +1437,13 @@
         }
 
         .form-error {
-            font-size: .74rem;
-            color: #e53e3e
+            font-size: var(--fs-caption);
+            color: var(--danger);
+            margin-top: var(--space-1)
+        }
+
+        .sec-alt {
+            background: var(--bg-subtle)
         }
 
         @media(max-width:768px) {
@@ -1366,14 +1456,51 @@
             }
         }
 
-        /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
-   CITIES
-   鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
+        /* ─── CITIES ─── */
+        .cities-intro {
+            margin-bottom: var(--space-5)
+        }
+
+        .cities-logistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-5)
+        }
+
+        .cities-logistics-card {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+            padding: var(--space-5);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start
+        }
+
+        .cities-logistics-icon {
+            font-size: 1.8rem;
+            line-height: 1
+        }
+
+        .cities-logistics-title {
+            font-weight: 700;
+            color: var(--ink);
+            font-size: 0.95rem
+        }
+
+        .cities-logistics-desc {
+            font-size: 0.8rem;
+            color: var(--ink-3);
+            margin-top: var(--space-1);
+            line-height: 1.5
+        }
+
         .cities-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 32px;
+            margin-top: var(--space-6);
             justify-content: center
         }
 

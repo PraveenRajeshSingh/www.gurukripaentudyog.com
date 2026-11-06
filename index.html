@@ -39,8 +39,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Gurukripa Bricks">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#C8460A" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#8B2E05" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#A83226" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#7F241C" media="(prefers-color-scheme: dark)">
     <link rel="manifest" href="manifest.json">
 
     <!-- Google Sign-In: paste your Web OAuth Client ID (ends with .apps.googleusercontent.com) to activate. Leave empty to keep dormant. -->
@@ -190,20 +190,20 @@
                 <div class="topbar-left">
                     <span class="topbar-status-pill">
                         <span class="live-pulse" aria-hidden="true"></span>
-                        Kiln Active · Same-Day Dispatch
+                        <span data-i18n="topbar.status">Kiln Active · Same-Day Dispatch</span>
                     </span>
                     <span class="topbar-divider-dot" aria-hidden="true">•</span>
-                    <span>📞 <a href="tel:+919198923230" aria-label="Call Gurukripa Kiln at +91 91989 23230">+91 91989 23230</a></span>
+                    <span><a href="tel:+919198923230" aria-label="Call Gurukripa Kiln at +91 91989 23230">+91 91989 23230</a></span>
                     <span class="topbar-divider-dot" aria-hidden="true">•</span>
-                    <span>✉️ <a href="mailto:info@gurukripaentudyog.com" aria-label="Email info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></span>
+                    <span><a href="mailto:info@gurukripaentudyog.com" aria-label="Email info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></span>
                     <span class="topbar-divider-dot" aria-hidden="true">•</span>
-                    <button type="button" onclick="openAdminPortal()" style="color:#fff;background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;cursor:pointer;border:none">⚙️ Operations Portal</button>
+                    <button type="button" class="topbar-ops-btn" onclick="openAdminPortal()" data-i18n="topbar.ops">Operations Portal</button>
                 </div>
                 <div class="topbar-right">
                     <span class="topbar-hours" data-i18n="topbar.hours">Mon–Sat | 8:00 AM – 6:00 PM</span>
-                    <div class="topbar-controls">
-                        <button type="button" class="lang-btn active" onclick="setLang('en')" id="langEn" aria-label="Switch language to English">🇬🇧 EN</button>
-                        <button type="button" class="lang-btn" onclick="setLang('hi')" id="langHi" aria-label="हिंदी भाषा चुनें">🇮🇳 HI</button>
+                    <div class="topbar-controls" role="group" aria-label="Language">
+                        <button type="button" class="lang-btn active" onclick="setLang('en')" id="langEn" aria-pressed="true" aria-label="Switch language to English">EN</button>
+                        <button type="button" class="lang-btn" onclick="setLang('hi')" id="langHi" aria-pressed="false" aria-label="हिंदी भाषा चुनें">HI</button>
                     </div>
                 </div>
             </div>
@@ -258,7 +258,7 @@
                 <nav class="nav-links" aria-label="Primary Navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)" aria-current="true" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
-                    <a href="#categories" class="nav-link" onclick="setActiveNav(this)">Categories</a>
+                    <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.categories">Categories</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
                     <button type="button" class="btn btn-primary btn-sm nav-quote-btn" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
@@ -415,7 +415,7 @@
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                <span>Home</span>
+                <span data-i18n="nav.home">Home</span>
             </a>
             <a href="#products" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -423,7 +423,7 @@
                     <line x1="3" y1="6" x2="21" y2="6" />
                     <path d="M16 10a4 4 0 01-8 0" />
                 </svg>
-                <span>Products</span>
+                <span data-i18n="nav.products">Products</span>
             </a>
             <a href="#calculator" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -432,7 +432,7 @@
                     <line x1="8" y1="10" x2="16" y2="10" />
                     <line x1="8" y1="14" x2="12" y2="14" />
                 </svg>
-                <span>Brick Estimator</span>
+                <span data-i18n="drawer.estimator">Brick Estimator</span>
             </a>
             <a href="#categories" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -441,14 +441,14 @@
                     <rect x="14" y="14" width="7" height="7" />
                     <rect x="3" y="14" width="7" height="7" />
                 </svg>
-                <span>Categories</span>
+                <span data-i18n="nav.categories">Categories</span>
             </a>
             <button type="button" class="drawer-link" onclick="toggleDrawer();openBulkQuoteModal()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                     <polyline points="14 2 14 8 20 8"/>
                 </svg>
-                <span>Get a Quote</span>
+                <span data-i18n="nav.getQuote">Get a Quote</span>
             </button>
             <button type="button" class="drawer-link" onclick="toggleDrawer();openWishlistDrawer()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -532,90 +532,61 @@
 
 
 <main id="main-content" role="main">
-    <!-- ━━━━━━━━━━━━━━━━━ MINIMAL COMPACT HERO ━━━━━━━━━━━━━━━━━ -->
+    <!-- ━━━━━━━━━━━━━━━━━ HERO ━━━━━━━━━━━━━━━━━ -->
     <section id="home" class="hero hero-compact">
-        <!-- Left: Image Panel -->
         <div class="hero-img">
-            <img src="src/assets/images/hero-banner.png" alt="Premium Red Clay Bricks — Gurukripa Bricks Industry" width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async">
+            <img src="src/assets/images/hero-banner.png" alt="Premium red clay bricks at Gurukripa Bricks Industry kiln" width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async">
             <div class="hero-img-overlay"></div>
-            <!-- Verified Quality Badge -->
             <div class="hero-cert">
-                <div class="hero-cert-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg></div>
+                <div class="hero-cert-icon" aria-hidden="true"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg></div>
                 <div class="hero-cert-text">
-                    <strong>Grade-A Double-Fired</strong>
-                    <span>Direct Bhatta Wholesale</span>
+                    <strong data-i18n="hero.certTitle">Grade-A Double-Fired</strong>
+                    <span data-i18n="hero.certSub">Direct Bhatta Wholesale</span>
                 </div>
             </div>
             <div class="hero-img-badge">
                 <div class="year">1998</div>
-                <div class="since">Est. Jaunpur</div>
+                <div class="since" data-i18n="hero.since">Est. Jaunpur</div>
             </div>
         </div>
 
-        <!-- Right: Content & Quick Conversion Panel -->
         <div class="hero-content">
             <div class="hero-copy">
-                <!-- Eyebrow -->
+                <p class="hero-brand" aria-label="Gurukripa Bricks Industry">Gurukripa Bricks Industry</p>
                 <div class="hero-eyebrow">
-                    <span class="hero-eyebrow-dot"></span>
-                    Jaunpur's Direct Kiln Manufacturer · Est. 1998
+                    <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+                    <span data-i18n="hero.eyebrow">Jaunpur's Direct Kiln Manufacturer · Est. 1998</span>
                 </div>
 
-                <!-- Headline -->
                 <h1 class="hero-h1" data-i18n="hero.title">Quality Bricks.<br><em>Reliable Supply.</em></h1>
-                <p class="hero-subh" data-i18n="hero.titleHi" style="font-size:1rem;color:var(--ink-3);font-style:italic;margin-top:-6px;margin-bottom:12px">मजबूत नींव, भरोसेमंद ईंटें।</p>
 
-                <p class="hero-lead" data-i18n="hero.subtitle" style="margin-bottom:20px">
+                <p class="hero-lead" data-i18n="hero.subtitle">
                     Wholesale Grade-A bricks for homes, commercial infrastructure &amp; contractor projects across Jaunpur, Varanasi &amp; Eastern UP.
                 </p>
 
-                <!-- High-Impact Direct Conversion CTAs -->
-                <div class="hero-cta" style="margin-bottom:20px">
-                    <a href="#products" class="btn btn-primary" data-i18n="hero.cta1">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                            <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                            <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                            <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                        </svg>
-                        Explore Products
-                    </a>
-                    <button type="button" class="btn btn-outline" onclick="openBulkQuoteModal()" style="display:inline-flex;align-items:center;gap:8px">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                        </svg>
-                        Request Bulk Quote
-                    </button>
+                <div class="hero-cta">
+                    <a href="#products" class="btn btn-primary btn-lg" data-i18n="hero.cta1">Explore Products</a>
+                    <button type="button" class="btn btn-outline btn-lg" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
                 </div>
 
-                <!-- Essential Trust Highlights -->
-                <div class="hero-chips" style="margin-bottom:0">
+                <div class="hero-chips">
                     <span class="hero-chip">
                         <span class="hero-chip-icon" aria-hidden="true">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                            </svg>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                         </span>
-                        Same-Day Trolley Delivery
+                        <span data-i18n="hero.chip1">Same-Day Delivery</span>
                     </span>
                     <span class="hero-chip">
                         <span class="hero-chip-icon" aria-hidden="true">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                         </span>
-                        ISI Standard Certified
+                        <span data-i18n="hero.chip3">ISI Certified</span>
                     </span>
                     <span class="hero-chip">
                         <span class="hero-chip-icon" aria-hidden="true">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M12 2c0 6-6 8-6 13a6 6 0 0012 0c0-5-6-7-6-13z"/>
-                            </svg>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2c0 6-6 8-6 13a6 6 0 0012 0c0-5-6-7-6-13z"/></svg>
                         </span>
-                        Double-Fired Weather Resistance
+                        <span data-i18n="hero.chip2">Weather-Resistant</span>
                     </span>
                 </div>
             </div>
@@ -668,7 +639,7 @@
             <div class="categories-grid">
                 <div class="cat-card" onclick="filterProducts('shiv-eent')">
                     <img class="cat-card-img" src="src/assets/images/brick_product_3.png" alt="Shiv Eent Grade-A Bricks"
-                        loading="lazy">
+                        loading="lazy" decoding="async" width="400" height="280">
                     <div class="cat-card-overlay"></div>
                     <div class="cat-card-body">
                         <div class="cat-card-icon">⭐</div>
@@ -680,7 +651,7 @@
                 </div>
                 <div class="cat-card" onclick="filterProducts('premium')">
                     <img class="cat-card-img" src="src/assets/images/brick_product_2.png" alt="Premium Red Clay Bricks"
-                        loading="lazy">
+                        loading="lazy" decoding="async" width="400" height="280">
                     <div class="cat-card-overlay"></div>
                     <div class="cat-card-body">
                         <div class="cat-card-icon">🔥</div>
@@ -691,7 +662,7 @@
                 </div>
                 <div class="cat-card" onclick="filterProducts('standard')">
                     <img class="cat-card-img" src="src/assets/images/redbrick1.jpg" alt="Standard Bricks"
-                        loading="lazy">
+                        loading="lazy" decoding="async" width="400" height="280">
                     <div class="cat-card-overlay"></div>
                     <div class="cat-card-body">
                         <div class="cat-card-icon">🏗️</div>
@@ -702,7 +673,7 @@
                 </div>
                 <div class="cat-card" onclick="filterProducts('machine-made')">
                     <img class="cat-card-img" src="src/assets/images/brick_product_1.png" alt="Machine Made Bricks"
-                        loading="lazy">
+                        loading="lazy" decoding="async" width="400" height="280">
                     <div class="cat-card-overlay"></div>
                     <div class="cat-card-body">
                         <div class="cat-card-icon">⚙️</div>
@@ -718,7 +689,7 @@
     <!-- ━━━━━━━━━━━━━━━━━ PRODUCTS CATALOG SECTION (BUILDMART INDUSTRIAL STYLE) ━━━━━━━━━━━━━━━━━ -->
     <section class="sec products-sec" id="products">
         <div class="container">
-            <div class="text-center" style="margin-bottom:28px">
+            <div class="text-center products-intro">
                 <span class="sec-tag" data-i18n="products.tag">Verified Kiln Quality</span>
                 <h2 class="sec-title" data-i18n="products.title">Building Materials &amp; Brick Catalog</h2>
                 <p class="sec-sub" data-i18n="products.desc">Direct manufacturer pricing on Grade-A red clay bricks, high-strength blocks, and custom masonry units</p>
@@ -1097,72 +1068,68 @@
         <div class="container">
             <div class="about-grid">
                 <div class="about-img-wrap">
-                    <img src="src/assets/images/gurukripaEnt.jpg" alt="Gurukripa Bricks Factory — Jaunpur"
-                        loading="lazy">
+                    <img src="src/assets/images/gurukripaEnt.jpg" alt="Gurukripa Bricks factory kiln in Jaunpur"
+                        loading="lazy" decoding="async">
                     <div class="about-img-card">
                         <div class="about-img-card-num">25+</div>
-                        <div class="about-img-card-label">Years of Excellence</div>
+                        <div class="about-img-card-label" data-i18n="about.yearsLabel">Years of Excellence</div>
                     </div>
                 </div>
-                <div>
-                    <span class="sec-tag">Our Story</span>
-                    <h2 class="sec-title" style="text-align:left;margin-bottom:16px">Jaunpur's Most<br><em
-                            style="font-family:var(--display);color:var(--brand);font-style:italic">Trusted</em> Brick
-                        Maker</h2>
-                    <p style="color:var(--ink-3);line-height:1.75;margin-bottom:24px">Since 1998, Gurukripa Bricks
-                        Industry has been the backbone of construction across Jaunpur, Varanasi and all of UP. Founded
-                        by Prem Narayan Singh, we've grown from a small kiln to a full-scale premium brick manufacturer
-                        supplying 10,000+ satisfied customers.</p>
+                <div class="about-copy">
+                    <span class="sec-tag" data-i18n="about.tag">Our Story</span>
+                    <h2 class="sec-title about-title" data-i18n="about.title">Jaunpur's Most<br><em>Trusted</em> Brick Maker</h2>
+                    <p class="about-lead" data-i18n="about.desc">Since 1998, Gurukripa Bricks Industry has been the backbone of construction across Jaunpur, Varanasi and all of UP. Founded by Prem Narayan Singh, we've grown from a small kiln to a full-scale premium brick manufacturer supplying customers across Eastern UP.</p>
                     <div class="about-features">
                         <div class="about-feat">
-                            <div class="about-feat-icon">🔥</div>
+                            <div class="about-feat-icon" aria-hidden="true">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1.5-3-1-1-1.5-2.12-1.5-3.5a2.5 2.5 0 015 0c0 1.38-.5 2.5-1.5 3.5S11 10.62 11 12a2.5 2.5 0 002.5 2.5"/></svg>
+                            </div>
                             <div>
-                                <div class="about-feat-title">Double-Fired Process</div>
-                                <div class="about-feat-desc">Every brick kiln-fired twice for maximum density and
-                                    weather resistance</div>
+                                <div class="about-feat-title" data-i18n="about.feat1Title">Double-Fired Process</div>
+                                <div class="about-feat-desc" data-i18n="about.feat1Desc">Every brick kiln-fired twice for maximum density and weather resistance</div>
                             </div>
                         </div>
                         <div class="about-feat">
-                            <div class="about-feat-icon">📐</div>
+                            <div class="about-feat-icon" aria-hidden="true">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                            </div>
                             <div>
-                                <div class="about-feat-title">Uniform Dimensions</div>
-                                <div class="about-feat-desc">Machine-calibrated for perfect 230×110×70mm standard sizing
-                                </div>
+                                <div class="about-feat-title" data-i18n="about.feat2Title">Uniform Dimensions</div>
+                                <div class="about-feat-desc" data-i18n="about.feat2Desc">Machine-calibrated for perfect 230×110×70mm standard sizing</div>
                             </div>
                         </div>
                         <div class="about-feat">
-                            <div class="about-feat-icon">🚛</div>
+                            <div class="about-feat-icon" aria-hidden="true">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                            </div>
                             <div>
-                                <div class="about-feat-title">Same-Day Delivery</div>
-                                <div class="about-feat-desc">Fleet of trucks ensuring morning order = afternoon delivery
-                                </div>
+                                <div class="about-feat-title" data-i18n="about.feat3Title">Same-Day Delivery</div>
+                                <div class="about-feat-desc" data-i18n="about.feat3Desc">Fleet of trucks ensuring morning order = afternoon delivery</div>
                             </div>
                         </div>
                         <div class="about-feat">
-                            <div class="about-feat-icon">✅</div>
+                            <div class="about-feat-icon" aria-hidden="true">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
                             <div>
-                                <div class="about-feat-title">Quality Guaranteed</div>
-                                <div class="about-feat-desc">100% replacement guarantee on damaged or substandard bricks
-                                </div>
+                                <div class="about-feat-title" data-i18n="about.feat4Title">Quality Guaranteed</div>
+                                <div class="about-feat-desc" data-i18n="about.feat4Desc">Replacement guarantee on damaged or substandard bricks</div>
                             </div>
                         </div>
                     </div>
-                    <a href="tel:+919198923230" class="btn btn-primary">📞 Talk to Us Today</a>
+                    <a href="tel:+919198923230" class="btn btn-primary" data-i18n="about.talkToUs">Talk to Us Today</a>
                 </div>
             </div>
         </div>
     </section>
 
-
     <!-- ━━━━━━━━━━━━━━━━━ FACTORY GALLERY ━━━━━━━━━━━━━━━━━ -->
     <section class="gallery-sec" id="gallery">
         <div class="container">
             <div class="text-center">
-                <span class="sec-tag" style="background:rgba(245,166,35,.15);color:var(--brand-amber)" data-i18n="about.tag">Our
-                    Factory</span>
-                <h2 class="sec-title" style="color:#fff" data-i18n="about.title">Inside Gurukripa Bricks</h2>
-                <p class="sec-sub" style="color:rgba(255,255,255,.5)" data-i18n="about.desc">A look inside our state-of-the-art manufacturing
-                    facility in Jaunpur, UP</p>
+                <span class="sec-tag gallery-sec-tag" data-i18n="about.gallery.tag">Our Factory</span>
+                <h2 class="sec-title" style="color:#fff" data-i18n="about.gallery.title">Inside Gurukripa Bricks</h2>
+                <p class="sec-sub" style="color:rgba(255,255,255,.65)" data-i18n="about.gallery.desc">A look inside our manufacturing facility in Jaunpur, UP</p>
             </div>
             <div class="gallery-grid">
                 <div class="gallery-item"
@@ -1184,7 +1151,7 @@
                 <div class="gallery-item"
                     onclick="lbOpen('src/assets/images/redbrick1.jpg','Premium Grade-A Red Bricks — Ready for Dispatch')">
                     <img src="src/assets/images/redbrick1.jpg" alt="Premium Red Bricks Ready" loading="lazy" width="600" height="400">
-                    <div class="gallery-status-chip" style="background:#16a34a">10k+ Ready Stock</div>
+                    <div class="gallery-status-chip is-success">10k+ Ready Stock</div>
                     <div class="gallery-item-ov"></div>
                     <div class="gallery-zoom">🔍</div>
                     <div class="gallery-lbl">Ready for Dispatch</div>
@@ -1200,7 +1167,7 @@
                 <div class="gallery-item"
                     onclick="lbOpen('src/assets/images/redbricks.jpg','Gurukripa Premium Red Clay Bricks — Grade-A Quality')">
                     <img src="src/assets/images/redbricks.jpg" alt="Grade-A Red Bricks" loading="lazy" width="600" height="400">
-                    <div class="gallery-status-chip" style="background:var(--brand)">ISI Grade-A Tested</div>
+                    <div class="gallery-status-chip">ISI Grade-A Tested</div>
                     <div class="gallery-item-ov"></div>
                     <div class="gallery-zoom">🔍</div>
                     <div class="gallery-lbl">Grade-A Red Bricks</div>
@@ -1264,9 +1231,9 @@
             </div>
 
             <!-- Submit Review Action -->
-            <div style="text-align:center;margin-top:24px">
-                <button type="button" class="btn btn-outline" style="border-radius:50px;font-weight:700;padding:10px 24px;max-width:100%;white-space:normal;line-height:1.35" onclick="openBulkQuoteModal()">
-                    ✍️ Submit Construction Review or Project Inquiry
+            <div class="reviews-cta">
+                <button type="button" class="btn btn-outline reviews-cta-btn" onclick="openBulkQuoteModal()">
+                    Submit Construction Review or Project Inquiry
                 </button>
             </div>
         </div>
@@ -1276,49 +1243,48 @@
     <div class="cta-banner">
         <div class="container">
             <div class="cta-content">
-                <h2>Order Premium Bricks Today —<br>Fast Delivery in Jaunpur!</h2>
-                <p>आज ही ऑर्डर करें और अपने सपनों का घर बनाएं</p>
+                <h2 data-i18n="cta.title">Order Premium Bricks Today —<br>Fast Delivery in Jaunpur!</h2>
+                <p data-i18n="cta.subtitle">Order today and build with confidence</p>
                 <div class="cta-btns">
-                    <a href="tel:+919198923230" class="cta-call">📞 Call Now: +91 91989 23230</a>
-                    <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="cta-wa">💬 WhatsApp
-                        Us</a>
+                    <a href="tel:+919198923230" class="cta-call" data-i18n="cta.call">Call Now: +91 91989 23230</a>
+                    <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="cta-wa" data-i18n="cta.wa">WhatsApp Us</a>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ━━━━━━━━━━━━━━━━━ ESSENTIAL DELIVERY COVERAGE & SERVICE AREAS ━━━━━━━━━━━━━━━━━ -->
-    <section class="sec sec-alt" id="cities" style="padding:48px 0">
+    <section class="sec sec-alt" id="cities">
         <div class="container">
-            <div class="text-center" style="margin-bottom:24px">
+            <div class="text-center cities-intro">
                 <span class="sec-tag" data-i18n="cities.tag">Delivery Coverage</span>
-                <h2 class="sec-title" data-i18n="cities.title" style="margin-bottom:6px">Direct Bhatta Delivery Network</h2>
-                <p class="sec-sub" style="margin-bottom:24px">Guaranteed same-day trolley dispatch across Jaunpur &amp; 24-48 hr scheduled delivery to Varanasi, Sultanpur &amp; Eastern UP</p>
+                <h2 class="sec-title" data-i18n="cities.title">Direct Bhatta Delivery Network</h2>
+                <p class="sec-sub" data-i18n="cities.desc">Delivering premium bricks across Jaunpur, Varanasi &amp; UP — same-day within Jaunpur district</p>
             </div>
 
             <!-- Key Delivery Logistics Cards -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:16px;margin-bottom:24px">
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
-                    <div style="font-size:1.8rem">🚛</div>
+            <div class="cities-logistics">
+                <div class="cities-logistics-card">
+                    <div class="cities-logistics-icon" aria-hidden="true">🚛</div>
                     <div>
-                        <div style="font-weight:700;color:var(--ink);font-size:0.95rem">Same-Day Local Dispatch</div>
-                        <div style="font-size:0.8rem;color:var(--ink-3);margin-top:4px">For orders placed before 12:00 PM across Jaunpur district sites.</div>
+                        <div class="cities-logistics-title">Same-Day Local Dispatch</div>
+                        <div class="cities-logistics-desc">For orders placed before 12:00 PM across Jaunpur district sites.</div>
                     </div>
                 </div>
 
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
-                    <div style="font-size:1.8rem">🚜</div>
+                <div class="cities-logistics-card">
+                    <div class="cities-logistics-icon" aria-hidden="true">🚜</div>
                     <div>
-                        <div style="font-weight:700;color:var(--ink);font-size:0.95rem">Narrow Lane Mini-Trolleys</div>
-                        <div style="font-size:0.8rem;color:var(--ink-3);margin-top:4px">Custom vehicles for tight village roads and residential colonies.</div>
+                        <div class="cities-logistics-title">Narrow Lane Mini-Trolleys</div>
+                        <div class="cities-logistics-desc">Custom vehicles for tight village roads and residential colonies.</div>
                     </div>
                 </div>
 
-                <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
-                    <div style="font-size:1.8rem">👷</div>
+                <div class="cities-logistics-card">
+                    <div class="cities-logistics-icon" aria-hidden="true">👷</div>
                     <div>
-                        <div style="font-weight:700;color:var(--ink);font-size:0.95rem">Site Unloading Services</div>
-                        <div style="font-size:0.8rem;color:var(--ink-3);margin-top:4px">Optional Gurukripa trained laborers for stacking at your site.</div>
+                        <div class="cities-logistics-title">Site Unloading Services</div>
+                        <div class="cities-logistics-desc">Optional Gurukripa trained laborers for stacking at your site.</div>
                     </div>
                 </div>
             </div>
@@ -1345,9 +1311,9 @@
     <section class="sec" id="faq">
         <div class="container">
             <div class="text-center">
-                <span class="sec-tag">FAQ</span>
+                <span class="sec-tag" data-i18n="faq.tag">FAQ</span>
                 <h2 class="sec-title" data-i18n="faq.title">Frequently Asked Questions</h2>
-                <p class="sec-sub">Everything you need to know about Gurukripa Bricks</p>
+                <p class="sec-sub" data-i18n="faq.desc">Everything you need to know about Gurukripa Bricks</p>
             </div>
             <!-- Quick FAQ Category Filter Tags -->
             <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 24px">
@@ -1420,23 +1386,23 @@
     <section class="sec" id="contact">
         <div class="container">
             <div class="text-center">
-                <span class="sec-tag">Get In Touch</span>
-                <h2 class="sec-title">Contact Us</h2>
-                <p class="sec-sub">We respond within the hour — or just call us directly</p>
+                <span class="sec-tag" data-i18n="contact.tag">Get In Touch</span>
+                <h2 class="sec-title" data-i18n="contact.title">Contact Us</h2>
+                <p class="sec-sub" data-i18n="contact.desc">We respond within the hour — or just call us directly</p>
             </div>
             <div class="contact-grid">
                 <div class="contact-info">
                     <div class="contact-item">
                         <div class="contact-item-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
                         <div>
-                            <div class="contact-item-label">Phone</div>
+                            <div class="contact-item-label" data-i18n="contact.labelPhone">Phone</div>
                             <div class="contact-item-value"><a href="tel:+919198923230">+91 91989 23230</a></div>
                         </div>
                     </div>
                     <div class="contact-item">
                         <div class="contact-item-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg></div>
                         <div>
-                            <div class="contact-item-label">Email</div>
+                            <div class="contact-item-label" data-i18n="contact.labelEmail">Email</div>
                             <div class="contact-item-value"><a
                                     href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></div>
                         </div>
@@ -1444,7 +1410,7 @@
                     <div class="contact-item">
                         <div class="contact-item-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
                         <div>
-                            <div class="contact-item-label">Address</div>
+                            <div class="contact-item-label" data-i18n="contact.labelAddress">Address</div>
                             <div class="contact-item-value">Nevada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) —
                                 222001</div>
                         </div>
@@ -1452,13 +1418,14 @@
                     <div class="contact-item">
                         <div class="contact-item-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                         <div>
-                            <div class="contact-item-label">Working Hours</div>
+                            <div class="contact-item-label" data-i18n="contact.labelHours">Working Hours</div>
                             <div class="contact-item-value">Mon – Sat &nbsp;|&nbsp; 8:00 AM – 6:00 PM</div>
                         </div>
                     </div>
                     <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="btn btn-primary btn-full"
                         style="gap:8px">
-                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg> Chat on WhatsApp
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+                        <span data-i18n="contact.whatsapp">Chat on WhatsApp</span>
                     </a>
                 </div>
                 <!-- Google Maps Embed — Guru Kripa Eant Udyog, Newada, Jalalpur -->
@@ -1472,7 +1439,7 @@
                     <a class="contact-directions" href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf"
                        target="_blank" rel="noopener">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        Get Directions — Open in Google Maps
+                        <span data-i18n="contact.directions">Get Directions — Open in Google Maps</span>
                     </a>
                 </div>
 
@@ -1480,40 +1447,40 @@
                     <form id="contactForm" onsubmit="handleContactSubmit(event)" novalidate>
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="cName">Full Name *</label>
+                                <label class="form-label" for="cName" data-i18n="contact.formName">Full Name *</label>
                                 <input type="text" id="cName" name="name" class="form-input"
-                                    placeholder="Your full name" required>
+                                    placeholder="Your full name" required data-i18n="contact.phName">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="cEmail">Email *</label>
+                                <label class="form-label" for="cEmail" data-i18n="contact.formEmail">Email *</label>
                                 <input type="email" id="cEmail" name="email" class="form-input"
-                                    placeholder="your@email.com" required>
+                                    placeholder="your@email.com" required data-i18n="contact.phEmail">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="cPhone">Phone *</label>
+                                <label class="form-label" for="cPhone" data-i18n="contact.formPhone">Phone *</label>
                                 <input type="tel" id="cPhone" name="phone" class="form-input"
-                                    placeholder="+91 98765 43210" required>
+                                    placeholder="+91 98765 43210" required data-i18n="contact.phPhone">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="cSubject">Subject *</label>
+                                <label class="form-label" for="cSubject" data-i18n="contact.formSubject">Subject *</label>
                                 <select id="cSubject" name="subject" class="form-select" required>
-                                    <option value="">Select subject</option>
-                                    <option value="general">General Inquiry</option>
-                                    <option value="products">Product Information</option>
-                                    <option value="orders">Order & Delivery</option>
-                                    <option value="quote">Get a Quote</option>
-                                    <option value="complaint">Complaint</option>
+                                    <option value="" data-i18n="contact.subjectSelect">Select subject</option>
+                                    <option value="general" data-i18n="contact.subjectGeneral">General Inquiry</option>
+                                    <option value="products" data-i18n="contact.subjectProducts">Product Information</option>
+                                    <option value="orders" data-i18n="contact.subjectOrders">Order & Delivery</option>
+                                    <option value="quote" data-i18n="contact.subjectQuote">Get a Quote</option>
+                                    <option value="complaint" data-i18n="contact.subjectComplaint">Complaint</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="cMessage">Message *</label>
+                            <label class="form-label" for="cMessage" data-i18n="contact.formMessage">Message *</label>
                             <textarea id="cMessage" name="message" class="form-textarea"
-                                placeholder="Describe your inquiry in detail..." required></textarea>
+                                placeholder="Describe your inquiry in detail..." required data-i18n="contact.phMessage"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-full" id="contactSubmitBtn">
+                        <button type="submit" class="btn btn-primary btn-full" id="contactSubmitBtn" data-i18n="contact.sendBtn">
                             Send Message
                         </button>
                     </form>
@@ -1534,7 +1501,7 @@
                         <span class="footer-logo-badge">GBI</span>
                         गुरुकृपा ईंट उद्योग
                     </div>
-                    <p class="footer-brand-desc">
+                    <p class="footer-brand-desc" data-i18n="footer.brandDesc">
                         Jaunpur's premier brick manufacturer since 1998. 25+ years of double-fired Grade-A quality, compressive strength, and trust you can build your home on.
                     </p>
                     <div class="footer-compliance-badges">
@@ -1563,24 +1530,22 @@
 
                 <!-- Column 2: Quick Links -->
                 <div class="footer-col">
-                    <h4 class="footer-col-title">Quick Navigation</h4>
+                    <h4 class="footer-col-title" data-i18n="footer.quickLinks">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#products">All Products</a></li>
-                        <li><a href="#calculator">3-in-1 Estimator</a></li>
-                        <li><a href="#about">About Our Kiln</a></li>
-                        <li><a href="#gallery">Kiln Factory Gallery</a></li>
-                        <li><a href="#reviews">Customer Reviews</a></li>
-                        <li><button type="button" onclick="openLegalModal('quality')">Quality Standards</button></li>
-                        <li><button type="button" onclick="openTrackerModal()">Live Track Delivery</button></li>
-                        <li><a href="#faq">FAQs</a></li>
-                        <li><a href="#contact">Contact &amp; Location</a></li>
+                        <li><a href="#home" data-i18n="nav.home">Home</a></li>
+                        <li><a href="#products" data-i18n="nav.products">Products</a></li>
+                        <li><a href="#calculator" data-i18n="nav.calculator">Estimator</a></li>
+                        <li><a href="#about" data-i18n="nav.about">About</a></li>
+                        <li><a href="#gallery" data-i18n="nav.gallery">Gallery</a></li>
+                        <li><button type="button" onclick="openLegalModal('quality')" data-i18n="footer.quality">Quality Standards</button></li>
+                        <li><button type="button" onclick="openTrackerModal()" data-i18n="nav.trackOrder">Track Delivery</button></li>
+                        <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
                     </ul>
                 </div>
 
                 <!-- Column 3: Products & Standard Trolleys -->
                 <div class="footer-col">
-                    <h4 class="footer-col-title">Brick Grades</h4>
+                    <h4 class="footer-col-title" data-i18n="footer.ourProducts">Our Products</h4>
                     <ul class="footer-links">
                         <li><a href="#products">Shiv Eent (Grade-A)</a></li>
                         <li><a href="#products">Awwal Bricks (₹28,200/trolley)</a></li>
@@ -1594,7 +1559,7 @@
 
                 <!-- Column 4: Newsletter, Social & Deliveries -->
                 <div class="footer-col">
-                    <h4 class="footer-col-title">Connect &amp; Updates</h4>
+                    <h4 class="footer-col-title" data-i18n="footer.connect">Connect With Us</h4>
                     <div class="footer-social">
                         <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="social-btn" aria-label="WhatsApp" title="WhatsApp"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg></a>
                         <a href="https://www.facebook.com/profile.php?id=100080293837397" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook" title="Facebook">f</a>
@@ -1602,10 +1567,10 @@
                         <a href="tel:+919198923230" class="social-btn" aria-label="Call Kiln Direct" title="Call Kiln"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></a>
                     </div>
                     <div class="newsletter-wrap">
-                        <p class="newsletter-desc">Receive wholesale brick rate alerts &amp; seasonal offers:</p>
+                        <p class="newsletter-desc" data-i18n="footer.newsletterDesc">Get offers &amp; updates</p>
                         <form onsubmit="handleNewsletter(event)" class="newsletter-form">
-                            <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Your email address">
-                            <button type="submit" class="newsletter-submit">Subscribe</button>
+                            <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Your email address" data-i18n="footer.emailPh">
+                            <button type="submit" class="newsletter-submit" data-i18n="footer.subscribe">Subscribe</button>
                         </form>
                     </div>
                     <p class="footer-delivery-note">
@@ -1616,7 +1581,7 @@
 
             <!-- Accepted Payments -->
             <div class="footer-payments">
-                <span class="pay-title">Verified Payments Accepted:</span>
+                <span class="pay-title" data-i18n="footer.weAccept">We Accept:</span>
                 <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> UPI / QR</span>
                 <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Google Pay</span>
                 <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg> PhonePe</span>
@@ -1629,7 +1594,7 @@
 
             <!-- Bottom Credits & Legal Links -->
             <div class="footer-bottom">
-                <p class="footer-copy">© 2026 Gurukripa Bricks Industry (गुरुकृपा ईंट उद्योग). All rights reserved. | Handcrafted in Jaunpur, UP</p>
+                <p class="footer-copy" data-i18n="footer.rights">© 2026 Gurukripa Bricks Industry. All rights reserved.</p>
                 <div class="footer-bottom-links">
                     <button type="button" class="footer-legal-link" onclick="openLegalModal('privacy')">Privacy Policy</button>
                     <span class="footer-legal-dot">•</span>
@@ -1647,11 +1612,13 @@
     <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
     <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle">
         <div class="cart-head">
-            <div style="display:flex;align-items:center;gap:10px">
+            <div class="cart-head-title">
                 <h2 id="cartDrawerTitle" data-i18n="cart.title">My Cart</h2>
                 <span class="cart-head-count" id="cartHeadCount">0 items</span>
             </div>
-            <button type="button" class="cart-close" onclick="closeCart()" aria-label="Close cart">✕</button>
+            <button type="button" class="cart-close" onclick="closeCart()" aria-label="Close cart">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
         </div>
         <!-- Free Delivery Progress Bar -->
         <div class="cart-delivery-progress" id="cartDeliveryProgress">
@@ -1665,15 +1632,15 @@
         </div>
 
         <!-- Trolley Capacity Load Bar & Bulk Discount Ladder -->
-        <div class="cart-trolley-progress" id="cartTrolleyProgress" style="margin:4px 16px 8px;padding:10px 12px;background:var(--bg-subtle);border-radius:10px;border:1px solid var(--line)">
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;font-weight:700;margin-bottom:6px">
-                <span>🚜 Trolley Load (4,000 pcs)</span>
-                <span id="cartTrolleyPct" style="color:var(--brand)">0%</span>
+        <div class="cart-trolley-progress" id="cartTrolleyProgress">
+            <div class="cart-trolley-progress__row">
+                <span>Trolley Load (4,000 pcs)</span>
+                <span class="cart-trolley-progress__pct" id="cartTrolleyPct">0%</span>
             </div>
-            <div class="cart-progress-track" style="height:6px;background:rgba(0,0,0,0.06);border-radius:3px;overflow:hidden">
-                <div id="cartTrolleyFill" style="width:0%;height:100%;background:linear-gradient(90deg,var(--brand),#f59e0b);border-radius:3px;transition:width 0.3s"></div>
+            <div class="cart-trolley-progress__track">
+                <div class="cart-trolley-progress__fill" id="cartTrolleyFill"></div>
             </div>
-            <div id="cartTrolleyLadder" style="font-size:0.72rem;color:var(--ink-2);margin-top:6px;line-height:1.3">
+            <div class="cart-trolley-progress__hint" id="cartTrolleyLadder">
                 Add 4,000 bricks to complete 1 full trolley load &amp; unlock 5% bulk discount.
             </div>
         </div>
@@ -1754,7 +1721,7 @@
                 <svg width="20" height="20" fill="none" stroke="var(--brand)" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="var(--brand)"/>
                 </svg>
-                <h2 id="wishlistDrawerTitle">My Wishlist</h2>
+                <h2 id="wishlistDrawerTitle" data-i18n="wishlist.title">My Wishlist</h2>
                 <span class="cart-head-count" id="wishlistHeadCount">0 items</span>
             </div>
             <button type="button" class="cart-close" onclick="closeWishlistDrawer()" aria-label="Close wishlist">
@@ -1768,15 +1735,15 @@
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                     </svg>
                 </div>
-                <h3>Your Wishlist is Empty</h3>
-                <p>Save bricks you love by tapping the heart on any product card.</p>
-                <button type="button" class="btn btn-primary btn-sm cart-empty-cta" onclick="closeWishlistDrawer();scrollToSection('products')">Browse Products</button>
+                <h3 data-i18n="wishlist.emptyTitle">Your Wishlist is Empty</h3>
+                <p data-i18n="wishlist.emptyText">Save bricks you love by tapping the heart on any product card.</p>
+                <button type="button" class="btn btn-primary btn-sm cart-empty-cta" onclick="closeWishlistDrawer();scrollToSection('products')" data-i18n="wishlist.browse">Browse Products</button>
             </div>
             <div id="wishlistItemsList" hidden></div>
         </div>
         <div class="cart-footer" id="wishlistFooter" hidden>
             <button type="button" class="cart-checkout-btn" onclick="moveAllWishlistToCart()">
-                <span>Add All to Cart</span>
+                <span data-i18n="wishlist.addAll">Add All to Cart</span>
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
@@ -1784,7 +1751,7 @@
 
     <!-- ━━━━━━━━━━━━━━━━━ AUTH MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="authModal" role="dialog" aria-modal="true" aria-label="Login or register" onclick="handleAuthOverlayClick(event)">
-        <div class="modal-box" id="authModalBox">
+        <div class="modal-box modal-box--md" id="authModalBox">
             <div class="auth-modal-brand">
                 <div class="auth-brand-icon"><svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="17"/><line x1="16" y1="7" x2="16" y2="17"/></svg></div>
             </div>
@@ -1811,8 +1778,8 @@
                      every panel is reachable with Tab and no tabpanel/aria-selected
                      contract has to be maintained by hand. Matches the profile hub. -->
                 <div class="auth-tabs" role="group" aria-label="Sign in or create an account">
-                    <button type="button" class="auth-tab active" onclick="switchAuthTab('login',this)" id="tabLogin" aria-controls="loginPanel" aria-current="true">Sign In</button>
-                    <button type="button" class="auth-tab" onclick="switchAuthTab('register',this)" id="tabRegister" aria-controls="registerPanel">Sign Up</button>
+                    <button type="button" class="auth-tab active" onclick="switchAuthTab('login',this)" id="tabLogin" aria-controls="loginPanel" aria-current="true" data-i18n="auth.signIn">Sign In</button>
+                    <button type="button" class="auth-tab" onclick="switchAuthTab('register',this)" id="tabRegister" aria-controls="registerPanel" data-i18n="auth.signUp">Sign Up</button>
                 </div>
 
                 <!-- Login Panel -->
@@ -1839,11 +1806,11 @@
                             </div>
                         </div>
                         <div class="auth-options">
-                            <label class="auth-check"><input type="checkbox" id="rememberMe" checked> Remember me</label>
-                            <button type="button" class="auth-forgot" onclick="handleForgotPw()">Forgot password?</button>
+                            <label class="auth-check"><input type="checkbox" id="rememberMe" checked> <span data-i18n="auth.remember">Remember me</span></label>
+                            <button type="button" class="auth-forgot" onclick="handleForgotPw()" data-i18n="auth.forgot">Forgot password?</button>
                         </div>
                         <button type="submit" class="auth-submit" id="loginSubmitBtn">
-                            <span>Sign In to Account</span>
+                            <span data-i18n="auth.submitLogin">Sign In to Account</span>
                             <svg class="auth-submit-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                         </button>
                         <div class="auth-divider"><span data-i18n="auth.orContinue">or continue with</span></div>
@@ -1948,7 +1915,7 @@
                         </label>
                         <div class="auth-error-msg auth-terms-err" id="regTermsErr"></div>
                         <button type="submit" class="auth-submit" id="registerSubmitBtn">
-                            <span>Create Free Account</span>
+                            <span data-i18n="auth.submitRegister">Create Account</span>
                             <svg class="auth-submit-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                         </button>
                         <div class="auth-divider"><span data-i18n="auth.orContinue">or continue with</span></div>
@@ -1986,11 +1953,11 @@
     <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━
          Mobile: bottom sheet (grab handle, sticky header + tabs, scrolling
          body, safe-area aware). Desktop: centred 620px dialog.
-         All geometry lives in refinements.css / overlays.css - no inline styles,
+         All geometry lives in refinements.css / overlays.css / popups.css - no inline styles,
          because inline styles cannot respond to viewport or open mobile keyboard.
     -->
     <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileHeaderName" onclick="handleProfileOverlayClick(event)">
-        <div class="modal-box profile-modal-box">
+        <div class="modal-box modal-box--lg profile-modal-box">
             <!-- Compact header card: who is buying + what proof is on file -->
             <div class="profile-header">
                 <button type="button" class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close profile">
@@ -2272,7 +2239,7 @@
 
     <!-- ━━━━━━━━━━━━━━━━━ CHECKOUT SLIDE-OVER (MOBILE-FIRST) ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay checkout-modal co-sheet" id="checkoutModal" onclick="handleCheckoutOverlayClick(event)">
-        <div class="modal-box" id="checkoutBox" role="dialog" aria-modal="true" aria-labelledby="coSheetTitle">
+        <div class="modal-box modal-box--lg" id="checkoutBox" role="dialog" aria-modal="true" aria-labelledby="coSheetTitle">
             <!-- Sticky sheet header -->
             <div class="co-sheet__head">
                 <div>
@@ -2280,10 +2247,12 @@
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                         Direct Kiln Dispatch · Jalalpur Yard
                     </span>
-                    <div class="co-sheet__title" id="coSheetTitle">Checkout &amp; Order Summary</div>
-                    <div class="co-sheet__sub">The yard confirms the loading slot after the order reaches it.</div>
+                    <div class="co-sheet__title" id="coSheetTitle" data-i18n="checkout.title">Checkout &amp; Order Summary</div>
+                    <div class="co-sheet__sub" data-i18n="checkout.sub">The yard confirms the loading slot after the order reaches it.</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeCheckout()" aria-label="Close Checkout">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeCheckout()" aria-label="Close Checkout">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             </div>
 
             <!-- Numbered Step Bar -->
@@ -2291,21 +2260,21 @@
                 <div class="co-step-item">
                     <div class="co-step-wrap active" id="cStepWrap1">
                         <div class="co-step-num">1</div>
-                        <div class="co-step-label">Details</div>
+                        <div class="co-step-label" data-i18n="checkout.stepDetails">Details</div>
                     </div>
                     <div class="co-step-line"></div>
                 </div>
                 <div class="co-step-item">
                     <div class="co-step-wrap" id="cStepWrap2">
                         <div class="co-step-num">2</div>
-                        <div class="co-step-label">Payment</div>
+                        <div class="co-step-label" data-i18n="checkout.stepPayment">Payment</div>
                     </div>
                     <div class="co-step-line"></div>
                 </div>
                 <div class="co-step-item">
                     <div class="co-step-wrap" id="cStepWrap3">
                         <div class="co-step-num">3</div>
-                        <div class="co-step-label">Confirm</div>
+                        <div class="co-step-label" data-i18n="checkout.stepConfirm">Confirm</div>
                     </div>
                 </div>
             </div>
@@ -2554,15 +2523,15 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ BULK QUOTATION & B2B RFQ MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ BULK QUOTATION & B2B RFQ MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="bulkQuoteModal" role="dialog" aria-modal="true" aria-labelledby="rfqTitle" onclick="if(event.target===this)closeBulkQuoteModal()">
-        <div class="modal-box" style="max-width:620px">
+        <div class="modal-box modal-box--lg">
             <div class="modal-head">
                 <div>
                     <span class="sec-tag" style="margin-bottom:4px">B2B &amp; Wholesale</span>
                     <h3 class="modal-title" id="rfqTitle">Request Bulk Project Quotation</h3>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeBulkQuoteModal()" aria-label="Close dialog">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeBulkQuoteModal()" aria-label="Close dialog"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="modal-body" style="padding:20px">
                 <form id="bulkQuoteForm" onsubmit="handleBulkQuoteSubmit(event)">
@@ -2650,9 +2619,9 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ ADMIN & OPERATIONS PORTAL MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ ADMIN & OPERATIONS PORTAL MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="adminPortalModal" role="dialog" aria-modal="true" aria-labelledby="adminPortalTitle" onclick="if(event.target===this)closeAdminPortal()">
-        <div class="modal-box admin-modal-box">
+        <div class="modal-box modal-box--full admin-modal-box">
             <!-- Admin Header -->
             <div class="admin-header">
                 <div class="admin-header-left">
@@ -2661,7 +2630,7 @@
                 </div>
                 <div class="admin-header-right">
                     <span class="admin-station">Kiln Station: Jaunpur Unit 1</span>
-                    <button type="button" class="modal-close-btn admin-close" onclick="closeAdminPortal()" aria-label="Close Admin Portal">✕</button>
+                    <button type="button" class="modal-close-btn admin-close" onclick="closeAdminPortal()" aria-label="Close Admin Portal"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
                 </div>
             </div>
 
@@ -2713,10 +2682,15 @@
 
     <!-- ━━━━━━━━━━━━━━━━━ PRODUCT DETAIL MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay product-detail-modal" id="productModal" role="dialog" aria-modal="true" aria-label="Product details" onclick="handleProductModalClick(event)">
-        <div class="modal-box" id="productModalBox">
+        <div class="modal-box modal-box--lg" id="productModalBox">
             <div class="modal-head">
-                <div></div>
-                <button type="button" class="modal-close-btn" onclick="closeProductModal()">✕</button>
+                <div>
+                    <div class="modal-title">Product details</div>
+                    <div class="modal-subtitle">Specs, pricing, and trolley estimate</div>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closeProductModal()" aria-label="Close product details">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             </div>
             <div class="modal-body" style="padding-top:8px">
                 <div class="pd-grid" id="pdContent"></div>
@@ -2726,91 +2700,88 @@
 
     <!-- ━━━━━━━━━━━━━━━━━ PINCODE & FREIGHT RATE DELIVERY MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="pincodeModal" role="dialog" aria-modal="true" aria-label="Delivery availability check" onclick="if(event.target===this)closePincodeModal()">
-        <div class="modal-box" id="pincodeModalBox" style="max-width:520px;border-radius:18px">
-            <div class="modal-head" style="border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
-                <div style="display:flex;align-items:center;gap:10px">
-                    <span style="font-size:1.4rem">🚚</span>
-                    <div>
-                        <h3 style="font-size:1.05rem;font-weight:800;color:var(--ink);margin:0">Delivery &amp; Freight Checker</h3>
-                        <p style="font-size:0.75rem;color:var(--ink-3);margin:2px 0 0">Direct from Gurukripa Kiln, Newada, Jalalpur</p>
+        <div class="modal-box modal-box--md" id="pincodeModalBox">
+            <div class="modal-head">
+                <div>
+                    <div class="modal-badge" aria-hidden="true">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                     </div>
+                    <h3 class="modal-title">Delivery &amp; Freight Checker</h3>
+                    <p class="modal-subtitle">Direct from Gurukripa Kiln, Newada, Jalalpur</p>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closePincodeModal()" aria-label="Close delivery modal" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--ink-3)">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closePincodeModal()" aria-label="Close delivery modal">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             </div>
 
-            <div class="modal-body" style="padding:20px">
-                <!-- Pincode Input & Detect -->
-                <div style="margin-bottom:16px">
-                    <label for="modalPincodeInput" style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink-2);margin-bottom:6px">
-                        Enter 6-digit Delivery Pincode
-                    </label>
-                    <div style="display:flex;gap:8px">
-                        <input type="tel" id="modalPincodeInput" maxlength="6" placeholder="e.g. 222001 or 221001" inputmode="numeric"
-                            style="flex:1;padding:10px 14px;border:1.5px solid var(--line-mid);border-radius:10px;font-size:0.95rem;font-weight:700;letter-spacing:1px;outline:none"
+            <div class="modal-body">
+                <div class="auth-field">
+                    <label class="auth-label" for="modalPincodeInput">Enter 6-digit Delivery Pincode</label>
+                    <div class="pin-check-row">
+                        <input type="tel" id="modalPincodeInput" class="auth-input pin-check-input" maxlength="6" placeholder="e.g. 222001 or 221001" inputmode="numeric"
                             oninput="if(this.value.trim().length===6)runModalPincodeCheck()">
-                        <button type="button" class="btn btn-primary" onclick="runModalPincodeCheck()" style="padding:0 18px;min-height:44px;font-weight:700">
-                            Check
-                        </button>
+                        <button type="button" class="btn btn-primary" onclick="runModalPincodeCheck()">Check</button>
                     </div>
                 </div>
 
-                <!-- Quick District Selector Pills -->
-                <div style="margin-bottom:18px">
-                    <div style="font-size:0.72rem;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Quick Delivery Hubs:</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:6px">
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222001')">📍 Jaunpur City (222001)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('221001')">📍 Varanasi (221001)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222105')">📍 Kerakat (222105)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222003')">📍 Mariahu (222003)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222125')">📍 Badlapur (222125)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('275301')">📍 Azamgarh (275301)</button>
+                <div class="pin-hubs">
+                    <div class="pin-hubs__label">Quick delivery hubs</div>
+                    <div class="pin-hubs__chips">
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222001')">Jaunpur City (222001)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('221001')">Varanasi (221001)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222105')">Kerakat (222105)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222003')">Mariahu (222003)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222125')">Badlapur (222125)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('275301')">Azamgarh (275301)</button>
                     </div>
                 </div>
 
-                <!-- Vehicle Access Selector -->
-                <div style="margin-bottom:18px;padding:12px;background:var(--bg-subtle);border-radius:12px;border:1px solid var(--line)">
-                    <div style="font-size:0.75rem;font-weight:700;color:var(--ink);margin-bottom:8px">Site Road Access &amp; Vehicle Compatibility:</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer">
-                            <input type="radio" name="modalVehicle" id="vehTrolley" value="trolley" checked onchange="runModalPincodeCheck()" style="accent-color:var(--brand)">
-                            <span>Mini Trolley (4k pcs)<br><small style="color:var(--ink-3)">Narrow streets &lt; 12ft</small></span>
+                <div class="pin-vehicle">
+                    <div class="pin-vehicle__title">Site road access &amp; vehicle compatibility</div>
+                    <div class="pin-vehicle__grid">
+                        <label class="pin-vehicle__option">
+                            <input type="radio" name="modalVehicle" id="vehTrolley" value="trolley" checked onchange="runModalPincodeCheck()">
+                            <span>
+                                <strong>Mini Trolley (4k pcs)</strong>
+                                <small>Narrow streets &lt; 12ft</small>
+                            </span>
                         </label>
-                        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer">
-                            <input type="radio" name="modalVehicle" id="vehTruck" value="truck" onchange="runModalPincodeCheck()" style="accent-color:var(--brand)">
-                            <span>Heavy Truck (10k+ pcs)<br><small style="color:var(--ink-3)">Wide road &gt; 18ft</small></span>
+                        <label class="pin-vehicle__option">
+                            <input type="radio" name="modalVehicle" id="vehTruck" value="truck" onchange="runModalPincodeCheck()">
+                            <span>
+                                <strong>Heavy Truck (10k+ pcs)</strong>
+                                <small>Wide road &gt; 18ft</small>
+                            </span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Live Results Container -->
-                <div id="modalPincodeResult" style="display:none;margin-bottom:16px"></div>
+                <div id="modalPincodeResult" class="pin-result" style="display:none"></div>
 
-                <!-- Kiln Dispatch Guarantee -->
-                <div style="font-size:0.75rem;color:var(--ink-3);display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(22,163,74,0.06);border:1px solid rgba(22,163,74,0.2);border-radius:10px">
-                    <span style="font-size:1.1rem">⚡</span>
-                    <span><strong>Gurukripa Kiln Guarantee:</strong> Zero breakage replacement on unloading. Free delivery within 10 km!</span>
+                <div class="pin-guarantee" role="note">
+                    <strong>Gurukripa Kiln Guarantee:</strong> Zero breakage replacement on unloading. Free delivery within 10 km.
                 </div>
             </div>
 
-            <div class="modal-foot" style="padding:14px 20px;border-top:1px solid var(--line);background:var(--bg-card);display:flex;gap:10px">
-                <button type="button" class="btn btn-outline btn-full" onclick="closePincodeModal()">Close</button>
-                <button type="button" class="btn btn-primary btn-full" id="modalPincodeWaBtn" onclick="whatsappModalDeliveryQuote()" style="background:#16a34a">
-                    💬 Confirm on WhatsApp
+            <div class="modal-foot">
+                <button type="button" class="btn btn-outline" onclick="closePincodeModal()">Close</button>
+                <button type="button" class="btn btn-primary gb-btn-whatsapp" id="modalPincodeWaBtn" onclick="whatsappModalDeliveryQuote()">
+                    Confirm on WhatsApp
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ LIVE ORDER & DELIVERY TRACKER MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ LIVE ORDER & DELIVERY TRACKER MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="trackerModal" role="dialog" aria-modal="true" aria-label="Order and delivery tracker" onclick="if(event.target.id==='trackerModal')closeTrackerModal()">
-        <div class="modal-box tracker-modal-box">
+        <div class="modal-box modal-box--lg tracker-modal-box">
             <div class="modal-head">
                 <div>
                     <div class="modal-badge"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
                     <div class="modal-title">Live Delivery Tracker</div>
                     <div class="modal-subtitle">Track your brick trolley / truck dispatch status</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeTrackerModal()">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeTrackerModal()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="modal-body" style="padding-top:12px">
                 <div class="tracker-search-wrap">
@@ -2831,15 +2802,15 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ GST TAX INVOICE MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ GST TAX INVOICE MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="gstInvoiceModal" role="dialog" aria-modal="true" aria-label="GST tax invoice" onclick="if(event.target.id==='gstInvoiceModal')closeGstInvoice()">
-        <div class="modal-box gst-invoice-box">
-            <div class="modal-head" style="padding:16px 20px;border-bottom:1px solid var(--line)">
+        <div class="modal-box modal-box--xl gst-invoice-box">
+            <div class="modal-head">
                 <div>
-                    <div class="modal-title" style="font-size:1.1rem">📄 Tax Invoice / Cash Memo</div>
+                    <div class="modal-title">Tax Invoice / Cash Memo</div>
                     <div class="modal-subtitle">Gurukripa Bricks Industry Official GST Invoice</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeGstInvoice()">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeGstInvoice()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="modal-body" style="padding:0;max-height:75vh;overflow-y:auto">
                 <div class="gst-invoice-paper" id="gstInvoicePrintArea">
@@ -2853,15 +2824,15 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ INVOICE PREVIEW / PDF MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ INVOICE PREVIEW / PDF MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="invoicePdfModal" role="dialog" aria-modal="true" aria-label="Invoice preview" onclick="if(event.target.id==='invoicePdfModal')closeInvoicePdf()">
-        <div class="modal-box inv-pdf-box">
-            <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
+        <div class="modal-box modal-box--xl inv-pdf-box">
+            <div class="modal-head">
                 <div>
-                    <div class="modal-title" style="font-size:1.05rem">Invoice &amp; PDF</div>
+                    <div class="modal-title">Invoice &amp; PDF</div>
                     <div class="modal-subtitle" id="invPdfSubtitle">Preview, download or print a GST invoice</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="modal-body inv-pdf-body">
                 <iframe id="invPdfFrame" class="inv-pdf-frame" title="Invoice preview"></iframe>
@@ -2876,15 +2847,15 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ COMPANY PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ COMPANY PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="companyProfileModal" role="dialog" aria-modal="true" aria-label="Company profile" onclick="if(event.target.id==='companyProfileModal')closeCompanyProfile()">
-        <div class="modal-box cp-box">
-            <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
+        <div class="modal-box modal-box--lg cp-box">
+            <div class="modal-head">
                 <div>
-                    <div class="modal-title" style="font-size:1.05rem">🏢 Company Profile</div>
+                    <div class="modal-title">Company Profile</div>
                     <div class="modal-subtitle">These details appear on every generated invoice</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="modal-body cp-body">
                 <form id="companyProfileForm" onsubmit="return false" autocomplete="off">
@@ -2986,15 +2957,15 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ LEGAL & POLICIES MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ LEGAL & POLICIES MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="legalModal" role="dialog" aria-modal="true" aria-label="Legal and policies" onclick="if(event.target.id==='legalModal')closeLegalModal()">
-        <div class="modal-box legal-modal-box">
+        <div class="modal-box modal-box--lg legal-modal-box">
             <div class="modal-head">
                 <div>
                     <span class="sec-tag" style="margin-bottom:6px">Official Compliance</span>
                     <h3 class="modal-title" id="legalModalTitle">Terms &amp; Policies</h3>
                 </div>
-                <button type="button" class="modal-close" onclick="closeLegalModal()" aria-label="Close modal">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeLegalModal()" aria-label="Close modal"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
 
             <!-- Tab Navigation -->
@@ -3055,7 +3026,7 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ ORDER & RATE ALERT CENTER ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ ORDER & RATE ALERT CENTER ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="notificationCenterModal" role="dialog" aria-modal="true" aria-label="Notifications" onclick="if(event.target.id==='notificationCenterModal')closeNotificationCenter()">
         <div class="modal-box alert-center-box">
             <div class="modal-head">
@@ -3069,7 +3040,7 @@
                     <div class="modal-title">Order &amp; Rate Alerts</div>
                     <div class="modal-subtitle" id="alertUnreadCount">All caught up</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeNotificationCenter()" aria-label="Close alerts">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeNotificationCenter()" aria-label="Close alerts"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
 
             <div class="modal-body">
@@ -3225,7 +3196,7 @@
                         <polyline points="9 22 9 12 15 12 15 22" />
                     </svg>
                 </span>
-                <span class="mn-label">Home</span>
+                <span class="mn-label" data-i18n="mobile.home">Home</span>
             </a>
 
             <!-- 2. Products -->
@@ -3238,7 +3209,7 @@
                         <rect x="3" y="14" width="7" height="7" rx="1.5" />
                     </svg>
                 </span>
-                <span class="mn-label">Products</span>
+                <span class="mn-label" data-i18n="mobile.products">Products</span>
             </a>
 
             <!-- 3. Estimator -->
@@ -3251,7 +3222,7 @@
                         <line x1="8" y1="14" x2="12" y2="14" />
                     </svg>
                 </span>
-                <span class="mn-label">Estimator</span>
+                <span class="mn-label" data-i18n="mobile.calc">Estimator</span>
             </button>
 
             <!-- 4. Cart -->
@@ -3264,7 +3235,7 @@
                     </svg>
                     <span class="mn-badge cart-badge-off" id="mobileCartBadge">0</span>
                 </span>
-                <span class="mn-label">Cart</span>
+                <span class="mn-label" data-i18n="mobile.cart">Cart</span>
             </button>
 
             <!-- 5. Account (single, consistent profile entry — Track lives in the drawer) -->
@@ -3275,7 +3246,7 @@
                         <circle cx="12" cy="7" r="4" />
                     </svg>
                 </span>
-                <span class="mn-label">Account</span>
+                <span class="mn-label" data-i18n="mobile.profile">Account</span>
             </button>
         </div>
     </nav>

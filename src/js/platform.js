@@ -62,7 +62,7 @@ const Platform = (function () {
         try {
             const isDark = theme === 'dark' || (!theme && document.documentElement.getAttribute('data-theme') === 'dark');
             await StatusBar.setStyle({ style: isDark ? 'DARK' : 'LIGHT' });
-            await StatusBar.setBackgroundColor({ color: isDark ? '#130B05' : '#C8460A' });
+            await StatusBar.setBackgroundColor({ color: isDark ? '#130B05' : '#A83226' });
         } catch (e) {
             console.debug('StatusBar sync notice:', e);
         }
