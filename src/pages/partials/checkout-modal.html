@@ -1,6 +1,6 @@
     <!-- ━━━━━━━━━━━━━━━━━ CHECKOUT SLIDE-OVER (MOBILE-FIRST) ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay checkout-modal co-sheet" id="checkoutModal" onclick="handleCheckoutOverlayClick(event)">
-        <div class="modal-box" id="checkoutBox" role="dialog" aria-modal="true" aria-labelledby="coSheetTitle">
+        <div class="modal-box modal-box--lg" id="checkoutBox" role="dialog" aria-modal="true" aria-labelledby="coSheetTitle">
             <!-- Sticky sheet header -->
             <div class="co-sheet__head">
                 <div>
@@ -11,7 +11,9 @@
                     <div class="co-sheet__title" id="coSheetTitle">Checkout &amp; Order Summary</div>
                     <div class="co-sheet__sub">The yard confirms the loading slot after the order reaches it.</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeCheckout()" aria-label="Close Checkout">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeCheckout()" aria-label="Close Checkout">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             </div>
 
             <!-- Numbered Step Bar -->

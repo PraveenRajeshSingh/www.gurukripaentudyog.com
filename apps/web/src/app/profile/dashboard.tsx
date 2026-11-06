@@ -7,7 +7,7 @@ import { api, formatDate } from '@/lib/client-api';
 import { setSiteLang } from '@/lib/lang';
 import { SESSION_EVENT, notifySessionChange } from '@/lib/session';
 import type { MeUser, MeAddress, MeEnquiry, MeQuotation, MeOrder } from '@/types/account';
-import Modal from '@/components/ui/Modal';
+import { Modal, ConfirmDialog } from '@/components/ui/popup';
 import StatusPill from '@/components/ui/StatusPill';
 import PageLoader from '@/components/ui/PageLoader';
 import { PanelSkeleton } from '@/components/ui/Skeleton';
@@ -220,27 +220,16 @@ export default function AccountPortal() {
       {tab === 'orders' && <OrdersTab onActioned={setNotice} />}
       {tab === 'addresses' && <AddressesTab onActioned={setNotice} />}
 
-      {/* Logout confirmation */}
-      <Modal
+      <ConfirmDialog
         isOpen={logoutOpen}
         onClose={() => setLogoutOpen(false)}
+        onConfirm={logout}
         title="Sign out?"
-        description="You will need your phone number and password to view enquiries, quotations and orders again."
-        alert
-        maxWidth="sm"
-      >
-        <div className="flex gap-3 pt-2">
-          <button onClick={() => setLogoutOpen(false)} className={`${btnGhost} flex-1`} data-autofocus>
-            Stay signed in
-          </button>
-          <button
-            onClick={logout}
-            className="flex-1 inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white text-sm font-bold min-h-[44px] px-4 rounded-lg transition"
-          >
-            Sign out
-          </button>
-        </div>
-      </Modal>
+        message="You will need your phone number and password to view enquiries, quotations and orders again."
+        confirmLabel="Sign out"
+        cancelLabel="Stay signed in"
+        danger
+      />
     </div>
   );
 }

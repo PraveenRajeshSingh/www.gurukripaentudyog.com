@@ -1807,31 +1807,19 @@ main [id].cta-banner {
    never show a ring around the whole dialog surface. */
 .modal-box:focus { outline: none; }
 
-/* ── GBDialogs (confirm / alert / prompt) ── */
-.gb-dialog .modal-body { padding-top: 18px; }
-.gb-dialog-row { display: flex; align-items: flex-start; gap: 12px; }
-.gb-dialog-icon { flex-shrink: 0; line-height: 0; }
-.gb-dialog-msg { font-size: .88rem; color: var(--ink-2); line-height: 1.6; }
-.gb-dialog-input { padding-left: 14px; }
-.gb-dialog-foot {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-.gb-dialog-foot .btn { min-height: 42px; min-width: 96px; }
+/* ── GBDialogs chrome moved to popups.css (shared popup system).
+   Keep danger + spinner aliases here for cascade / test stability. ── */
 .gb-btn-danger {
-    background: #dc2626;
+    background: var(--danger);
     color: #fff;
-    border: 1px solid #dc2626;
+    border: 1px solid var(--danger);
     border-radius: var(--r-md);
     font-weight: 700;
     cursor: pointer;
-    transition: background var(--t);
+    transition: background var(--t), filter var(--t);
 }
-.gb-btn-danger:hover { background: #b91c1c; }
+.gb-btn-danger:hover { filter: brightness(0.94); }
 
-/* Busy/progress state used while a dialog action is in flight. */
 .gb-spin {
     width: 14px;
     height: 14px;

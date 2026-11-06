@@ -1,75 +1,72 @@
     <!-- ━━━━━━━━━━━━━━━━━ PINCODE & FREIGHT RATE DELIVERY MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="pincodeModal" role="dialog" aria-modal="true" aria-label="Delivery availability check" onclick="if(event.target===this)closePincodeModal()">
-        <div class="modal-box" id="pincodeModalBox" style="max-width:520px;border-radius:18px">
-            <div class="modal-head" style="border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
-                <div style="display:flex;align-items:center;gap:10px">
-                    <span style="font-size:1.4rem">🚚</span>
-                    <div>
-                        <h3 style="font-size:1.05rem;font-weight:800;color:var(--ink);margin:0">Delivery &amp; Freight Checker</h3>
-                        <p style="font-size:0.75rem;color:var(--ink-3);margin:2px 0 0">Direct from Gurukripa Kiln, Newada, Jalalpur</p>
+        <div class="modal-box modal-box--md" id="pincodeModalBox">
+            <div class="modal-head">
+                <div>
+                    <div class="modal-badge" aria-hidden="true">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                     </div>
+                    <h3 class="modal-title">Delivery &amp; Freight Checker</h3>
+                    <p class="modal-subtitle">Direct from Gurukripa Kiln, Newada, Jalalpur</p>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closePincodeModal()" aria-label="Close delivery modal" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--ink-3)">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closePincodeModal()" aria-label="Close delivery modal">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             </div>
 
-            <div class="modal-body" style="padding:20px">
-                <!-- Pincode Input & Detect -->
-                <div style="margin-bottom:16px">
-                    <label for="modalPincodeInput" style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink-2);margin-bottom:6px">
-                        Enter 6-digit Delivery Pincode
-                    </label>
-                    <div style="display:flex;gap:8px">
-                        <input type="tel" id="modalPincodeInput" maxlength="6" placeholder="e.g. 222001 or 221001" inputmode="numeric"
-                            style="flex:1;padding:10px 14px;border:1.5px solid var(--line-mid);border-radius:10px;font-size:0.95rem;font-weight:700;letter-spacing:1px;outline:none"
+            <div class="modal-body">
+                <div class="auth-field">
+                    <label class="auth-label" for="modalPincodeInput">Enter 6-digit Delivery Pincode</label>
+                    <div class="pin-check-row">
+                        <input type="tel" id="modalPincodeInput" class="auth-input pin-check-input" maxlength="6" placeholder="e.g. 222001 or 221001" inputmode="numeric"
                             oninput="if(this.value.trim().length===6)runModalPincodeCheck()">
-                        <button type="button" class="btn btn-primary" onclick="runModalPincodeCheck()" style="padding:0 18px;min-height:44px;font-weight:700">
-                            Check
-                        </button>
+                        <button type="button" class="btn btn-primary" onclick="runModalPincodeCheck()">Check</button>
                     </div>
                 </div>
 
-                <!-- Quick District Selector Pills -->
-                <div style="margin-bottom:18px">
-                    <div style="font-size:0.72rem;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Quick Delivery Hubs:</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:6px">
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222001')">📍 Jaunpur City (222001)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('221001')">📍 Varanasi (221001)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222105')">📍 Kerakat (222105)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222003')">📍 Mariahu (222003)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222125')">📍 Badlapur (222125)</button>
-                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('275301')">📍 Azamgarh (275301)</button>
+                <div class="pin-hubs">
+                    <div class="pin-hubs__label">Quick delivery hubs</div>
+                    <div class="pin-hubs__chips">
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222001')">Jaunpur City (222001)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('221001')">Varanasi (221001)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222105')">Kerakat (222105)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222003')">Mariahu (222003)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('222125')">Badlapur (222125)</button>
+                        <button type="button" class="btn-pill-chip" onclick="setModalPincode('275301')">Azamgarh (275301)</button>
                     </div>
                 </div>
 
-                <!-- Vehicle Access Selector -->
-                <div style="margin-bottom:18px;padding:12px;background:var(--bg-subtle);border-radius:12px;border:1px solid var(--line)">
-                    <div style="font-size:0.75rem;font-weight:700;color:var(--ink);margin-bottom:8px">Site Road Access &amp; Vehicle Compatibility:</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer">
-                            <input type="radio" name="modalVehicle" id="vehTrolley" value="trolley" checked onchange="runModalPincodeCheck()" style="accent-color:var(--brand)">
-                            <span>Mini Trolley (4k pcs)<br><small style="color:var(--ink-3)">Narrow streets &lt; 12ft</small></span>
+                <div class="pin-vehicle">
+                    <div class="pin-vehicle__title">Site road access &amp; vehicle compatibility</div>
+                    <div class="pin-vehicle__grid">
+                        <label class="pin-vehicle__option">
+                            <input type="radio" name="modalVehicle" id="vehTrolley" value="trolley" checked onchange="runModalPincodeCheck()">
+                            <span>
+                                <strong>Mini Trolley (4k pcs)</strong>
+                                <small>Narrow streets &lt; 12ft</small>
+                            </span>
                         </label>
-                        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer">
-                            <input type="radio" name="modalVehicle" id="vehTruck" value="truck" onchange="runModalPincodeCheck()" style="accent-color:var(--brand)">
-                            <span>Heavy Truck (10k+ pcs)<br><small style="color:var(--ink-3)">Wide road &gt; 18ft</small></span>
+                        <label class="pin-vehicle__option">
+                            <input type="radio" name="modalVehicle" id="vehTruck" value="truck" onchange="runModalPincodeCheck()">
+                            <span>
+                                <strong>Heavy Truck (10k+ pcs)</strong>
+                                <small>Wide road &gt; 18ft</small>
+                            </span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Live Results Container -->
-                <div id="modalPincodeResult" style="display:none;margin-bottom:16px"></div>
+                <div id="modalPincodeResult" class="pin-result" style="display:none"></div>
 
-                <!-- Kiln Dispatch Guarantee -->
-                <div style="font-size:0.75rem;color:var(--ink-3);display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(22,163,74,0.06);border:1px solid rgba(22,163,74,0.2);border-radius:10px">
-                    <span style="font-size:1.1rem">⚡</span>
-                    <span><strong>Gurukripa Kiln Guarantee:</strong> Zero breakage replacement on unloading. Free delivery within 10 km!</span>
+                <div class="pin-guarantee" role="note">
+                    <strong>Gurukripa Kiln Guarantee:</strong> Zero breakage replacement on unloading. Free delivery within 10 km.
                 </div>
             </div>
 
-            <div class="modal-foot" style="padding:14px 20px;border-top:1px solid var(--line);background:var(--bg-card);display:flex;gap:10px">
-                <button type="button" class="btn btn-outline btn-full" onclick="closePincodeModal()">Close</button>
-                <button type="button" class="btn btn-primary btn-full" id="modalPincodeWaBtn" onclick="whatsappModalDeliveryQuote()" style="background:#16a34a">
-                    💬 Confirm on WhatsApp
+            <div class="modal-foot">
+                <button type="button" class="btn btn-outline" onclick="closePincodeModal()">Close</button>
+                <button type="button" class="btn btn-primary gb-btn-whatsapp" id="modalPincodeWaBtn" onclick="whatsappModalDeliveryQuote()">
+                    Confirm on WhatsApp
                 </button>
             </div>
         </div>

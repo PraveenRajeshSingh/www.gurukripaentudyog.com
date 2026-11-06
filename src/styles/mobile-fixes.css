@@ -2057,28 +2057,39 @@ body { overscroll-behavior-y: contain; }
    ═══════════════════════════════════════════════════════════════ */
 
 .modal-overlay {
-    background: rgba(18, 10, 5, 0.65) !important;
+    background:
+        radial-gradient(ellipse 80% 50% at 50% 100%, rgba(200, 70, 10, 0.18), transparent 55%),
+        rgba(18, 10, 5, 0.62) !important;
     backdrop-filter: blur(10px) saturate(160%) !important;
     -webkit-backdrop-filter: blur(10px) saturate(160%) !important;
     transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.24s !important;
 }
 
 .modal-box {
-    background: #FFFFFF !important;
+    background:
+        linear-gradient(180deg, rgba(251, 234, 224, 0.5) 0%, transparent 72px),
+        #FFFFFF !important;
     border: 1px solid rgba(200, 70, 10, 0.12) !important;
     box-shadow: 0 24px 64px -12px rgba(28, 16, 9, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.8) inset !important;
-    border-radius: 24px !important;
+    border-radius: 22px !important;
     transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s !important;
     overflow: hidden !important;
     display: flex !important;
     flex-direction: column !important;
 }
 
+.modal-box--sm { max-width: 380px !important; }
+.modal-box--md { max-width: 460px !important; }
+.modal-box--lg { max-width: 600px !important; }
+.modal-box--xl { max-width: 760px !important; }
+.modal-box--full { max-width: min(960px, 96vw) !important; }
+
 .modal-head {
     background: linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 100%) !important;
     border-bottom: 1px solid rgba(200, 70, 10, 0.08) !important;
-    padding: 18px 24px 16px !important;
+    padding: 16px 20px 14px !important;
     position: relative !important;
+    flex-shrink: 0 !important;
 }
 
 .modal-head::before {
@@ -2086,7 +2097,7 @@ body { overscroll-behavior-y: contain; }
     display: block;
     width: 40px;
     height: 4px;
-    border-radius: 2px;
+    border-radius: 999px;
     background: rgba(28, 16, 9, 0.14);
     margin: -4px auto 12px auto;
 }
@@ -2097,32 +2108,47 @@ body { overscroll-behavior-y: contain; }
     }
 }
 
-.modal-close-btn {
-    width: 34px !important;
-    height: 34px !important;
+.modal-close-btn,
+.cart-close {
+    width: 44px !important;
+    height: 44px !important;
     border-radius: 50% !important;
     background: #F4EFEA !important;
     border: 1px solid rgba(200, 70, 10, 0.12) !important;
     color: var(--ink-2) !important;
     font-size: 0.95rem !important;
     font-weight: 700 !important;
-    display: flex !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    transition: all 0.18s ease !important;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease !important;
 }
 
-.modal-close-btn:hover {
-    background: var(--brand) !important;
-    color: #FFFFFF !important;
-    border-color: var(--brand) !important;
-    transform: rotate(90deg) !important;
+.modal-close-btn:hover,
+.cart-close:hover {
+    background: var(--brand-light) !important;
+    color: var(--brand) !important;
+    border-color: rgba(200, 70, 10, 0.22) !important;
+    transform: none !important;
 }
 
 .modal-body {
-    padding: 20px 24px !important;
+    padding: 18px 20px 22px !important;
     overflow-y: auto !important;
+    overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+}
+
+.modal-foot {
+    flex-shrink: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+    border-top: 1px solid rgba(200, 70, 10, 0.08) !important;
+    background: var(--bg-subtle) !important;
 }
 
 /* Modern Pill Inputs & Selects inside all Modals */

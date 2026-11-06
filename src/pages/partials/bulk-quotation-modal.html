@@ -1,12 +1,12 @@
-    <!-- ━━━━━━━━━━━━━━━━━ BULK QUOTATION & B2B RFQ MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ BULK QUOTATION & B2B RFQ MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="bulkQuoteModal" role="dialog" aria-modal="true" aria-labelledby="rfqTitle" onclick="if(event.target===this)closeBulkQuoteModal()">
-        <div class="modal-box" style="max-width:620px">
+        <div class="modal-box modal-box--lg">
             <div class="modal-head">
                 <div>
                     <span class="sec-tag" style="margin-bottom:4px">B2B &amp; Wholesale</span>
                     <h3 class="modal-title" id="rfqTitle">Request Bulk Project Quotation</h3>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeBulkQuoteModal()" aria-label="Close dialog">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeBulkQuoteModal()" aria-label="Close dialog"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="modal-body" style="padding:20px">
                 <form id="bulkQuoteForm" onsubmit="handleBulkQuoteSubmit(event)">

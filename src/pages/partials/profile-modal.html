@@ -1,11 +1,11 @@
     <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━
          Mobile: bottom sheet (grab handle, sticky header + tabs, scrolling
          body, safe-area aware). Desktop: centred 620px dialog.
-         All geometry lives in refinements.css / overlays.css - no inline styles,
+         All geometry lives in refinements.css / overlays.css / popups.css - no inline styles,
          because inline styles cannot respond to viewport or open mobile keyboard.
     -->
     <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileHeaderName" onclick="handleProfileOverlayClick(event)">
-        <div class="modal-box profile-modal-box">
+        <div class="modal-box modal-box--lg profile-modal-box">
             <!-- Compact header card: who is buying + what proof is on file -->
             <div class="profile-header">
                 <button type="button" class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close profile">

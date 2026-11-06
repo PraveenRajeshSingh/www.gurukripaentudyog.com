@@ -1,12 +1,12 @@
-    <!-- ━━━━━━━━━━━━━━━━━ COMPANY PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ COMPANY PROFILE MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="companyProfileModal" role="dialog" aria-modal="true" aria-label="Company profile" onclick="if(event.target.id==='companyProfileModal')closeCompanyProfile()">
-        <div class="modal-box cp-box">
-            <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
+        <div class="modal-box modal-box--lg cp-box">
+            <div class="modal-head">
                 <div>
-                    <div class="modal-title" style="font-size:1.05rem">🏢 Company Profile</div>
+                    <div class="modal-title">Company Profile</div>
                     <div class="modal-subtitle">These details appear on every generated invoice</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeCompanyProfile()" aria-label="Close"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="modal-body cp-body">
                 <form id="companyProfileForm" onsubmit="return false" autocomplete="off">

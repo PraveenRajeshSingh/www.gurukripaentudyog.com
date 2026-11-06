@@ -1,12 +1,12 @@
-    <!-- ━━━━━━━━━━━━━━━━━ INVOICE PREVIEW / PDF MODAL ━━━━━━━━━━━━━━━━━ -->
+﻿    <!-- ━━━━━━━━━━━━━━━━━ INVOICE PREVIEW / PDF MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="invoicePdfModal" role="dialog" aria-modal="true" aria-label="Invoice preview" onclick="if(event.target.id==='invoicePdfModal')closeInvoicePdf()">
-        <div class="modal-box inv-pdf-box">
-            <div class="modal-head" style="padding:14px 20px;border-bottom:1px solid var(--line)">
+        <div class="modal-box modal-box--xl inv-pdf-box">
+            <div class="modal-head">
                 <div>
-                    <div class="modal-title" style="font-size:1.05rem">Invoice &amp; PDF</div>
+                    <div class="modal-title">Invoice &amp; PDF</div>
                     <div class="modal-subtitle" id="invPdfSubtitle">Preview, download or print a GST invoice</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close">✕</button>
+                <button type="button" class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="modal-body inv-pdf-body">
                 <iframe id="invPdfFrame" class="inv-pdf-frame" title="Invoice preview"></iframe>

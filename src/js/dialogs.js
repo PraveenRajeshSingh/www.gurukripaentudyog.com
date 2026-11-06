@@ -34,10 +34,12 @@
         el.setAttribute('aria-modal', 'true');
         el.setAttribute('aria-labelledby', 'gbDlgTitle');
         el.innerHTML =
-            '<div class="modal-box" style="max-width:420px">' +
+            '<div class="modal-box modal-box--sm">' +
             '<div class="modal-head"><div>' +
             '<h3 class="modal-title" id="gbDlgTitle"></h3>' +
-            '</div><button type="button" class="modal-close-btn" data-gb-act="cancel" aria-label="Close dialog">✕</button></div>' +
+            '</div><button type="button" class="modal-close-btn" data-gb-act="cancel" aria-label="Close dialog">' +
+            '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+            '</button></div>' +
             '<div class="modal-body">' +
             '<div class="gb-dialog-row"><span class="gb-dialog-icon" id="gbDlgIcon" hidden></span><p class="gb-dialog-msg" id="gbDlgMsg"></p></div>' +
             '<div class="auth-field" id="gbDlgField" hidden>' +
@@ -97,6 +99,9 @@
         inputEl.classList.remove('error');
         fieldEl.hidden = mode !== 'prompt';
         el.setAttribute('role', opts.mode === 'confirm' && opts.danger ? 'alertdialog' : 'dialog');
+        el.setAttribute('data-kind', opts.icon || (opts.danger ? 'error' : 'info'));
+        if (opts.danger) el.classList.add('is-danger');
+        else el.classList.remove('is-danger');
 
         okBtn.className = 'btn ' + (opts.danger ? 'gb-btn-danger' : 'btn-primary');
         okBtn.textContent = opts.confirmLabel || (mode === 'prompt' ? 'Save' : 'Confirm');

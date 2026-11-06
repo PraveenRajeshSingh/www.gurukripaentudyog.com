@@ -1,9 +1,14 @@
     <!-- ━━━━━━━━━━━━━━━━━ PRODUCT DETAIL MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay product-detail-modal" id="productModal" role="dialog" aria-modal="true" aria-label="Product details" onclick="handleProductModalClick(event)">
-        <div class="modal-box" id="productModalBox">
+        <div class="modal-box modal-box--lg" id="productModalBox">
             <div class="modal-head">
-                <div></div>
-                <button type="button" class="modal-close-btn" onclick="closeProductModal()">✕</button>
+                <div>
+                    <div class="modal-title">Product details</div>
+                    <div class="modal-subtitle">Specs, pricing, and trolley estimate</div>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closeProductModal()" aria-label="Close product details">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             </div>
             <div class="modal-body" style="padding-top:8px">
                 <div class="pd-grid" id="pdContent"></div>
