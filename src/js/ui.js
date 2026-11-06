@@ -231,26 +231,58 @@ function toggleDrawer() {
 // ══════════════════════════════════════════
 // USER DROPDOWN
 // ══════════════════════════════════════════
+function isAccountSheetMode() {
+    return typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)').matches;
+}
+
+function syncAccountPopupChrome(open) {
+    const backdrop = document.getElementById('accountPopupBackdrop');
+    if (backdrop) {
+        backdrop.classList.toggle('is-open', !!open && isAccountSheetMode());
+        backdrop.setAttribute('aria-hidden', open && isAccountSheetMode() ? 'false' : 'true');
+    }
+    document.body.classList.toggle('account-popup-open', !!open && isAccountSheetMode());
+}
+
 function toggleUserDropdown() {
     const dd = document.getElementById('userDropdown');
     if (!dd) return;
-    const open = dd.classList.toggle('open');
+    const open = !dd.classList.contains('open');
+    if (open) {
+        dd.classList.add('open');
+        if (typeof refreshAccountPopupStats === 'function') refreshAccountPopupStats();
+        const first = dd.querySelector('.ud-item, .account-popup__close');
+        if (first && typeof first.focus === 'function') {
+            setTimeout(() => first.focus(), 30);
+        }
+    } else {
+        dd.classList.remove('open');
+    }
     document.getElementById('userMenuBtn')?.setAttribute('aria-expanded', open ? 'true' : 'false');
+    syncAccountPopupChrome(open);
 }
 
 function closeUserDropdown() {
     document.getElementById('userDropdown')?.classList.remove('open');
     document.getElementById('userMenuBtn')?.setAttribute('aria-expanded', 'false');
+    syncAccountPopupChrome(false);
 }
 
 document.addEventListener('click', e => {
     const um = document.getElementById('navUserMenu');
-    if (um && !um.contains(e.target)) closeUserDropdown();
+    const backdrop = document.getElementById('accountPopupBackdrop');
+    if (backdrop && backdrop.contains(e.target)) return; // backdrop has its own handler
+    if (um && !um.contains(e.target) && !isAccountSheetMode()) closeUserDropdown();
+    if (um && !um.contains(e.target) && isAccountSheetMode() && !(backdrop && backdrop.classList.contains('is-open'))) {
+        closeUserDropdown();
+    }
 });
 
-// Close the account menu on scroll or hash/navigation change so it can never
-// float over (or be clipped by) moving content.
-window.addEventListener('scroll', () => closeUserDropdown(), { passive: true });
+// Desktop: close on scroll so the menu never floats over moving content.
+// Mobile sheet stays open while the page behind is locked.
+window.addEventListener('scroll', () => {
+    if (!isAccountSheetMode()) closeUserDropdown();
+}, { passive: true });
 window.addEventListener('hashchange', () => closeUserDropdown());
 
 // ══════════════════════════════════════════

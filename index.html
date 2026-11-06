@@ -150,6 +150,7 @@
     <link rel="stylesheet" href="src/styles/app.css">
     <link rel="stylesheet" href="src/styles/mobile-fixes.css">
     <link rel="stylesheet" href="src/styles/refinements.css">
+    <link rel="stylesheet" href="src/styles/account.css">
     <!-- Last: the checkout slide-over and the yard console override the
          generic bottom-sheet rules above them. -->
     <link rel="stylesheet" href="src/styles/ops-console.css">
@@ -310,63 +311,139 @@
                                 <path d="M6 9l6 6 6-6" />
                             </svg>
                         </button>
-                        <div class="user-dropdown" id="userDropdown" role="menu" aria-label="Account menu">
-                            <div class="ud-header">
-                                <div class="ud-identity">
-                                    <div class="ud-avatar" id="udAvatar"><span id="udAvatarInitial">U</span></div>
-                                    <div class="ud-idtext">
-                                        <div class="ud-name" id="udName">User</div>
-                                        <div class="ud-ref" id="udRef">—</div>
+                        <!-- My Account popup — desktop anchored menu / mobile bottom sheet -->
+                        <div class="user-dropdown account-popup" id="userDropdown" role="menu" aria-label="My Account">
+                            <div class="account-popup__sheet" id="accountPopupSheet">
+                                <div class="account-popup__grab" aria-hidden="true"></div>
+                                <header class="account-popup__header ud-header">
+                                    <div class="ud-identity">
+                                        <div class="ud-avatar account-popup__avatar" id="udAvatar" aria-hidden="true">
+                                            <span id="udAvatarInitial">U</span>
+                                        </div>
+                                        <div class="ud-idtext">
+                                            <div class="ud-name" id="udName">User</div>
+                                            <div class="ud-email" id="udEmail">—</div>
+                                            <div class="ud-phone" id="udPhone">—</div>
+                                            <div class="ud-ref" id="udRef">—</div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="account-popup__close" onclick="closeUserDropdown()" aria-label="Close account menu">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                                    </button>
+                                </header>
+
+                                <div class="account-popup__metrics" id="accountPopupMetrics" aria-label="Account summary">
+                                    <div class="account-popup__metric">
+                                        <span class="account-popup__metric-val" id="udStatOrders">0</span>
+                                        <span class="account-popup__metric-label">Orders</span>
+                                    </div>
+                                    <div class="account-popup__metric">
+                                        <span class="account-popup__metric-val" id="udStatSites">0</span>
+                                        <span class="account-popup__metric-label">Sites</span>
+                                    </div>
+                                    <div class="account-popup__metric">
+                                        <span class="account-popup__metric-val" id="udStatWish">0</span>
+                                        <span class="account-popup__metric-label">Wishlist</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="ud-body">
-                                <div class="ud-grouplabel">Account</div>
-                                <button type="button" class="ud-item" onclick="openProfile()" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                    <span data-i18n="auth.myProfile">My Profile</span>
-                                </button>
-                                <button type="button" class="ud-item" onclick="openProfileTab('sites')" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    <span>Saved Sites</span>
-                                </button>
-                            </div>
-                            <div class="ud-divider"></div>
-                            <div class="ud-body">
-                                <div class="ud-grouplabel">Orders &amp; Delivery</div>
-                                <button type="button" class="ud-item" onclick="openProfileTab('orders')" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                                    <span>My Orders &amp; Invoices</span>
-                                </button>
-                                <button type="button" class="ud-item" onclick="openProfileTab('enquiries')" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                                    <span>My Enquiries</span>
-                                </button>
-                                <button type="button" class="ud-item" onclick="openTrackerModal();closeUserDropdown()" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                                    <span>Track Delivery</span>
-                                </button>
-                            </div>
-                            <div class="ud-divider"></div>
-                            <div class="ud-body">
-                                <div class="ud-grouplabel">More</div>
-                                <button type="button" class="ud-item" onclick="openWishlistDrawer();closeUserDropdown()" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                                    <span>Wishlist</span>
-                                </button>
-                                <button type="button" class="ud-item" onclick="scrollToSection('contact');closeUserDropdown()" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                    <span>Help &amp; Support</span>
-                                </button>
-                            </div>
-                            <div class="ud-divider"></div>
-                            <div class="ud-body">
-                                <button type="button" class="ud-item ud-logout" onclick="requestSignOut(this)" role="menuitem">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-                                    Sign Out
-                                </button>
+
+                                <nav class="account-popup__nav" aria-label="Account actions">
+                                    <div class="ud-body">
+                                        <div class="ud-grouplabel">Account</div>
+                                        <button type="button" class="ud-item" onclick="openProfile();closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title" data-i18n="auth.myProfile">My Profile</span>
+                                                <span class="ud-item__hint">View account details</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="openAccountEditProfile()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Edit Profile</span>
+                                                <span class="ud-item__hint">Update name, email &amp; mobile</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="openProfileTab('sites');closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">My Addresses</span>
+                                                <span class="ud-item__hint">Saved construction sites</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="openProfileTab('gst');closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Account Settings</span>
+                                                <span class="ud-item__hint">Business / GST for invoices</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="closeUserDropdown();handleForgotPw()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Recover Access</span>
+                                                <span class="ud-item__hint">Yard resets passwords (no in-app change)</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="ud-divider" role="separator"></div>
+                                    <div class="ud-body">
+                                        <div class="ud-grouplabel">Orders &amp; Delivery</div>
+                                        <button type="button" class="ud-item" onclick="openProfileTab('orders');closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">My Orders &amp; Invoices</span>
+                                                <span class="ud-item__hint">History on this device</span>
+                                            </span>
+                                            <span class="ud-item__badge" id="udOrdersBadge" hidden>0</span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="openProfileTab('enquiries');closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">My Enquiries</span>
+                                                <span class="ud-item__hint">RFQs &amp; quotations</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="openTrackerModal();closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Track Delivery</span>
+                                                <span class="ud-item__hint">Yard dispatch status</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="ud-divider" role="separator"></div>
+                                    <div class="ud-body">
+                                        <div class="ud-grouplabel">More</div>
+                                        <button type="button" class="ud-item" onclick="openWishlistDrawer();closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Wishlist</span>
+                                                <span class="ud-item__hint">Saved brick products</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="scrollToSection('contact');closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Help &amp; Support</span>
+                                                <span class="ud-item__hint">Call or WhatsApp the yard</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="ud-divider" role="separator"></div>
+                                    <div class="ud-body account-popup__footer">
+                                        <button type="button" class="ud-item ud-logout" onclick="requestSignOut(this)" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Sign Out</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </nav>
                             </div>
                         </div>
+                        <div class="account-popup-backdrop" id="accountPopupBackdrop" onclick="closeUserDropdown()" aria-hidden="true"></div>
+
                     </div>
 
                     <!-- Mobile Navigation Hamburger -->
@@ -1793,6 +1870,7 @@
                     <button type="button" class="auth-tab active" onclick="switchAuthTab('login',this)" id="tabLogin" aria-controls="loginPanel" aria-current="true" data-i18n="auth.signIn">Sign In</button>
                     <button type="button" class="auth-tab" onclick="switchAuthTab('register',this)" id="tabRegister" aria-controls="registerPanel" data-i18n="auth.signUp">Sign Up</button>
                 </div>
+                <p class="auth-device-note" data-i18n="auth.deviceNote">Passwords are verified by the yard server when connected. This browser never stores your password.</p>
 
                 <!-- Login Panel -->
                 <div id="loginPanel" class="auth-panel">
@@ -3290,6 +3368,7 @@
     <script src="src/js/cart.js" defer></script>
     <script src="src/js/wishlist-drawer.js" defer></script>
     <script src="src/js/auth-modal.js" defer></script>
+    <script src="src/js/account-popup.js" defer></script>
     <script src="src/js/profile-modal.js" defer></script>
     <script src="src/js/google-auth.js" defer></script>
     <script src="src/js/checkout.js" defer></script>

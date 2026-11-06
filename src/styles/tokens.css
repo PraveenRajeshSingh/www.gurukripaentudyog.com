@@ -105,6 +105,24 @@
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
     --t: 0.22s;
     --t-fast: 0.15s;
+    --transition-fast: 180ms ease;
+    --transition-normal: 280ms ease;
+
+    /* ─── 12b. Semantic aliases (account UI + shared components) ─── */
+    --color-primary: var(--brand);
+    --color-primary-hover: #87271F;
+    --color-secondary: var(--brand-secondary);
+    --color-accent: var(--brand-amber);
+    --color-background: var(--bg);
+    --color-surface: var(--bg-card);
+    --color-text: var(--ink);
+    --color-muted: var(--ink-3);
+    --color-border: var(--line);
+    --radius-small: 6px;
+    --radius-medium: var(--r-md);
+    --radius-large: var(--r-lg);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.07);
+    --shadow-modal: 0 16px 48px rgba(0, 0, 0, 0.18);
 
     /* ─── 13. Glassmorphism Tokens ─── */
     --glass-bg: rgba(255, 255, 255, 0.15);

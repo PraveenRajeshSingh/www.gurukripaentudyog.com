@@ -104,18 +104,31 @@ function handleLogin(e) {
     finishLocalLogin(email, password);
 }
 
-/** Device-only password fingerprint (not a substitute for server auth). */
-function localPwHash(email, password) {
-    const s = String(email || '').toLowerCase() + '|' + String(password || '') + '|gb-local';
-    let h = 2166136261;
-    for (let i = 0; i < s.length; i++) {
-        h ^= s.charCodeAt(i);
-        h = Math.imul(h, 16777619);
-    }
-    return 'gbh:' + (h >>> 0).toString(16);
+/**
+ * Strip any legacy password material from the device user directory.
+ * Passwords must never live in localStorage — server auth (GBApi) owns them.
+ */
+function scrubLocalUserSecrets() {
+    try {
+        const users = getSafeStorage('gb_users', []);
+        if (!Array.isArray(users) || !users.length) return;
+        let changed = false;
+        const cleaned = users.map((u) => {
+            if (!u || typeof u !== 'object') return u;
+            if (!('password' in u) && !('passwordHash' in u) && !('pw' in u)) return u;
+            changed = true;
+            const next = Object.assign({}, u);
+            delete next.password;
+            delete next.passwordHash;
+            delete next.pw;
+            return next;
+        });
+        if (changed) setSafeStorage('gb_users', cleaned);
+    } catch (_e) { /* ignore */ }
 }
 
 function finishLocalLogin(email, password) {
+    scrubLocalUserSecrets();
     setTimeout(() => {
         const users = getSafeStorage('gb_users', []);
         const found = users.find(u => u.email === email);
@@ -127,19 +140,14 @@ function finishLocalLogin(email, password) {
             else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
         };
 
-        if (!found) { fail(); return; }
-
-        const hash = localPwHash(email, password);
-        if (found.passwordHash) {
-            if (found.passwordHash !== hash) { fail(); return; }
-        } else {
-            // Migration: bind password on first login after upgrade
-            found.passwordHash = hash;
-            setSafeStorage('gb_users', users);
-        }
+        // Device-only directory: email must exist on this browser. Password is
+        // required by the form but never stored or compared locally — real
+        // credential checks happen only when GBApi is configured.
+        if (!found || !password || password.length < 6) { fail(); return; }
 
         failedLoginAttempts = 0;
         loginSuccess({ name: found.name, email: found.email, mobile: found.mobile });
+        showToast(t('auth.deviceSession') || 'Signed in on this device. Server password is not stored in the browser.', 'info');
     }, 1000);
 }
 
@@ -213,7 +221,7 @@ function handleRegister(e) {
             .then(() => {
                 const users = getSafeStorage('gb_users', []);
                 if (!users.some(u => u.email === email)) {
-                    users.push({ name, mobile, email, passwordHash: localPwHash(email, password) });
+                    users.push({ name, mobile, email });
                     setSafeStorage('gb_users', users);
                 }
                 setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
@@ -242,7 +250,8 @@ function finishLocalRegister(name, mobile, email, password) {
             return;
         }
 
-        const newUser = { name, mobile, email, passwordHash: localPwHash(email, password) };
+        // Profile only — never persist password or hash in localStorage.
+        const newUser = { name, mobile, email };
         users.push(newUser);
         setSafeStorage('gb_users', users);
 
@@ -280,6 +289,7 @@ function requestSignOut() {
 }
 
 function updateAuthUI() {
+    scrubLocalUserSecrets();
     const authBtns = document.getElementById('navAuthBtns');
     const userMenu = document.getElementById('navUserMenu');
     const drawerAuth = document.getElementById('drawerAuthBtns');
@@ -296,25 +306,26 @@ function updateAuthUI() {
 
         const userNameEl = document.getElementById('navUserName');
         if (userNameEl) userNameEl.textContent = user.name?.split(' ')[0] || 'User';
-        const udNameEl = document.getElementById('udName');
-        if (udNameEl) udNameEl.textContent = sanitizeHTML(user.name || 'User');
-        const udAvatarEl = document.getElementById('udAvatar');
-        if (udAvatarEl) udAvatarEl.style.background = getAvatarBg(user.name);
-        const udInitEl = document.getElementById('udAvatarInitial');
-        if (udInitEl) udInitEl.textContent = initial;
-        const udRefEl = document.getElementById('udRef');
-        if (udRefEl) {
-            udRefEl.textContent = getAccountRef(user);
-            udRefEl.title = user.email || user.mobile || '';
-        }
 
-        if (drawerAuth) drawerAuth.innerHTML = `<button class="btn btn-ghost btn-full" onclick="logoutUser();toggleDrawer()">Sign Out (${sanitizeHTML(user.name?.split(' ')[0])})</button>`;
+        if (typeof fillAccountPopupIdentity === 'function') fillAccountPopupIdentity(user);
+        else if (typeof refreshAccountPopupStats === 'function') refreshAccountPopupStats();
+
+        if (drawerAuth) {
+            drawerAuth.innerHTML =
+                `<button type="button" class="btn btn-primary btn-full" onclick="openProfile();toggleDrawer()">My Account</button>` +
+                `<button type="button" class="btn btn-ghost btn-full" onclick="requestSignOut();toggleDrawer()">Sign Out (${sanitizeHTML(user.name?.split(' ')[0] || '')})</button>`;
+        }
         const mnLabel = document.getElementById('mnProfileLabel');
         if (mnLabel) mnLabel.textContent = user.name?.split(' ')[0] || 'Me';
     } else {
         authBtns?.classList.remove('hidden');
         userMenu?.classList.add('hidden');
-        if (drawerAuth) drawerAuth.innerHTML = `<button class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up — Free</button><button class="btn btn-outline btn-full" onclick="openAuth('login');toggleDrawer()">Sign In</button>`;
+        closeUserDropdown();
+        if (drawerAuth) {
+            drawerAuth.innerHTML =
+                `<button type="button" class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up — Free</button>` +
+                `<button type="button" class="btn btn-outline btn-full" onclick="openAuth('login');toggleDrawer()">Sign In</button>`;
+        }
         const mnLabel = document.getElementById('mnProfileLabel');
         if (mnLabel) mnLabel.textContent = 'Profile';
     }
