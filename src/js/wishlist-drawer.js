@@ -54,16 +54,21 @@ function syncWishlistUI() {
 }
 
 function openWishlistDrawer() {
-    document.getElementById('wishlistOverlay')?.classList.add('open');
-    document.getElementById('wishlistDrawer')?.classList.add('open');
-    overlayLock();
+    const overlay = document.getElementById('wishlistOverlay');
+    const drawer = document.getElementById('wishlistDrawer');
+    const alreadyOpen = drawer && drawer.classList.contains('open');
+    overlay?.classList.add('open');
+    drawer?.classList.add('open');
+    if (!alreadyOpen) overlayLock();
     renderWishlistItems();
 }
 
 function closeWishlistDrawer() {
+    const drawer = document.getElementById('wishlistDrawer');
+    const wasOpen = drawer && drawer.classList.contains('open');
     document.getElementById('wishlistOverlay')?.classList.remove('open');
-    document.getElementById('wishlistDrawer')?.classList.remove('open');
-    overlayUnlock();
+    drawer?.classList.remove('open');
+    if (wasOpen) overlayUnlock();
 }
 
 function renderWishlistItems() {

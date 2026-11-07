@@ -402,18 +402,23 @@ body:has(.fab-main-btn.open) .scroll-top {
 }
 
 /* ── Maps ── */
-.tracker-map-container,
-[id$="MapContainer"],
 .gm-style,
 .cities-map,
-.map-embed {
+.map-embed,
+.contact-map-wrap {
     width: 100% !important;
     max-width: 100% !important;
     overflow: hidden;
 }
-.tracker-map-container {
+/* Tracker host must not clip Directions / Open Maps action row */
+.tracker-map-container,
+#trackerMapContainer,
+[id$="MapContainer"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible;
     min-height: 180px;
-    height: min(42vh, 260px);
+    height: auto;
 }
 
 /* ── Product cards / filters ── */

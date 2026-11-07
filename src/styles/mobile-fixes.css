@@ -2607,17 +2607,31 @@ button:active,
     color: var(--brand);
 }
 
-/* ── 7. Lock Background Scroll When Any Overlay is Open ── */
+/* ── 7. Lock Background Scroll When Any Overlay is Open ──
+   Do NOT set touch-action:none on body — it blocks taps on buttons
+   inside sheets on iOS/Android. Body is pinned via position:fixed in
+   interaction-fixes.css; nested panes use touch-action:pan-y. */
 body.overlay-open {
     overflow: hidden !important;
-    touch-action: none;
+    touch-action: manipulation;
 }
 body.overlay-open .modal-box,
+body.overlay-open .modal-body,
+body.overlay-open .modal-foot,
 body.overlay-open .cart-body,
 body.overlay-open .drawer,
-body.overlay-open .chatbot-box {
+body.overlay-open .drawer-body,
+body.overlay-open .chatbot-box,
+body.overlay-open .gb-map-fallback__actions,
+body.overlay-open .contact-map-actions {
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
+}
+body.overlay-open .btn,
+body.overlay-open a.btn,
+body.overlay-open button,
+body.overlay-open .modal-close-btn {
+    touch-action: manipulation;
 }
 
 /* ═══════════════════════════════════════════════════════════════

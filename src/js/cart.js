@@ -96,17 +96,22 @@ function updateCartUI() {
 }
 
 function openCart() {
-    document.getElementById('cartOverlay')?.classList.add('open');
-    document.getElementById('cartDrawer')?.classList.add('open');
-    overlayLock();
+    const overlay = document.getElementById('cartOverlay');
+    const drawer = document.getElementById('cartDrawer');
+    const alreadyOpen = drawer && drawer.classList.contains('open');
+    overlay?.classList.add('open');
+    drawer?.classList.add('open');
+    if (!alreadyOpen) overlayLock();
     renderCartItems();
     if (window.WhatsAppOrder) WhatsAppOrder.renderQueuedNotice();
 }
 
 function closeCart() {
+    const drawer = document.getElementById('cartDrawer');
+    const wasOpen = drawer && drawer.classList.contains('open');
     document.getElementById('cartOverlay')?.classList.remove('open');
-    document.getElementById('cartDrawer')?.classList.remove('open');
-    overlayUnlock();
+    drawer?.classList.remove('open');
+    if (wasOpen) overlayUnlock();
 }
 
 function renderCartItems() {

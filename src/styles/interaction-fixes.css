@@ -53,7 +53,9 @@ body {
     overscroll-behavior-x: contain;
 }
 
-/* ── Overlay scroll lock (paired with ui.js overlayLock) ── */
+/* ── Overlay scroll lock (paired with ui.js overlayLock) ──
+   CRITICAL: never use touch-action:none on body — it swallows taps on
+   iOS/Android inside open sheets (close, map actions, primary CTAs). */
 body.overlay-open,
 body.account-popup-open {
     position: fixed;
@@ -61,9 +63,57 @@ body.account-popup-open {
     width: 100%;
     overflow: hidden !important;
     overscroll-behavior: none;
+    touch-action: manipulation !important; /* overrides mobile-fixes touch-action:none */
+}
+/* Floating page chrome must not sit above / intercept open overlays */
+body.overlay-open .mobile-nav,
+body.overlay-open .mobile-quick-bar,
+body.overlay-open .wa-float,
+body.overlay-open .fab-wrap,
+body.overlay-open #scrollTopBtn,
+body.overlay-open .scroll-top,
+body.account-popup-open .mobile-nav,
+body.account-popup-open .mobile-quick-bar {
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+body.overlay-open .modal-overlay.open,
+body.overlay-open .cart-overlay.open,
+body.overlay-open .cart-drawer.open,
+body.overlay-open .wishlist-drawer.open,
+body.overlay-open #mobileDrawer.open {
+    pointer-events: auto !important;
+    visibility: visible !important;
+}
+/* Never force the closed full-screen chatbot sheet visible — it sits at
+   z-index 10000 on mobile and would swallow every modal/map tap. */
+body.overlay-open .chatbot-wrap:not(.open),
+body.overlay-open .chatbot-wrap:not(.open) * {
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+body.gb-chat-open .chatbot-wrap.open,
+body.gb-chat-open .chatbot-wrap.open .chatbot-box {
+    pointer-events: auto !important;
+    visibility: visible !important;
+}
+body.overlay-open .modal-overlay .btn,
+body.overlay-open .modal-overlay a,
+body.overlay-open .modal-overlay button,
+body.overlay-open .modal-close-btn,
+body.overlay-open .gb-map-fallback__actions,
+body.overlay-open .gb-map-fallback__actions .btn,
+body.overlay-open .contact-map-actions,
+body.overlay-open .contact-map-actions .btn,
+body.overlay-open .contact-directions {
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    position: relative;
+    z-index: 2;
 }
 body.overlay-open .modal-body,
 body.overlay-open .modal-box,
+body.overlay-open .modal-foot,
 body.overlay-open .cart-body,
 body.overlay-open .wishlist-body,
 body.overlay-open .drawer,
@@ -74,7 +124,7 @@ body.overlay-open .chatbot-box,
 body.overlay-open .catalog-sidebar,
 body.account-popup-open .account-popup,
 body.account-popup-open .user-dropdown {
-    touch-action: pan-y;
+    touch-action: pan-y !important;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
 }
@@ -142,17 +192,22 @@ input[type="submit"].btn {
     .ud-item,
     .filter-btn,
     .auth-tab,
-    .modal-close-btn,
-    .profile-close-btn,
-    .cart-close-btn {
+.modal-close-btn,
+.profile-close-btn,
+.cart-close-btn {
         min-height: 44px;
+    }
+    /* SVG icons inside close controls must not steal the tap target */
+    .modal-close-btn svg,
+    .modal-close-btn path,
+    .profile-close-btn svg,
+    .cart-close-btn svg {
+        pointer-events: none;
     }
 }
 
-/* ── Maps: never collapse / never overflow modal ── */
+/* ── Maps: canvas clips; action row must stay tappable ── */
 .contact-map-wrap,
-.tracker-map-container,
-#trackerMapContainer,
 .gb-map-host {
     position: relative;
     width: 100%;
@@ -171,44 +226,101 @@ input[type="submit"].btn {
     border: 0;
     display: block;
 }
+/* Tracker host grows with fallback meta so Directions/Open Maps are never clipped */
 .tracker-map-container,
 #trackerMapContainer {
-    height: clamp(180px, 38vh, 260px);
+    position: relative;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
     min-height: 180px;
+    overflow: visible !important;
+    border-radius: var(--r-md, 12px);
+    background: var(--bg-subtle, #F1EEE8);
 }
 .tracker-map-container .gb-map-fallback,
 #trackerMapContainer .gb-map-fallback {
-    height: 100%;
-    min-height: inherit;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
 }
 .gb-map-fallback__frame-wrap {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
+    height: clamp(160px, 32vh, 220px);
     min-height: 140px;
     position: relative;
+    overflow: hidden;
+    border-radius: var(--r-md, 12px) var(--r-md, 12px) 0 0;
 }
 .gb-map-fallback__frame {
     width: 100%;
     height: 100%;
-    min-height: 160px;
+    min-height: 140px;
     border: 0;
     display: block;
+    pointer-events: auto;
+    touch-action: pan-x pan-y;
 }
-.gb-map-fallback__actions {
+.gb-map-fallback__actions,
+.contact-map-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
 }
-.gb-map-fallback__actions .btn {
+.gb-map-fallback__actions .btn,
+.contact-map-actions .btn,
+.contact-directions {
     flex: 1 1 140px;
     min-height: 44px;
     justify-content: center;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(200, 70, 10, 0.15);
 }
-/* Google Maps JS canvas */
-.tracker-map-container > div,
+.tracker-map-container .gb-map-fallback__meta,
+#trackerMapContainer .gb-map-fallback__meta {
+    flex: 0 0 auto;
+    background: var(--bg-card, #fff);
+    position: relative;
+    z-index: 4;
+    padding: 10px 12px 12px;
+    pointer-events: auto;
+}
+/* Live Google Maps JS canvas (no fallback chrome) */
+.tracker-map-container.gb-map-host:not(:has(.gb-map-fallback)),
+#trackerMapContainer.gb-map-host:not(:has(.gb-map-fallback)) {
+    height: clamp(180px, 38vh, 260px);
+    overflow: hidden;
+}
+.tracker-map-container > div:not(.gb-map-fallback),
 #trackerMapContainer > div:not(.gb-map-fallback) {
     width: 100% !important;
-    height: 100% !important;
+    height: clamp(180px, 38vh, 260px) !important;
     min-height: 180px;
+}
+
+/* Drag pill must never steal taps from close / title controls */
+@media (max-width: 768px) {
+    .modal-box::before {
+        pointer-events: none !important;
+    }
+}
+
+/* Closed floating layers must never intercept taps (mobile chatbot is inset:0) */
+.chatbot-wrap:not(.open),
+.chatbot-wrap:not(.open) * {
+    pointer-events: none !important;
+}
+.modal-overlay:not(.open),
+.cart-overlay:not(.open),
+.cart-drawer:not(.open),
+.wishlist-drawer:not(.open) {
+    pointer-events: none !important;
 }
 
 /* ── Dropdowns stay in viewport ── */

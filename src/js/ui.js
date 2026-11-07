@@ -189,8 +189,7 @@ function openMobileTrack(el) {
 function openNotificationCenter() {
     const modal = document.getElementById('notificationCenterModal');
     if (!modal) return;
-    modal.classList.add('open');
-    overlayLock();
+    if (!openOverlay(modal)) return;
     if (typeof PushNotifications !== 'undefined') {
         PushNotifications.renderCenter();
         PushNotifications.renderSettings();
@@ -198,8 +197,7 @@ function openNotificationCenter() {
 }
 
 function closeNotificationCenter() {
-    document.getElementById('notificationCenterModal')?.classList.remove('open');
-    overlayUnlock();
+    closeOverlay('notificationCenterModal');
     // Alerts are considered seen once the panel is dismissed, so the bell
     // badge clears while the unread highlight stays visible during reading.
     if (typeof PushNotifications !== 'undefined') PushNotifications.markAllRead();

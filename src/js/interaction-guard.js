@@ -19,15 +19,17 @@
         }
     }
 
-    // Capture-phase: block rapid re-clicks on primary actions inside forms /
-    // checkout / contact / auth. Releases after 2.5s or when form resets.
+    // Capture-phase: block rapid re-clicks on submit/checkout only.
+    // Never guard plain links (map Directions / Open in Maps) or navigation.
     document.addEventListener('click', function (e) {
         var btn = e.target && e.target.closest && e.target.closest(
-            'form button[type="submit"], form .btn-primary, form input[type="submit"],' +
-            '#checkoutModal .btn-primary, #authModal .btn-primary, #contactForm .btn-primary,' +
-            '[data-busy-guard]'
+            'form button[type="submit"], form input[type="submit"],' +
+            '#checkoutModal button.btn-primary, #authModal button.btn-primary,' +
+            '#contactForm button[type="submit"], #contactForm button.btn-primary,' +
+            'button[data-busy-guard]'
         );
-        if (!btn || btn.disabled || btn.getAttribute('aria-disabled') === 'true') return;
+        if (!btn || btn.tagName === 'A') return;
+        if (btn.disabled || btn.getAttribute('aria-disabled') === 'true') return;
         if (btn.dataset.gbBusy === '1') {
             e.preventDefault();
             e.stopPropagation();

@@ -136,13 +136,19 @@ function openCheckout() {
     resetCheckout();
     buildCheckoutSummary();
     if (window.SavedSites) SavedSites.renderAll();
-    document.getElementById('checkoutModal')?.classList.add('open');
-    overlayLock();
+    if (typeof openOverlay === 'function') openOverlay('checkoutModal');
+    else {
+        document.getElementById('checkoutModal')?.classList.add('open');
+        overlayLock();
+    }
 }
 
 function closeCheckout() {
-    document.getElementById('checkoutModal')?.classList.remove('open');
-    overlayUnlock();
+    if (typeof closeOverlay === 'function') closeOverlay('checkoutModal');
+    else {
+        document.getElementById('checkoutModal')?.classList.remove('open');
+        overlayUnlock();
+    }
 }
 
 function handleCheckoutOverlayClick(e) {
