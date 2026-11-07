@@ -52,8 +52,13 @@
                     <button type="button" class="btn btn-primary btn-sm nav-quote-btn" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
                 </nav>
 
-                <!-- Actions: Alerts, Cart, Wishlist, Auth / Account, Mobile Toggle -->
+                <!-- Actions: Language, Alerts, Cart, Wishlist, Auth / Account, Mobile Toggle -->
                 <div class="nav-actions">
+                    <!-- Compact language toggle (phones/tablets — topbar is easy to miss) -->
+                    <div class="nav-lang" role="group" aria-label="Language">
+                        <button type="button" class="nav-lang-btn active" id="navLangEn" onclick="setLang('en')" aria-pressed="true" aria-label="English">EN</button>
+                        <button type="button" class="nav-lang-btn" id="navLangHi" onclick="setLang('hi')" aria-pressed="false" aria-label="हिंदी">HI</button>
+                    </div>
                     <!-- Order status & rate drop alerts -->
                     <button type="button" class="nav-icon-btn nav-alert-btn" onclick="openNotificationCenter()" aria-label="Order and rate alerts" title="Order &amp; Rate Alerts">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">

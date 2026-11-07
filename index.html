@@ -140,7 +140,7 @@
       })();
     </script>
 
-    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements -> ops-console) -->
+    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements -> ops-console -> ux-responsive) -->
     <link rel="stylesheet" href="src/styles/tokens.css">
     <link rel="stylesheet" href="src/styles/base.css">
     <link rel="stylesheet" href="src/styles/sections.css">
@@ -151,9 +151,12 @@
     <link rel="stylesheet" href="src/styles/mobile-fixes.css">
     <link rel="stylesheet" href="src/styles/refinements.css">
     <link rel="stylesheet" href="src/styles/account.css">
-    <!-- Last: the checkout slide-over and the yard console override the
-         generic bottom-sheet rules above them. -->
+    <!-- Checkout / yard console override generic bottom-sheet rules. -->
     <link rel="stylesheet" href="src/styles/ops-console.css">
+    <!-- Final pass: mobile overflow, button overlap, estimator & account fixes. -->
+    <link rel="stylesheet" href="src/styles/ux-responsive.css">
+    <!-- Premium e-commerce chrome (grids, cards, modals) — brand tokens unchanged. -->
+    <link rel="stylesheet" href="src/styles/ecommerce.css">
 </head>
 
 <body>
@@ -198,7 +201,7 @@
                     <span class="topbar-divider-dot" aria-hidden="true">•</span>
                     <span><a href="mailto:info@gurukripaentudyog.com" aria-label="Email info@gurukripaentudyog.com">info@gurukripaentudyog.com</a></span>
                     <span class="topbar-divider-dot" aria-hidden="true">•</span>
-                    <button type="button" class="topbar-ops-btn" onclick="openAdminPortal()" data-i18n="topbar.ops">Operations Portal</button>
+                    <button type="button" class="topbar-ops-btn" data-ops-portal onclick="openAdminPortal()" data-i18n="topbar.ops" hidden aria-hidden="true">Operations Portal</button>
                 </div>
                 <div class="topbar-right">
                     <span class="topbar-hours" data-i18n="topbar.hours">Mon–Sat | 8:00 AM – 6:00 PM</span>
@@ -265,8 +268,13 @@
                     <button type="button" class="btn btn-primary btn-sm nav-quote-btn" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
                 </nav>
 
-                <!-- Actions: Alerts, Cart, Wishlist, Auth / Account, Mobile Toggle -->
+                <!-- Actions: Language, Alerts, Cart, Wishlist, Auth / Account, Mobile Toggle -->
                 <div class="nav-actions">
+                    <!-- Compact language toggle (phones/tablets — topbar is easy to miss) -->
+                    <div class="nav-lang" role="group" aria-label="Language">
+                        <button type="button" class="nav-lang-btn active" id="navLangEn" onclick="setLang('en')" aria-pressed="true" aria-label="English">EN</button>
+                        <button type="button" class="nav-lang-btn" id="navLangHi" onclick="setLang('hi')" aria-pressed="false" aria-label="हिंदी">HI</button>
+                    </div>
                     <!-- Order status & rate drop alerts -->
                     <button type="button" class="nav-icon-btn nav-alert-btn" onclick="openNotificationCenter()" aria-label="Order and rate alerts" title="Order &amp; Rate Alerts">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -584,7 +592,7 @@
                 </svg>
                 <span>Delivery Coverage</span>
             </a>
-            <button type="button" class="drawer-link" onclick="toggleDrawer();openAdminPortal()">
+            <button type="button" class="drawer-link" data-ops-portal onclick="toggleDrawer();openAdminPortal()" hidden aria-hidden="true" style="display:none">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="12" r="3"/>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -1733,13 +1741,13 @@
         <!-- Trolley Capacity Load Bar & Bulk Discount Ladder -->
         <div class="cart-trolley-progress" id="cartTrolleyProgress">
             <div class="cart-trolley-progress__row">
-                <span>Trolley Load (4,000 pcs)</span>
+                <span data-i18n="cart.trolleyTitle">Trolley Load (4,000 pcs)</span>
                 <span class="cart-trolley-progress__pct" id="cartTrolleyPct">0%</span>
             </div>
             <div class="cart-trolley-progress__track">
                 <div class="cart-trolley-progress__fill" id="cartTrolleyFill"></div>
             </div>
-            <div class="cart-trolley-progress__hint" id="cartTrolleyLadder">
+            <div class="cart-trolley-progress__hint" id="cartTrolleyLadder" data-i18n="cart.trolleyHintEmpty">
                 Add 4,000 bricks to complete 1 full trolley load &amp; unlock 5% bulk discount.
             </div>
         </div>
@@ -1886,7 +1894,7 @@
                 <div id="loginPanel" class="auth-panel">
                     <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
                         <div class="auth-field">
-                            <label class="auth-label" for="loginEmail">Email Address</label>
+                            <label class="auth-label" for="loginEmail" data-i18n="auth.emailLabel">Email Address</label>
                             <div class="auth-input-wrap">
                                 <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg></span>
                                 <input type="email" id="loginEmail" name="email" class="auth-input"
@@ -1895,7 +1903,7 @@
                             </div>
                         </div>
                         <div class="auth-field">
-                            <label class="auth-label" for="loginPassword">Password</label>
+                            <label class="auth-label" for="loginPassword" data-i18n="auth.passwordLabel">Password</label>
                             <div class="auth-input-wrap">
                                 <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
                                 <input type="password" id="loginPassword" name="password" class="auth-input auth-input-pw"
@@ -1907,7 +1915,7 @@
                         </div>
                         <div class="auth-options">
                             <label class="auth-check"><input type="checkbox" id="rememberMe" checked> <span data-i18n="auth.remember">Remember me</span></label>
-                            <button type="button" class="auth-forgot" onclick="handleForgotPw()" data-i18n="auth.forgot">Forgot password?</button>
+                            <button type="button" class="auth-forgot" onclick="handleForgotPw()" data-i18n="auth.forgot">Call yard to reset access</button>
                         </div>
                         <button type="submit" class="auth-submit" id="loginSubmitBtn">
                             <span data-i18n="auth.submitLogin">Sign In to Account</span>
@@ -1946,7 +1954,7 @@
                     <form id="registerForm" onsubmit="handleRegister(event)" novalidate>
                         <div class="auth-row">
                             <div class="auth-field">
-                                <label class="auth-label" for="regName">Full Name</label>
+                                <label class="auth-label" for="regName" data-i18n="auth.nameLabel">Full Name</label>
                                 <div class="auth-input-wrap">
                                     <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                                     <input type="text" id="regName" name="name" class="auth-input"
@@ -1955,7 +1963,7 @@
                                 </div>
                             </div>
                             <div class="auth-field">
-                                <label class="auth-label" for="regMobile">Mobile</label>
+                                <label class="auth-label" for="regMobile" data-i18n="auth.mobileLabel">Mobile</label>
                                 <div class="auth-input-wrap">
                                     <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg></span>
                                     <input type="tel" id="regMobile" name="mobile" class="auth-input"
@@ -1966,7 +1974,7 @@
                             </div>
                         </div>
                         <div class="auth-field">
-                            <label class="auth-label" for="regEmail">Email Address</label>
+                            <label class="auth-label" for="regEmail" data-i18n="auth.emailLabel">Email Address</label>
                             <div class="auth-input-wrap">
                                 <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg></span>
                                 <input type="email" id="regEmail" name="email" class="auth-input"
@@ -1976,7 +1984,7 @@
                         </div>
                         <div class="auth-row">
                             <div class="auth-field">
-                                <label class="auth-label" for="regPassword">Password</label>
+                                <label class="auth-label" for="regPassword" data-i18n="auth.passwordLabel">Password</label>
                                 <div class="auth-input-wrap">
                                     <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
                                     <input type="password" id="regPassword" name="password" class="auth-input auth-input-pw"
@@ -1995,7 +2003,7 @@
                                 </div>
                             </div>
                             <div class="auth-field">
-                                <label class="auth-label" for="regConfirm">Confirm Password</label>
+                                <label class="auth-label" for="regConfirm" data-i18n="auth.confirmLabel">Confirm Password</label>
                                 <div class="auth-input-wrap">
                                     <span class="auth-icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
                                     <input type="password" id="regConfirm" name="confirmPassword" class="auth-input auth-input-pw"
@@ -2084,7 +2092,7 @@
             <div class="profile-hub-metrics">
                 <div class="hub-metric">
                     <span class="hub-metric__val" id="profileStatOrders">0</span>
-                    <span class="hub-metric__label">Orders</span>
+                    <span class="hub-metric__label">Total Orders</span>
                 </div>
                 <div class="hub-metric hub-metric--accent">
                     <span class="hub-metric__val" id="profileStatBricks">0</span>
@@ -2097,6 +2105,14 @@
                 <div class="hub-metric">
                     <span class="hub-metric__val" id="profileStatWishlist">0</span>
                     <span class="hub-metric__label">Wishlist</span>
+                </div>
+                <div class="hub-metric">
+                    <span class="hub-metric__val" id="profileStatPending">0</span>
+                    <span class="hub-metric__label">Pending Enquiries</span>
+                </div>
+                <div class="hub-metric hub-metric--ok">
+                    <span class="hub-metric__val" id="profileStatCompleted">0</span>
+                    <span class="hub-metric__label">Completed Orders</span>
                 </div>
             </div>
 
@@ -2467,7 +2483,7 @@
                             <span class="pay-method-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                             <span>UPI (manual)</span>
                         </div>
-                        <div class="pay-method" data-method="card" onclick="selectPayMethod(this)">
+                        <div class="pay-method is-disabled" data-method="card" aria-disabled="true" title="Card checkout is not connected yet" onclick="selectPayMethod(this)">
                             <span class="pay-method-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
                             <span>Card (unavailable)</span>
                         </div>
@@ -2490,36 +2506,11 @@
                         </div>
                     </div>
 
-                    <!-- Panel 2: Credit/Debit Card Sub-Panel -->
+                    <!-- Panel 2: Card unavailable until Razorpay (or similar) is configured -->
                     <div class="payment-panel" id="panelCard">
-                        <div class="card-visual">
-                            <span class="card-brand-icon" id="cardBrandLogo"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
-                            <div class="card-chip"></div>
-                            <div class="card-number-display" id="cardNumDisp">•••• •••• •••• ••••</div>
-                            <div class="card-bottom">
-                                <div>
-                                    <div class="card-holder-display">CARD HOLDER</div>
-                                    <div class="card-holder-name" id="cardNameDisp">YOUR NAME</div>
-                                </div>
-                                <div class="card-expiry-display">
-                                    <div class="card-expiry-label">EXPIRES</div>
-                                    <div class="card-expiry-val" id="cardExpDisp">MM/YY</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="auth-field">
-                            <label class="co-form-label">Card Number</label>
-                            <input type="text" class="co-input" id="cardNumInput" placeholder="4532 •••• •••• 8890" maxlength="19" oninput="syncCardVisual()">
-                        </div>
-                        <div class="card-form-row" style="margin-top:10px">
-                            <div class="auth-field">
-                                <label class="co-form-label">Expiration Date</label>
-                                <input type="text" class="co-input" id="cardExpInput" placeholder="MM/YY" maxlength="5" oninput="syncCardVisual()">
-                            </div>
-                            <div class="auth-field">
-                                <label class="co-form-label">CVV / CVC</label>
-                                <input type="password" class="co-input" placeholder="•••" maxlength="4">
-                            </div>
+                        <div class="cod-box" role="status">
+                            <div class="cod-title">Card checkout not connected</div>
+                            <div class="cod-sub">This site does not collect card numbers. Choose Cash on Delivery, UPI via WhatsApp confirmation, or Instant WhatsApp Order.</div>
                         </div>
                     </div>
 
@@ -2585,8 +2576,8 @@
                         </svg>
                     </div>
                     <div style="text-align:center">
-                        <h3 style="font-family:var(--display);font-size:1.4rem;color:var(--ink);margin-bottom:4px">Order Confirmed!</h3>
-                        <p style="font-size:.85rem;color:var(--ink-3);margin-bottom:16px">Your brick order has been logged into Gurukripa system.</p>
+                        <h3 style="font-family:var(--display);font-size:1.4rem;color:var(--ink);margin-bottom:4px" id="orderSuccessTitle">Order token saved</h3>
+                        <p style="font-size:.85rem;color:var(--ink-3);margin-bottom:16px" id="orderSuccessSub">Saved on this device. Confirm with the yard on WhatsApp or phone — nothing is charged online.</p>
                         
                         <div class="order-success-box">
                             <div style="font-size:.74rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em">TRACKING NUMBER</div>

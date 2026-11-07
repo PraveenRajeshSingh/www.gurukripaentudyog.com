@@ -64,14 +64,34 @@ function updateCartUI() {
     if (tPctEl) tPctEl.textContent = `${total.toLocaleString('en-IN')} / 4,000 (${trolleyPct}%)`;
     if (tLadder) {
         if (total === 0) {
-            tLadder.innerHTML = 'Add 4,000 bricks to complete 1 full trolley load &amp; unlock 5% bulk discount.';
+            tLadder.innerHTML = t('cart.trolleyHintEmpty') || 'Add 4,000 bricks to complete 1 full trolley load &amp; unlock 5% bulk discount.';
         } else if (total < trolleyCap) {
             const need = trolleyCap - total;
-            tLadder.innerHTML = `Add <strong>${need.toLocaleString('en-IN')} more bricks</strong> to unlock <strong>5% bulk trolley discount</strong>!`;
+            tLadder.innerHTML = (t('cart.trolleyHintNeed') || 'Add <strong>{n} more bricks</strong> to unlock <strong>5% bulk trolley discount</strong>!')
+                .replace('{n}', need.toLocaleString('en-IN'));
         } else {
             const trolleys = (total / trolleyCap).toFixed(1);
-            tLadder.innerHTML = `<span style="color:#16a34a;font-weight:700">🎉 Full Trolley Load (${trolleys} Trolleys) · 5% Bulk Discount Unlocked!</span>`;
+            tLadder.innerHTML = '<span style="color:#16a34a;font-weight:700">' +
+                (t('cart.trolleyHintFull') || 'Full Trolley Load ({t} Trolleys) · 5% Bulk Discount Unlocked!')
+                    .replace('{t}', trolleys) +
+                '</span>';
         }
+    }
+
+    // Free-delivery ladder label + progress (keeps Hindi/English in sync with setLang)
+    const deliveryLabel = document.getElementById('cartDeliveryLabel');
+    const progressFill = document.getElementById('cartProgressFill');
+    if (deliveryLabel || progressFill) {
+        const subtotal = cart.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.qty) || 0), 0);
+        const threshold = 5000;
+        const remaining = Math.max(0, threshold - subtotal);
+        const pct = Math.min(100, Math.round((subtotal / threshold) * 100));
+        if (deliveryLabel) {
+            deliveryLabel.textContent = remaining > 0
+                ? (t('cart.addMore') || 'Add ₹{amt} more').replace('{amt}', remaining.toLocaleString('en-IN'))
+                : (t('cart.freeUnlocked') || 'Free delivery unlocked');
+        }
+        if (progressFill) progressFill.style.width = pct + '%';
     }
 }
 
@@ -118,9 +138,9 @@ function renderCartItems() {
                 <div class="cart-item-name">${sanitizeHTML(item.name)}</div>
                 <div class="cart-item-price">${formatINR(item.price * item.qty)} <span style="font-size:.72rem;color:var(--ink-3)">(₹${item.price}/${item.unit || 'pc'})</span></div>
                 <div class="cart-item-qty">
-                  <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+                  <button type="button" class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
                   <span class="qty-val">${item.qty}</span>
-                  <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+                  <button type="button" class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
                 </div>
               </div>
               <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="${t('cart.remove')}" aria-label="${t('cart.remove')}">${_trashSVG}</button>

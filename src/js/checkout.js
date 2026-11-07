@@ -96,9 +96,22 @@ function renderCheckoutFooter(n) {
     if (n === 1) {
         primary.innerHTML = 'Continue to Payment →';
         primary.setAttribute('aria-label', 'Continue to payment');
+        primary.disabled = false;
     } else {
-        primary.innerHTML = 'Pay via UPI / Cash on Delivery';
-        primary.setAttribute('aria-label', 'Confirm order and pay');
+        const method = selectedPayMethod || 'cod';
+        if (method === 'card') {
+            primary.innerHTML = 'Card checkout unavailable';
+            primary.setAttribute('aria-label', 'Card checkout is not available');
+            primary.disabled = true;
+        } else if (method === 'upi') {
+            primary.innerHTML = 'Confirm UPI order on WhatsApp';
+            primary.setAttribute('aria-label', 'Confirm UPI order on WhatsApp');
+            primary.disabled = false;
+        } else {
+            primary.innerHTML = 'Place COD Order';
+            primary.setAttribute('aria-label', 'Place cash on delivery order');
+            primary.disabled = false;
+        }
     }
 }
 
@@ -199,6 +212,10 @@ function backToDetails() {
 }
 
 function selectPayMethod(el) {
+    if (!el || el.getAttribute('aria-disabled') === 'true' || el.classList.contains('is-disabled')) {
+        showToast(t('checkout.onlinePayUnavailable') || 'Online card checkout is not connected yet. Use Cash on Delivery or confirm on WhatsApp.', 'warning');
+        return;
+    }
     document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
     el.classList.add('selected');
     selectedPayMethod = el.dataset.method;
@@ -210,6 +227,7 @@ function selectPayMethod(el) {
     if (pUpi) pUpi.classList.toggle('visible', selectedPayMethod === 'upi');
     if (pCard) pCard.classList.toggle('visible', selectedPayMethod === 'card');
     if (pCod) pCod.classList.toggle('visible', selectedPayMethod === 'cod');
+    renderCheckoutFooter(checkoutStep);
 }
 
 function copyUpiId() {
@@ -244,16 +262,21 @@ function placeOrder() {
     const procState = document.getElementById('paymentProcessingState');
     const method = selectedPayMethod || 'cod';
 
-    // Card / UPI gateways are not configured on the static storefront.
-    // Never claim "payment verified" — steer to WhatsApp confirmation or COD.
-    if (method === 'upi' || method === 'card') {
-        showToast(t('checkout.onlinePayUnavailable') || 'Online card/UPI checkout is not connected yet. Use Cash on Delivery or confirm on WhatsApp.', 'warning');
-        const title = document.querySelector('#paymentProcessingState .processing-title');
-        const sub = document.querySelector('#paymentProcessingState .processing-sub');
-        if (title) title.textContent = 'Online payment unavailable';
-        if (sub) sub.textContent = 'No payment gateway is configured. Choose Cash on Delivery, or confirm the order on WhatsApp.';
-        if (procState) procState.style.display = 'block';
-        if (btnsRow) btnsRow.style.display = 'flex';
+    // Card gateway is not configured — never collect card data or claim payment.
+    if (method === 'card') {
+        showToast(t('checkout.onlinePayUnavailable') || 'Online card checkout is not connected yet. Use Cash on Delivery or confirm on WhatsApp.', 'warning');
+        setCheckoutBusy(false);
+        return;
+    }
+
+    // UPI: no in-browser capture — record the token and open WhatsApp so the
+    // yard can confirm the UPI ID / amount before any money moves.
+    if (method === 'upi') {
+        if (window.WhatsAppOrder) {
+            confirmOrderOnWhatsApp();
+            return;
+        }
+        showToast(t('checkout.onlinePayUnavailable') || 'Confirm the UPI order on WhatsApp, or choose Cash on Delivery.', 'warning');
         setCheckoutBusy(false);
         return;
     }
@@ -280,6 +303,11 @@ function placeOrder() {
         const offlinePayload = !navigator.onLine && window.WhatsAppOrder
             ? WhatsAppOrder.buildCheckoutOrder(orderId)
             : null;
+
+        const successTitle = document.getElementById('orderSuccessTitle');
+        const successSub = document.getElementById('orderSuccessSub');
+        if (successTitle) successTitle.textContent = 'Order token saved';
+        if (successSub) successSub.textContent = 'Saved on this device. Confirm with the yard on WhatsApp or phone — nothing is charged online.';
 
         const orderIdDisp = document.getElementById('orderIdDisplay');
         if (orderIdDisp) orderIdDisp.textContent = orderId;
@@ -366,6 +394,11 @@ function confirmOrderOnWhatsApp() {
     const order = recordOrder(payload.ref, payload.total, navigator.onLine ? 'Sent on WhatsApp' : 'Queued (offline)');
     WhatsAppOrder.open(payload);
     if (!navigator.onLine) WhatsAppOrder.queueOffline(payload);
+
+    const successTitle = document.getElementById('orderSuccessTitle');
+    const successSub = document.getElementById('orderSuccessSub');
+    if (successTitle) successTitle.textContent = 'WhatsApp order ready';
+    if (successSub) successSub.textContent = 'Order token saved on this device. Complete the WhatsApp message so the yard can confirm dispatch.';
 
     const orderIdDisp = document.getElementById('orderIdDisplay');
     if (orderIdDisp) orderIdDisp.textContent = payload.ref;

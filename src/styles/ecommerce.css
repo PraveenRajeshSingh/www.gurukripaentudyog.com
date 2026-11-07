@@ -1,0 +1,450 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   E-COMMERCE DESIGN LAYER — Gurukripa Bricks Industry
+   Premium shopping UI on top of existing brand tokens.
+   Loaded after ux-responsive.css. Does not replace brand colors.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root {
+    --ecom-radius: var(--r-lg);
+    --ecom-radius-sm: var(--r-md);
+    --ecom-shadow: 0 4px 24px rgba(37, 37, 37, 0.06);
+    --ecom-shadow-hover: 0 14px 40px rgba(168, 50, 38, 0.16);
+    --ecom-ring: 0 0 0 1px var(--line), var(--ecom-shadow);
+}
+
+/* ── Shared commerce card ── */
+.ecom-card,
+.product-card,
+.cat-card,
+.hub-tile,
+.hub-metric,
+.studio-shell,
+.enquiry-row,
+.order-item,
+.wishlist-item {
+    border-radius: var(--ecom-radius);
+    transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease), border-color var(--t) var(--ease);
+}
+
+/* ── Product catalogue grid (4 / 3 / 2 / 1) ── */
+.products-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+@media (max-width: 1200px) {
+    .products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+}
+@media (max-width: 800px) {
+    .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+}
+@media (max-width: 380px) {
+    .products-grid { grid-template-columns: 1fr; gap: 14px; }
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    box-shadow: var(--ecom-shadow);
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+}
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--ecom-shadow-hover);
+    border-color: var(--line-mid);
+}
+.product-card:focus-within {
+    box-shadow: var(--focus-ring), var(--ecom-shadow);
+}
+.product-card-media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--bg-subtle);
+}
+.product-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s var(--ease);
+}
+.product-card:hover .product-card-img {
+    transform: scale(1.05);
+}
+.product-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: 14px 14px 16px;
+    gap: 6px;
+    min-width: 0;
+}
+.product-card-price-row {
+    margin-top: 4px;
+}
+.product-price-current {
+    font-family: var(--display);
+    font-weight: 700;
+    color: var(--brand);
+    font-size: 1.25rem;
+}
+.product-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 10px;
+}
+.product-card-actions--secondary {
+    margin-top: 8px;
+    padding-top: 0;
+}
+.product-card-actions--secondary .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 40px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 8px 10px;
+    white-space: normal;
+    line-height: 1.2;
+}
+.product-add-btn {
+    flex: 1 1 auto;
+    min-height: 44px;
+    border-radius: var(--r-md);
+    font-weight: 700;
+}
+.product-wa-btn {
+    flex: 0 0 46px;
+    min-width: 46px;
+    min-height: 44px;
+    border-radius: var(--r-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #16a34a;
+    color: #fff;
+    border: none;
+}
+.product-wa-btn:hover { filter: brightness(0.95); color: #fff; }
+
+.wishlist-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--line);
+    box-shadow: var(--sh-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform var(--t-fast), background var(--t-fast);
+}
+.wishlist-btn:hover,
+.wishlist-btn.active {
+    background: #fff;
+    transform: scale(1.06);
+}
+.wishlist-btn.pop { animation: ecom-pop 0.4s var(--ease); }
+@keyframes ecom-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* ── Category grid ── */
+.categories-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+@media (max-width: 900px) {
+    .categories-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+}
+@media (max-width: 380px) {
+    .categories-grid { grid-template-columns: 1fr; }
+}
+.cat-card {
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    box-shadow: var(--ecom-shadow);
+    overflow: hidden;
+    cursor: pointer;
+}
+.cat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ecom-shadow-hover);
+    border-color: var(--brand);
+}
+
+/* ── Hero commerce polish ── */
+.hero-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.hero-cta-row .btn {
+    min-height: 48px;
+    padding-inline: 22px;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+}
+
+/* ── Estimator as commerce dashboard ── */
+.studio-shell {
+    background: linear-gradient(180deg, #fff 0%, var(--bg-subtle) 140%);
+    border: 1px solid var(--line);
+    box-shadow: var(--ecom-shadow);
+}
+.studio-modes {
+    margin-top: 16px;
+}
+.studio-mode {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--line);
+    box-shadow: var(--sh-sm);
+    border-radius: var(--ecom-radius-sm);
+    padding: 12px 14px !important;
+}
+.studio-tabs {
+    background: var(--bg-subtle);
+    border: 1px solid var(--line);
+    border-radius: var(--ecom-radius-sm);
+    padding: 6px;
+}
+.studio-tab {
+    border-radius: var(--r-md) !important;
+    border: 1px solid transparent;
+}
+.studio-tab.active {
+    background: var(--bg-card) !important;
+    border-color: var(--line-mid) !important;
+    box-shadow: var(--sh-sm);
+    color: var(--brand) !important;
+}
+.studio-btn--primary {
+    border-radius: var(--radius-pill) !important;
+    min-height: 48px;
+}
+.studio-tile {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--ecom-radius-sm);
+    box-shadow: var(--sh-sm);
+}
+.studio-total {
+    border-radius: var(--ecom-radius-sm) !important;
+    box-shadow: var(--sh-hover);
+}
+
+/* ── Customer dashboard / profile hub ── */
+.profile-hub-metrics {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px !important;
+}
+@media (max-width: 520px) {
+    .profile-hub-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.hub-metric {
+    box-shadow: var(--sh-sm);
+    border-radius: var(--ecom-radius-sm) !important;
+    transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+.hub-metric:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ecom-shadow);
+}
+.hub-tile {
+    box-shadow: var(--sh-sm);
+}
+.hub-tile:hover {
+    box-shadow: var(--ecom-shadow-hover);
+}
+.profile-tabs {
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--line);
+}
+.profile-tab.active {
+    color: var(--brand);
+    box-shadow: inset 0 -2.5px 0 var(--brand);
+}
+
+/* Account popup metrics as commerce chips */
+.account-popup__metric {
+    transition: background var(--t-fast);
+}
+.account-popup__metric:hover {
+    background: var(--brand-light);
+}
+
+/* ── Orders / enquiries / sites cards ── */
+.enquiry-row,
+.order-item,
+.wishlist-item {
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    box-shadow: var(--sh-sm);
+    border-radius: var(--ecom-radius-sm);
+    padding: 14px;
+}
+.enquiry-row:hover,
+.order-item:hover {
+    border-color: var(--line-mid);
+    box-shadow: var(--ecom-shadow);
+}
+.status-pill,
+.enquiry-row__status,
+.order-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+/* ── Unified modal / drawer commerce chrome ── */
+.modal-overlay {
+    background: rgba(37, 37, 37, 0.48);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.modal-box {
+    border-radius: var(--ecom-radius) !important;
+    border: 1px solid var(--line);
+    box-shadow: var(--sh-modal);
+    overflow: hidden;
+}
+.modal-head {
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--brand-light) 0%, var(--bg-card) 100%);
+}
+.modal-close-btn {
+    border-radius: 50% !important;
+    transition: background var(--t-fast), transform var(--t-fast);
+}
+.modal-close-btn:hover {
+    transform: scale(1.05);
+}
+.cart-drawer,
+.wishlist-overlay + .cart-drawer,
+#wishlistDrawer.cart-drawer {
+    box-shadow: var(--sh-modal);
+    border-left: 1px solid var(--line);
+}
+.cart-head,
+.wishlist-drawer .cart-head {
+    background: linear-gradient(180deg, var(--brand-light), var(--bg-card));
+    border-bottom: 1px solid var(--line);
+}
+.cart-checkout-btn,
+.auth-submit {
+    border-radius: var(--radius-pill) !important;
+    min-height: 48px;
+    font-weight: 800;
+}
+
+/* Auth modal premium */
+#authModal .modal-box {
+    overflow: hidden;
+}
+#authModal .auth-modal-brand {
+    min-height: 72px;
+}
+.auth-tabs {
+    background: var(--bg-subtle) !important;
+}
+.auth-tab.active {
+    background: var(--bg-card) !important;
+    color: var(--brand) !important;
+    box-shadow: var(--sh-sm) !important;
+}
+.auth-input {
+    border-radius: var(--r-md) !important;
+    min-height: 46px;
+}
+
+/* Toast / feedback */
+#toast-container .toast,
+.toast {
+    border-radius: var(--r-md);
+    box-shadow: var(--ecom-shadow-hover);
+    border: 1px solid var(--line);
+}
+
+/* Empty states */
+.cart-empty,
+.hub-empty,
+.products-empty,
+.studio-empty {
+    border-radius: var(--ecom-radius);
+    background: var(--bg-subtle);
+    border: 1px dashed var(--line-mid);
+}
+
+/* Reviews / trust cards */
+.review-card {
+    border-radius: var(--ecom-radius);
+    box-shadow: var(--ecom-shadow);
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+}
+
+/* Product detail modal */
+.product-detail-modal .modal-box {
+    max-width: min(860px, 96vw);
+}
+.pd-img {
+    border-radius: var(--ecom-radius-sm);
+    overflow: hidden;
+    background: var(--bg-subtle);
+}
+.pd-img img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* Section rhythm */
+.sec {
+    padding-block: clamp(40px, 6vw, 72px);
+}
+.sec-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--brand-light);
+    color: var(--brand-dark);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .product-card,
+    .cat-card,
+    .hub-metric,
+    .hub-tile,
+    .product-card-img,
+    .wishlist-btn {
+        transition: none !important;
+        animation: none !important;
+    }
+    .product-card:hover,
+    .cat-card:hover {
+        transform: none;
+    }
+}

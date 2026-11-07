@@ -471,13 +471,17 @@ function setLang(lang) {
     currentLang = lang;
     localStorage.setItem('gb_lang', lang);
 
-    // Update language toggle button active states
-    const langEn = document.getElementById('langEn');
-    const langHi = document.getElementById('langHi');
-    langEn?.classList.toggle('active', lang === 'en');
-    langHi?.classList.toggle('active', lang === 'hi');
-    langEn?.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
-    langHi?.setAttribute('aria-pressed', lang === 'hi' ? 'true' : 'false');
+    // Sync every language control: topbar, nav compact, drawer
+    const syncPair = (enId, hiId) => {
+        const en = document.getElementById(enId);
+        const hi = document.getElementById(hiId);
+        en?.classList.toggle('active', lang === 'en');
+        hi?.classList.toggle('active', lang === 'hi');
+        en?.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+        hi?.setAttribute('aria-pressed', lang === 'hi' ? 'true' : 'false');
+    };
+    syncPair('langEn', 'langHi');
+    syncPair('navLangEn', 'navLangHi');
 
     // Mobile drawer language label stays in sync with desktop
     const drawerLang = document.getElementById('drawerLangLabel');
@@ -500,6 +504,17 @@ function setLang(lang) {
 
     // Refresh dynamic cart labels (item count, delivery progress) in new language
     if (typeof updateCartUI === 'function') updateCartUI();
+
+    // Re-paint estimator results / product grid / profile hub so dynamic copy switches too
+    if (typeof lastEstimateResult !== 'undefined' && lastEstimateResult && typeof renderEstimate === 'function') {
+        try { renderEstimate(lastEstimateResult); } catch (_e) { /* ignore */ }
+    }
+    if (typeof renderProducts === 'function' && typeof currentFilter !== 'undefined') {
+        try { renderProducts(currentFilter); } catch (_e) { /* ignore */ }
+    }
+    if (typeof renderAccountHub === 'function' && document.getElementById('profileModal')?.classList.contains('open')) {
+        try { renderAccountHub(); } catch (_e) { /* ignore */ }
+    }
 
     // Toast language notification
     showToast(lang === 'hi' ? t('toast.langChangedHi') : t('toast.langChanged'));

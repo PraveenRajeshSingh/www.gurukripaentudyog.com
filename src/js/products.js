@@ -114,6 +114,10 @@ function renderProductCard(p) {
           </button>
           <a class="product-wa-btn" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" aria-label="Order ${name} on WhatsApp" title="Order on WhatsApp">${_waSVG}</a>
         </div>
+        <div class="product-card-actions product-card-actions--secondary">
+          <button type="button" class="btn btn-outline btn-sm" onclick="openProductDetail(${p.id})">${typeof t === 'function' ? t('products.viewDetails') : 'View Details'}</button>
+          <a class="btn btn-outline btn-sm" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener">${typeof t === 'function' ? t('products.getPrice') : 'Get Price'}</a>
+        </div>
       </div>
     </article>`;
 }
@@ -243,20 +247,22 @@ function openProductDetail(id) {
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
             <span style="font-size:.84rem;font-weight:600">Quantity:</span>
             <div style="display:flex;align-items:center;gap:4px">
-              <button class="qty-btn" onclick="changePdQty(-1)">−</button>
+              <button type="button" class="qty-btn" onclick="changePdQty(-1)">−</button>
               <input type="number" id="pdQty" class="qty-val" value="1000" min="100" step="100" style="width:70px;text-align:center;padding:6px;border:1.5px solid var(--line);border-radius:var(--r-sm)">
-              <button class="qty-btn" onclick="changePdQty(1)">+</button>
+              <button type="button" class="qty-btn" onclick="changePdQty(1)">+</button>
             </div>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;padding:8px 12px;background:var(--bg-subtle);border-radius:var(--r-sm)">
             <span style="font-size:0.78rem;color:var(--ink-2)">🚚 Need delivery estimate?</span>
             <button type="button" class="btn btn-outline btn-sm" onclick="openPincodeModal('${sanitizeHTML(p.name)}')" style="font-size:0.75rem;padding:4px 10px;min-height:30px">Check Pincode →</button>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-primary" style="flex:2 1 130px;display:inline-flex;align-items:center;justify-content:center;gap:7px" onclick="addToCart(${p.id},parseInt(document.getElementById('pdQty').value)||1000);closeProductModal();if(navigator.vibrate)navigator.vibrate(30)">${_cartSVG} Add to Cart</button>
+          <div class="pd-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn btn-primary" style="flex:2 1 130px;display:inline-flex;align-items:center;justify-content:center;gap:7px" onclick="addToCart(${p.id},parseInt(document.getElementById('pdQty').value)||1000);closeProductModal();if(navigator.vibrate)navigator.vibrate(30)">${_cartSVG} ${typeof t === 'function' ? t('products.addToCart') : 'Add to Cart'}</button>
+            <button type="button" class="btn btn-outline" style="flex:1 1 110px" onclick="toggleWishlist(${p.id})">${typeof t === 'function' ? t('wishlist.add') : 'Wishlist'}</button>
             <a href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" class="btn pd-wa-btn" style="flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:0 14px" aria-label="Order on WhatsApp">${_waSVG}</a>
             <a href="tel:+919198923230" class="btn btn-outline" style="flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px">${_phoneSVG} Call</a>
           </div>
+          <button type="button" class="btn btn-primary btn-full" style="margin-top:10px;min-height:46px" onclick="closeProductModal();openBulkQuoteModal()">${typeof t === 'function' ? t('products.requestQuote') : 'Request Quotation'}</button>
         </div>`;
     document.getElementById('productModal').classList.add('open');
     overlayLock();

@@ -27,11 +27,17 @@ function shareQuotationOnWhatsApp(quoteId) {
 }
 
 function openAdminPortal() {
+    // UI gate — Platform API still enforces STAFF_ROLES on every /staff/* call.
+    if (typeof requireStaffAccess === 'function' && !requireStaffAccess()) return;
+    if (typeof isStaffUser === 'function' && !isStaffUser(user)) {
+        if (typeof showToast === 'function') showToast(typeof t === 'function' ? t('auth.accessDenied') : 'Access denied', 'error');
+        return;
+    }
     const modal = document.getElementById('adminPortalModal');
     if (modal) {
         // Seed the ERP operating user + item master from the storefront catalog
         if (window.GurukripaERP && GurukripaERP.Core) {
-            GurukripaERP.Core.setActor((typeof user !== 'undefined' && user) ? user : { name: 'Admin', role: 'owner' });
+            GurukripaERP.Core.setActor(user || { name: 'Staff', role: 'STAFF' });
             if (GurukripaERP.Inventory && typeof PRODUCTS !== 'undefined') {
                 GurukripaERP.Inventory.bootstrapFromProducts(PRODUCTS);
             }

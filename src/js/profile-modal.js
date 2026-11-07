@@ -98,10 +98,17 @@ function renderAccountHub() {
         if (el) el.textContent = value;
     };
 
+    const completed = rows.filter((o) => /deliver|complete|fulfilled/i.test(o.status || '')).length;
+    const quotesForStats = (window.GurukripaServices && GurukripaServices.QuotationService)
+        ? GurukripaServices.QuotationService.getAllQuotations() : [];
+    const pendingEnquiries = quotesForStats.filter(q => !/resolved|closed|cancelled|approved|rejected/i.test(q.status || '')).length;
+
     set('profileStatOrders', rows.length);
     set('profileStatWishlist', (typeof wishlist !== 'undefined') ? wishlist.length : 0);
     set('profileStatBricks', formatNum(BuyerProfile.piecesOrdered()));
     set('profileStatSites', sites.length);
+    set('profileStatPending', pendingEnquiries);
+    set('profileStatCompleted', completed);
 
     // Quick-access tiles
     set('hubOrdersBadge', active ? active + ' Active' : rows.length + ' Total');
@@ -359,42 +366,56 @@ function saveProfile(e) {
 
     if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
 
-    user.name = name;
-    user.email = email;
-    user.mobile = mobile;
-    user.address = address;
-    delete user.password;
+    const applyLocalProfile = () => {
+        user.name = name;
+        user.email = email;
+        user.mobile = mobile;
+        user.address = address;
+        delete user.password;
+        if (typeof persistUserSession === 'function') persistUserSession(user, !!rememberUserSession);
+        else setSafeStorage('gb_user', user);
 
-    setSafeStorage('gb_user', user);
+        updateAuthUI();
+        const hName = document.getElementById('profileHeaderName');
+        const hEmail = document.getElementById('profileHeaderEmail');
+        const vName = document.getElementById('profileViewName');
+        const vEmail = document.getElementById('profileViewEmail');
+        const vMobile = document.getElementById('profileViewMobile');
+        const vAddr = document.getElementById('profileViewAddress');
+        const aDisp = document.getElementById('profileAddressDisplay');
 
-    updateAuthUI();
-    const hName = document.getElementById('profileHeaderName');
-    const hEmail = document.getElementById('profileHeaderEmail');
-    const vName = document.getElementById('profileViewName');
-    const vEmail = document.getElementById('profileViewEmail');
-    const vMobile = document.getElementById('profileViewMobile');
-    const vAddr = document.getElementById('profileViewAddress');
-    const aDisp = document.getElementById('profileAddressDisplay');
+        if (hName) hName.textContent = sanitizeHTML(name);
+        if (hEmail) hEmail.textContent = sanitizeHTML(email);
+        if (vName) vName.textContent = sanitizeHTML(name);
+        if (vEmail) vEmail.textContent = sanitizeHTML(email);
+        if (vMobile) vMobile.textContent = sanitizeHTML(mobile || '—');
+        if (vAddr) vAddr.textContent = sanitizeHTML(address || '—');
+        if (aDisp) aDisp.textContent = sanitizeHTML(address || 'No saved address yet.');
+        const rRef = document.getElementById('profileViewRef');
+        if (rRef) rRef.textContent = getAccountRef(user);
 
-    if (hName) hName.textContent = sanitizeHTML(name);
-    if (hEmail) hEmail.textContent = sanitizeHTML(email);
-    if (vName) vName.textContent = sanitizeHTML(name);
-    if (vEmail) vEmail.textContent = sanitizeHTML(email);
-    if (vMobile) vMobile.textContent = sanitizeHTML(mobile || '—');
-    if (vAddr) vAddr.textContent = sanitizeHTML(address || '—');
-    if (aDisp) aDisp.textContent = sanitizeHTML(address || 'No saved address yet.');
-    const rRef = document.getElementById('profileViewRef');
-    if (rRef) rRef.textContent = getAccountRef(user);
+        const initial = name[0]?.toUpperCase() || 'U';
+        const aLetter = document.getElementById('profileAvatarLetter');
+        const avatar = document.getElementById('profileAvatarLg');
+        if (aLetter) aLetter.textContent = initial;
+        if (avatar) avatar.style.background = getAvatarBg(name);
 
-    const initial = name[0]?.toUpperCase() || 'U';
-    const aLetter = document.getElementById('profileAvatarLetter');
-    const avatar = document.getElementById('profileAvatarLg');
-    if (aLetter) aLetter.textContent = initial;
-    if (avatar) avatar.style.background = getAvatarBg(name);
+        cancelEditProfile();
+        renderAccountHub();
+        if (btn) { btn.disabled = false; btn.textContent = 'Save Changes'; }
+        showToast(t('auth.profileSaved'), 'success');
+    };
 
-    cancelEditProfile();
-    renderAccountHub();
-    showToast(t('auth.profileSaved'), 'success');
+    if (window.GBApi && GBApi.enabled() && GBApi.token && GBApi.token()) {
+        GBApi.endpoints.updateProfile({ name, email, phone: mobile, address })
+            .then(applyLocalProfile)
+            .catch(() => {
+                applyLocalProfile();
+                showToast(t('auth.profileSavedOffline') || 'Saved on this device. Server sync will retry when online.', 'info');
+            });
+        return;
+    }
+    applyLocalProfile();
 }
 
 function renderWishlistInProfile() {

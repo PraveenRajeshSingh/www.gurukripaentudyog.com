@@ -55,6 +55,17 @@ function switchAuthTab(tab, btn) {
     document.getElementById('authBadge').innerHTML = showLogin ? _authLockSVG : _authStarSVG;
 }
 
+function resolveLoginPhone(email) {
+    if (window.GBApi && GBApi.phoneFor) {
+        const mapped = GBApi.phoneFor(email);
+        if (mapped) return String(mapped).replace(/\D/g, '').slice(-10);
+    }
+    const users = getSafeStorage('gb_users', []);
+    const found = users.find(u => u && String(u.email || '').toLowerCase() === String(email).toLowerCase());
+    if (found && found.mobile) return String(found.mobile).replace(/\D/g, '').slice(-10);
+    return '';
+}
+
 function handleLogin(e) {
     e.preventDefault();
     if (failedLoginAttempts >= 3) {
@@ -78,13 +89,20 @@ function handleLogin(e) {
     setButtonLoading('loginSubmitBtn', true, 'Signing in...');
 
     // Server-first sign-in when the Platform API is configured (docs/PLATFORM-API.md).
-    // Network failures fall through to the local session — clearly labelled as offline.
+    // Resolve phone from the email→phone map or the local profile directory.
     if (window.GBApi && GBApi.enabled()) {
-        const phone = GBApi.phoneFor(email);
-        if (phone) {
+        const phone = resolveLoginPhone(email);
+        if (phone && phone.length === 10) {
             GBApi.login({ phone, password }).then(su => {
                 failedLoginAttempts = 0;
-                loginSuccess({ name: su.name, email: su.email || email, mobile: su.phone });
+                loginSuccess({
+                    id: su.id,
+                    name: su.name,
+                    email: su.email || email,
+                    mobile: su.phone || phone,
+                    role: su.role || 'CUSTOMER',
+                    tenantId: su.tenantId
+                });
                 GBApi.flushOutbox();
             }).catch(err => {
                 if (err.code === 401) {
@@ -94,12 +112,17 @@ function handleLogin(e) {
                     if (failedLoginAttempts >= 3) startLockoutTimer();
                     else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
                 } else {
-                    showToast('Offline sign-in (server unreachable) — data stays on this device.', 'info');
+                    // Network down: verify against the local credential verifier only.
                     finishLocalLogin(email, password);
                 }
             });
             return;
         }
+        // API on but no phone on file — cannot call /auth/login; do not invent a session.
+        setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
+        showFieldError('loginEmailErr', t('auth.needPhone') || 'No mobile linked to this email on this device. Sign up once, or call the yard.');
+        triggerFormShake('loginForm');
+        return;
     }
     finishLocalLogin(email, password);
 }
@@ -129,26 +152,56 @@ function scrubLocalUserSecrets() {
 
 function finishLocalLogin(email, password) {
     scrubLocalUserSecrets();
-    setTimeout(() => {
+    const fail = () => {
+        failedLoginAttempts++;
+        setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
+        triggerFormShake('loginForm');
+        if (failedLoginAttempts >= 3) startLockoutTimer();
+        else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
+    };
+
+    verifyLocalCredential(email, password).then((ok) => {
+        if (!ok) { fail(); return; }
         const users = getSafeStorage('gb_users', []);
-        const found = users.find(u => u.email === email);
-        const fail = () => {
-            failedLoginAttempts++;
-            setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
-            triggerFormShake('loginForm');
-            if (failedLoginAttempts >= 3) startLockoutTimer();
-            else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
-        };
-
-        // Device-only directory: email must exist on this browser. Password is
-        // required by the form but never stored or compared locally — real
-        // credential checks happen only when GBApi is configured.
-        if (!found || !password || password.length < 6) { fail(); return; }
-
+        const found = users.find(u => String(u.email || '').toLowerCase() === String(email).toLowerCase());
+        if (!found) { fail(); return; }
         failedLoginAttempts = 0;
         loginSuccess({ name: found.name, email: found.email, mobile: found.mobile });
         showToast(t('auth.deviceSession') || 'Signed in on this device. Server password is not stored in the browser.', 'info');
-    }, 1000);
+    }).catch(() => { fail(); });
+}
+
+/** Device-only credential verifier (salted SHA-256). Plaintext is never stored. */
+const AUTH_VERIFIER_KEY = 'gb_auth_verifiers';
+
+function _toHex(buf) {
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function _sha256Hex(str) {
+    const data = new TextEncoder().encode(str);
+    const digest = await crypto.subtle.digest('SHA-256', data);
+    return _toHex(digest);
+}
+
+async function storeLocalCredential(email, password) {
+    if (!email || !password || !window.crypto || !crypto.subtle) return false;
+    const saltBytes = crypto.getRandomValues(new Uint8Array(16));
+    const salt = _toHex(saltBytes);
+    const hash = await _sha256Hex(salt + '\0' + password);
+    const map = getSafeStorage(AUTH_VERIFIER_KEY, {});
+    map[String(email).toLowerCase()] = { salt, hash, at: Date.now() };
+    setSafeStorage(AUTH_VERIFIER_KEY, map);
+    return true;
+}
+
+async function verifyLocalCredential(email, password) {
+    if (!email || !password || !window.crypto || !crypto.subtle) return false;
+    const map = getSafeStorage(AUTH_VERIFIER_KEY, {});
+    const entry = map[String(email).toLowerCase()];
+    if (!entry || !entry.salt || !entry.hash) return false;
+    const hash = await _sha256Hex(entry.salt + '\0' + password);
+    return hash === entry.hash;
 }
 
 function startLockoutTimer() {
@@ -177,10 +230,88 @@ function triggerFormShake(formId) {
     setTimeout(() => form.classList.remove('auth-form-shake'), 450);
 }
 
+/** Platform API staff roles that may open the Operations Portal (UI gate only). */
+const STAFF_ROLES = ['STAFF', 'SALES_MANAGER', 'ADMIN', 'TENANT_ADMIN', 'SUPER_ADMIN', 'owner', 'admin', 'accountant', 'sales_manager'];
+
+function normalizeRole(role) {
+    return String(role || 'CUSTOMER').toUpperCase();
+}
+
+function isStaffUser(u) {
+    if (!u) return false;
+    const r = normalizeRole(u.role);
+    return STAFF_ROLES.some((s) => String(s).toUpperCase() === r);
+}
+
+function requireAuth(opts) {
+    if (user) return true;
+    if (typeof showToast === 'function') showToast(t('auth.requireLogin'), 'info');
+    openAuth((opts && opts.tab) || 'login');
+    return false;
+}
+
+function requireStaffAccess() {
+    if (!requireAuth()) return false;
+    if (isStaffUser(user)) return true;
+    if (typeof showToast === 'function') showToast(t('auth.accessDenied'), 'error');
+    return false;
+}
+
+/**
+ * When Platform API is on and a JWT exists, re-validate via /auth/me.
+ * Expired/invalid tokens clear the local session. Network failures keep the
+ * offline profile so the storefront still works without inventing privileges.
+ */
+function validateServerSession() {
+    if (!window.GBApi || !GBApi.enabled()) return Promise.resolve(user);
+    const sess = GBApi.session();
+    if (!sess || !sess.token) {
+        // Stale local profile with no JWT — keep browsing as guest for private actions.
+        return Promise.resolve(user);
+    }
+    return GBApi.me().then((su) => {
+        if (!su) return user;
+        user = Object.assign({}, user || {}, {
+            id: su.id,
+            name: su.name || (user && user.name),
+            email: su.email || (user && user.email),
+            mobile: su.phone || (user && user.mobile),
+            role: su.role || 'CUSTOMER',
+            tenantId: su.tenantId
+        });
+        delete user.password;
+        persistUserSession(user, rememberUserSession);
+        updateAuthUI();
+        return user;
+    }).catch((err) => {
+        if (err && (err.code === 401 || err.code === 403)) {
+            user = null;
+            persistUserSession(null, false);
+            GBApi.logout();
+            updateAuthUI();
+            if (typeof showToast === 'function') showToast(t('auth.sessionExpired'), 'warning');
+        }
+        return user;
+    });
+}
+
 function loginSuccess(userData) {
     user = { ...userData };
     delete user.password;
-    setSafeStorage('gb_user', user);
+    // Prefer role/id from the Platform JWT session when present.
+    if (window.GBApi && GBApi.enabled()) {
+        const su = (GBApi.session() || {}).user;
+        if (su) {
+            if (su.id) user.id = su.id;
+            if (su.role) user.role = su.role;
+            if (su.tenantId) user.tenantId = su.tenantId;
+            if (su.phone && !user.mobile) user.mobile = su.phone;
+        }
+    }
+    if (!user.role) user.role = 'CUSTOMER';
+    const rememberEl = document.getElementById('rememberMe');
+    rememberUserSession = rememberEl ? !!rememberEl.checked : true;
+    persistUserSession(user, rememberUserSession);
     updateAuthUI();
     closeAuth();
     showToast(t('auth.welcome', { name: user.name }), 'success');
@@ -220,12 +351,23 @@ function handleRegister(e) {
         GBApi.register({ name, phone: mobile.replace(/\D/g, ''), password, email })
             .then(() => {
                 const users = getSafeStorage('gb_users', []);
-                if (!users.some(u => u.email === email)) {
+                if (!users.some(u => String(u.email || '').toLowerCase() === String(email).toLowerCase())) {
                     users.push({ name, mobile, email });
                     setSafeStorage('gb_users', users);
                 }
+                return storeLocalCredential(email, password);
+            })
+            .then(() => {
                 setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
-                loginSuccess({ name, mobile, email });
+                const su = (GBApi.session() || {}).user || {};
+                loginSuccess({
+                    id: su.id,
+                    name: su.name || name,
+                    mobile: su.phone || mobile,
+                    email: su.email || email,
+                    role: su.role || 'CUSTOMER',
+                    tenantId: su.tenantId
+                });
                 GBApi.flushOutbox();
             })
             .catch(err => {
@@ -241,29 +383,35 @@ function handleRegister(e) {
 }
 
 function finishLocalRegister(name, mobile, email, password) {
-    setTimeout(() => {
-        const users = getSafeStorage('gb_users', []);
-        if (users.some(u => u.email === email)) {
-            setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
-            showFieldError('regEmailErr', 'Email already registered');
-            triggerFormShake('registerForm');
-            return;
-        }
+    const users = getSafeStorage('gb_users', []);
+    if (users.some(u => String(u.email || '').toLowerCase() === String(email).toLowerCase())) {
+        setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
+        showFieldError('regEmailErr', 'Email already registered');
+        triggerFormShake('registerForm');
+        return;
+    }
 
-        // Profile only — never persist password or hash in localStorage.
-        const newUser = { name, mobile, email };
-        users.push(newUser);
-        setSafeStorage('gb_users', users);
+    // Profile only in gb_users — never persist password plaintext here.
+    // A salted SHA-256 verifier is stored separately under gb_auth_verifiers.
+    const newUser = { name, mobile, email };
+    users.push(newUser);
+    setSafeStorage('gb_users', users);
+    if (window.GBApi && GBApi.rememberEmail) GBApi.rememberEmail(email, mobile);
 
+    storeLocalCredential(email, password).then(() => {
         loginSuccess({ name, mobile, email });
         setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
         showToast(t('auth.created'), 'success');
-    }, 1000);
+    }).catch(() => {
+        loginSuccess({ name, mobile, email });
+        setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
+        showToast(t('auth.created'), 'success');
+    });
 }
 
 function logoutUser() {
     user = null;
-    localStorage.removeItem('gb_user');
+    persistUserSession(null, false);
     if (window.GBApi) GBApi.logout();
     updateAuthUI();
     closeUserDropdown();
@@ -293,6 +441,16 @@ function updateAuthUI() {
     const authBtns = document.getElementById('navAuthBtns');
     const userMenu = document.getElementById('navUserMenu');
     const drawerAuth = document.getElementById('drawerAuthBtns');
+    const staff = isStaffUser(user);
+
+    // Hide Operations Portal entry points from guests and retail customers.
+    document.querySelectorAll('[data-ops-portal], .topbar-ops-btn').forEach((el) => {
+        el.hidden = !staff;
+        el.setAttribute('aria-hidden', staff ? 'false' : 'true');
+        if (el.classList.contains('drawer-link')) {
+            el.style.display = staff ? '' : 'none';
+        }
+    });
 
     if (user) {
         authBtns?.classList.add('hidden');

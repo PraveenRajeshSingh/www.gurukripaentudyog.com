@@ -51,8 +51,45 @@ function setSafeStorage(key, value) {
     try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { console.warn('Storage write error:', e); }
 }
 
+function getSessionStorage(key, fallback) {
+    try {
+        const item = sessionStorage.getItem(key);
+        return item ? JSON.parse(item) : fallback;
+    } catch (e) {
+        return fallback;
+    }
+}
+
+function setSessionStorage(key, value) {
+    try { sessionStorage.setItem(key, JSON.stringify(value)); } catch (e) { console.warn('SessionStorage write error:', e); }
+}
+
+/** Persist signed-in user for this tab only, or across visits when Remember me is on. */
+function persistUserSession(userData, remember) {
+    if (!userData) {
+        localStorage.removeItem('gb_user');
+        sessionStorage.removeItem('gb_user');
+        return;
+    }
+    const clean = Object.assign({}, userData);
+    delete clean.password;
+    delete clean.passwordHash;
+    delete clean.pw;
+    if (remember) {
+        setSafeStorage('gb_user', clean);
+        sessionStorage.removeItem('gb_user');
+    } else {
+        setSessionStorage('gb_user', clean);
+        localStorage.removeItem('gb_user');
+    }
+}
+
+function loadPersistedUser() {
+    return getSafeStorage('gb_user', null) || getSessionStorage('gb_user', null);
+}
+
 let cart         = getSafeStorage('gb_cart', []);
-let user         = getSafeStorage('gb_user', null);
+let user         = loadPersistedUser();
 let wishlist     = getSafeStorage('gb_wishlist', []);
 let orders       = getSafeStorage('gb_orders', []);
 let couponDiscount   = 0;
@@ -60,6 +97,8 @@ let appliedCoupon    = '';
 let currentFilter    = 'all';
 let selectedPayMethod = 'cod';
 let currentLang      = localStorage.getItem('gb_lang') || 'hi'; // Hindi default; English fallback
+/** Whether the current session should survive browser restarts (Remember me). */
+let rememberUserSession = !!getSafeStorage('gb_user', null);
 
 // AUTH RATE LIMITING STATE
 let failedLoginAttempts = 0;

@@ -128,7 +128,7 @@
                             <span class="pay-method-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                             <span>UPI (manual)</span>
                         </div>
-                        <div class="pay-method" data-method="card" onclick="selectPayMethod(this)">
+                        <div class="pay-method is-disabled" data-method="card" aria-disabled="true" title="Card checkout is not connected yet" onclick="selectPayMethod(this)">
                             <span class="pay-method-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
                             <span>Card (unavailable)</span>
                         </div>
@@ -151,36 +151,11 @@
                         </div>
                     </div>
 
-                    <!-- Panel 2: Credit/Debit Card Sub-Panel -->
+                    <!-- Panel 2: Card unavailable until Razorpay (or similar) is configured -->
                     <div class="payment-panel" id="panelCard">
-                        <div class="card-visual">
-                            <span class="card-brand-icon" id="cardBrandLogo"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
-                            <div class="card-chip"></div>
-                            <div class="card-number-display" id="cardNumDisp">•••• •••• •••• ••••</div>
-                            <div class="card-bottom">
-                                <div>
-                                    <div class="card-holder-display">CARD HOLDER</div>
-                                    <div class="card-holder-name" id="cardNameDisp">YOUR NAME</div>
-                                </div>
-                                <div class="card-expiry-display">
-                                    <div class="card-expiry-label">EXPIRES</div>
-                                    <div class="card-expiry-val" id="cardExpDisp">MM/YY</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="auth-field">
-                            <label class="co-form-label">Card Number</label>
-                            <input type="text" class="co-input" id="cardNumInput" placeholder="4532 •••• •••• 8890" maxlength="19" oninput="syncCardVisual()">
-                        </div>
-                        <div class="card-form-row" style="margin-top:10px">
-                            <div class="auth-field">
-                                <label class="co-form-label">Expiration Date</label>
-                                <input type="text" class="co-input" id="cardExpInput" placeholder="MM/YY" maxlength="5" oninput="syncCardVisual()">
-                            </div>
-                            <div class="auth-field">
-                                <label class="co-form-label">CVV / CVC</label>
-                                <input type="password" class="co-input" placeholder="•••" maxlength="4">
-                            </div>
+                        <div class="cod-box" role="status">
+                            <div class="cod-title">Card checkout not connected</div>
+                            <div class="cod-sub">This site does not collect card numbers. Choose Cash on Delivery, UPI via WhatsApp confirmation, or Instant WhatsApp Order.</div>
                         </div>
                     </div>
 
@@ -246,8 +221,8 @@
                         </svg>
                     </div>
                     <div style="text-align:center">
-                        <h3 style="font-family:var(--display);font-size:1.4rem;color:var(--ink);margin-bottom:4px">Order Confirmed!</h3>
-                        <p style="font-size:.85rem;color:var(--ink-3);margin-bottom:16px">Your brick order has been logged into Gurukripa system.</p>
+                        <h3 style="font-family:var(--display);font-size:1.4rem;color:var(--ink);margin-bottom:4px" id="orderSuccessTitle">Order token saved</h3>
+                        <p style="font-size:.85rem;color:var(--ink-3);margin-bottom:16px" id="orderSuccessSub">Saved on this device. Confirm with the yard on WhatsApp or phone — nothing is charged online.</p>
                         
                         <div class="order-success-box">
                             <div style="font-size:.74rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em">TRACKING NUMBER</div>

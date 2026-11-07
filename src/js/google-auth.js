@@ -32,7 +32,20 @@ function loadGoogleGsi(cb) {
 
 function initGoogleSignIn() {
     const clientId = APP_CONFIG.googleClientId;
-    if (!clientId) return; // feature intentionally dormant until configured
+    if (!clientId) {
+        // Hide dormant Google CTAs so they do not look clickable when unconfigured.
+        ['googleCustomBtn', 'googleCustomBtnReg', 'googleGsiBtn', 'googleGsiBtnReg'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.hidden = true;
+        });
+        document.querySelectorAll('#loginPanel .auth-social-btns, #registerPanel .auth-social-btns').forEach((el) => {
+            el.hidden = true;
+        });
+        document.querySelectorAll('#loginPanel .auth-divider, #registerPanel .auth-divider').forEach((el) => {
+            el.hidden = true;
+        });
+        return;
+    }
     loadGoogleGsi(() => {
         try {
             window.google.accounts.id.initialize({

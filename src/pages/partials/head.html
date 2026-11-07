@@ -137,7 +137,7 @@
       })();
     </script>
 
-    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements -> ops-console) -->
+    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements -> ops-console -> ux-responsive) -->
     <link rel="stylesheet" href="src/styles/tokens.css">
     <link rel="stylesheet" href="src/styles/base.css">
     <link rel="stylesheet" href="src/styles/sections.css">
@@ -148,7 +148,10 @@
     <link rel="stylesheet" href="src/styles/mobile-fixes.css">
     <link rel="stylesheet" href="src/styles/refinements.css">
     <link rel="stylesheet" href="src/styles/account.css">
-    <!-- Last: the checkout slide-over and the yard console override the
-         generic bottom-sheet rules above them. -->
+    <!-- Checkout / yard console override generic bottom-sheet rules. -->
     <link rel="stylesheet" href="src/styles/ops-console.css">
+    <!-- Final pass: mobile overflow, button overlap, estimator & account fixes. -->
+    <link rel="stylesheet" href="src/styles/ux-responsive.css">
+    <!-- Premium e-commerce chrome (grids, cards, modals) — brand tokens unchanged. -->
+    <link rel="stylesheet" href="src/styles/ecommerce.css">
 </head>

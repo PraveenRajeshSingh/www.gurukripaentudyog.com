@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'updateCartUI': () => updateCartUI(),
         'updateWishlistBadges': () => { if (typeof updateWishlistBadges === 'function') updateWishlistBadges(); },
         'updateAuthUI': () => updateAuthUI(),
+        'validateServerSession': () => { if (typeof validateServerSession === 'function') validateServerSession(); },
         'initScrollProgress': () => initScrollProgress(),
         'initCounters': () => initCounters(),
         'initNavHighlight': () => initNavHighlight(),
@@ -86,7 +87,7 @@ function handleContactSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const btn = document.getElementById('contactSubmitBtn');
-    if (!btn) return;
+    if (!btn || btn.disabled) return;
 
     const val = (id) => {
         const el = document.getElementById(id);
@@ -111,6 +112,10 @@ function handleContactSubmit(e) {
         return;
     }
 
+    const payload = {
+        name, email, phone: phone.replace(/\D/g, '').slice(-10),
+        subject, message, source: 'contact-form'
+    };
     const text = encodeURIComponent(
         'Website enquiry\n' +
         'Name: ' + name + '\n' +
@@ -122,16 +127,30 @@ function handleContactSubmit(e) {
 
     btn.disabled = true;
     btn.textContent = t('contact.opening');
-    try {
-        window.open('https://wa.me/919198923230?text=' + text, '_blank', 'noopener');
-        showToast(t('contact.handedOff'), 'success');
-        form.reset();
-    } catch (err) {
-        // Pop-up blocked or WebView cannot open externally: be honest, offer mailto.
-        showToast(t('contact.handoffFailed'), 'error');
+
+    const openWhatsApp = () => {
+        try {
+            window.open('https://wa.me/919198923230?text=' + text, '_blank', 'noopener');
+            showToast(t('contact.handedOff'), 'success');
+            form.reset();
+        } catch (err) {
+            showToast(t('contact.handoffFailed'), 'error');
+        }
+        btn.disabled = false;
+        btn.textContent = t('contact.sendBtn');
+    };
+
+    // Server-first when Platform API is configured; always hand off to WhatsApp after.
+    if (window.GBApi && GBApi.enabled()) {
+        GBApi.submitEnquiry(payload).then(() => {
+            showToast(t('contact.serverSaved') || 'Enquiry saved. Opening WhatsApp…', 'success');
+            openWhatsApp();
+        }).catch(() => {
+            openWhatsApp();
+        });
+        return;
     }
-    btn.disabled = false;
-    btn.textContent = t('contact.sendBtn');
+    openWhatsApp();
 }
 
 // Newsletter: there is no mailing backend on the static site, so instead of a
@@ -188,7 +207,10 @@ function handleBulkQuoteSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('rfqSubmitBtn');
     const notice = document.getElementById('rfqResultNotice');
-    if (btn) btn.disabled = true;
+    if (btn) {
+        if (btn.disabled) return;
+        btn.disabled = true;
+    }
 
     const payload = collectBulkQuote();
 
@@ -201,10 +223,10 @@ function handleBulkQuoteSubmit(e) {
         console.error('[GBI] RFQ submit failed:', err); // falls back to manual notice below
     }
 
-    setTimeout(() => {
+    const finishUi = () => {
         if (notice) {
             notice.style.display = 'block';
-            notice.innerHTML = `✓ RFQ Generated: <strong>${quote ? quote.id : 'QT-2026-SUBMITTED'}</strong>. Our Jaunpur Bhatta Sales Manager will call ${sanitizeHTML(payload.phone)} within 30 minutes with official rate quote.`;
+            notice.innerHTML = `✓ RFQ Generated: <strong>${quote ? quote.id : 'QT-LOCAL'}</strong>. Our Jaunpur Bhatta Sales Manager will call ${sanitizeHTML(payload.phone)} within 30 minutes with official rate quote.`;
         }
         if (btn) {
             btn.disabled = false;
@@ -217,7 +239,29 @@ function handleBulkQuoteSubmit(e) {
             if (notice) notice.style.display = 'none';
             if (btn) btn.textContent = 'Submit Bulk RFQ Quotation Request →';
         }, 3000);
-    }, 600);
+    };
+
+    const enquiryBody = {
+        name: payload.name,
+        phone: String(payload.phone || '').replace(/\D/g, '').slice(-10),
+        company: payload.company,
+        gstin: payload.gstin,
+        product: payload.product,
+        quantity: payload.qty,
+        site: payload.site,
+        roadAccess: payload.roadAccess,
+        unloadingReq: payload.unloadingReq,
+        subject: 'Bulk RFQ',
+        message: `Bulk RFQ for ${payload.product || 'bricks'} × ${payload.qty} at ${payload.site}`,
+        source: 'bulk-rfq',
+        localQuoteId: quote ? quote.id : undefined
+    };
+
+    if (window.GBApi && GBApi.enabled()) {
+        GBApi.submitEnquiry(enquiryBody).then(finishUi).catch(finishUi);
+        return;
+    }
+    setTimeout(finishUi, 600);
 }
 
 // One-tap WhatsApp route for the same form: the enquiry is logged locally first

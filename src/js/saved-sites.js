@@ -262,8 +262,29 @@ function saveConstructionSite() {
         const panel = document.getElementById(id);
         if (panel) panel.classList.add('hidden');
     });
-    showToast('"' + res.site.nickname + '" saved to your sites on this device.', 'success');
-    if (typeof renderAccountHub === 'function' && document.getElementById('profileModal')?.classList.contains('open')) renderAccountHub();
+
+    const done = (synced) => {
+        showToast(
+            synced
+                ? '"' + res.site.nickname + '" saved to your account.'
+                : '"' + res.site.nickname + '" saved to your sites on this device.',
+            'success'
+        );
+        if (typeof renderAccountHub === 'function' && document.getElementById('profileModal')?.classList.contains('open')) renderAccountHub();
+    };
+
+    if (window.GBApi && GBApi.enabled() && GBApi.token && GBApi.token()) {
+        GBApi.endpoints.addSavedSite({
+            nickname: res.site.nickname,
+            address: res.site.address,
+            city: res.site.city,
+            pincode: res.site.pincode,
+            roadAccess: res.site.roadAccess,
+            notes: res.site.notes
+        }).then(() => done(true)).catch(() => done(false));
+        return;
+    }
+    done(false);
 }
 
 // Profile-side shortcut: name a site without going through checkout first.
@@ -292,8 +313,27 @@ async function addSiteFromProfile() {
         roadAccess: /narrow/i.test(road) ? 'narrow' : 'wide'
     });
     if (res.error) { showToast(res.error, 'error'); return; }
-    showToast('"' + res.site.nickname + '" added to your sites.', 'success');
-    if (typeof renderAccountHub === 'function') renderAccountHub();
+
+    const finish = (synced) => {
+        showToast(
+            synced
+                ? '"' + res.site.nickname + '" added to your account.'
+                : '"' + res.site.nickname + '" added to your sites on this device.',
+            'success'
+        );
+        if (typeof renderAccountHub === 'function') renderAccountHub();
+    };
+    if (window.GBApi && GBApi.enabled() && GBApi.token && GBApi.token()) {
+        GBApi.endpoints.addSavedSite({
+            nickname: res.site.nickname,
+            address: res.site.address,
+            city: res.site.city,
+            pincode: res.site.pincode,
+            roadAccess: res.site.roadAccess
+        }).then(() => finish(true)).catch(() => finish(false));
+        return;
+    }
+    finish(false);
 }
 
 function renderSavedSites() { SavedSites.renderAll(); }

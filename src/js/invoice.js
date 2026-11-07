@@ -35,7 +35,27 @@ function closeInvoicePdf() { const m = document.getElementById('invoicePdfModal'
 function printCurrentInvoice() { if (_currentInvoiceRef) GurukripaERP.Invoices.printInvoice(_currentInvoiceRef); }
 function downloadCurrentInvoice() { if (_currentInvoiceRef) { const r = GurukripaERP.Invoices.downloadInvoice(_currentInvoiceRef); if (r.ok) showToast('Invoice downloaded', 'success'); } }
 function shareCurrentInvoice() { if (_currentInvoiceRef) { const r = GurukripaERP.Invoices.shareInvoice(_currentInvoiceRef); if (!r.ok && r.error !== 'cancelled') showToast('Sharing not supported here — use Download', 'info'); } }
-function resendCurrentInvoice() { if (_currentInvoiceRef) showToast(GurukripaERP.Invoices.resendInvoice(_currentInvoiceRef).message, 'info'); }
+function resendCurrentInvoice() {
+    if (!_currentInvoiceRef) return;
+    const IV = _ERPInv();
+    if (!IV) { showToast('Invoice engine unavailable', 'warning'); return; }
+    // No mail transport on the storefront — hand the invoice to WhatsApp so the
+    // customer or yard can forward it. Never toast a fake "email sent".
+    const inv = (window.GurukripaERP && GurukripaERP.Documents)
+        ? GurukripaERP.Documents.getDoc(_currentInvoiceRef)
+        : null;
+    const number = (inv && inv.number) || String(_currentInvoiceRef);
+    const text = encodeURIComponent(
+        'Gurukripa Bricks — Invoice ' + number +
+        '\nPlease find / confirm this invoice. (Sent from the website invoice viewer.)'
+    );
+    const url = 'https://wa.me/919198923230?text=' + text;
+    if (window.Platform && Platform.openExternal) Platform.openExternal(url);
+    else window.open(url, '_blank', 'noopener');
+    // Still expose the native share sheet when available.
+    try { IV.shareInvoice(_currentInvoiceRef); } catch (_e) { /* ignore */ }
+    showToast('Opening WhatsApp to share invoice ' + number + '.', 'success');
+}
 
 // ── Customer order → invoice (real-first, legacy fallback) ───────
 function openGstInvoice(orderId) {

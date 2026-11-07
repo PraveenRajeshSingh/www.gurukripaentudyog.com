@@ -48,8 +48,33 @@ function refreshTracker() {
     const id = (document.getElementById('trackerSearchInput')?.value || '').trim();
     mountTrackerYardMap();
     if (!id) { renderTrackerEmpty(); return; }
-    renderTrackerDetails(id);
-    showToast(typeof t === 'function' ? t('tracker.refreshed') : 'Status refreshed from this device.', 'info');
+
+    const paintLocal = () => {
+        renderTrackerDetails(id);
+        showToast(typeof t === 'function' ? t('tracker.refreshed') : 'Status refreshed from this device.', 'info');
+    };
+
+    // Prefer Platform API order status when signed in; otherwise re-read the local ledger.
+    if (window.GBApi && GBApi.enabled() && GBApi.token && GBApi.token()) {
+        GBApi.endpoints.order(id).then((remote) => {
+            if (remote && remote.id) {
+                const idx = orders.findIndex((o) => String(o.id) === String(remote.id));
+                const merged = Object.assign({}, idx >= 0 ? orders[idx] : {}, {
+                    id: remote.id,
+                    status: remote.status || remote.stage || 'Processing',
+                    customer: remote.customerName || remote.customer || '',
+                    customerPhone: remote.customerPhone || remote.phone || '',
+                    total: remote.total != null ? remote.total : (idx >= 0 ? orders[idx].total : 0)
+                });
+                if (idx >= 0) orders[idx] = merged;
+                else orders.unshift(merged);
+                setSafeStorage('gb_orders', orders);
+            }
+            paintLocal();
+        }).catch(paintLocal);
+        return;
+    }
+    paintLocal();
 }
 
 function trackOrderSubmit() {
