@@ -157,6 +157,8 @@
     <link rel="stylesheet" href="src/styles/ux-responsive.css">
     <!-- Premium e-commerce chrome (grids, cards, modals) — brand tokens unchanged. -->
     <link rel="stylesheet" href="src/styles/ecommerce.css">
+    <!-- Final popup/sheet/dialog polish — wins over earlier radius/overflow conflicts. -->
+    <link rel="stylesheet" href="src/styles/popup-polish.css">
 </head>
 
 <body>
@@ -361,6 +363,31 @@
                                 </div>
 
                                 <nav class="account-popup__nav" aria-label="Account actions">
+                                    <div class="ud-body">
+                                        <div class="ud-grouplabel">Dashboard</div>
+                                        <button type="button" class="ud-item" data-perm="profile.manage_own" onclick="RoleAccess.goCustomerDashboard();closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">My Dashboard</span>
+                                                <span class="ud-item__hint">Orders, sites, wishlist &amp; GST</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="RoleAccess.goEstimator();closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Brick Estimator &amp; BOQ</span>
+                                                <span class="ud-item__hint">Wall, building &amp; boundary — saved estimates</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" data-audience="contractor" onclick="RoleAccess.goBulkQuote();closeUserDropdown()" role="menuitem" hidden>
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Bulk Order / RFQ</span>
+                                                <span class="ud-item__hint">Contractor wholesale enquiry</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="ud-divider" role="separator"></div>
                                     <div class="ud-body">
                                         <div class="ud-grouplabel">Account</div>
                                         <button type="button" class="ud-item" onclick="openProfile();closeUserDropdown()" role="menuitem">
@@ -576,6 +603,26 @@
                     <circle cx="12" cy="7" r="4" />
                 </svg>
                 <span>My Account</span>
+            </button>
+            <button type="button" class="drawer-link" data-audience="customer,contractor,staff,manager,admin" onclick="toggleDrawer();RoleAccess.requireCustomer('My Orders', function(){ openProfileTab('orders'); })" hidden>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+                <span>My Orders &amp; Invoices</span>
+            </button>
+            <button type="button" class="drawer-link" data-audience="customer,contractor,staff,manager,admin" onclick="toggleDrawer();RoleAccess.requireCustomer('Saved sites', function(){ openProfileTab('sites'); })" hidden>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>Saved Construction Sites</span>
+            </button>
+            <button type="button" class="drawer-link" data-audience="contractor" onclick="toggleDrawer();RoleAccess.goBulkQuote()" hidden>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span>Contractor Bulk RFQ</span>
             </button>
             <a href="#about" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -2166,6 +2213,30 @@
                     <span class="hub-tile__label">Enquiries &amp; Quotations</span>
                     <span class="hub-tile__meta" id="hubEnquiryMeta">RFQs logged on this device</span>
                 </button>
+                <button type="button" class="hub-tile" onclick="closeProfile();RoleAccess.goEstimator()">
+                    <span class="hub-tile__top">
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></span>
+                        <span class="hub-tile__badge" id="hubEstimatesBadge">BOQ</span>
+                    </span>
+                    <span class="hub-tile__label">Estimator &amp; Saved Estimates</span>
+                    <span class="hub-tile__meta">Wall, building &amp; boundary — print PDF</span>
+                </button>
+                <button type="button" class="hub-tile" onclick="closeProfile();openTrackerModal()">
+                    <span class="hub-tile__top">
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+                        <span class="hub-tile__badge">Track</span>
+                    </span>
+                    <span class="hub-tile__label">Track Delivery</span>
+                    <span class="hub-tile__meta">Yard dispatch status (no fake GPS)</span>
+                </button>
+                <button type="button" class="hub-tile" data-audience="contractor" hidden onclick="closeProfile();RoleAccess.goBulkQuote()">
+                    <span class="hub-tile__top">
+                        <span class="hub-tile__icon"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                        <span class="hub-tile__badge">Bulk</span>
+                    </span>
+                    <span class="hub-tile__label">Contractor Bulk RFQ</span>
+                    <span class="hub-tile__meta">Wholesale quantity &amp; special quote</span>
+                </button>
             </div>
 
             <!-- Profile Navigation Tabs. These WRAP - a sideways-scrolling tab
@@ -2811,7 +2882,10 @@
     <div class="modal-overlay" id="compareModal" role="dialog" aria-modal="true" aria-labelledby="compareModalTitle" onclick="if(event.target===this)CatalogDiscovery.closeCompareModal()">
         <div class="modal-box modal-box--lg compare-modal-box">
             <div class="modal-head">
-                <h2 id="compareModalTitle" class="modal-title">Compare bricks</h2>
+                <div>
+                    <div id="compareModalTitle" class="modal-title">Compare bricks</div>
+                    <div class="modal-subtitle">Side-by-side specs &amp; today’s catalogue rates</div>
+                </div>
                 <button type="button" class="modal-close-btn" onclick="CatalogDiscovery.closeCompareModal()" aria-label="Close comparison">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
@@ -3399,6 +3473,7 @@
     <script src="src/js/cart.js" defer></script>
     <script src="src/js/wishlist-drawer.js" defer></script>
     <script src="src/js/auth-modal.js" defer></script>
+    <script src="src/js/role-access.js" defer></script>
     <script src="src/js/account-popup.js" defer></script>
     <script src="src/js/profile-modal.js" defer></script>
     <script src="src/js/google-auth.js" defer></script>

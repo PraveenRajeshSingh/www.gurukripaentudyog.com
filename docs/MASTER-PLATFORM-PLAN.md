@@ -1,7 +1,10 @@
 # Master Platform Plan — Gurukripa Bricks Industry
 
-**Date:** 2026-11-07  
+**Date:** 2026-11-07 (updated after audit agents)  
 **Rule:** Improve existing modules. No duplicate auth, no fake payments/GPS, phase-by-phase delivery.
+
+**Audits:** [Storefront inventory](8283644e-2a5f-40e7-87a6-7021d719aef8) · [Platform API backend](9ab4a0f0-8a46-4598-aa8c-db597659b2d7)  
+**Phase 1 report:** [PHASE1-CATALOG-REPORT.md](./PHASE1-CATALOG-REPORT.md)
 
 ---
 
@@ -11,66 +14,75 @@
 |-------|----------|-------|
 | Production storefront | Root static PWA (`src/`, `index.html`, Capacitor) | Primary delivery surface today |
 | Next.js client | `apps/web` | CI / preview path |
-| Platform API | `backend/src/platform` | Nest JWT + role guards; in-memory store (+ Postgres migrations present) |
+| Platform API | `backend/src/platform` | Nest JWT + role guards; **in-memory authoritative** + optional Postgres mirror (`002_platform_workflow.sql`) |
 | Shared math/catalog | `packages/api-contracts` | GST 5%, estimator formulas |
 | Docs | `docs/PLATFORM-API.md`, `ARCHITECTURE.md`, `API.md` | Authoritative contracts |
+
+### Platform API surface (confirmed)
+
+| Group | Purpose |
+|-------|---------|
+| `/api/v1/auth` | Register, dealer-register, login, `/me` |
+| `/api/v1/public` | Products, categories, announcements, guest enquiries |
+| `/api/v1/me` | Profile, addresses, enquiries, quotations, orders, devices, notifications, `/me/dealer/*` |
+| `/api/v1/staff` | Enquiry/quote/order ops, dealers, announcements, stats, audit, CSV |
+| `/api/v1/calculator` | `POST /estimate` |
+| Legacy | `/tenants/:slug/*`, mock `POST /orders`, `POST /sync/push` (no JWT) |
+
+**RBAC:** CUSTOMER/DEALER on `/me/*` with ownership checks; STAFF→SUPER_ADMIN on `/staff/*`. Roles `DISPATCHER` / `WAREHOUSE_STAFF` / `DRIVER` exist in the enum but are **not** in `STAFF_ROLES` today.  
+**Payments:** Orders hard-code `PAYMENT_ON_DELIVERY`; Razorpay env vars are unused stubs.
 
 ---
 
 ## Capability inventory
 
-| # | Capability | Status | Where it lives |
-|---|------------|--------|----------------|
-| 1 | Product search / category / price / sort | **PARTIAL** | `main.js` nav search, `products.js`, sidebar (some checkboxes inert) |
-| 1b | Suggestions, history, recently viewed, size/availability filters | **MISSING → Phase 1** | — |
-| 2 | Cart, GST, coupons, checkout, WA handoff | **EXISTS** | `cart.js`, `checkout.js`, `payment-service.js` (honest: no fake gateway success) |
-| 2b | Live payment gateway | **BLOCKED** | Needs merchant credentials |
-| 3 | Wishlist | **EXISTS** | `wishlist-drawer.js`, profile hub |
-| 3b | Product comparison table | **MISSING → Phase 1** | — |
-| 4 | Order history / status / invoice / reorder hook | **PARTIAL** | `invoice.js`, `tracker.js`, API `/me/orders` |
-| 4b | Full status timeline + staff updates | **PARTIAL** | Staff `POST /staff/orders/:id/status`; UI timeline basic |
-| 5 | Pincode delivery check | **PARTIAL** | `pincodeChecker.js` — zone rules, not live maps distance |
-| 5b | Maps routing + admin transport tariffs | **MISSING → Phase 2** | Needs Maps API key |
-| 6 | Dealer/contractor register + sites | **PARTIAL** | `/auth/dealer-register`, `/me/dealer/*`, bulk RFQ modal |
-| 6b | Full contractor dashboard / account pricing | **MISSING → Phase 3** | |
-| 7 | Quotation RFQ + admin send | **PARTIAL** | QuotationService + staff quotation routes |
-| 7b | Branded quotation PDF | **PARTIAL** | ERP invoice PDF stronger than RFQ PDF |
-| 8 | 3-in-1 estimator | **EXISTS** | `calculator.js`, `erp-calculators.js`, contracts package |
-| 8b | BOQ PDF / estimate compare / convert to quote | **PARTIAL → Phase 2** | Save estimates exist offline |
-| 9 | Construction project management | **MISSING → Phase 2** | Saved sites ≠ full projects |
-| 10 | Site expense manager | **MISSING → Phase 2** | |
-| 11 | Notifications | **PARTIAL** | `/me/notifications`, push SW, `erp-notify.js` |
-| 12 | Chat assistant | **PARTIAL** | `chatbot.js` — extend with catalog facts only |
-| 13 | Reviews system (submit/moderate) | **MISSING → Phase 3** | Static rating display only |
-| 14 | Reorder | **PARTIAL** | `reorderTrolley` — must use **current** catalogue prices |
-| 15 | Coupons | **PARTIAL** | Local `COUPONS` in `data.js`; no admin loyalty |
-| 16 | PWA | **EXISTS** | SW, manifest, offline store |
-| 17 | Admin / ops portal | **PARTIAL** | `admin-portal.js` + ERP modules; staff API for enquiries/orders |
-| 18 | Auth / RBAC | **EXISTS** | JWT `/auth/*`, guards, storefront session harden (prior pass) |
-| 19 | i18n | **PARTIAL** | `hi` + `en`; Marathi scaffold later |
-| 20 | DB entities | **PARTIAL** | Platform store + migrations; extend carefully |
+| # | Capability | Status | Notes |
+|---|------------|--------|-------|
+| 1 | Product discovery | **DONE (Phase 1)** | `catalog-discovery.js` — filters, suggestions, history, recent, related, compare |
+| 2 | Cart / GST / coupons / checkout | **EXISTS** | Honest: no fake Razorpay success; coupons still **client-only** |
+| 2b | Live payment gateway | **BLOCKED** | Needs merchant credentials + backend wiring |
+| 3 | Wishlist | **EXISTS** | Local + profile hub |
+| 3b | Product comparison | **DONE (Phase 1)** | Multi-select compare modal (max 3) |
+| 4 | Orders / track / invoice / reorder | **EXISTS** | Reorder uses **current** catalogue prices (Phase 1 fix) |
+| 5 | Transport / PIN | **PARTIAL** | Zone table + Haversine helpers; **not** Distance Matrix |
+| 5b | Admin transport tariffs + checkout line | **Phase 2** | Label estimates; wire PIN charge into checkout |
+| 6 | Dealer API | **EXISTS** | `/auth/dealer-register`, `/me/dealer/*`, staff approve + discount % |
+| 6b | Dealer portal UI | **Phase 3** | API ready; storefront UI thin |
+| 7 | Quotations | **PARTIAL** | Full workflow; client print-to-PDF (no server PDF) |
+| 8 | 3-in-1 estimator / indicative BOQ | **EXISTS** | Offline save + print; not full PM BOQ software |
+| 9 | Construction project management | **MISSING → Phase 2** | Saved sites ≠ projects |
+| 10 | Site expenses | **PARTIAL → Phase 2** | `erp-crm` local expenses exist; **no** Platform API / customer UI |
+| 11 | Notifications | **PARTIAL** | In-app inbox + optional `PUSH_WEBHOOK_URL`; no email/WA/SMS |
+| 12 | Chat assistant | **PARTIAL** | Offline KB; optional `gb-chat-endpoint` |
+| 13 | Reviews moderation | **MISSING → Phase 3** | Display-only stars/testimonials |
+| 14 | Coupons / loyalty | **PARTIAL → Phase 3** | Static `COUPONS`; no server validation / loyalty |
+| 15 | PWA | **EXISTS** | SW + offline; install prompt UX still thin |
+| 16 | Admin / ops | **PARTIAL** | Local ERP + `/staff/*` when JWT present |
+| 17 | Auth / RBAC | **EXISTS** | JWT + guards; storefront session `/auth/me` |
+| 18 | i18n | **PARTIAL** | `en`/`hi`; DTO allows `mr` — Marathi UI missing |
+| 19 | DB | **PARTIAL** | Dual-mode store; products from mock seed, not platform tables |
 
 ---
 
-## Phased roadmap (execution order)
+## Phased roadmap
 
-### Phase 1 — Core e-commerce discovery (this sprint)
-1. Unified catalog filter pipeline (category + price + stock + query + sort).
-2. Search suggestions + search history.
-3. Recently viewed products.
-4. Product comparison (up to 3) responsive table.
-5. Wire sidebar availability filters (remove dead checkboxes).
-6. Fix reorder to reprice from current `PRODUCTS`.
-7. Tests + rebuild + report.
+### Phase 1 — Core e-commerce discovery — **COMPLETE**
+See [PHASE1-CATALOG-REPORT.md](./PHASE1-CATALOG-REPORT.md). Suite: **145/145** pass.
 
-### Phase 2 — Construction tools
-Transport estimate (labelled estimates), BOQ PDF/share, projects, site expenses, estimate→enquiry.
+### Phase 2 — Construction tools *(next)*
+Priority order from audits (no fake integrations):
+
+1. **Transport line on checkout** — use existing PIN/distance helpers; label as estimated until yard confirms.
+2. **BOQ / estimate** — compare saved estimates; convert estimate → enquiry/quotation; improve PDF share.
+3. **Site expense UI** — surface existing `erp-crm` expenses on saved sites / admin; do not invent server tables until needed.
+4. **Lightweight projects** — extend saved sites with budget + linked estimates/orders (avoid duplicate dealer-site schema).
+5. Optional: staff console prefer `/staff/stats` when API JWT present.
 
 ### Phase 3 — Business automation
-Delivery workflow UX, payment when credentials exist, contractor portal polish, coupons/loyalty admin, reviews with moderation, notifications prefs.
+Dealer portal UI on `/me/dealer/*`, server-validated coupons, reviews + moderation, notification prefs + push config, payment when Razorpay credentials exist, Marathi dictionary.
 
 ### Phase 4 — Advanced
-Assistant grounded on catalog, recommendations, analytics, QR inventory.
+Catalog-grounded assistant, recommendations, analytics, QR inventory.
 
 ---
 
@@ -78,18 +90,19 @@ Assistant grounded on catalog, recommendations, analytics, QR inventory.
 
 | Integration | Status |
 |-------------|--------|
-| Platform API `gb-api-base` | Optional meta tag |
-| Google OAuth | Optional meta |
-| Razorpay / UPI gateway | Not configured — checkout stays COD/WA |
-| Maps distance matrix | Not configured — pincode zones only |
-| SMS / WhatsApp Business API | WA deep-links only |
-| Push VAPID | Partial SW support |
+| Platform API `gb-api-base` / `JWT_SECRET` / `DATABASE_URL` | Deploy config |
+| `PUSH_WEBHOOK_URL` (+ token) | Optional device push |
+| Razorpay keys | Documented only — **unused in code** |
+| Maps Distance Matrix | Not configured — zone table only |
+| SMS / WA Business API / SMTP | Not present |
+| Google OAuth / chat endpoint metas | Optional |
 
 ---
 
-## Non-negotiables (enforced)
+## Non-negotiables
 
 - No fake payment success, live GPS, or invented stock/prices.
 - No second authentication system.
 - Backend authorization remains source of truth for `/me/*` and `/staff/*`.
+- Prefer extending Platform entities / ERP modules over parallel schemas.
 - Do not mark a module complete without a tested workflow.

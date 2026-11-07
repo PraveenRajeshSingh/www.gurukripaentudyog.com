@@ -39,6 +39,31 @@
 
                                 <nav class="account-popup__nav" aria-label="Account actions">
                                     <div class="ud-body">
+                                        <div class="ud-grouplabel">Dashboard</div>
+                                        <button type="button" class="ud-item" data-perm="profile.manage_own" onclick="RoleAccess.goCustomerDashboard();closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">My Dashboard</span>
+                                                <span class="ud-item__hint">Orders, sites, wishlist &amp; GST</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" onclick="RoleAccess.goEstimator();closeUserDropdown()" role="menuitem">
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Brick Estimator &amp; BOQ</span>
+                                                <span class="ud-item__hint">Wall, building &amp; boundary — saved estimates</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="ud-item" data-audience="contractor" onclick="RoleAccess.goBulkQuote();closeUserDropdown()" role="menuitem" hidden>
+                                            <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                                            <span class="ud-item__text">
+                                                <span class="ud-item__title">Bulk Order / RFQ</span>
+                                                <span class="ud-item__hint">Contractor wholesale enquiry</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="ud-divider" role="separator"></div>
+                                    <div class="ud-body">
                                         <div class="ud-grouplabel">Account</div>
                                         <button type="button" class="ud-item" onclick="openProfile();closeUserDropdown()" role="menuitem">
                                             <span class="ud-item__icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>

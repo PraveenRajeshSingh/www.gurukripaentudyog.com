@@ -100,6 +100,26 @@
                 </svg>
                 <span>My Account</span>
             </button>
+            <button type="button" class="drawer-link" data-audience="customer,contractor,staff,manager,admin" onclick="toggleDrawer();RoleAccess.requireCustomer('My Orders', function(){ openProfileTab('orders'); })" hidden>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+                <span>My Orders &amp; Invoices</span>
+            </button>
+            <button type="button" class="drawer-link" data-audience="customer,contractor,staff,manager,admin" onclick="toggleDrawer();RoleAccess.requireCustomer('Saved sites', function(){ openProfileTab('sites'); })" hidden>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>Saved Construction Sites</span>
+            </button>
+            <button type="button" class="drawer-link" data-audience="contractor" onclick="toggleDrawer();RoleAccess.goBulkQuote()" hidden>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span>Contractor Bulk RFQ</span>
+            </button>
             <a href="#about" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="12" r="10" />

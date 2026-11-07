@@ -59,6 +59,9 @@ function openProfile() {
     document.getElementById('profileModal')?.classList.add('open');
     overlayLock();
     translateProfileModal();
+    if (window.RoleAccess && typeof RoleAccess.applyVisibility === 'function') {
+        RoleAccess.applyVisibility(document.getElementById('profileModal'));
+    }
 }
 
 /**

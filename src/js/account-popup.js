@@ -49,6 +49,9 @@
                     verified = b.tone === 'verified';
                 }
             } catch (_) { /* ignore */ }
+        } else if (global.RoleAccess && typeof global.RoleAccess.roleLabel === 'function') {
+            label = global.RoleAccess.roleLabel(u);
+            verified = global.RoleAccess.isContractorLike(u) || global.RoleAccess.isStaffLike(u);
         } else if (u && u.role) {
             label = String(u.role);
         } else if (u && u.verified) {

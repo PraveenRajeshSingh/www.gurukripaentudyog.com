@@ -312,24 +312,27 @@
     text-transform: uppercase;
 }
 
-/* ── Unified modal / drawer commerce chrome ── */
+/* ── Unified modal / drawer commerce chrome ──
+   Border-radius for sheets is finalized in popup-polish.css (mobile top-only). */
 .modal-overlay {
     background: rgba(37, 37, 37, 0.48);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
 .modal-box {
-    border-radius: var(--ecom-radius) !important;
     border: 1px solid var(--line);
     box-shadow: var(--sh-modal);
     overflow: hidden;
+}
+@media (min-width: 640px) {
+    .modal-box { border-radius: var(--ecom-radius); }
 }
 .modal-head {
     border-bottom: 1px solid var(--line);
     background: linear-gradient(180deg, var(--brand-light) 0%, var(--bg-card) 100%);
 }
 .modal-close-btn {
-    border-radius: 50% !important;
+    border-radius: 50%;
     transition: background var(--t-fast), transform var(--t-fast);
 }
 .modal-close-btn:hover {
@@ -339,7 +342,10 @@
 .wishlist-overlay + .cart-drawer,
 #wishlistDrawer.cart-drawer {
     box-shadow: var(--sh-modal);
-    border-left: 1px solid var(--line);
+}
+@media (min-width: 640px) {
+    .cart-drawer,
+    #wishlistDrawer.cart-drawer { border-left: 1px solid var(--line); }
 }
 .cart-head,
 .wishlist-drawer .cart-head {

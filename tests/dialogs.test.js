@@ -199,6 +199,7 @@ describe('Dialog system integration (static checks)', () => {
     test('responsive dialog CSS: safe areas, short screens, bottom sheet, spinner', () => {
         const css = read('src/styles/refinements.css');
         const popups = read('src/styles/popups.css');
+        const polish = read('src/styles/popup-polish.css');
         assert.match(css, /env\(safe-area-inset-left\)/);
         assert.match(css, /env\(safe-area-inset-bottom\)/);
         assert.match(css, /@media \(max-height: 560px\)/, 'landscape/zoom short-viewport rules');
@@ -207,6 +208,11 @@ describe('Dialog system integration (static checks)', () => {
         assert.match(popups, /\.modal-box--lg/);
         assert.match(popups, /\.gb-dialog-row/);
         assert.match(popups, /\.pin-vehicle/);
+        assert.match(polish, /popup-radius-sheet/);
+        assert.match(polish, /align-items:\s*flex-end/);
+        assert.match(polish, /font-size:\s*16px/);
+        const head = read('src/pages/partials/head.html');
+        assert.match(head, /popup-polish\.css/);
     });
 
     test('native popups removed from the storefront (no window.confirm/prompt left)', () => {

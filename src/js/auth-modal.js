@@ -239,6 +239,10 @@ function normalizeRole(role) {
 
 function isStaffUser(u) {
     if (!u) return false;
+    // Prefer RoleAccess so CUSTOMER/DEALER never inherit yard console access.
+    if (window.RoleAccess && typeof RoleAccess.isStaffLike === 'function') {
+        return RoleAccess.isStaffLike(u) || RoleAccess.isManagerLike(u) || RoleAccess.isAdminLike(u);
+    }
     const r = normalizeRole(u.role);
     return STAFF_ROLES.some((s) => String(s).toUpperCase() === r);
 }
@@ -441,16 +445,19 @@ function updateAuthUI() {
     const authBtns = document.getElementById('navAuthBtns');
     const userMenu = document.getElementById('navUserMenu');
     const drawerAuth = document.getElementById('drawerAuthBtns');
-    const staff = isStaffUser(user);
-
-    // Hide Operations Portal entry points from guests and retail customers.
-    document.querySelectorAll('[data-ops-portal], .topbar-ops-btn').forEach((el) => {
-        el.hidden = !staff;
-        el.setAttribute('aria-hidden', staff ? 'false' : 'true');
-        if (el.classList.contains('drawer-link')) {
-            el.style.display = staff ? '' : 'none';
-        }
-    });
+    // Role-based chrome: customer tools stay visible; ops portal staff+ only.
+    if (window.RoleAccess && typeof RoleAccess.applyVisibility === 'function') {
+        RoleAccess.applyVisibility();
+    } else {
+        const staff = isStaffUser(user);
+        document.querySelectorAll('[data-ops-portal], .topbar-ops-btn').forEach((el) => {
+            el.hidden = !staff;
+            el.setAttribute('aria-hidden', staff ? 'false' : 'true');
+            if (el.classList.contains('drawer-link')) {
+                el.style.display = staff ? '' : 'none';
+            }
+        });
+    }
 
     if (user) {
         authBtns?.classList.add('hidden');

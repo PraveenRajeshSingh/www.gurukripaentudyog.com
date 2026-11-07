@@ -1,0 +1,452 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   POPUP POLISH — final cascade layer for every modal / drawer /
+   dialog / sheet. Loaded after ecommerce.css. Restores mobile
+   bottom-sheets that later layers had flattened, and hardens
+   viewport / keyboard / safe-area behaviour site-wide.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root {
+    --popup-radius: var(--r-lg, 16px);
+    --popup-radius-sheet: 18px;
+    --popup-pad-x: clamp(14px, 3.5vw, 22px);
+    --popup-max-h: min(92dvh, 100%);
+    --popup-max-h-desk: min(86dvh, 900px);
+}
+
+/* ── Backdrop: clean, no heavy branded gradients ── */
+.modal-overlay,
+.cart-overlay,
+.wishlist-overlay,
+.lb-overlay {
+    background: rgba(28, 25, 23, 0.52) !important;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.modal-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:
+        max(12px, env(safe-area-inset-top, 0px))
+        max(12px, env(safe-area-inset-right, 0px))
+        max(12px, env(safe-area-inset-bottom, 0px))
+        max(12px, env(safe-area-inset-left, 0px));
+    overscroll-behavior: contain;
+}
+
+/* ── Shell: flex column, sticky head, scroll body ── */
+.modal-overlay > .modal-box,
+.modal-overlay .modal-box.modal-box--sm,
+.modal-overlay .modal-box.modal-box--md,
+.modal-overlay .modal-box.modal-box--lg,
+.modal-overlay .modal-box.modal-box--xl,
+.modal-overlay .modal-box.modal-box--full,
+.gb-dialog .modal-box {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--line) !important;
+    box-shadow: 0 24px 64px rgba(28, 25, 23, 0.22) !important;
+    width: 100%;
+    max-height: var(--popup-max-h-desk);
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-head,
+.auth-modal-brand + .modal-head,
+.co-sheet__head,
+.cart-head,
+.wishlist-drawer .cart-head,
+.profile-header {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.modal-body,
+.co-sheet__body,
+.cart-body,
+.profile-modal-body,
+#compareModalBody,
+#pdContent {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-foot,
+.gb-dialog-foot,
+.cart-footer,
+.auth-submit-wrap {
+    flex-shrink: 0;
+}
+
+/* Close control — always 44×44 touch */
+.modal-close-btn,
+.cart-close,
+.profile-close-btn,
+.account-popup__close,
+.filter-sheet-close {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    z-index: 3;
+}
+
+.modal-close-btn:focus-visible,
+.cart-close:focus-visible,
+.profile-close-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring, 0 0 0 3px rgba(168, 50, 38, 0.35));
+}
+
+/* Forms inside popups */
+.modal-body .auth-input,
+.modal-body .co-input,
+.modal-body input[type="text"],
+.modal-body input[type="email"],
+.modal-body input[type="tel"],
+.modal-body input[type="password"],
+.modal-body input[type="number"],
+.modal-body select,
+.modal-body textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 16px; /* prevents iOS zoom */
+    min-height: 46px;
+    border-radius: var(--r-md, 10px);
+}
+
+.modal-body textarea { min-height: 96px; resize: vertical; }
+
+.modal-body .btn,
+.modal-foot .btn,
+.gb-dialog-foot .btn,
+.auth-submit,
+.cart-checkout-btn {
+    min-height: 46px;
+}
+
+.auth-error-msg:not(:empty),
+.field-error:not(:empty) {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: var(--danger, #b91c1c);
+    font-weight: 600;
+}
+
+/* Desktop centred cards */
+@media (min-width: 640px) {
+    .modal-overlay {
+        align-items: center;
+        padding: max(16px, env(safe-area-inset-top)) 20px max(16px, env(safe-area-inset-bottom));
+    }
+    .modal-overlay > .modal-box {
+        border-radius: var(--popup-radius) !important;
+        max-height: var(--popup-max-h-desk);
+        margin: auto;
+    }
+    .modal-box--sm { max-width: 380px !important; }
+    .modal-box--md,
+    #authModal .modal-box { max-width: 460px !important; }
+    .modal-box--lg,
+    #productModal .modal-box,
+    #compareModal .modal-box,
+    #profileModal .modal-box,
+    #bulkQuoteModal .modal-box { max-width: min(640px, 94vw) !important; }
+    .modal-box--xl,
+    #checkoutModal .modal-box { max-width: min(720px, 94vw) !important; }
+    .modal-box--full,
+    #adminPortalModal .modal-box { max-width: min(1100px, 96vw) !important; }
+    #trackerModal .modal-box,
+    #gstInvoiceModal .modal-box,
+    #invoicePdfModal .modal-box,
+    #legalModal .modal-box,
+    #pincodeModal .modal-box,
+    #notificationCenterModal .modal-box,
+    #companyProfileModal .modal-box { max-width: min(560px, 94vw) !important; }
+}
+
+/* Mobile / narrow: bottom sheet */
+@media (max-width: 639px) {
+    .modal-overlay {
+        align-items: flex-end !important;
+        justify-content: stretch;
+        padding: 0 !important;
+        padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .modal-overlay > .modal-box,
+    .gb-dialog .modal-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: var(--popup-max-h) !important;
+        margin: 0 !important;
+        border-radius: var(--popup-radius-sheet) var(--popup-radius-sheet) 0 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        transform: translateY(0);
+    }
+
+    /* Drag pill: owned by mobile-fixes.css (.modal-box::before) — do not duplicate. */
+
+    .modal-head,
+    .cart-head {
+        padding-inline: var(--popup-pad-x);
+    }
+
+    .modal-body,
+    .co-sheet__body {
+        padding: 12px var(--popup-pad-x) 18px;
+    }
+
+    .modal-foot,
+    .gb-dialog-foot,
+    .cart-footer {
+        flex-direction: column;
+        padding: 12px var(--popup-pad-x) calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .modal-foot .btn,
+    .gb-dialog-foot .btn,
+    .cart-footer .btn,
+    .auth-submit {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+
+    /* Cart / wishlist already sheeted in popups.css — reinforce */
+    .cart-drawer,
+    .wishlist-drawer {
+        top: auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        max-height: var(--popup-max-h) !important;
+        border-radius: var(--popup-radius-sheet) var(--popup-radius-sheet) 0 0 !important;
+        border-left: none !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+}
+
+/* Very short viewports (landscape phone / zoom) */
+@media (max-height: 520px) {
+    .modal-overlay > .modal-box {
+        max-height: 98dvh !important;
+    }
+    .modal-body { padding-block: 10px; }
+    .auth-modal-brand { display: none; }
+}
+
+/* ── Auth ── */
+#authModal .modal-box {
+    max-width: 460px;
+}
+#authModal .modal-body {
+    padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+}
+#authModal .auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+    border-radius: var(--r-md);
+}
+#authModal .auth-tab {
+    min-height: 42px;
+    border-radius: var(--r-sm);
+}
+
+/* ── Profile hub ── */
+#profileModal .profile-modal-box {
+    max-width: min(640px, 96vw);
+}
+#profileModal .profile-header {
+    position: relative;
+    padding-right: 52px; /* room for close — avoids Edit/X overlap */
+}
+#profileModal .profile-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+#profileModal .profile-tabs {
+    flex-wrap: wrap;
+    gap: 4px;
+    overflow: visible;
+}
+#profileModal .profile-tab {
+    min-height: 40px;
+}
+
+/* ── Product detail ── */
+#productModal .pd-grid {
+    display: grid;
+    gap: 16px;
+}
+@media (min-width: 700px) {
+    #productModal .pd-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+        align-items: start;
+    }
+}
+#productModal .pd-img img {
+    width: 100%;
+    border-radius: var(--r-md);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+#productModal .pd-actions .btn {
+    min-height: 44px;
+}
+
+/* ── Compare ── */
+#compareModal .compare-table-wrap {
+    margin: 0 -4px;
+    padding-bottom: 8px;
+}
+#compareModal .compare-actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-card);
+    padding-top: 10px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Checkout sheet ── */
+#checkoutModal .modal-box,
+#checkoutModal.co-sheet .co-sheet__panel {
+    max-height: var(--popup-max-h-desk);
+}
+@media (max-width: 639px) {
+    #checkoutModal .co-sheet__panel,
+    #checkoutModal .modal-box {
+        max-height: var(--popup-max-h) !important;
+        border-radius: var(--popup-radius-sheet) var(--popup-radius-sheet) 0 0 !important;
+    }
+}
+
+/* ── Admin stays nearly full on mobile ── */
+@media (max-width: 900px) {
+    #adminPortalModal .modal-box.admin-modal-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 100dvh !important;
+        height: 100dvh;
+        border-radius: 0 !important;
+    }
+    #adminPortalModal .modal-box.admin-modal-box::before { display: none !important; }
+}
+
+/* ── Search suggestions ── */
+.search-suggest {
+    border-radius: var(--r-md);
+    box-shadow: 0 16px 40px rgba(28, 25, 23, 0.16);
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+}
+@media (max-width: 640px) {
+    .search-suggest {
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        top: calc(var(--nav-h, 64px) + env(safe-area-inset-top, 0px) + 4px);
+        max-height: min(50dvh, 360px);
+        z-index: calc(var(--z-modal, 1100) - 10);
+    }
+}
+
+/* ── Account popup sheet (already themed — reinforce mobile) ── */
+@media (max-width: 1024px) {
+    .account-popup.open,
+    .user-dropdown.account-popup.open {
+        max-height: min(90dvh, 100%);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+}
+
+/* ── Lightbox ── */
+.lb-overlay {
+    z-index: var(--z-lightbox, 1200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.lb-overlay img {
+    max-width: min(96vw, 1200px);
+    max-height: min(88dvh, 900px);
+    object-fit: contain;
+    border-radius: var(--r-md);
+}
+
+/* ── Toast above everything, clear of home indicator ── */
+#toast-container,
+.toast-container {
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    left: 12px;
+    right: 12px;
+    pointer-events: none;
+}
+@media (min-width: 768px) {
+    #toast-container,
+    .toast-container {
+        left: auto;
+        right: 20px;
+        bottom: 24px;
+        width: min(380px, 92vw);
+    }
+}
+.toast {
+    pointer-events: auto;
+    border-radius: var(--r-md);
+    box-shadow: 0 12px 32px rgba(28, 25, 23, 0.18);
+}
+
+/* ── Filter sheet ── */
+@media (max-width: 900px) {
+    .catalog-sidebar.open {
+        max-height: min(88dvh, 100%);
+        border-radius: var(--popup-radius-sheet) var(--popup-radius-sheet) 0 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+    .modal-overlay,
+    .modal-box,
+    .cart-drawer,
+    .wishlist-drawer {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Visual viewport / virtual keyboard: keep footers reachable when possible */
+@supports (height: 100dvh) {
+    .modal-overlay > .modal-box {
+        max-height: min(92dvh, 100%);
+    }
+    @media (min-width: 640px) {
+        .modal-overlay > .modal-box {
+            max-height: min(86dvh, 900px);
+        }
+    }
+}
