@@ -346,6 +346,19 @@ function syncAccountPopupChrome(open) {
     }
 }
 
+/** Ignore document click-outside briefly after open (mobile bottom-nav / drawer
+ *  open the sheet in the same tap that then bubbles to the outside-closer). */
+let __accountPopupIgnoreOutsideUntil = 0;
+
+function isAccountPopupOpenTrigger(el) {
+    if (!el || !el.closest) return false;
+    if (el.closest('#userMenuBtn')) return true;
+    // Bottom-nav Profile + drawer "My Account" both call handleMobileProfile.
+    if (el.closest('.mn-item[onclick*="handleMobileProfile"]')) return true;
+    if (el.closest('[onclick*="handleMobileProfile"]')) return true;
+    return false;
+}
+
 function openUserDropdown() {
     const dd = document.getElementById('userDropdown');
     if (!dd || dd.classList.contains('open')) return;
@@ -356,6 +369,7 @@ function openUserDropdown() {
     }
     positionAccountPopup();
     dd.classList.add('open');
+    __accountPopupIgnoreOutsideUntil = Date.now() + 400;
     // Reposition after paint so max-height matches real content.
     requestAnimationFrame(() => {
         positionAccountPopup();
@@ -398,11 +412,12 @@ function closeUserDropdown() {
 document.addEventListener('click', e => {
     const dd = document.getElementById('userDropdown');
     if (!dd || !dd.classList.contains('open')) return;
-    const btn = document.getElementById('userMenuBtn');
+    if (Date.now() < __accountPopupIgnoreOutsideUntil) return;
     const backdrop = document.getElementById('accountPopupBackdrop');
+    // Backdrop has its own onclick="closeUserDropdown()" — don't double-handle.
     if (backdrop && (e.target === backdrop || backdrop.contains(e.target))) return;
     if (dd.contains(e.target)) return;
-    if (btn && btn.contains(e.target)) return;
+    if (isAccountPopupOpenTrigger(e.target)) return;
     closeUserDropdown();
 });
 
