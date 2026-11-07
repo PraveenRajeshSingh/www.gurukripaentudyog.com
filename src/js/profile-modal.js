@@ -267,7 +267,11 @@ function switchProfileTab(tabName, btn) {
     }
     tabs.forEach(t => {
         const panel = document.getElementById('pTab' + t.charAt(0).toUpperCase() + t.slice(1));
-        if (panel) panel.classList.toggle('active', t === tabName);
+        if (!panel) return;
+        const on = t === tabName;
+        panel.classList.toggle('active', on);
+        panel.hidden = !on;
+        panel.setAttribute('aria-hidden', on ? 'false' : 'true');
     });
 }
 

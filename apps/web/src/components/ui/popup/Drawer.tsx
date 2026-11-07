@@ -75,7 +75,10 @@ export default function Drawer({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 overscroll-contain min-h-0">
+        <div
+          className="gb-modal-body flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-3 overscroll-contain min-h-0"
+          style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+        >
           {children}
         </div>
 

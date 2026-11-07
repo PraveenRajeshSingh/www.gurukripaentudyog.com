@@ -14,6 +14,8 @@ const _trWaSVG = `<svg width="15" height="15" fill="currentColor" viewBox="0 0 2
 function openTrackerModal(orderId) {
     const modal = document.getElementById('trackerModal');
     if (!modal) return;
+    // Avoid a previous sheet sitting above the tracker map action row.
+    if (typeof closeAllModalOverlays === 'function') closeAllModalOverlays();
     const inp = document.getElementById('trackerSearchInput');
     if (inp) {
         if (orderId) inp.value = orderId;

@@ -1987,15 +1987,29 @@ main [id].cta-banner {
     .hub-quick { display: none }
 }
 
-/* Short viewports (small phones, landscape, 200% zoom): the fixed chrome can
-   still outgrow the sheet, and the shell gives .modal-box overflow:hidden, so a
-   shrinking body would clip content. Here the whole sheet scrolls instead, with
-   the identity header (and its close button) pinned, so no account content is
-   ever unreachable. */
+/* Short viewports: keep header + tabs fixed; only .profile-modal-body scrolls.
+   Do NOT scroll the whole sheet — that moves chrome and breaks sticky actions. */
 @media (max-height: 700px) {
-    .profile-modal-box { overflow-y: auto !important }
-    .profile-modal-body { flex: none !important; min-height: 0 !important; overflow: visible !important }
-    .profile-header { position: sticky; top: 0; z-index: 5 }
+    #profileModal.modal-overlay.open > .profile-modal-box {
+        overflow: hidden !important;
+        max-height: min(var(--vv-height, 100dvh), 96dvh) !important;
+    }
+    #profileModal .profile-header,
+    #profileModal .profile-hub-metrics,
+    #profileModal .profile-tabs {
+        flex-shrink: 0;
+        position: relative;
+        z-index: 5;
+    }
+    #profileModal .profile-modal-body {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+    }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -2122,7 +2136,7 @@ main [id].cta-banner {
 .chatbot-box.minimized .chatbot-disclaimer { display: none }
 
 /* Desktop: raise above the help FAB launcher while keeping it a compact window */
-.chatbot-wrap.open { z-index: 900 }
+.chatbot-wrap.open { z-index: var(--z-chat, 1150) }
 
 @media (max-width: 640px) {
     .chatbot-wrap,
@@ -2135,15 +2149,17 @@ main [id].cta-banner {
         transform: none;            /* defeat the containing-block trap */
         opacity: 0;
         visibility: hidden;
-        z-index: 10000;
+        pointer-events: none;
+        z-index: var(--z-chat, 1150);
         transition: opacity .2s var(--ease);
     }
     .chatbot-wrap.open {
         opacity: 1;
         visibility: visible;
+        pointer-events: auto;
         /* shrink with the on-screen keyboard when chatbot.js provides it */
         height: 100dvh;
-        height: var(--gb-chat-vh, 100dvh);
+        height: var(--gb-chat-vh, var(--vv-height, 100dvh));
     }
     .chatbot-box,
     .chatbot-box.open {

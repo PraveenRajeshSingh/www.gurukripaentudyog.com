@@ -5,6 +5,59 @@ import { useEffect, useRef } from 'react';
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+/** Nested Modal/Drawer share one body pin so unlock restores the original scrollY. */
+let lockCount = 0;
+let lockedScrollY = 0;
+let vvCleanup: (() => void) | null = null;
+
+function syncVisualViewportVar() {
+  if (typeof document === 'undefined') return;
+  const vv = window.visualViewport;
+  const h = vv ? vv.height : window.innerHeight;
+  document.documentElement.style.setProperty('--vv-height', `${h}px`);
+}
+
+function lockBodyScroll() {
+  if (typeof document === 'undefined') return;
+  if (lockCount === 0) {
+    lockedScrollY = window.scrollY || window.pageYOffset || 0;
+    syncVisualViewportVar();
+    document.documentElement.classList.add('gb-popup-open');
+    document.body.classList.add('gb-popup-open');
+    document.body.style.top = `-${lockedScrollY}px`;
+    document.body.style.position = 'fixed';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    if (window.visualViewport) {
+      const onVv = () => syncVisualViewportVar();
+      window.visualViewport.addEventListener('resize', onVv, { passive: true });
+      window.visualViewport.addEventListener('scroll', onVv, { passive: true });
+      vvCleanup = () => {
+        window.visualViewport?.removeEventListener('resize', onVv);
+        window.visualViewport?.removeEventListener('scroll', onVv);
+        vvCleanup = null;
+      };
+    }
+  }
+  lockCount += 1;
+}
+
+function unlockBodyScroll() {
+  if (typeof document === 'undefined') return;
+  lockCount = Math.max(0, lockCount - 1);
+  if (lockCount !== 0) return;
+  if (vvCleanup) vvCleanup();
+  document.documentElement.classList.remove('gb-popup-open');
+  document.body.classList.remove('gb-popup-open');
+  document.body.style.top = '';
+  document.body.style.position = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  window.scrollTo(0, lockedScrollY || 0);
+}
+
 /**
  * Focus trap + body scroll lock + Escape for popup surfaces.
  * Returns a ref to attach to the dialog panel.
@@ -18,8 +71,7 @@ export function useFocusTrap(isOpen: boolean, onEscape: () => void) {
   useEffect(() => {
     if (!isOpen) return;
     restoreRef.current = document.activeElement as HTMLElement | null;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    lockBodyScroll();
 
     const focusTimer = window.setTimeout(() => {
       const el =
@@ -60,7 +112,7 @@ export function useFocusTrap(isOpen: boolean, onEscape: () => void) {
     return () => {
       window.clearTimeout(focusTimer);
       document.removeEventListener('keydown', onKey, true);
-      document.body.style.overflow = prevOverflow;
+      unlockBodyScroll();
       restoreRef.current?.focus({ preventScroll: true });
     };
   }, [isOpen]);

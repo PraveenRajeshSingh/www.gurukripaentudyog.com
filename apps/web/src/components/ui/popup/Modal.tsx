@@ -20,7 +20,7 @@ export interface ModalProps {
   isDirty?: boolean;
   /** While true (async save in flight) all dismissal paths are blocked. */
   busy?: boolean;
-  /** Optional sticky footer (actions) outside the scroll region. */
+  /** Sticky footer (actions) outside the scroll region. */
   footer?: React.ReactNode;
 }
 
@@ -33,7 +33,8 @@ const maxWidthClass = {
 
 /**
  * App-wide dialog — mobile bottom sheet, desktop centered panel.
- * Safe-area aware; sticky header/footer; dirty-state discard guard.
+ * Header + footer stay fixed; only the middle region scrolls.
+ * Body scroll is locked via useFocusTrap (scrollY restored on close).
  */
 export default function Modal({
   isOpen,
@@ -52,6 +53,7 @@ export default function Modal({
   const reactId = useId();
   const titleId = `${reactId}-title`;
   const descId = `${reactId}-desc`;
+  const bodyRef = useRef<HTMLDivElement>(null);
 
   const guards = useRef({ isDirty, busy, confirmDiscard });
   guards.current = { isDirty, busy, confirmDiscard };
@@ -73,14 +75,25 @@ export default function Modal({
   const panelRef = useFocusTrap(isOpen, onEscape);
 
   useEffect(() => {
-    if (isOpen) setConfirmDiscard(false);
+    if (isOpen) {
+      setConfirmDiscard(false);
+      // Reset inner scroll when reopening so tab switches / re-edits start at top.
+      if (bodyRef.current) bodyRef.current.scrollTop = 0;
+    }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 sm:pt-[max(1rem,env(safe-area-inset-top))] animate-fadeIn">
-      <OverlayBackdrop onDismiss={requestDismiss} />
+    <div
+      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none"
+      style={{
+        paddingTop: 'max(0px, env(safe-area-inset-top))',
+      }}
+    >
+      <div className="pointer-events-auto absolute inset-0 animate-fadeIn">
+        <OverlayBackdrop onDismiss={requestDismiss} />
+      </div>
 
       <div
         ref={panelRef}
@@ -89,17 +102,20 @@ export default function Modal({
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
-        className={`relative z-10 w-full ${maxWidthClass[maxWidth]} bg-surface-card rounded-t-2xl sm:rounded-xl border border-neutral-200 shadow-modal overflow-hidden max-h-[min(92dvh,100%)] sm:max-h-[85vh] flex flex-col animate-slideUp outline-none`}
+        onClick={(e) => e.stopPropagation()}
+        className={`gb-modal-panel pointer-events-auto relative z-10 w-full ${maxWidthClass[maxWidth]} bg-surface-card rounded-t-2xl sm:rounded-xl border border-neutral-200 shadow-modal flex flex-col outline-none animate-slideUp`}
         style={{
+          maxHeight: 'min(var(--vv-height, 100dvh), 92dvh)',
           paddingBottom: 'env(safe-area-inset-bottom)',
           backgroundImage:
             'linear-gradient(180deg, rgba(251,234,224,0.55) 0%, transparent 72px)',
           backgroundColor: 'var(--bg-card)',
         }}
       >
-        <div className="sheet-handle" aria-hidden="true" />
+        <div className="sheet-handle shrink-0" aria-hidden="true" />
 
-        <div className="px-5 py-4 border-b border-neutral-100 flex items-start justify-between gap-3 shrink-0 bg-white/70 backdrop-blur-sm">
+        {/* Fixed header */}
+        <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-neutral-100 flex items-start justify-between gap-3 shrink-0 sticky top-0 z-[2] bg-white/90 backdrop-blur-sm">
           <div className="min-w-0">
             <h2 id={titleId} className="font-display font-bold text-base text-ink-primary tracking-tight">
               {title}
@@ -123,7 +139,15 @@ export default function Modal({
           )}
         </div>
 
-        <div className="p-5 overflow-y-auto overscroll-contain flex-1 text-sm text-ink-secondary">
+        {/* Independent scroll region — does not move the dashboard page */}
+        <div
+          ref={bodyRef}
+          className="gb-modal-body px-4 sm:px-5 py-4 sm:py-5 flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain text-sm text-ink-secondary"
+          style={{
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-y',
+          }}
+        >
           {children}
 
           {confirmDiscard && (
@@ -161,8 +185,9 @@ export default function Modal({
           )}
         </div>
 
+        {/* Fixed footer actions */}
         {footer && (
-          <div className="px-5 py-4 border-t border-neutral-100 bg-surface-subtle shrink-0 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+          <div className="px-4 sm:px-5 py-3 sm:py-4 border-t border-neutral-100 bg-surface-subtle shrink-0 sticky bottom-0 z-[2] flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
             {footer}
           </div>
         )}

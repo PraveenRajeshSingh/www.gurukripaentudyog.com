@@ -318,8 +318,32 @@ function ProfileTab({ user, onSaved }: { user: MeUser; onSaved: (u: MeUser) => v
         </p>
       </section>
 
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Edit profile" isDirty={isDirty} busy={busy} maxWidth="md">
-        <form onSubmit={save} className="space-y-4">
+      <Modal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title="Edit profile"
+        isDirty={isDirty}
+        busy={busy}
+        maxWidth="md"
+        footer={
+          <>
+            <button type="button" onClick={() => setOpen(false)} disabled={busy} className={`${btnGhost} w-full sm:w-auto sm:min-w-[7.5rem]`}>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              form="edit-profile-form"
+              disabled={busy || !isDirty}
+              className={`${btnPrimary} w-full sm:w-auto sm:min-w-[9rem]`}
+              data-autofocus
+            >
+              {busy ? <Spinner className="w-4 h-4 animate-spin" /> : null}
+              {busy ? 'Saving…' : 'Save changes'}
+            </button>
+          </>
+        }
+      >
+        <form id="edit-profile-form" onSubmit={save} className="space-y-4">
           {saveError && (
             <div role="alert" className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg p-3">
               {saveError}
@@ -344,13 +368,6 @@ function ProfileTab({ user, onSaved }: { user: MeUser; onSaved: (u: MeUser) => v
               <option value="hi">हिन्दी (Hindi)</option>
               <option value="mr">मराठी (Marathi)</option>
             </select>
-          </div>
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={() => setOpen(false)} className={`${btnGhost} flex-1`}>Cancel</button>
-            <button type="submit" disabled={busy || !isDirty} className={`${btnPrimary} flex-1`} data-autofocus>
-              {busy ? <Spinner className="w-4 h-4 animate-spin" /> : null}
-              {busy ? 'Saving…' : 'Save changes'}
-            </button>
           </div>
         </form>
       </Modal>
@@ -503,22 +520,27 @@ function QuotationsTab({ onActioned }: { onActioned: (msg: string) => void }) {
         isDirty={!!reason}
         busy={busyId === rejecting?.id}
         maxWidth="sm"
+        footer={
+          <>
+            <button type="button" onClick={() => setRejecting(null)} className={`${btnGhost} w-full sm:w-auto`} data-autofocus>
+              Keep quotation
+            </button>
+            <button
+              type="button"
+              onClick={() => rejecting && act(rejecting, 'reject', { reason: reason.trim() || undefined })}
+              disabled={busyId === rejecting?.id}
+              className="w-full sm:w-auto inline-flex items-center justify-center bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-bold min-h-[44px] px-4 rounded-lg transition"
+            >
+              Reject quotation
+            </button>
+          </>
+        }
       >
-        <div className="space-y-4">
+        <div className="space-y-2">
           <label htmlFor="reject-reason" className={labelCls}>Reason (optional)</label>
           <textarea id="reject-reason" rows={3} value={reason} maxLength={500}
             onChange={(e) => setReason(e.target.value)} className={`${inputCls} min-h-[80px]`}
             placeholder="e.g. rate higher than discussed, need delivery by a certain date…" />
-          <div className="flex gap-3 pt-1">
-            <button onClick={() => setRejecting(null)} className={`${btnGhost} flex-1`} data-autofocus>Keep quotation</button>
-            <button
-              onClick={() => rejecting && act(rejecting, 'reject', { reason: reason.trim() || undefined })}
-              disabled={busyId === rejecting?.id}
-              className="flex-1 inline-flex items-center justify-center bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-bold min-h-[44px] px-4 rounded-lg transition"
-            >
-              Reject quotation
-            </button>
-          </div>
         </div>
       </Modal>
     </section>
@@ -663,20 +685,25 @@ function OrdersTab({ onActioned }: { onActioned: (msg: string) => void }) {
         alert
         busy={busyId === cancelling?.id}
         maxWidth="sm"
+        footer={
+          <>
+            <Button variant="outline" fullWidth onClick={() => setCancelling(null)} data-autofocus>
+              Keep order
+            </Button>
+            <Button
+              variant="danger"
+              fullWidth
+              loading={busyId === cancelling?.id}
+              onClick={() => cancelling && act(cancelling, 'cancel')}
+            >
+              Cancel order
+            </Button>
+          </>
+        }
       >
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
-          <Button variant="outline" fullWidth onClick={() => setCancelling(null)} data-autofocus>
-            Keep order
-          </Button>
-          <Button
-            variant="danger"
-            fullWidth
-            loading={busyId === cancelling?.id}
-            onClick={() => cancelling && act(cancelling, 'cancel')}
-          >
-            Cancel order
-          </Button>
-        </div>
+        <p className="text-sm text-ink-secondary m-0">
+          This only cancels the kiln order record. If production has already started, the yard may still contact you.
+        </p>
       </Modal>
     </section>
   );
@@ -788,8 +815,32 @@ function AddressesTab({ onActioned }: { onActioned: (msg: string) => void }) {
         </ul>
       )}
 
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Add delivery address" isDirty={isDirty} busy={busy} maxWidth="md">
-        <form onSubmit={save} className="space-y-4">
+      <Modal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title="Add delivery address"
+        isDirty={isDirty}
+        busy={busy}
+        maxWidth="md"
+        footer={
+          <>
+            <button type="button" onClick={() => setOpen(false)} disabled={busy} className={`${btnGhost} w-full sm:w-auto sm:min-w-[7.5rem]`}>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              form="add-address-form"
+              disabled={busy}
+              className={`${btnPrimary} w-full sm:w-auto sm:min-w-[9rem]`}
+              data-autofocus
+            >
+              {busy ? <Spinner className="w-4 h-4 animate-spin" /> : null}
+              {busy ? 'Saving…' : 'Save address'}
+            </button>
+          </>
+        }
+      >
+        <form id="add-address-form" onSubmit={save} className="space-y-4">
           {saveError && (
             <div role="alert" className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg p-3">{saveError}</div>
           )}
@@ -829,13 +880,6 @@ function AddressesTab({ onActioned }: { onActioned: (msg: string) => void }) {
                 className="w-5 h-5 accent-[#C8460A]" />
               Use as default
             </label>
-          </div>
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={() => setOpen(false)} className={`${btnGhost} flex-1`}>Cancel</button>
-            <button type="submit" disabled={busy} className={`${btnPrimary} flex-1`} data-autofocus>
-              {busy ? <Spinner className="w-4 h-4 animate-spin" /> : null}
-              {busy ? 'Saving…' : 'Save address'}
-            </button>
           </div>
         </form>
       </Modal>

@@ -147,6 +147,7 @@
     --z-overlay: 1000;                 /* search overlay / dimming */
     --z-drawer: 1010;                  /* cart, wishlist, mobile drawers */
     --z-modal: 1100;                   /* dialogs — above header */
+    --z-chat: 1150;                    /* kiln assistant sheet — above modals when open */
     --z-lightbox: 1200;                /* full-screen image viewer */
     --z-toast: 9999;                   /* transient notices — always on top */
 }

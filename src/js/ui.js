@@ -543,7 +543,11 @@ function overlayLock() {
         // a sheet. Pin the body and restore scrollY on unlock.
         __overlayScrollY = window.scrollY || window.pageYOffset || 0;
         document.body.style.top = '-' + __overlayScrollY + 'px';
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
         document.body.classList.add('overlay-open');
+        document.documentElement.classList.add('overlay-open');
     }
     __overlayCount++;
     // Move keyboard / screen-reader focus into the dialog that just opened.
@@ -561,7 +565,11 @@ function overlayUnlock() {
     __overlayCount = Math.max(0, __overlayCount - 1);
     if (__overlayCount === 0) {
         document.body.classList.remove('overlay-open');
+        document.documentElement.classList.remove('overlay-open');
         document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
         window.scrollTo(0, __overlayScrollY || 0);
         // Return focus to the element that opened the overlay (§6 a11y).
         if (prev && document.contains(prev) && typeof prev.focus === 'function') {
@@ -570,12 +578,29 @@ function overlayUnlock() {
     }
 }
 
+function _notifyOverlayLayout(el) {
+    try {
+        window.dispatchEvent(new CustomEvent('gb:overlay-layout', {
+            detail: { id: el && el.id ? el.id : '', open: !!(el && el.classList.contains('open')) }
+        }));
+    } catch (_e) { /* ignore */ }
+    // Maps painted inside sheets need a reflow after open animation.
+    setTimeout(function () {
+        if (window.GurukripaMaps && typeof GurukripaMaps.invalidateMapIn === 'function') {
+            GurukripaMaps.invalidateMapIn('trackerMapContainer');
+        }
+    }, 280);
+}
+
 /** Idempotent open — never double-lock if the overlay is already visible. */
 function openOverlay(elOrId) {
     const el = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
     if (!el || el.classList.contains('open')) return false;
     el.classList.add('open');
     overlayLock();
+    // Stack newly opened layers above any already-open sheets (same token band).
+    el.style.setProperty('z-index', String(1100 + __overlayCount), 'important');
+    _notifyOverlayLayout(el);
     return true;
 }
 
@@ -584,8 +609,17 @@ function closeOverlay(elOrId) {
     const el = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
     if (!el || !el.classList.contains('open')) return false;
     el.classList.remove('open');
+    el.style.removeProperty('z-index');
     overlayUnlock();
+    _notifyOverlayLayout(el);
     return true;
+}
+
+/** Close every open modal overlay (not cart/drawer) — used before primary opens. */
+function closeAllModalOverlays() {
+    document.querySelectorAll('.modal-overlay.open, .lb-overlay.open, #lb.open').forEach(function (el) {
+        closeOverlay(el);
+    });
 }
 
 /** Close the mobile nav drawer only if it is open (safe before opening a modal). */
@@ -696,19 +730,11 @@ document.addEventListener('keydown', e => {
 // ══════════════════════════════════════════
 function openLegalModal(tab = 'privacy') {
     switchLegalTab(tab);
-    const modal = document.getElementById('legalModal');
-    if (modal) {
-        modal.classList.add('open');
-        overlayLock();
-    }
+    openOverlay('legalModal');
 }
 
 function closeLegalModal() {
-    const modal = document.getElementById('legalModal');
-    if (modal) {
-        modal.classList.remove('open');
-        overlayUnlock();
-    }
+    closeOverlay('legalModal');
 }
 
 function switchLegalTab(tab) {
@@ -717,8 +743,16 @@ function switchLegalTab(tab) {
         const cap = t.charAt(0).toUpperCase() + t.slice(1);
         const tabBtn = document.getElementById('legalTab' + cap);
         const content = document.getElementById('legalContent' + cap);
-        if (tabBtn) tabBtn.classList.toggle('active', t === tab);
-        if (content) content.classList.toggle('active', t === tab);
+        const on = t === tab;
+        if (tabBtn) {
+            tabBtn.classList.toggle('active', on);
+            tabBtn.setAttribute('aria-selected', on ? 'true' : 'false');
+        }
+        if (content) {
+            content.classList.toggle('active', on);
+            content.hidden = !on;
+            content.setAttribute('aria-hidden', on ? 'false' : 'true');
+        }
     });
 }
 
@@ -733,16 +767,39 @@ function lbOpen(src, caption) {
     img.src = src;
     img.alt = caption || '';
     if (cap) cap.textContent = caption || '';
-    lb.classList.add('open');
-    overlayLock();
+    openOverlay(lb);
 }
 
 function lbClose(e) {
     if (!e || e.target.id === 'lb' || e.target.classList.contains('lb-close')) {
-        document.getElementById('lb')?.classList.remove('open');
-        overlayUnlock();
+        closeOverlay('lb');
     }
 }
+
+// Visual viewport → CSS vars for keyboard / sheet height on mobile
+(function initVisualViewportVars() {
+    function sync() {
+        const vv = window.visualViewport;
+        const h = vv ? vv.height : window.innerHeight;
+        const offsetTop = vv ? vv.offsetTop : 0;
+        document.documentElement.style.setProperty('--vv-height', h + 'px');
+        document.documentElement.style.setProperty('--vv-offset-top', offsetTop + 'px');
+        document.documentElement.style.setProperty('--gb-chat-vh', h + 'px');
+    }
+    sync();
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', sync, { passive: true });
+        window.visualViewport.addEventListener('scroll', sync, { passive: true });
+    }
+    window.addEventListener('orientationchange', function () {
+        setTimeout(sync, 120);
+        setTimeout(function () {
+            if (window.GurukripaMaps && GurukripaMaps.invalidateMapIn) {
+                GurukripaMaps.invalidateMapIn('trackerMapContainer');
+            }
+        }, 320);
+    }, { passive: true });
+})();
 
 // ══════════════════════════════════════════
 // SCROLL REVEAL (Intersection Observer)

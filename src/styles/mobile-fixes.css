@@ -1740,7 +1740,7 @@
         .calc-tab { padding: 9px 18px; border-radius: var(--r-sm) var(--r-sm) 0 0; font-size: .88rem; font-weight: 600; color: var(--ink-3); border-bottom: 2.5px solid transparent; cursor: pointer; transition: all var(--t); white-space: nowrap }
         .calc-tab.active { color: var(--brand); border-color: var(--brand); background: rgba(200,70,10,0.06) }
         .calc-tab-panel { display: none }
-        .calc-tab-panel.active { display: block }
+        .calc-tab-panel.active { display: flex; flex-direction: column }
 
         .estimator-results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 16px 0 }
         .estimator-card { background: var(--bg-subtle); border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px 12px; text-align: center }
@@ -1982,7 +1982,8 @@ body { overscroll-behavior-y: contain; }
         background: rgba(0, 0, 0, 0.55) !important;
         backdrop-filter: blur(8px) !important;
         -webkit-backdrop-filter: blur(8px) !important;
-        z-index: 1000 !important;
+        /* Use design tokens — hardcoding 1000 put sheets under the header */
+        z-index: var(--z-modal, 1100) !important;
     }
 
     /* Slide-up bottom sheet configuration */
@@ -2003,7 +2004,7 @@ body { overscroll-behavior-y: contain; }
         display: flex !important;
         flex-direction: column !important;
         transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        z-index: 1001 !important;
+        z-index: var(--z-drawer, 1010) !important;
     }
 
     .cart-drawer.open,

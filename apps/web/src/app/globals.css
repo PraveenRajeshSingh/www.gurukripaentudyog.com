@@ -75,6 +75,22 @@
     padding-right: var(--sar);
   }
 
+  /* Popup open: pin page so modal body scrolls independently (iOS/Android) */
+  html.gb-popup-open,
+  body.gb-popup-open {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+  .gb-modal-panel {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .gb-modal-body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
   h1,
   h2,
   h3,

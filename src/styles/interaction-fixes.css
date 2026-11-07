@@ -317,9 +317,12 @@ input[type="submit"].btn {
     pointer-events: none !important;
 }
 .modal-overlay:not(.open),
+.modal-overlay:not(.open) *,
 .cart-overlay:not(.open),
 .cart-drawer:not(.open),
-.wishlist-drawer:not(.open) {
+.wishlist-drawer:not(.open),
+.lb-overlay:not(.open),
+#lb:not(.open) {
     pointer-events: none !important;
 }
 
@@ -399,5 +402,196 @@ input[type="submit"].btn {
     #scrollTopBtn,
     .wa-float {
         bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PRODUCTION HARDENING — scroll ownership, tabs, stacking, VV
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+html.overlay-open {
+    overflow: hidden !important;
+}
+
+/* Single scroll owner: box clips; head/foot fixed in flex; body pans */
+.modal-overlay.open > .modal-box {
+    overflow: hidden !important;
+    max-height: min(var(--vv-height, 100dvh), 92dvh) !important;
+}
+.modal-overlay.open > .modal-box > .modal-head,
+.modal-overlay.open > .modal-box > .modal-foot,
+.modal-overlay.open > .modal-box > .profile-header,
+.modal-overlay.open > .modal-box > .auth-modal-brand,
+.modal-overlay.open > .modal-box > .co-sheet__head {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+.modal-overlay.open > .modal-box > .modal-body,
+.modal-overlay.open > .modal-box > .co-sheet__body,
+.modal-overlay.open > .modal-box > .profile-modal-body,
+.modal-overlay.open #pdContent,
+.modal-overlay.open #compareModalBody {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important; /* defeat mobile-fixes calc() that fights flex */
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+.modal-overlay.open > .modal-box > .modal-foot,
+.modal-overlay.open .gb-dialog-foot {
+    flex-shrink: 0 !important;
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    background: var(--bg-card, #fff);
+}
+
+/* Inactive / hidden tab panes must never intercept taps */
+.legal-content:not(.active),
+.profile-tab-panel:not(.active),
+.studio-pane:not(.active),
+[hidden],
+.auth-panel[hidden],
+#loginPanel[hidden],
+#registerPanel[hidden] {
+    display: none !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+.legal-content.active,
+.profile-tab-panel.active {
+    display: block;
+    pointer-events: auto;
+    visibility: visible;
+}
+/* Calculator panes are flex fieldsets — restore flex when active */
+.studio-pane.active,
+.calc-tab-panel.active {
+    display: flex !important;
+    flex-direction: column;
+    pointer-events: auto;
+    visibility: visible;
+}
+.calc-tab-panel:not(.active) {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* Consistent stacking — always above header/nav, below toast */
+.modal-overlay.open,
+.gb-dialog.modal-overlay.open {
+    z-index: var(--z-modal, 1100) !important;
+}
+.cart-drawer.open,
+.wishlist-drawer.open,
+#mobileDrawer.open {
+    z-index: var(--z-drawer, 1010) !important;
+}
+.chatbot-wrap.open {
+    z-index: var(--z-chat, 1150) !important;
+}
+.lb-overlay.open,
+#lb.open {
+    z-index: var(--z-lightbox, 1200) !important;
+}
+#toast-container,
+.toast-container {
+    z-index: var(--z-toast, 9999) !important;
+}
+
+/* Account / user menus above page, below modals */
+.user-dropdown.open,
+.account-popup.open {
+    z-index: calc(var(--z-modal, 1100) - 20) !important;
+}
+
+/* Tables / forms never blow past viewport */
+.modal-body table,
+.modal-body img,
+.modal-body iframe,
+.modal-body video {
+    max-width: 100%;
+}
+.modal-body .form-row,
+.modal-body .co-grid,
+.modal-body .pd-grid {
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* Orientation + short screens */
+@media (max-height: 520px) {
+    .modal-overlay.open > .modal-box {
+        max-height: min(var(--vv-height, 100dvh), 98dvh) !important;
+    }
+}
+
+/* Tablet landscape / laptop mid */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .modal-overlay.open > .modal-box {
+        max-height: min(var(--vv-height, 100dvh), 88dvh) !important;
+    }
+}
+
+/* Desktop: keep sheets centred, not full-bleed */
+@media (min-width: 1025px) {
+    .modal-overlay {
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 24px !important;
+    }
+    .modal-overlay.open > .modal-box {
+        max-height: min(var(--vv-height, 100dvh), 86dvh) !important;
+    }
+}
+
+/* My Account hub (#profileModal): fixed header/tabs, scrollable body only */
+#profileModal.modal-overlay.open > .profile-modal-box {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    max-height: min(var(--vv-height, 100dvh), 92dvh) !important;
+}
+#profileModal.open .profile-header,
+#profileModal.open .profile-hub-metrics,
+#profileModal.open .hub-quick,
+#profileModal.open .profile-tabs {
+    flex-shrink: 0;
+}
+#profileModal.open .profile-modal-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+#profileModal.open .profile-tab-panel:not(.active) {
+    display: none !important;
+    pointer-events: none !important;
+}
+@media (max-width: 480px) {
+    #profileModal.open > .profile-modal-box {
+        max-height: min(var(--vv-height, 100dvh), 94dvh) !important;
+        border-radius: 18px 18px 0 0 !important;
+    }
+}
+@media (min-width: 481px) and (max-width: 1024px) {
+    #profileModal.open > .profile-modal-box {
+        max-width: min(560px, 94vw) !important;
+        max-height: min(var(--vv-height, 100dvh), 90dvh) !important;
+    }
+}
+@media (min-width: 1025px) {
+    #profileModal.open > .profile-modal-box {
+        max-width: min(620px, 92vw) !important;
+        max-height: min(var(--vv-height, 100dvh), 86dvh) !important;
+        border-radius: var(--r-xl, 16px) !important;
     }
 }

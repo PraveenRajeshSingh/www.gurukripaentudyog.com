@@ -335,12 +335,20 @@ function addCalcToCart(name, qty, unitPrice) {
 function switchCalcTab(tab) {
     currentCalcTab = tab;
     document.querySelectorAll('.studio-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
-    document.querySelectorAll('.studio-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.studio-pane').forEach(p => {
+        p.classList.remove('active');
+        p.hidden = true;
+        p.setAttribute('aria-hidden', 'true');
+    });
     const btnMap = { wall: 'cTabWallBtn', house: 'cTabHouseBtn', boundary: 'cTabBoundaryBtn' };
     const paneMap = { wall: 'calcTabWall', house: 'calcTabHouse', boundary: 'calcTabBoundary' };
     const b = $(btnMap[tab]), p = $(paneMap[tab]);
     if (b) { b.classList.add('active'); b.setAttribute('aria-selected', 'true'); }
-    if (p) p.classList.add('active');
+    if (p) {
+        p.classList.add('active');
+        p.hidden = false;
+        p.setAttribute('aria-hidden', 'false');
+    }
     const pv = $('wallPreviewWrap'); if (pv) pv.hidden = true;
     clearErrs();
     renderEmpty();
