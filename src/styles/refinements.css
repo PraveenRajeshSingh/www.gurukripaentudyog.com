@@ -110,7 +110,10 @@
     accent-color: var(--brand);
     cursor: pointer; flex-shrink: 0;
 }
-.auth-terms-check a { color: var(--brand); font-weight: 700; text-decoration: underline; text-underline-offset: 2px }
+.auth-terms-check a,
+.auth-terms-check .auth-inline-link {
+    color: var(--brand); font-weight: 700; text-decoration: underline; text-underline-offset: 2px;
+}
 .auth-terms-err { display: block; margin: -4px 0 8px; min-height: 1em }
 
 /* ── R3. Cart drawer — refined side/full sheet ──────────────────── */

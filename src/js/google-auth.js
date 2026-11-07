@@ -61,6 +61,7 @@ function initGoogleSignIn() {
                 window.google.accounts.id.renderButton(mount, {
                     theme: 'outline', size: 'large', width: 300, text: 'signin_with', shape: 'pill'
                 });
+                mount.hidden = false;
                 mount.style.display = 'flex';
                 rendered = true;
             });

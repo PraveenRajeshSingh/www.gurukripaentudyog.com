@@ -13,12 +13,25 @@ const _authLockSVG = `<svg width="22" height="22" fill="none" stroke="currentCol
 const _authStarSVG = `<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg>`;
 
 function openAuth(tab = 'login') {
+    // Avoid stacked sheets covering the auth form (legal, profile, tracker…).
+    if (typeof closeAllModalOverlays === 'function') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (el) {
+            if (el.id !== 'authModal') closeOverlay(el);
+        });
+    }
     switchAuthTab(tab);
     if (typeof openOverlay === 'function') openOverlay('authModal');
     else {
         document.getElementById('authModal')?.classList.add('open');
         overlayLock();
     }
+    setTimeout(function () {
+        const panel = document.getElementById(tab === 'register' ? 'registerPanel' : 'loginPanel');
+        const first = panel && panel.querySelector('input:not([type="checkbox"]):not([type="hidden"])');
+        if (first) try { first.focus({ preventScroll: true }); } catch (_e) {}
+        const body = document.querySelector('#authModal .modal-body');
+        if (body) body.scrollTop = 0;
+    }, 60);
 }
 
 function closeAuth() {
@@ -58,7 +71,18 @@ function switchAuthTab(tab, btn) {
     const sub = document.getElementById('authSubtitle');
     if (title) title.textContent = t(showLogin ? 'auth.signInTitle' : 'auth.signUpTitle');
     if (sub) sub.textContent = t(showLogin ? 'auth.signInSub' : 'auth.signUpSub');
-    document.getElementById('authBadge').innerHTML = showLogin ? _authLockSVG : _authStarSVG;
+    const badge = document.getElementById('authBadge');
+    if (badge) badge.innerHTML = showLogin ? _authLockSVG : _authStarSVG;
+    clearAuthErrors();
+    const body = document.querySelector('#authModal .modal-body');
+    if (body) body.scrollTop = 0;
+    setTimeout(function () {
+        const panel = showLogin ? loginPanel : regPanel;
+        const first = panel && panel.querySelector('input:not([type="checkbox"]):not([type="hidden"])');
+        if (first && document.getElementById('authModal')?.classList.contains('open')) {
+            try { first.focus({ preventScroll: true }); } catch (_e) {}
+        }
+    }, 40);
 }
 
 function resolveLoginPhone(email) {
@@ -82,31 +106,42 @@ function handleLogin(e) {
         return;
     }
 
-    const email = document.getElementById('loginEmail')?.value.trim();
+    const identifier = (document.getElementById('loginEmail')?.value || '').trim();
     const password = document.getElementById('loginPassword')?.value;
     clearAuthErrors();
 
+    const digits = identifier.replace(/\D/g, '').slice(-10);
+    const isPhone = /^\d{10}$/.test(digits) && !identifier.includes('@');
+    const isEmail = /\S+@\S+\.\S+/.test(identifier);
+
     let valid = true;
-    if (!email || !/\S+@\S+\.\S+/.test(email)) { showFieldError('loginEmailErr', 'Enter a valid email'); valid = false; }
-    if (!password || password.length < 6) { showFieldError('loginPasswordErr', 'Password must be 6+ characters'); valid = false; }
+    if (!isPhone && !isEmail) {
+        showFieldError('loginEmailErr', 'Enter a valid email or 10-digit mobile number');
+        valid = false;
+    }
+    if (!password || password.length < 6) {
+        showFieldError('loginPasswordErr', 'Password must be 6+ characters');
+        valid = false;
+    }
     if (!valid) {
         triggerFormShake('loginForm');
         return;
     }
 
+    const email = isEmail ? identifier : '';
     setButtonLoading('loginSubmitBtn', true, 'Signing in...');
 
     // Server-first sign-in when the Platform API is configured (docs/PLATFORM-API.md).
-    // Resolve phone from the email→phone map or the local profile directory.
+    // Phone can be entered directly, or resolved from the email→phone map.
     if (window.GBApi && GBApi.enabled()) {
-        const phone = resolveLoginPhone(email);
+        const phone = isPhone ? digits : resolveLoginPhone(email);
         if (phone && phone.length === 10) {
             GBApi.login({ phone, password }).then(su => {
                 failedLoginAttempts = 0;
                 loginSuccess({
                     id: su.id,
                     name: su.name,
-                    email: su.email || email,
+                    email: su.email || email || '',
                     mobile: su.phone || phone,
                     role: su.role || 'CUSTOMER',
                     tenantId: su.tenantId
@@ -119,9 +154,13 @@ function handleLogin(e) {
                     triggerFormShake('loginForm');
                     if (failedLoginAttempts >= 3) startLockoutTimer();
                     else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
-                } else {
+                } else if (isEmail) {
                     // Network down: verify against the local credential verifier only.
                     finishLocalLogin(email, password);
+                } else {
+                    setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
+                    showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }) || 'Sign-in failed. Check mobile and password.', 'error');
+                    triggerFormShake('loginForm');
                 }
             });
             return;
@@ -129,6 +168,12 @@ function handleLogin(e) {
         // API on but no phone on file — cannot call /auth/login; do not invent a session.
         setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
         showFieldError('loginEmailErr', t('auth.needPhone') || 'No mobile linked to this email on this device. Sign up once, or call the yard.');
+        triggerFormShake('loginForm');
+        return;
+    }
+    if (!isEmail) {
+        setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
+        showFieldError('loginEmailErr', 'Offline sign-in needs your registered email on this device.');
         triggerFormShake('loginForm');
         return;
     }
@@ -372,7 +417,7 @@ function handleRegister(e) {
                 return storeLocalCredential(email, password);
             })
             .then(() => {
-                setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
+                setButtonLoading('registerSubmitBtn', false, 'Create Account');
                 const su = (GBApi.session() || {}).user || {};
                 loginSuccess({
                     id: su.id,
@@ -385,7 +430,7 @@ function handleRegister(e) {
                 GBApi.flushOutbox();
             })
             .catch(err => {
-                setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
+                setButtonLoading('registerSubmitBtn', false, 'Create Account');
                 if (err.code === 409) { showFieldError('regMobileErr', 'Mobile already registered — sign in instead'); triggerFormShake('registerForm'); return; }
                 if (err.code === 400) { showFieldError('regPasswordErr', err.message || 'Check the details and retry'); triggerFormShake('registerForm'); return; }
                 showToast('Server unreachable — account created offline on this device.', 'info');
@@ -399,7 +444,7 @@ function handleRegister(e) {
 function finishLocalRegister(name, mobile, email, password) {
     const users = getSafeStorage('gb_users', []);
     if (users.some(u => String(u.email || '').toLowerCase() === String(email).toLowerCase())) {
-        setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
+        setButtonLoading('registerSubmitBtn', false, 'Create Account');
         showFieldError('regEmailErr', 'Email already registered');
         triggerFormShake('registerForm');
         return;
@@ -414,11 +459,11 @@ function finishLocalRegister(name, mobile, email, password) {
 
     storeLocalCredential(email, password).then(() => {
         loginSuccess({ name, mobile, email });
-        setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
+        setButtonLoading('registerSubmitBtn', false, 'Create Account');
         showToast(t('auth.created'), 'success');
     }).catch(() => {
         loginSuccess({ name, mobile, email });
-        setButtonLoading('registerSubmitBtn', false, 'Create Free Account');
+        setButtonLoading('registerSubmitBtn', false, 'Create Account');
         showToast(t('auth.created'), 'success');
     });
 }
@@ -529,16 +574,18 @@ function clearAuthErrors() {
 
 function showFieldError(id, msg) {
     const el = document.getElementById(id);
-    if (el) {
-        el.textContent = msg;
-        el.parentElement.querySelector('input')?.classList.add('error');
-    }
+    if (!el) return;
+    el.textContent = msg;
+    const field = el.closest('.auth-field') || el.parentElement;
+    field?.querySelector('input')?.classList.add('error');
 }
 
 function setButtonLoading(id, loading, text) {
     const btn = document.getElementById(id);
     if (!btn) return;
     btn.disabled = loading;
+    btn.setAttribute('aria-busy', loading ? 'true' : 'false');
+    btn.classList.toggle('is-busy', !!loading);
     const span = btn.querySelector('span');
     if (span) span.textContent = text;
 }
@@ -547,8 +594,11 @@ function togglePw(inputId, btnId) {
     const input = document.getElementById(inputId);
     const btn = document.getElementById(btnId);
     if (!input || !btn) return;
-    if (input.type === 'password') { input.type = 'text'; btn.innerHTML = _authEyeOffSVG; }
-    else { input.type = 'password'; btn.innerHTML = _authEyeSVG; }
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.innerHTML = show ? _authEyeOffSVG : _authEyeSVG;
+    btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
 }
 
 function checkPwStrength(pw) {

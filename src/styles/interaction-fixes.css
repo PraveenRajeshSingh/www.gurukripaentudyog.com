@@ -549,6 +549,155 @@ html.overlay-open {
     }
 }
 
+/* ── Auth modal (Sign In / Sign Up) — pro layout + independent scroll ── */
+#authModal.modal-overlay.open {
+    z-index: var(--z-modal, 1100) !important;
+}
+#authModal.modal-overlay.open > #authModalBox,
+#authModal.modal-overlay.open > .modal-box {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    max-height: min(var(--vv-height, 100dvh), 92dvh) !important;
+    width: 100%;
+    max-width: min(440px, 100%) !important;
+}
+#authModal .auth-modal-brand,
+#authModal .modal-head {
+    flex-shrink: 0;
+}
+#authModal.open .modal-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+}
+#authModal .auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin: 0 0 12px;
+}
+#authModal .auth-device-note {
+    font-size: 0.74rem;
+    line-height: 1.4;
+    color: var(--ink-3);
+    margin: 0 0 14px;
+}
+#authModal .auth-field {
+    margin-bottom: 14px;
+}
+#authModal .auth-error-msg {
+    display: block;
+    min-height: 1.1em;
+    margin-top: 5px;
+}
+#authModal .auth-error-msg:empty {
+    display: none;
+}
+#authModal .auth-input-wrap {
+    position: relative;
+}
+#authModal .auth-pw-toggle {
+    /* Must beat body.overlay-open … button { position: relative } */
+    position: absolute !important;
+    width: 44px;
+    height: 44px;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    touch-action: manipulation;
+    z-index: 3;
+    background: transparent;
+    border: 0;
+    color: var(--ink-3);
+    cursor: pointer;
+}
+#authModal .auth-pw-toggle:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+}
+#authModal .auth-form-foot {
+    margin-top: 8px;
+    padding-top: 4px;
+}
+#authModal .auth-submit {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 50px;
+}
+#authModal .auth-options {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 14px;
+}
+#authModal .auth-switch {
+    text-align: center;
+    margin: 14px 0 0;
+    font-size: 0.84rem;
+    color: var(--ink-2);
+}
+#authModal .pw-strength {
+    margin-top: 6px;
+}
+#authModal .pw-strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--bg-muted, #e8e4dd);
+    overflow: hidden;
+}
+#authModal .pw-strength-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 2px;
+    transition: width 0.2s ease, background 0.2s ease;
+}
+#authModal .pw-strength-text {
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-top: 4px;
+}
+#authModal .google-gsi-mount:not([hidden]) {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+@media (max-width: 480px) {
+    #authModal.open > .modal-box {
+        max-width: 100% !important;
+        max-height: min(var(--vv-height, 100dvh), 96dvh) !important;
+        border-radius: 18px 18px 0 0 !important;
+    }
+    #authModal .auth-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+@media (min-width: 481px) and (max-width: 1024px) {
+    #authModal.open > .modal-box {
+        max-width: min(440px, 92vw) !important;
+        max-height: min(var(--vv-height, 100dvh), 90dvh) !important;
+    }
+}
+@media (min-width: 1025px) {
+    #authModal.open > .modal-box {
+        max-width: 440px !important;
+        max-height: min(var(--vv-height, 100dvh), 86dvh) !important;
+        border-radius: var(--r-xl, 16px) !important;
+    }
+}
+
 /* My Account hub (#profileModal): fixed header/tabs, scrollable body only */
 #profileModal.modal-overlay.open > .profile-modal-box {
     display: flex !important;
