@@ -154,8 +154,11 @@ export class MeController {
   @Get('orders/:id/invoice')
   invoiceDocument(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
     const o = this.workflow.mustFindOrder(id);
+    this.workflow.assertTenantAccess(user, o.tenantId);
     if (o.userId !== user.id) throw new NotFoundException('Order not found');
-    const tenant = (this.store as any).mockDb.getTenantBySlug('gurukripa');
+    const tenant = (this.store as any).mockDb?.getTenantBySlug?.(o.tenantId)
+      || (this.store as any).mockDb?.getTenantBySlug?.('gurukripa');
+    if (!tenant) throw new NotFoundException('Business profile not found for this order');
     return {
       success: true,
       data: {

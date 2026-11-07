@@ -81,33 +81,79 @@ window.GurukripaMaps = window.GurukripaMaps || {};
             '</div>';
     };
 
+    function ensureMapHostSize(mapEl) {
+        if (!mapEl) return;
+        mapEl.classList.add('gb-map-host');
+        if (!mapEl.style.minHeight) mapEl.style.minHeight = '180px';
+        if (!mapEl.style.width) mapEl.style.width = '100%';
+    }
+
+    function invalidateMapSize(map) {
+        if (!map || typeof google === 'undefined' || !google.maps) return;
+        try {
+            google.maps.event.trigger(map, 'resize');
+            const c = map.getCenter && map.getCenter();
+            if (c) map.setCenter(c);
+        } catch (_e) { /* ignore */ }
+    }
+
     exports.initMapElement = function(elementId, initialMarkerCoords, options) {
         options = options || {};
         const mapEl = document.getElementById(elementId);
         if (!mapEl) return null;
+        ensureMapHostSize(mapEl);
 
         const center = initialMarkerCoords || BHATTA_COORDS;
 
         if (typeof google !== 'undefined' && google.maps) {
-            const map = new google.maps.Map(mapEl, {
-                center: center,
-                zoom: options.zoom || 15,
-                mapTypeControl: false,
-                streetViewControl: false,
-                styles: [
-                    { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-                    { featureType: 'transit', stylers: [{ visibility: 'simplified' }] }
-                ]
-            });
-            const marker = new google.maps.Marker({
-                position: center,
-                map: map,
-                title: options.title || 'Gurukripa Bricks Kiln — Newada, Jalalpur'
-            });
-            return { map, marker };
+            // Reuse existing map instance if the host was already initialized.
+            if (mapEl._gbMap) {
+                mapEl._gbMap.setCenter(center);
+                if (mapEl._gbMarker) mapEl._gbMarker.setPosition(center);
+                setTimeout(function () { invalidateMapSize(mapEl._gbMap); }, 120);
+                return { map: mapEl._gbMap, marker: mapEl._gbMarker };
+            }
+            try {
+                const map = new google.maps.Map(mapEl, {
+                    center: center,
+                    zoom: options.zoom || 15,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                    fullscreenControl: true,
+                    gestureHandling: 'greedy',
+                    styles: [
+                        { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+                        { featureType: 'transit', stylers: [{ visibility: 'simplified' }] }
+                    ]
+                });
+                const marker = new google.maps.Marker({
+                    position: center,
+                    map: map,
+                    title: options.title || 'Gurukripa Bricks Kiln — Newada, Jalalpur'
+                });
+                mapEl._gbMap = map;
+                mapEl._gbMarker = marker;
+                // Modal/sheet open animations leave the canvas at 0×0 until painted.
+                setTimeout(function () { invalidateMapSize(map); }, 80);
+                setTimeout(function () { invalidateMapSize(map); }, 320);
+                if (window.visualViewport) {
+                    const onVV = function () { invalidateMapSize(map); };
+                    window.visualViewport.addEventListener('resize', onVV, { passive: true });
+                    mapEl._gbVvHandler = onVV;
+                }
+                return { map, marker };
+            } catch (_err) {
+                exports.renderEmbedFallback(mapEl, options);
+                return null;
+            }
         }
 
         exports.renderEmbedFallback(mapEl, options);
         return null;
+    };
+
+    exports.invalidateMapIn = function(elementId) {
+        const mapEl = document.getElementById(elementId);
+        if (mapEl && mapEl._gbMap) invalidateMapSize(mapEl._gbMap);
     };
 })(window.GurukripaMaps);

@@ -12,6 +12,7 @@ export declare const STAFF_ROLES: UserRole[];
 export declare const MANAGER_ROLES: UserRole[];
 export declare const ADMIN_ROLES: UserRole[];
 export declare const END_CUSTOMER_ROLES: UserRole[];
+export type AccountStatus = 'ACTIVE' | 'DISABLED' | 'SUSPENDED';
 export interface PlatformUser {
     id: string;
     tenantId: string;
@@ -28,6 +29,11 @@ export interface PlatformUser {
     dealerAddress?: string;
     dealerCity?: string;
     dealerDiscountPct?: number;
+    accountStatus?: AccountStatus;
+    branchName?: string;
+    username?: string;
+    jobTitle?: string;
+    isTestAccount?: boolean;
     createdAt: string;
 }
 export interface UserAddress {

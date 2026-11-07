@@ -82,6 +82,10 @@ let AuthService = class AuthService {
         if (!(await bcrypt.compare(dto.password, user.passwordHash))) {
             throw new common_1.UnauthorizedException('Invalid phone number or password');
         }
+        const status = user.accountStatus || 'ACTIVE';
+        if (status === 'DISABLED' || status === 'SUSPENDED') {
+            throw new common_1.ForbiddenException(`Account is ${status.toLowerCase()}. Contact the administrator.`);
+        }
         if (user.role === 'DEALER' && user.dealerStatus === 'REJECTED') {
             throw new common_1.ForbiddenException('Dealer application was rejected. Contact the branch office.');
         }

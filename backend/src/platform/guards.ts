@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
 import { AuthenticatedUser, UserRole } from '../types/domain';
-import { MultiTenantRequest } from '../security/tenant.guard';
+import { MultiTenantRequest, TenantIsolationGuard } from '../security/tenant.guard';
 
 export const JWT_ROLES_KEY = 'jwt:roles';
 export const RATE_LIMIT_KEY = 'platform:rateLimit';
@@ -97,4 +97,7 @@ export class RateLimitGuard implements CanActivate {
 
 /** Composed decorators used across platform controllers. */
 export const Authenticated = (...roles: UserRole[]) =>
-  applyDecorators(UseGuards(JwtAuthGuard, RolesGuard), ...(roles.length ? [RequireRoles(...roles)] : []));
+  applyDecorators(
+    UseGuards(JwtAuthGuard, TenantIsolationGuard, RolesGuard),
+    ...(roles.length ? [RequireRoles(...roles)] : []),
+  );

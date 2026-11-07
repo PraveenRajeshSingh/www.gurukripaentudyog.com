@@ -19,6 +19,7 @@ All monetary totals (CGST/SGST split of the 5 % inclusive rate) are computed **o
 | POST | `/public/enquiries` | Guest enquiry (lead). Requires `contactName`, `contactPhone` |
 | GET | `/tenants/:slug/branding` · `/tenants/:slug/products` | Legacy SaaS white-label endpoints (unchanged) |
 | POST | `/calculator/estimate` | Wall / house / boundary estimator (wastage + mortar allowances included) |
+| POST | `/orders` · `/sync/push` | **Auth required** — JWT `tenantId` is authoritative; body `tenantId`/`userId` ignored for scoping |
 
 ## 2. Auth
 

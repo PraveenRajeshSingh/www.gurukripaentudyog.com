@@ -16,6 +16,8 @@ exports.ApiController = void 0;
 const common_1 = require("@nestjs/common");
 const pricing_service_1 = require("../pricing/pricing.service");
 const mock_db_service_1 = require("../database/mock-db.service");
+const tenant_guard_1 = require("../security/tenant.guard");
+const guards_1 = require("../platform/guards");
 let ApiController = class ApiController {
     constructor(pricingEngine, db) {
         this.pricingEngine = pricingEngine;
@@ -53,19 +55,21 @@ let ApiController = class ApiController {
         const result = this.pricingEngine.calculateEstimation(params);
         return { success: true, data: result };
     }
-    createOrder(body) {
-        const tenantId = body.tenantId;
-        if (!tenantId) {
-            throw new common_1.UnauthorizedException('Tenant ID is required to place an order');
-        }
-        const order = this.db.createOrder(tenantId, body);
+    createOrder(tenantId, user, body) {
+        const order = this.db.createOrder(tenantId, {
+            ...body,
+            tenantId,
+            customerName: body.customerName || user.name,
+            customerPhone: body.customerPhone || user.phone,
+            userId: user.id,
+        });
         return { success: true, message: 'Order created successfully', data: order };
     }
-    syncOfflineData(body) {
-        if (!body.tenantId || !body.deviceId) {
-            throw new common_1.UnauthorizedException('Tenant ID and Device ID are mandatory for sync transactions');
+    syncOfflineData(tenantId, user, body) {
+        if (!body.deviceId) {
+            return { success: false, message: 'deviceId is required for sync transactions' };
         }
-        const result = this.db.recordSyncBatch(body.tenantId, body.deviceId, body.userId, body.entries || []);
+        const result = this.db.recordSyncBatch(tenantId, body.deviceId, user.id, body.entries || []);
         return { success: true, message: 'Offline sync journal applied successfully', result };
     }
 };
@@ -93,16 +97,22 @@ __decorate([
 ], ApiController.prototype, "calculateEstimate", null);
 __decorate([
     (0, common_1.Post)('orders'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.UseGuards)(guards_1.JwtAuthGuard, tenant_guard_1.TenantIsolationGuard),
+    __param(0, (0, tenant_guard_1.CurrentTenant)()),
+    __param(1, (0, tenant_guard_1.CurrentUser)()),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", void 0)
 ], ApiController.prototype, "createOrder", null);
 __decorate([
     (0, common_1.Post)('sync/push'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.UseGuards)(guards_1.JwtAuthGuard, tenant_guard_1.TenantIsolationGuard),
+    __param(0, (0, tenant_guard_1.CurrentTenant)()),
+    __param(1, (0, tenant_guard_1.CurrentUser)()),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", void 0)
 ], ApiController.prototype, "syncOfflineData", null);
 exports.ApiController = ApiController = __decorate([

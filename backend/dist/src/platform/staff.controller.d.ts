@@ -35,6 +35,11 @@ export declare class StaffController {
                 dealerAddress?: string;
                 dealerCity?: string;
                 dealerDiscountPct?: number;
+                accountStatus?: import("./types").AccountStatus;
+                branchName?: string;
+                username?: string;
+                jobTitle?: string;
+                isTestAccount?: boolean;
                 createdAt: string;
             };
             id: string;
@@ -106,6 +111,11 @@ export declare class StaffController {
             dealerAddress?: string;
             dealerCity?: string;
             dealerDiscountPct?: number;
+            accountStatus?: import("./types").AccountStatus;
+            branchName?: string;
+            username?: string;
+            jobTitle?: string;
+            isTestAccount?: boolean;
             createdAt: string;
         }[];
     };

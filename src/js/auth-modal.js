@@ -14,13 +14,19 @@ const _authStarSVG = `<svg width="22" height="22" fill="none" stroke="currentCol
 
 function openAuth(tab = 'login') {
     switchAuthTab(tab);
-    document.getElementById('authModal')?.classList.add('open');
-    overlayLock();
+    if (typeof openOverlay === 'function') openOverlay('authModal');
+    else {
+        document.getElementById('authModal')?.classList.add('open');
+        overlayLock();
+    }
 }
 
 function closeAuth() {
-    document.getElementById('authModal')?.classList.remove('open');
-    overlayUnlock();
+    if (typeof closeOverlay === 'function') closeOverlay('authModal');
+    else {
+        document.getElementById('authModal')?.classList.remove('open');
+        overlayUnlock();
+    }
 }
 
 function handleAuthOverlayClick(e) {
@@ -68,6 +74,8 @@ function resolveLoginPhone(email) {
 
 function handleLogin(e) {
     e.preventDefault();
+    const submitBtn = document.getElementById('loginSubmitBtn');
+    if (submitBtn && (submitBtn.disabled || submitBtn.getAttribute('aria-busy') === 'true')) return;
     if (failedLoginAttempts >= 3) {
         triggerFormShake('loginForm');
         showToast(t('auth.locked'), 'error');
@@ -323,6 +331,8 @@ function loginSuccess(userData) {
 }
 function handleRegister(e) {
     e.preventDefault();
+    const submitBtn = document.getElementById('regSubmitBtn') || document.querySelector('#registerForm button[type="submit"]');
+    if (submitBtn && (submitBtn.disabled || submitBtn.getAttribute('aria-busy') === 'true')) return;
     const name = document.getElementById('regName')?.value.trim();
     const mobile = document.getElementById('regMobile')?.value.trim();
     const email = document.getElementById('regEmail')?.value.trim();
@@ -477,8 +487,8 @@ function updateAuthUI() {
 
         if (drawerAuth) {
             drawerAuth.innerHTML =
-                `<button type="button" class="btn btn-primary btn-full" onclick="openProfile();toggleDrawer()">My Account</button>` +
-                `<button type="button" class="btn btn-ghost btn-full" onclick="requestSignOut();toggleDrawer()">Sign Out (${sanitizeHTML(user.name?.split(' ')[0] || '')})</button>`;
+                `<button type="button" class="btn btn-primary btn-full" onclick="openProfileFromDrawer()">My Account</button>` +
+                `<button type="button" class="btn btn-ghost btn-full" onclick="closeDrawerIfOpen();requestSignOut()">Sign Out (${sanitizeHTML(user.name?.split(' ')[0] || '')})</button>`;
         }
         const mnLabel = document.getElementById('mnProfileLabel');
         if (mnLabel) mnLabel.textContent = user.name?.split(' ')[0] || 'Me';
@@ -488,8 +498,8 @@ function updateAuthUI() {
         closeUserDropdown();
         if (drawerAuth) {
             drawerAuth.innerHTML =
-                `<button type="button" class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up — Free</button>` +
-                `<button type="button" class="btn btn-outline btn-full" onclick="openAuth('login');toggleDrawer()">Sign In</button>`;
+                `<button type="button" class="btn btn-primary btn-full" onclick="openAuthFromDrawer('register')">Sign Up — Free</button>` +
+                `<button type="button" class="btn btn-outline btn-full" onclick="openAuthFromDrawer('login')">Sign In</button>`;
         }
         const mnLabel = document.getElementById('mnProfileLabel');
         if (mnLabel) mnLabel.textContent = 'Profile';

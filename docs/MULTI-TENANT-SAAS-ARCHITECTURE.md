@@ -35,11 +35,17 @@
 | Workflow staff actions lacked tenant assert | Tenant A staff could mutate Tenant B enquiry/quote/order by ID | **Fixed** — `assertTenantAccess` |
 | Dealer decision / announcement patch missing tenant check | Cross-tenant admin mutation by ID | **Fixed** |
 | Login phone fallback scanned **all** tenants | Same phone in Tenant B could log into wrong business without slug | **Fixed** — slug-scoped lookup only |
+| `TenantIsolationGuard` unused on platform routes | Body/path `tenantId` spoof not blocked | **Fixed** — wired into `Authenticated()` |
+| Legacy `POST /orders` + `POST /sync/push` trusted body `tenantId` | Unauthenticated cross-tenant writes | **Fixed** — JWT + JWT tenant only |
+| Invoice branding hard-coded Gurukripa | Wrong legal entity on other-tenant invoices | **Fixed** — uses order `tenantId` |
+| Public catalogue still primary-tenant default | White-label by slug exists; public `/public/*` still Gurukripa | Deferred (2b) |
 | Roles `DRIVER` / warehouse / dispatcher in enum but not `STAFF_ROLES` | Incomplete RBAC for delivery/inventory | Deferred |
+| SQL `user_role` enum vs TS 10-role set | Schema drift if Postgres authoritative | Deferred with migration |
 | Coupons client-only; Razorpay env unused | No live payments | Deferred (needs credentials) |
 | Live GPS / Distance Matrix | Not wired | Deferred (needs provider + consent) |
 | Native iOS App Store readiness | Capacitor shell only | Deferred |
 | Full PM (BOQ projects, expenses, ledgers) | Partial / local ERP only | Deferred phases |
+| No tenant onboarding UI/API | Seed-only demo tenants | Deferred (2b) |
 
 ### Estimators (existing)
 

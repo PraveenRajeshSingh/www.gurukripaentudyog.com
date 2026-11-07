@@ -285,8 +285,11 @@ function openProductDetail(id) {
           <button type="button" class="btn btn-primary btn-full" style="margin-top:10px;min-height:46px" onclick="closeProductModal();openBulkQuoteModal()">${typeof t === 'function' ? t('products.requestQuote') : 'Request Quotation'}</button>
           ${related.length ? `<div class="pd-related"><div class="pd-related__title">Related products</div><div class="pd-related__row">${related.map(r => `<button type="button" class="pd-related__chip" onclick="openProductDetail(${r.id})"><img src="${sanitizeHTML(r.img)}" alt="" width="36" height="36" loading="lazy"><span>${sanitizeHTML(r.name)}</span><strong>₹${r.price}</strong></button>`).join('')}</div></div>` : ''}
         </div>`;
-    document.getElementById('productModal').classList.add('open');
-    overlayLock();
+    if (typeof openOverlay === 'function') openOverlay('productModal');
+    else {
+        document.getElementById('productModal').classList.add('open');
+        overlayLock();
+    }
 }
 
 function changePdQty(d) {
@@ -295,8 +298,11 @@ function changePdQty(d) {
 }
 
 function closeProductModal() {
-    document.getElementById('productModal')?.classList.remove('open');
-    overlayUnlock();
+    if (typeof closeOverlay === 'function') closeOverlay('productModal');
+    else {
+        document.getElementById('productModal')?.classList.remove('open');
+        overlayUnlock();
+    }
 }
 
 function handleProductModalClick(e) {

@@ -50,6 +50,8 @@ export const MANAGER_ROLES: UserRole[] = ['SALES_MANAGER', 'ADMIN', 'TENANT_ADMI
 export const ADMIN_ROLES: UserRole[] = ['ADMIN', 'TENANT_ADMIN', 'SUPER_ADMIN'];
 export const END_CUSTOMER_ROLES: UserRole[] = ['CUSTOMER', 'DEALER'];
 
+export type AccountStatus = 'ACTIVE' | 'DISABLED' | 'SUSPENDED';
+
 export interface PlatformUser {
   id: string;
   tenantId: string;
@@ -67,6 +69,16 @@ export interface PlatformUser {
   dealerCity?: string;
   /** Percent discount applied to quotations for approved dealers (0-100). */
   dealerDiscountPct?: number;
+  /** Login / ops status — DISABLED and SUSPENDED cannot obtain a session. */
+  accountStatus?: AccountStatus;
+  /** Optional branch label for multi-yard tenants (no separate Branch table yet). */
+  branchName?: string;
+  /** Optional login alias; platform auth still uses phone as the primary identifier. */
+  username?: string;
+  /** Human job label for QA (e.g. Accountant) when JWT role is a close enum match. */
+  jobTitle?: string;
+  /** Marks seeder-created accounts so production bootstrap never touches them. */
+  isTestAccount?: boolean;
   createdAt: string;
 }
 

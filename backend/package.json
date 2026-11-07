@@ -8,7 +8,10 @@
     "start:dev": "ts-node src/main.ts",
     "migrate": "node dist/src/database/migrator.js",
     "smoke": "node scripts/smoke.js",
-    "test": "node --test test/isolation_and_pricing.test.js dist/test/backend.test.js dist/test/platform.test.js"
+    "seed:demo": "ts-node scripts/seed-demo-accounts.ts",
+    "seed:demo:reset": "ts-node scripts/seed-demo-accounts.ts --reset",
+    "test": "node --test test/isolation_and_pricing.test.js dist/test/backend.test.js dist/test/platform.test.js dist/test/demo_accounts.test.js",
+    "test:demo-accounts": "node --test dist/test/demo_accounts.test.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",

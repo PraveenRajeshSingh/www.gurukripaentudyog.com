@@ -8,6 +8,12 @@ node_modules/
 backend/.env
 flutter_app/.env
 
+# Confidential local-only QA credentials (never commit)
+TEST_ACCOUNTS.local.md
+**/TEST_ACCOUNTS.local.md
+.demo/
+backend/.demo/
+
 .DS_Store
 
 # Generated web bundle for native packaging (rebuilt by `npm run www`)

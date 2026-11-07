@@ -13,6 +13,7 @@ const notify_service_1 = require("../src/platform/notify.service");
 const workflow_service_1 = require("../src/platform/workflow.service");
 const staff_controller_1 = require("../src/platform/staff.controller");
 const guards_1 = require("../src/platform/guards");
+const tenant_guard_1 = require("../src/security/tenant.guard");
 const TENANT = store_service_1.PlatformStoreService.GURUKRIPA_TENANT_ID;
 function makeCtx() {
     const pricing = new pricing_service_1.PricingEngineService();
@@ -88,6 +89,18 @@ const asUser = (u) => ({
         await assert.rejects(() => guard.canActivate(ctxFor({ headers: {} }, () => { })), common_1.UnauthorizedException);
         const forged = new jwt_1.JwtService({ secret: 'attacker-secret' }).sign({ id: 'x', tenantId: TENANT, role: 'ADMIN' });
         await assert.rejects(() => guard.canActivate(ctxFor({ headers: { authorization: `Bearer ${forged}` } }, () => { })), common_1.UnauthorizedException);
+    });
+    (0, node_test_1.test)('TenantIsolationGuard rejects body tenantId that does not match JWT', () => {
+        const guard = new tenant_guard_1.TenantIsolationGuard();
+        const req = {
+            user: { id: 'u1', tenantId: TENANT, name: 'x', phone: '9', role: 'CUSTOMER' },
+            body: { tenantId: 'tenant-awadh-002' },
+            params: {},
+        };
+        assert.throws(() => guard.canActivate(ctxFor(req, () => { })), common_1.ForbiddenException);
+        req.body = { tenantId: TENANT };
+        assert.equal(guard.canActivate(ctxFor(req, () => { })), true);
+        assert.equal(req.tenantId, TENANT);
     });
     (0, node_test_1.test)('RateLimitGuard blocks the 4th request in a 3/60s window', () => {
         const guard = new guards_1.RateLimitGuard(new core_1.Reflector());

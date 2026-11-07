@@ -328,7 +328,17 @@ function syncAccountPopupChrome(open) {
         backdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
         backdrop.style.background = sheet ? '' : 'transparent';
     }
-    document.body.classList.toggle('account-popup-open', !!open && sheet);
+    const wantSheetLock = !!open && sheet;
+    const wasSheetLock = document.body.classList.contains('account-popup-open');
+    document.body.classList.toggle('account-popup-open', wantSheetLock);
+    // Sheet mode needs the same body pin as overlays (unless an overlay already owns it).
+    if (wantSheetLock && !wasSheetLock && !document.body.classList.contains('overlay-open')) {
+        __overlayScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.style.top = '-' + __overlayScrollY + 'px';
+    } else if (!wantSheetLock && wasSheetLock && !document.body.classList.contains('overlay-open')) {
+        document.body.style.top = '';
+        window.scrollTo(0, __overlayScrollY || 0);
+    }
 }
 
 function openUserDropdown() {
@@ -527,9 +537,16 @@ function setLang(lang) {
 // ══════════════════════════════════════════
 var __overlayCount = 0;
 var __overlayFocus = [];
+var __overlayScrollY = 0;
 function overlayLock() {
     __overlayFocus.push(document.activeElement);
-    if (__overlayCount === 0) document.body.classList.add('overlay-open');
+    if (__overlayCount === 0) {
+        // iOS/Android: overflow:hidden alone still rubber-bands the page under
+        // a sheet. Pin the body and restore scrollY on unlock.
+        __overlayScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.style.top = '-' + __overlayScrollY + 'px';
+        document.body.classList.add('overlay-open');
+    }
     __overlayCount++;
     // Move keyboard / screen-reader focus into the dialog that just opened.
     // Fields that want the caret (pincode, search) focus themselves after.
@@ -546,11 +563,51 @@ function overlayUnlock() {
     __overlayCount = Math.max(0, __overlayCount - 1);
     if (__overlayCount === 0) {
         document.body.classList.remove('overlay-open');
+        document.body.style.top = '';
+        window.scrollTo(0, __overlayScrollY || 0);
         // Return focus to the element that opened the overlay (§6 a11y).
         if (prev && document.contains(prev) && typeof prev.focus === 'function') {
             try { prev.focus(); } catch (_e) {}
         }
     }
+}
+
+/** Idempotent open — never double-lock if the overlay is already visible. */
+function openOverlay(elOrId) {
+    const el = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
+    if (!el || el.classList.contains('open')) return false;
+    el.classList.add('open');
+    overlayLock();
+    return true;
+}
+
+/** Idempotent close — never unlock if the overlay was already closed. */
+function closeOverlay(elOrId) {
+    const el = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
+    if (!el || !el.classList.contains('open')) return false;
+    el.classList.remove('open');
+    overlayUnlock();
+    return true;
+}
+
+/** Close the mobile nav drawer only if it is open (safe before opening a modal). */
+function closeDrawerIfOpen() {
+    const d = document.getElementById('mobileDrawer');
+    if (d && d.classList.contains('open')) toggleDrawer();
+}
+
+/** Close drawer first, then run opener — prevents unlock-while-modal-open race. */
+function openFromDrawer(fn) {
+    closeDrawerIfOpen();
+    if (typeof fn === 'function') fn();
+}
+
+function openAuthFromDrawer(tab) {
+    openFromDrawer(function () { openAuth(tab || 'login'); });
+}
+
+function openProfileFromDrawer() {
+    openFromDrawer(function () { openProfile(); });
 }
 
 // [element-id, closer] — checked top-most first (reverse paint order).
@@ -573,6 +630,7 @@ const OVERLAY_STACK = [
     ['notificationCenterModal', () => typeof closeNotificationCenter === 'function' && closeNotificationCenter()],
     ['wishlistDrawer',   () => typeof closeWishlistDrawer === 'function' && closeWishlistDrawer()],
     ['cartDrawer',       () => typeof closeCart           === 'function' && closeCart()],
+    ['chatbotBox',       () => typeof toggleChatbot       === 'function' && toggleChatbot(false)],
     ['mobileDrawer',     () => typeof toggleDrawer        === 'function' && toggleDrawer()]
 ];
 

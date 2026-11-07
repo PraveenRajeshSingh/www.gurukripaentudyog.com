@@ -37,6 +37,11 @@ export declare class AuthController {
             dealerAddress?: string;
             dealerCity?: string;
             dealerDiscountPct?: number;
+            accountStatus?: import("./types").AccountStatus;
+            branchName?: string;
+            username?: string;
+            jobTitle?: string;
+            isTestAccount?: boolean;
             createdAt: string;
         };
     };

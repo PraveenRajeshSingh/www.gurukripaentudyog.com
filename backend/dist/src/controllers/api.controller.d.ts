@@ -1,6 +1,6 @@
 import { PricingEngineService } from '../pricing/pricing.service';
 import { MockDatabaseService } from '../database/mock-db.service';
-import { EstimationParams } from '../types/domain';
+import { AuthenticatedUser, EstimationParams } from '../types/domain';
 export declare class ApiController {
     private readonly pricingEngine;
     private readonly db;
@@ -52,7 +52,7 @@ export declare class ApiController {
         success: boolean;
         data: import("../types/domain").EstimationResult;
     };
-    createOrder(body: any): {
+    createOrder(tenantId: string, user: AuthenticatedUser, body: any): {
         success: boolean;
         message: string;
         data: {
@@ -73,12 +73,16 @@ export declare class ApiController {
             createdAt: string;
         };
     };
-    syncOfflineData(body: {
-        tenantId: string;
+    syncOfflineData(tenantId: string, user: AuthenticatedUser, body: {
         deviceId: string;
-        userId: string;
-        entries: any[];
+        entries?: any[];
+        tenantId?: string;
+        userId?: string;
     }): {
+        success: boolean;
+        message: string;
+        result?: undefined;
+    } | {
         success: boolean;
         message: string;
         result: {

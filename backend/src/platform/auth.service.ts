@@ -93,10 +93,15 @@ export class AuthService implements OnModuleInit {
     // Resolve tenant from optional slug only — never accept a raw tenantId from the client,
     // and never fall back to "any phone across all tenants" (cross-tenant session leak).
     const tenantId = this.resolveTenantId(dto.tenantSlug);
+    // Platform login identifier is the 10-digit Indian mobile (Username in QA docs mirrors phone).
     const user = this.store.findUserByPhone(tenantId, dto.phone);
     if (!user) throw new UnauthorizedException('Invalid phone number or password');
     if (!(await bcrypt.compare(dto.password, user.passwordHash))) {
       throw new UnauthorizedException('Invalid phone number or password');
+    }
+    const status = user.accountStatus || 'ACTIVE';
+    if (status === 'DISABLED' || status === 'SUSPENDED') {
+      throw new ForbiddenException(`Account is ${status.toLowerCase()}. Contact the administrator.`);
     }
     if (user.role === 'DEALER' && user.dealerStatus === 'REJECTED') {
       throw new ForbiddenException('Dealer application was rejected. Contact the branch office.');

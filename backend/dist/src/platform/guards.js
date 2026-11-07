@@ -13,6 +13,7 @@ exports.Authenticated = exports.RateLimitGuard = exports.RolesGuard = exports.Jw
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const jwt_1 = require("@nestjs/jwt");
+const tenant_guard_1 = require("../security/tenant.guard");
 exports.JWT_ROLES_KEY = 'jwt:roles';
 exports.RATE_LIMIT_KEY = 'platform:rateLimit';
 const RequireRoles = (...roles) => (0, common_1.SetMetadata)(exports.JWT_ROLES_KEY, roles);
@@ -108,6 +109,6 @@ exports.RateLimitGuard = RateLimitGuard = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [core_1.Reflector])
 ], RateLimitGuard);
-const Authenticated = (...roles) => (0, common_1.applyDecorators)((0, common_1.UseGuards)(JwtAuthGuard, RolesGuard), ...(roles.length ? [(0, exports.RequireRoles)(...roles)] : []));
+const Authenticated = (...roles) => (0, common_1.applyDecorators)((0, common_1.UseGuards)(JwtAuthGuard, tenant_guard_1.TenantIsolationGuard, RolesGuard), ...(roles.length ? [(0, exports.RequireRoles)(...roles)] : []));
 exports.Authenticated = Authenticated;
 //# sourceMappingURL=guards.js.map

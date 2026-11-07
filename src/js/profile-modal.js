@@ -56,8 +56,11 @@ function openProfile() {
     renderWishlistInProfile();
     renderEnquiriesInProfile();
 
-    document.getElementById('profileModal')?.classList.add('open');
-    overlayLock();
+    if (typeof openOverlay === 'function') openOverlay('profileModal');
+    else {
+        document.getElementById('profileModal')?.classList.add('open');
+        overlayLock();
+    }
     translateProfileModal();
     if (window.RoleAccess && typeof RoleAccess.applyVisibility === 'function') {
         RoleAccess.applyVisibility(document.getElementById('profileModal'));
@@ -231,8 +234,11 @@ function saveBuyerProfileType() {
 }
 
 function closeProfile() {
-    document.getElementById('profileModal')?.classList.remove('open');
-    overlayUnlock();
+    if (typeof closeOverlay === 'function') closeOverlay('profileModal');
+    else {
+        document.getElementById('profileModal')?.classList.remove('open');
+        overlayUnlock();
+    }
 }
 
 function handleProfileOverlayClick(e) {

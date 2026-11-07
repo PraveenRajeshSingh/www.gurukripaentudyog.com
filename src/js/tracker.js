@@ -19,9 +19,18 @@ function openTrackerModal(orderId) {
         if (orderId) inp.value = orderId;
         else if (!inp.value || /^GBI-20260728-4912$/i.test(inp.value.trim())) inp.value = '';
     }
-    modal.classList.add('open');
-    overlayLock();
+    if (typeof openOverlay === 'function') openOverlay(modal);
+    else {
+        modal.classList.add('open');
+        overlayLock();
+    }
     mountTrackerYardMap();
+    // Sheet animation finishes after paint — reflow map so it is not 0×0.
+    setTimeout(function () {
+        if (window.GurukripaMaps && GurukripaMaps.invalidateMapIn) {
+            GurukripaMaps.invalidateMapIn('trackerMapContainer');
+        }
+    }, 280);
     if (orderId || (inp && inp.value.trim())) {
         renderTrackerDetails((orderId || inp.value).trim());
     } else {
@@ -30,8 +39,11 @@ function openTrackerModal(orderId) {
 }
 
 function closeTrackerModal() {
-    document.getElementById('trackerModal')?.classList.remove('open');
-    overlayUnlock();
+    if (typeof closeOverlay === 'function') closeOverlay('trackerModal');
+    else {
+        document.getElementById('trackerModal')?.classList.remove('open');
+        overlayUnlock();
+    }
 }
 
 function mountTrackerYardMap() {

@@ -14,6 +14,7 @@ import { NotifyService } from '../src/platform/notify.service';
 import { WorkflowService } from '../src/platform/workflow.service';
 import { StaffController } from '../src/platform/staff.controller';
 import { JwtAuthGuard, RolesGuard, RateLimitGuard, RequireRoles, RateLimit, JWT_ROLES_KEY, RATE_LIMIT_KEY } from '../src/platform/guards';
+import { TenantIsolationGuard } from '../src/security/tenant.guard';
 import { AuthenticatedUser } from '../src/types/domain';
 
 const TENANT = PlatformStoreService.GURUKRIPA_TENANT_ID;
@@ -102,6 +103,19 @@ describe('Server-side guards (RBAC + rate limiting)', () => {
     await assert.rejects(() => guard.canActivate(ctxFor({ headers: {} }, () => {})), UnauthorizedException);
     const forged = new JwtService({ secret: 'attacker-secret' }).sign({ id: 'x', tenantId: TENANT, role: 'ADMIN' });
     await assert.rejects(() => guard.canActivate(ctxFor({ headers: { authorization: `Bearer ${forged}` } }, () => {})), UnauthorizedException);
+  });
+
+  test('TenantIsolationGuard rejects body tenantId that does not match JWT', () => {
+    const guard = new TenantIsolationGuard();
+    const req: any = {
+      user: { id: 'u1', tenantId: TENANT, name: 'x', phone: '9', role: 'CUSTOMER' },
+      body: { tenantId: 'tenant-awadh-002' },
+      params: {},
+    };
+    assert.throws(() => guard.canActivate(ctxFor(req, () => {})), ForbiddenException);
+    req.body = { tenantId: TENANT };
+    assert.equal(guard.canActivate(ctxFor(req, () => {})), true);
+    assert.equal(req.tenantId, TENANT);
   });
 
   test('RateLimitGuard blocks the 4th request in a 3/60s window', () => {

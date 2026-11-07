@@ -258,6 +258,9 @@ function syncCardVisual() {
 }
 
 function placeOrder() {
+    const foot = document.getElementById('coFoot');
+    if (foot && foot.classList.contains('is-busy')) return;
+
     const btnsRow = document.getElementById('checkoutPayBtns');
     const procState = document.getElementById('paymentProcessingState');
     const method = selectedPayMethod || 'cod';
@@ -281,6 +284,7 @@ function placeOrder() {
         return;
     }
 
+    setCheckoutBusy(true);
     if (btnsRow) btnsRow.style.display = 'none';
     if (procState) {
         const title = procState.querySelector('.processing-title');
@@ -289,7 +293,6 @@ function placeOrder() {
         if (sub) sub.textContent = 'Saving your order token on this device. The yard confirms by phone or WhatsApp — no online payment is charged.';
         procState.style.display = 'block';
     }
-    setCheckoutBusy(true);
 
     setTimeout(() => {
         const orderId = makeLocalOrderRef();

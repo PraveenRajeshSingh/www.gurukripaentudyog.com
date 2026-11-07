@@ -1,0 +1,291 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INTERACTION FIXES — final cascade layer (after popup-polish)
+   Scroll lock, maps, overflow, touch, breakpoints 320→1440+.
+   Does not change brand colours, fonts, or layout language.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* ── Z-index: restore token stacking on mobile (overrides mobile-fixes 1000/1001) ── */
+@media (max-width: 768px) {
+    .modal-overlay,
+    .gb-dialog.modal-overlay {
+        z-index: var(--z-modal, 1100) !important;
+    }
+    .cart-overlay {
+        z-index: calc(var(--z-drawer, 1010) - 1) !important;
+    }
+    .cart-drawer,
+    .wishlist-drawer,
+    #mobileDrawer.drawer,
+    .drawer.open {
+        z-index: var(--z-drawer, 1010) !important;
+    }
+    .lb-overlay,
+    #lb {
+        z-index: var(--z-lightbox, 1200) !important;
+    }
+}
+
+/* ── Page chrome: no sideways page scroll; nested areas may scroll-x ── */
+html {
+    overflow-x: clip;
+    max-width: 100%;
+}
+body {
+    overflow-x: clip;
+    max-width: 100%;
+    overscroll-behavior-x: none;
+}
+
+/* Tables / compare / long chips: scroll inside wrappers only */
+.table-wrap,
+.compare-table-wrap,
+.studio-tabs,
+.filter-chips,
+.hub-tiles,
+.product-grid,
+.cart-items {
+    max-width: 100%;
+}
+.table-wrap,
+.compare-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+/* ── Overlay scroll lock (paired with ui.js overlayLock) ── */
+body.overlay-open,
+body.account-popup-open {
+    position: fixed;
+    inset-inline: 0;
+    width: 100%;
+    overflow: hidden !important;
+    overscroll-behavior: none;
+}
+body.overlay-open .modal-body,
+body.overlay-open .modal-box,
+body.overlay-open .cart-body,
+body.overlay-open .wishlist-body,
+body.overlay-open .drawer,
+body.overlay-open .drawer-body,
+body.overlay-open .co-sheet__body,
+body.overlay-open .profile-modal-body,
+body.overlay-open .chatbot-box,
+body.overlay-open .catalog-sidebar,
+body.account-popup-open .account-popup,
+body.account-popup-open .user-dropdown {
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Modal body must remain the scroll owner */
+.modal-overlay.open > .modal-box {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.modal-overlay.open .modal-body,
+.modal-overlay.open .co-sheet__body,
+.modal-overlay.open .profile-modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* ── Buttons: hover / active / busy / touch ── */
+.btn,
+button.btn,
+input[type="submit"].btn {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn:active:not(:disabled):not(.is-busy) {
+    transform: translateY(1px);
+}
+.btn:disabled,
+.btn[aria-disabled="true"],
+.btn.is-busy,
+.btn[aria-busy="true"] {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.72;
+}
+.btn.is-busy::after {
+    content: "";
+    display: inline-block;
+    width: 0.85em;
+    height: 0.85em;
+    margin-inline-start: 0.45em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    vertical-align: -0.1em;
+    animation: gb-btn-spin 0.7s linear infinite;
+}
+@keyframes gb-btn-spin {
+    to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .btn:active { transform: none; }
+    .btn.is-busy::after { animation: none; opacity: 0.5; }
+}
+
+@media (max-width: 767px) {
+    .btn,
+    .nav-icon-btn,
+    .nav-toggle,
+    .mn-item,
+    .drawer-link,
+    .ud-item,
+    .filter-btn,
+    .auth-tab,
+    .modal-close-btn,
+    .profile-close-btn,
+    .cart-close-btn {
+        min-height: 44px;
+    }
+}
+
+/* ── Maps: never collapse / never overflow modal ── */
+.contact-map-wrap,
+.tracker-map-container,
+#trackerMapContainer,
+.gb-map-host {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: var(--r-md, 12px);
+    background: var(--bg-subtle, #F1EEE8);
+}
+.contact-map-wrap {
+    min-height: clamp(200px, 42vw, 300px);
+}
+.contact-map-frame {
+    width: 100%;
+    height: clamp(200px, 42vw, 300px);
+    max-width: 100%;
+    border: 0;
+    display: block;
+}
+.tracker-map-container,
+#trackerMapContainer {
+    height: clamp(180px, 38vh, 260px);
+    min-height: 180px;
+}
+.tracker-map-container .gb-map-fallback,
+#trackerMapContainer .gb-map-fallback {
+    height: 100%;
+    min-height: inherit;
+}
+.gb-map-fallback__frame-wrap {
+    flex: 1 1 auto;
+    min-height: 140px;
+    position: relative;
+}
+.gb-map-fallback__frame {
+    width: 100%;
+    height: 100%;
+    min-height: 160px;
+    border: 0;
+    display: block;
+}
+.gb-map-fallback__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.gb-map-fallback__actions .btn {
+    flex: 1 1 140px;
+    min-height: 44px;
+    justify-content: center;
+}
+/* Google Maps JS canvas */
+.tracker-map-container > div,
+#trackerMapContainer > div:not(.gb-map-fallback) {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 180px;
+}
+
+/* ── Dropdowns stay in viewport ── */
+@media (min-width: 1025px) {
+    .user-dropdown.account-popup.open,
+    #userDropdown.open {
+        max-height: min(70vh, 520px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ── Breakpoints ── */
+@media (max-width: 375px) {
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .nav-quote-btn span,
+    .hero-ctas .btn { font-size: 0.82rem; }
+    .contact-map-actions .btn { flex: 1 1 100%; }
+    .gb-map-fallback__actions .btn { flex: 1 1 100%; }
+}
+
+@media (min-width: 376px) and (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+    }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .modal-overlay {
+        padding: 16px;
+    }
+}
+
+/* Short landscape phones / tablets: keep sheets usable */
+@media (max-height: 500px) and (orientation: landscape) {
+    .modal-overlay.open > .modal-box {
+        max-height: 96dvh !important;
+        border-radius: var(--r-md, 12px) !important;
+    }
+    .modal-overlay.open .modal-body {
+        max-height: none;
+    }
+    .tracker-map-container,
+    #trackerMapContainer,
+    .contact-map-frame {
+        height: min(140px, 40vh);
+        min-height: 120px;
+    }
+}
+
+/* Large desktop: restrain ultra-wide stretch without redesign */
+@media (min-width: 1441px) {
+    .container {
+        max-width: 1240px;
+    }
+}
+
+/* Safe area: bottom chrome clearance for floating actions */
+.fab-stack,
+#scrollTopBtn,
+.wa-float {
+    bottom: calc(var(--bottom-nav-h, 64px) + env(safe-area-inset-bottom, 0px) + 12px);
+}
+@media (min-width: 1025px) {
+    .fab-stack,
+    #scrollTopBtn,
+    .wa-float {
+        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+}

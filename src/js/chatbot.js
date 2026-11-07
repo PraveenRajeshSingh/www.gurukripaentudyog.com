@@ -44,7 +44,12 @@ function toggleChatbot(force) {
     const box = chatEl('chatbotBox');
     const wrap = chatEl('chatbotWrap');
     if (!box) return;
-    const willOpen = (typeof force === 'boolean') ? force : !box.classList.contains('open');
+    const isOpen = box.classList.contains('open');
+    const willOpen = (typeof force === 'boolean') ? force : !isOpen;
+    if (willOpen === isOpen) {
+        if (willOpen) setTimeout(() => chatEl('chatInput')?.focus({ preventScroll: true }), 60);
+        return;
+    }
 
     GBChat.minimized = false;
     box.classList.toggle('open', willOpen);

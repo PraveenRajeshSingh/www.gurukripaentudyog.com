@@ -159,6 +159,8 @@
     <link rel="stylesheet" href="src/styles/ecommerce.css">
     <!-- Final popup/sheet/dialog polish — wins over earlier radius/overflow conflicts. -->
     <link rel="stylesheet" href="src/styles/popup-polish.css">
+    <!-- Interaction / map / scroll / breakpoint hardening (last CSS). -->
+    <link rel="stylesheet" href="src/styles/interaction-fixes.css">
 </head>
 
 <body>
@@ -664,8 +666,8 @@
 
         <!-- Account Controls -->
         <div class="drawer-auth" id="drawerAuthBtns">
-            <button type="button" class="btn btn-primary btn-full" onclick="openAuth('register');toggleDrawer()">Sign Up — Free</button>
-            <button type="button" class="btn btn-outline btn-full" onclick="openAuth('login');toggleDrawer()">Sign In</button>
+            <button type="button" class="btn btn-primary btn-full" onclick="openAuthFromDrawer('register')">Sign Up — Free</button>
+            <button type="button" class="btn btn-outline btn-full" onclick="openAuthFromDrawer('login')">Sign In</button>
         </div>
 
         <!-- Legal Link in Drawer -->
@@ -3465,6 +3467,7 @@
     <script src="src/js/erp-notify.js" defer></script>
     <script src="src/js/erp-invoice.js" defer></script>
     <script src="src/js/ui.js" defer></script>
+    <script src="src/js/interaction-guard.js" defer></script>
     <script src="src/js/dialogs.js" defer></script>
     <script src="src/js/pincodeChecker.js" defer></script>
     <script src="src/js/voice-search.js" defer></script>

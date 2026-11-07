@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { PricingEngineService } from '../pricing/pricing.service';
 import { MockDatabaseService } from '../database/mock-db.service';
-import { CurrentTenant, MultiTenantRequest, TenantIsolationGuard } from '../security/tenant.guard';
-import { EstimationParams } from '../types/domain';
+import { CurrentTenant, CurrentUser, TenantIsolationGuard } from '../security/tenant.guard';
+import { AuthenticatedUser, EstimationParams } from '../types/domain';
+import { JwtAuthGuard } from '../platform/guards';
 
 @Controller('api/v1')
 export class ApiController {
@@ -51,24 +52,33 @@ export class ApiController {
     return { success: true, data: result };
   }
 
-  // 4. Order Checkout with automatic 5% GST computation
+  // 4. Legacy mock checkout — JWT tenant is authoritative (body.tenantId cannot spoof).
+  // Prefer /api/v1/me + quotation workflow for production orders.
   @Post('orders')
-  createOrder(@Body() body: any) {
-    const tenantId = body.tenantId;
-    if (!tenantId) {
-      throw new UnauthorizedException('Tenant ID is required to place an order');
-    }
-    const order = this.db.createOrder(tenantId, body);
+  @UseGuards(JwtAuthGuard, TenantIsolationGuard)
+  createOrder(@CurrentTenant() tenantId: string, @CurrentUser() user: AuthenticatedUser, @Body() body: any) {
+    const order = this.db.createOrder(tenantId, {
+      ...body,
+      tenantId,
+      customerName: body.customerName || user.name,
+      customerPhone: body.customerPhone || user.phone,
+      userId: user.id,
+    });
     return { success: true, message: 'Order created successfully', data: order };
   }
 
-  // 5. Offline Sync Push Endpoint for Drivers & Warehouse Staff
+  // 5. Offline sync — authenticated; tenant and user come from JWT, not the body.
   @Post('sync/push')
-  syncOfflineData(@Body() body: { tenantId: string; deviceId: string; userId: string; entries: any[] }) {
-    if (!body.tenantId || !body.deviceId) {
-      throw new UnauthorizedException('Tenant ID and Device ID are mandatory for sync transactions');
+  @UseGuards(JwtAuthGuard, TenantIsolationGuard)
+  syncOfflineData(
+    @CurrentTenant() tenantId: string,
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: { deviceId: string; entries?: any[]; tenantId?: string; userId?: string },
+  ) {
+    if (!body.deviceId) {
+      return { success: false, message: 'deviceId is required for sync transactions' };
     }
-    const result = this.db.recordSyncBatch(body.tenantId, body.deviceId, body.userId, body.entries || []);
+    const result = this.db.recordSyncBatch(tenantId, body.deviceId, user.id, body.entries || []);
     return { success: true, message: 'Offline sync journal applied successfully', result };
   }
 }
