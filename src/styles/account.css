@@ -322,10 +322,15 @@
 }
 .user-dropdown.account-popup.is-sheet .account-popup__grab { display: block; }
 .user-dropdown.account-popup.is-sheet .account-popup__sheet {
-    max-height: min(82vh, 640px);
+    max-height: min(88dvh, calc(100dvh - env(safe-area-inset-bottom, 0px) - 8px));
 }
 
-body.account-popup-open { overflow: hidden; }
+body.account-popup-open {
+    overflow: hidden;
+    /* Pair with interaction-fixes position:fixed + scrollY restore in ui.js */
+    overscroll-behavior: none;
+    touch-action: manipulation;
+}
 
 @media (prefers-reduced-motion: reduce) {
     .user-dropdown.account-popup,

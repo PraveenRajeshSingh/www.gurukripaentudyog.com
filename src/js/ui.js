@@ -326,13 +326,20 @@ function syncAccountPopupChrome(open) {
         backdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
         backdrop.style.background = sheet ? '' : 'transparent';
     }
+    // Lock background scroll whenever the account sheet/popup is open on narrow
+    // viewports (and restore scrollY on close). Desktop still closes on scroll.
     const wantSheetLock = !!open && sheet;
     const wasSheetLock = document.body.classList.contains('account-popup-open');
     document.body.classList.toggle('account-popup-open', wantSheetLock);
-    // Sheet mode needs the same body pin as overlays (unless an overlay already owns it).
     if (wantSheetLock && !wasSheetLock && !document.body.classList.contains('overlay-open')) {
         __overlayScrollY = window.scrollY || window.pageYOffset || 0;
         document.body.style.top = '-' + __overlayScrollY + 'px';
+        try {
+            document.documentElement.style.setProperty(
+                '--vv-height',
+                ((window.visualViewport && window.visualViewport.height) || window.innerHeight) + 'px'
+            );
+        } catch (_e) { /* ignore */ }
     } else if (!wantSheetLock && wasSheetLock && !document.body.classList.contains('overlay-open')) {
         document.body.style.top = '';
         window.scrollTo(0, __overlayScrollY || 0);

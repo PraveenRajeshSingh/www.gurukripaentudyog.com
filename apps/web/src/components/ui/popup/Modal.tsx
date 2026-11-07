@@ -86,7 +86,7 @@ export default function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none"
+      className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none"
       style={{
         paddingTop: 'max(0px, env(safe-area-inset-top))',
       }}

@@ -185,8 +185,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand/12 shadow-sm">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand/12 shadow-sm overflow-visible">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-3 overflow-visible">
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <BrandLogo size={40} />
             <div className="min-w-0">
@@ -224,14 +224,18 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-1 sm:gap-2">
-            <div className="relative" ref={accountRef}>
+            <div className="relative z-50" ref={accountRef}>
               {user ? (
                 <button
-                  onClick={() => setAccountOpen((v) => !v)}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAccountOpen((v) => !v);
+                  }}
                   aria-haspopup="menu"
                   aria-expanded={accountOpen}
                   aria-controls="account-menu"
-                  className="inline-flex items-center gap-2 px-1.5 sm:pl-1.5 sm:pr-2.5 py-1.5 rounded-full hover:bg-brand-glow text-ink-primary transition min-h-[40px]"
+                  className="inline-flex items-center gap-2 px-1.5 sm:pl-1.5 sm:pr-2.5 py-1.5 rounded-full hover:bg-brand-glow text-ink-primary transition min-h-[44px] min-w-[44px] touch-manipulation"
                 >
                   <span
                     className="w-7 h-7 rounded-full bg-brand-dark text-white text-[11px] font-black flex items-center justify-center shrink-0"
@@ -268,7 +272,7 @@ export default function Navbar() {
                   id="account-menu"
                   role="menu"
                   aria-label={lang === 'en' ? 'Account' : 'खाता'}
-                  className="absolute right-0 mt-2 w-60 bg-white rounded-xl border border-neutral-200 shadow-lg py-1.5 z-50 animate-fadeIn"
+                  className="absolute right-0 mt-2 w-[min(15rem,calc(100vw-1.5rem))] max-h-[min(70vh,24rem)] overflow-y-auto overscroll-contain bg-white rounded-xl border border-neutral-200 shadow-lg py-1.5 z-[60] animate-fadeIn"
                 >
                   <div className="px-3.5 py-2 border-b border-neutral-100">
                     <p className="text-sm font-black text-ink-primary truncate">{user.name}</p>

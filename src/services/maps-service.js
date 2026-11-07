@@ -158,23 +158,29 @@ window.GurukripaMaps = window.GurukripaMaps || {};
     };
 
     exports.invalidateAll = function() {
+        if (!document || typeof document.querySelectorAll !== 'function') return;
         document.querySelectorAll('.gb-map-host, #trackerMapContainer, .tracker-map-container').forEach(function (el) {
             if (el && el._gbMap) invalidateMapSize(el._gbMap);
         });
     };
 
     // Reflow after modal/sheet animation, orientation, or visualViewport keyboard resize.
-    window.addEventListener('gb:overlay-layout', function () {
-        setTimeout(exports.invalidateAll, 80);
-        setTimeout(exports.invalidateAll, 320);
-    }, { passive: true });
-    window.addEventListener('orientationchange', function () {
-        setTimeout(exports.invalidateAll, 200);
-        setTimeout(exports.invalidateAll, 500);
-    }, { passive: true });
-    if (window.visualViewport) {
+    // Guard addEventListener so Node/test sandboxes (and non-DOM hosts) can still load the module.
+    if (typeof window.addEventListener === 'function') {
+        window.addEventListener('gb:overlay-layout', function () {
+            setTimeout(exports.invalidateAll, 80);
+            setTimeout(exports.invalidateAll, 320);
+        }, { passive: true });
+        window.addEventListener('orientationchange', function () {
+            setTimeout(exports.invalidateAll, 200);
+            setTimeout(exports.invalidateAll, 500);
+        }, { passive: true });
+    }
+    if (window.visualViewport && typeof window.visualViewport.addEventListener === 'function') {
         window.visualViewport.addEventListener('resize', function () {
-            if (document.body.classList.contains('overlay-open')) exports.invalidateAll();
+            if (document.body && document.body.classList.contains('overlay-open')) {
+                exports.invalidateAll();
+            }
         }, { passive: true });
     }
 })(window.GurukripaMaps);

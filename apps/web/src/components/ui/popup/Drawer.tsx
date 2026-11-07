@@ -38,7 +38,7 @@ export default function Drawer({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-stretch sm:justify-end animate-fadeIn">
+    <div className="fixed inset-0 z-[70] flex items-end sm:items-stretch sm:justify-end animate-fadeIn">
       <OverlayBackdrop onDismiss={onClose} />
 
       <div

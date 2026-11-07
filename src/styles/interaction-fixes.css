@@ -326,14 +326,38 @@ input[type="submit"].btn {
     pointer-events: none !important;
 }
 
-/* ── Dropdowns stay in viewport ── */
+/* ── Account popup: header/metrics fixed; only nav list scrolls ── */
+.user-dropdown.account-popup.open .account-popup__sheet,
+#userDropdown.open .account-popup__sheet {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+    max-height: var(--account-popup-max-h, min(560px, calc(100dvh - 24px))) !important;
+}
+.user-dropdown.account-popup.open .account-popup__header,
+.user-dropdown.account-popup.open .account-popup__metrics,
+.user-dropdown.account-popup.open .account-popup__grab {
+    flex-shrink: 0 !important;
+}
+.user-dropdown.account-popup.open .account-popup__nav {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+.user-dropdown.account-popup.is-sheet.open .account-popup__sheet {
+    max-height: min(88dvh, calc(var(--vv-height, 100dvh) - env(safe-area-inset-bottom, 0px) - 8px)) !important;
+}
 @media (min-width: 1025px) {
     .user-dropdown.account-popup.open,
     #userDropdown.open {
-        max-height: min(70vh, 520px);
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        -webkit-overflow-scrolling: touch;
+        /* Panel itself does not scroll — inner nav does */
+        overflow: hidden !important;
+        max-height: min(70vh, 560px);
     }
 }
 
@@ -503,10 +527,23 @@ html.overlay-open {
     z-index: var(--z-toast, 9999) !important;
 }
 
-/* Account / user menus above page, below modals */
-.user-dropdown.open,
-.account-popup.open {
-    z-index: calc(var(--z-modal, 1100) - 20) !important;
+/* Account popup must sit ABOVE its own backdrop (backdrop = z-modal - 1).
+   A lower z-index left the sheet under the dimmer — looks “closed” on mobile. */
+.account-popup-backdrop.is-open {
+    z-index: calc(var(--z-modal, 1100) - 1) !important;
+}
+.user-dropdown.account-popup.open,
+.account-popup.open,
+#userDropdown.open {
+    z-index: var(--z-modal, 1100) !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+}
+body.account-popup-open .account-popup-backdrop.is-open,
+body.account-popup-open #userDropdown.open,
+body.account-popup-open .user-dropdown.account-popup.open {
+    pointer-events: auto !important;
+    visibility: visible !important;
 }
 
 /* Tables / forms never blow past viewport */
