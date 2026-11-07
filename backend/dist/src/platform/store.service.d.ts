@@ -59,6 +59,7 @@ export declare class PlatformStoreService implements OnModuleInit {
         id: string;
         name: string;
         role: any;
+        tenantId?: string;
     }): StatusEvent;
     timeline(entityType: StatusEvent['entityType'], entityId: string): StatusEvent[];
     registerDevice(userId: string, dto: any): Promise<DeviceToken>;
@@ -75,6 +76,7 @@ export declare class PlatformStoreService implements OnModuleInit {
     audit(actor: {
         id: string;
         role: any;
+        tenantId?: string;
     }, action: string, entityType: string, entityId: string, meta?: Record<string, any>): Promise<void>;
     listAudit(tenantId: string, limit?: number): AuditLog[];
     findProduct(tenantId: string, productId: string): any;

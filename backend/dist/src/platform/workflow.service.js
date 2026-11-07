@@ -32,6 +32,13 @@ let WorkflowService = class WorkflowService {
             throw new common_1.ForbiddenException('Sales manager or administrator authorization required');
         }
     }
+    assertTenantAccess(user, tenantId) {
+        if (user.role === 'SUPER_ADMIN')
+            return;
+        if (!user.tenantId || user.tenantId !== tenantId) {
+            throw new common_1.ForbiddenException('Cross-tenant access denied');
+        }
+    }
     moveEnquiry(enq, to, actor, note) {
         const allowed = types_1.ENQUIRY_TRANSITIONS[enq.status] || [];
         if (!allowed.includes(to)) {
@@ -41,6 +48,7 @@ let WorkflowService = class WorkflowService {
     async reviewEnquiry(user, enquiryId) {
         this.assertStaff(user);
         const enq = this.mustFindEnquiry(enquiryId);
+        this.assertTenantAccess(user, enq.tenantId);
         this.moveEnquiry(enq, 'UNDER_REVIEW', user);
         const updated = await this.store.updateEnquiry(enquiryId, { status: 'UNDER_REVIEW' });
         this.store.addEvent('ENQUIRY', enq.id, 'NEW', 'UNDER_REVIEW', 'Enquiry accepted for review', user);
@@ -53,10 +61,12 @@ let WorkflowService = class WorkflowService {
     async assignEnquiry(user, enquiryId, staffId) {
         this.assertManager(user);
         const enq = this.mustFindEnquiry(enquiryId);
+        this.assertTenantAccess(user, enq.tenantId);
         const staff = this.store.findUserById(staffId);
         if (!staff || !types_1.STAFF_ROLES.includes(staff.role)) {
             throw new common_1.BadRequestException('Assignee must be an active staff account');
         }
+        this.assertTenantAccess(user, staff.tenantId);
         const updated = await this.store.updateEnquiry(enquiryId, { assignedStaffId: staffId });
         this.store.addEvent('ENQUIRY', enq.id, enq.status, enq.status, `Assigned to ${staff.name}`, user);
         await this.store.audit(user, 'ENQUIRY_ASSIGNED', 'ENQUIRY', enq.id, { staffId });
@@ -65,6 +75,7 @@ let WorkflowService = class WorkflowService {
     async createQuotation(user, enquiryId, dto) {
         this.assertStaff(user);
         const enq = this.mustFindEnquiry(enquiryId);
+        this.assertTenantAccess(user, enq.tenantId);
         if (enq.status !== 'UNDER_REVIEW' && enq.status !== 'QUOTATION_PREPARED') {
             throw new common_1.BadRequestException(`Quotation requires an enquiry under review (current: ${enq.status})`);
         }
@@ -105,6 +116,7 @@ let WorkflowService = class WorkflowService {
     async sendQuotation(user, quotationId) {
         this.assertStaff(user);
         const q = this.mustFindQuotation(quotationId);
+        this.assertTenantAccess(user, q.tenantId);
         if (!(types_1.QUOTATION_TRANSITIONS[q.status] || []).includes('SENT')) {
             throw new common_1.BadRequestException(`Quotation cannot be sent from status ${q.status}`);
         }
@@ -121,6 +133,7 @@ let WorkflowService = class WorkflowService {
     }
     async respondToQuotation(user, quotationId, approve, reason) {
         const q = this.mustFindQuotation(quotationId);
+        this.assertTenantAccess(user, q.tenantId);
         if (q.userId !== user.id)
             throw new common_1.ForbiddenException('Quotations are visible only to their owner');
         if (user.role !== 'CUSTOMER' && user.role !== 'DEALER')
@@ -157,6 +170,7 @@ let WorkflowService = class WorkflowService {
     }
     async changeOrderStatus(user, orderId, dto) {
         const order = this.mustFindOrder(orderId);
+        this.assertTenantAccess(user, order.tenantId);
         const to = dto.status;
         const isCustomerCancelling = (user.role === 'CUSTOMER' || user.role === 'DEALER');
         if (isCustomerCancelling) {

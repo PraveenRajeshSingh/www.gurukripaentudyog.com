@@ -88,7 +88,7 @@ export declare class StaffController {
         success: boolean;
         data: import("./types").PlatformOrder;
     }>;
-    dealers(status?: string): {
+    dealers(user: AuthenticatedUser, status?: string): {
         success: boolean;
         data: {
             passwordHash: any;
@@ -149,5 +149,4 @@ export declare class StaffController {
         data: import("./types").AuditLog[];
     };
     exportCsv(user: AuthenticatedUser, entity: string, res: Response): Promise<void>;
-    private tenant;
 }

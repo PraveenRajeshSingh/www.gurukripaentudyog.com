@@ -75,9 +75,8 @@ let AuthService = class AuthService {
         return { ...session, dealerStatus: 'PENDING' };
     }
     async login(dto) {
-        const tenantId = store_service_1.PlatformStoreService.GURUKRIPA_TENANT_ID;
-        const user = this.store.findUserByPhone(tenantId, dto.phone)
-            || this.store.users.find((u) => u.phone === dto.phone);
+        const tenantId = this.resolveTenantId(dto.tenantSlug);
+        const user = this.store.findUserByPhone(tenantId, dto.phone);
         if (!user)
             throw new common_1.UnauthorizedException('Invalid phone number or password');
         if (!(await bcrypt.compare(dto.password, user.passwordHash))) {

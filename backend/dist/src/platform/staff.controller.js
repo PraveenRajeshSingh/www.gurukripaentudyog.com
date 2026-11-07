@@ -40,6 +40,7 @@ let StaffController = class StaffController {
     }
     enquiry(user, id) {
         const enq = this.workflow.mustFindEnquiry(id);
+        this.workflow.assertTenantAccess(user, enq.tenantId);
         return { success: true, data: { ...enq, timeline: this.store.timeline('ENQUIRY', enq.id), customer: enq.userId ? { ...this.auth.freshUser(enq.userId), passwordHash: undefined } : null } };
     }
     review(user, id) {
@@ -67,13 +68,14 @@ let StaffController = class StaffController {
     orderStatus(user, id, dto) {
         return this.workflow.changeOrderStatus(user, id, dto).then((o) => ({ success: true, data: o }));
     }
-    dealers(status) {
-        return { success: true, data: this.store.listDealers(this.tenant(), status).map((d) => ({ ...d, passwordHash: undefined })) };
+    dealers(user, status) {
+        return { success: true, data: this.store.listDealers(user.tenantId, status).map((d) => ({ ...d, passwordHash: undefined })) };
     }
     async dealerDecision(user, id, dto) {
         const dealer = this.auth.freshUser(id);
         if (!dealer || dealer.role !== 'DEALER')
             throw new common_1.NotFoundException('Dealer application not found');
+        this.workflow.assertTenantAccess(user, dealer.tenantId);
         await this.store.updateUser(id, { dealerStatus: dto.status, dealerDiscountPct: dto.status === 'APPROVED' ? dto.dealerDiscountPct ?? 0 : undefined });
         await this.store.audit(user, `DEALER_${dto.status}`, 'USER', id, { dealerDiscountPct: dto.dealerDiscountPct });
         await this.notify.notifyUser(id, dealer.tenantId, 'ANNOUNCEMENT', dto.status === 'APPROVED' ? 'Dealer account approved' : 'Dealer application rejected', dto.status === 'APPROVED' ? 'Your dealer pricing is now active in the app.' : 'Contact the branch office for details.');
@@ -92,11 +94,13 @@ let StaffController = class StaffController {
         }
         return { success: true, data: a };
     }
-    patchAnnouncement(user, id, dto) {
+    async patchAnnouncement(user, id, dto) {
         const a = this.store.findAnnouncement(id);
         if (!a)
             throw new common_1.NotFoundException('Announcement not found');
-        return this.store.saveAnnouncement({ ...a, ...dto }).then((x) => ({ success: true, data: x }));
+        this.workflow.assertTenantAccess(user, a.tenantId);
+        const x = await this.store.saveAnnouncement({ ...a, ...dto });
+        return { success: true, data: x };
     }
     stats(user) {
         const t = user.tenantId;
@@ -144,11 +148,8 @@ let StaffController = class StaffController {
         ].join('\n');
         await this.store.audit(user, 'CSV_EXPORT', entity, 'all');
         res.setHeader('content-type', 'text/csv; charset=utf-8');
-        res.setHeader('content-disposition', `attachment; filename="gurukripa-${entity}.csv"`);
+        res.setHeader('content-disposition', `attachment; filename="${entity}-${user.tenantId}.csv"`);
         res.send(body);
-    }
-    tenant() {
-        return store_service_1.PlatformStoreService.GURUKRIPA_TENANT_ID;
     }
 };
 exports.StaffController = StaffController;
@@ -238,9 +239,10 @@ __decorate([
 __decorate([
     (0, common_1.Get)('dealers'),
     (0, guards_1.RequireRoles)(...types_1.ADMIN_ROLES),
-    __param(0, (0, common_1.Query)('status')),
+    __param(0, (0, tenant_guard_1.CurrentUser)()),
+    __param(1, (0, common_1.Query)('status')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], StaffController.prototype, "dealers", null);
 __decorate([
@@ -270,7 +272,7 @@ __decorate([
     __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], StaffController.prototype, "patchAnnouncement", null);
 __decorate([
     (0, common_1.Get)('stats'),

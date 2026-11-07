@@ -9,6 +9,7 @@ export declare class RegisterDto {
 export declare class LoginDto {
     phone: string;
     password: string;
+    tenantSlug?: string;
 }
 export declare class DealerRegisterDto extends RegisterDto {
     firmName: string;

@@ -239,4 +239,74 @@ const asUser = (u) => ({
         assert.equal(audit[0].action, 'CSV_EXPORT');
     });
 });
+(0, node_test_1.describe)('Cross-tenant isolation', () => {
+    const OTHER = 'tenant-awadh-002';
+    (0, node_test_1.test)('staff from tenant A cannot review or quote an enquiry owned by tenant B', async () => {
+        const s = makeCtx();
+        const gurukripaStaff = await s.store.createUser({
+            tenantId: TENANT, role: 'STAFF', name: 'GK Staff', phone: '9415111111', passwordHash: 'x',
+        });
+        const awadhCustomer = await s.store.createUser({
+            tenantId: OTHER, role: 'CUSTOMER', name: 'Awadh Buyer', phone: '9415222222', passwordHash: 'x',
+        });
+        const foreignEnq = await s.store.createEnquiry({
+            tenantId: OTHER, userId: awadhCustomer.id, contactName: 'Awadh Buyer', contactPhone: '9415222222',
+            siteLocation: 'Varanasi', lines: [{ productName: 'Awwal', quantity: 1000, unit: 'bricks' }], attachments: [],
+        });
+        const actor = asUser(gurukripaStaff);
+        await assert.rejects(() => s.workflow.reviewEnquiry(actor, foreignEnq.id), common_1.ForbiddenException);
+        await s.store.updateEnquiry(foreignEnq.id, { status: 'UNDER_REVIEW' });
+        await assert.rejects(() => s.workflow.createQuotation(actor, foreignEnq.id, { lines: [{ name: 'Awwal', quantity: 1000, unit: 'bricks', unitPrice: 7 }] }), common_1.ForbiddenException);
+    });
+    (0, node_test_1.test)('dealers list and announcement patch are scoped to the caller tenant', async () => {
+        const s = makeCtx();
+        await s.store.createUser({
+            tenantId: OTHER, role: 'DEALER', name: 'Foreign Dealer', phone: '9415333333', passwordHash: 'x',
+            dealerStatus: 'PENDING', firmName: 'Awadh Firm',
+        });
+        await s.store.createUser({
+            tenantId: TENANT, role: 'DEALER', name: 'Local Dealer', phone: '9415444444', passwordHash: 'x',
+            dealerStatus: 'PENDING', firmName: 'GK Firm',
+        });
+        const admin = asUser(await s.store.createUser({
+            tenantId: TENANT, role: 'ADMIN', name: 'GK Admin', phone: '9415555555', passwordHash: 'x',
+        }));
+        const listed = s.staff.dealers(admin, 'PENDING');
+        assert.equal(listed.data.length, 1);
+        assert.equal(listed.data[0].phone, '9415444444');
+        const foreignAnn = await s.store.saveAnnouncement({
+            id: 'ann-foreign', tenantId: OTHER, title: 'Secret', body: 'B only',
+            audience: 'ALL', isActive: true, createdById: 'foreign-admin', createdAt: new Date().toISOString(),
+        });
+        await assert.rejects(() => s.staff.patchAnnouncement(admin, foreignAnn.id, { title: 'Hacked' }), common_1.ForbiddenException);
+    });
+    (0, node_test_1.test)('login with tenantSlug does not authenticate a user from another tenant with the same phone', async () => {
+        const s = makeCtx();
+        const bcrypt = await Promise.resolve().then(() => require('bcrypt'));
+        const hash = await bcrypt.hash('password123', 4);
+        await s.store.createUser({
+            tenantId: OTHER, role: 'CUSTOMER', name: 'Awadh Same Phone', phone: '9415666666', passwordHash: hash,
+        });
+        await assert.rejects(() => s.auth.login({ phone: '9415666666', password: 'password123' }), common_1.UnauthorizedException);
+        const ok = await s.auth.login({ phone: '9415666666', password: 'password123', tenantSlug: 'awadh-bricks' });
+        assert.equal(ok.user.tenantId, OTHER);
+    });
+    (0, node_test_1.test)('events and audit logs inherit the actor tenantId', async () => {
+        const s = makeCtx();
+        const staffAcc = await s.store.createUser({
+            tenantId: TENANT, role: 'STAFF', name: 'Yard', phone: '9415777777', passwordHash: 'x',
+        });
+        const customer = await s.auth.register({ name: 'C', phone: '9415888888', password: 'password123' });
+        const enq = await s.store.createEnquiry({
+            tenantId: TENANT, userId: customer.user.id, contactName: 'C', contactPhone: '9415888888',
+            siteLocation: 'Jaunpur', lines: [{ productName: 'Awwal', quantity: 500, unit: 'bricks' }], attachments: [],
+        });
+        await s.workflow.reviewEnquiry(asUser(staffAcc), enq.id);
+        const events = s.store.timeline('ENQUIRY', enq.id);
+        assert.ok(events.every((e) => e.tenantId === TENANT));
+        const audits = s.store.listAudit(TENANT);
+        assert.ok(audits.some((a) => a.action === 'ENQUIRY_REVIEW' && a.tenantId === TENANT));
+        assert.equal(s.store.listAudit(OTHER).length, 0);
+    });
+});
 //# sourceMappingURL=platform.test.js.map

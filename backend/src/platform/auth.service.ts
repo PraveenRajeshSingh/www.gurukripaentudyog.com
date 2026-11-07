@@ -90,10 +90,10 @@ export class AuthService implements OnModuleInit {
   }
 
   async login(dto: LoginDto): Promise<{ user: AuthenticatedUser; token: string }> {
-    const tenantId = PlatformStoreService.GURUKRIPA_TENANT_ID;
-    const user = this.store.findUserByPhone(tenantId, dto.phone)
-      // Allow staff/admin/dealer from other tenants too when multi-tenant ops start.
-      || this.store.users.find((u) => u.phone === dto.phone);
+    // Resolve tenant from optional slug only — never accept a raw tenantId from the client,
+    // and never fall back to "any phone across all tenants" (cross-tenant session leak).
+    const tenantId = this.resolveTenantId(dto.tenantSlug);
+    const user = this.store.findUserByPhone(tenantId, dto.phone);
     if (!user) throw new UnauthorizedException('Invalid phone number or password');
     if (!(await bcrypt.compare(dto.password, user.passwordHash))) {
       throw new UnauthorizedException('Invalid phone number or password');

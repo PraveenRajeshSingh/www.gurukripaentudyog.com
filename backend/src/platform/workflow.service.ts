@@ -40,6 +40,14 @@ export class WorkflowService {
     }
   }
 
+  /** Staff may only act on records that belong to their own tenant (unless platform super-admin). */
+  assertTenantAccess(user: AuthenticatedUser, tenantId: string): void {
+    if (user.role === 'SUPER_ADMIN') return;
+    if (!user.tenantId || user.tenantId !== tenantId) {
+      throw new ForbiddenException('Cross-tenant access denied');
+    }
+  }
+
   private moveEnquiry(enq: PlatformEnquiry, to: string, actor: AuthenticatedUser, note?: string): void {
     const allowed = ENQUIRY_TRANSITIONS[enq.status] || [];
     if (!allowed.includes(to as any)) {
@@ -51,6 +59,7 @@ export class WorkflowService {
   async reviewEnquiry(user: AuthenticatedUser, enquiryId: string): Promise<PlatformEnquiry> {
     this.assertStaff(user);
     const enq = this.mustFindEnquiry(enquiryId);
+    this.assertTenantAccess(user, enq.tenantId);
     this.moveEnquiry(enq, 'UNDER_REVIEW', user);
     const updated = await this.store.updateEnquiry(enquiryId, { status: 'UNDER_REVIEW' });
     this.store.addEvent('ENQUIRY', enq.id, 'NEW', 'UNDER_REVIEW', 'Enquiry accepted for review', user);
@@ -65,10 +74,12 @@ export class WorkflowService {
   async assignEnquiry(user: AuthenticatedUser, enquiryId: string, staffId: string): Promise<PlatformEnquiry> {
     this.assertManager(user);
     const enq = this.mustFindEnquiry(enquiryId);
+    this.assertTenantAccess(user, enq.tenantId);
     const staff = this.store.findUserById(staffId);
     if (!staff || !STAFF_ROLES.includes(staff.role)) {
       throw new BadRequestException('Assignee must be an active staff account');
     }
+    this.assertTenantAccess(user, staff.tenantId);
     const updated = await this.store.updateEnquiry(enquiryId, { assignedStaffId: staffId });
     this.store.addEvent('ENQUIRY', enq.id, enq.status, enq.status, `Assigned to ${staff.name}`, user);
     await this.store.audit(user, 'ENQUIRY_ASSIGNED', 'ENQUIRY', enq.id, { staffId });
@@ -79,6 +90,7 @@ export class WorkflowService {
   async createQuotation(user: AuthenticatedUser, enquiryId: string, dto: CreateQuotationDto): Promise<PlatformQuotation> {
     this.assertStaff(user);
     const enq = this.mustFindEnquiry(enquiryId);
+    this.assertTenantAccess(user, enq.tenantId);
     if (enq.status !== 'UNDER_REVIEW' && enq.status !== 'QUOTATION_PREPARED') {
       throw new BadRequestException(`Quotation requires an enquiry under review (current: ${enq.status})`);
     }
@@ -126,6 +138,7 @@ export class WorkflowService {
   async sendQuotation(user: AuthenticatedUser, quotationId: string): Promise<PlatformQuotation> {
     this.assertStaff(user);
     const q = this.mustFindQuotation(quotationId);
+    this.assertTenantAccess(user, q.tenantId);
     if (!(QUOTATION_TRANSITIONS[q.status] || []).includes('SENT')) {
       throw new BadRequestException(`Quotation cannot be sent from status ${q.status}`);
     }
@@ -146,6 +159,7 @@ export class WorkflowService {
   /** Customer-side action: only the quotation owner may approve/reject. */
   async respondToQuotation(user: AuthenticatedUser, quotationId: string, approve: boolean, reason?: string): Promise<PlatformOrder | null> {
     const q = this.mustFindQuotation(quotationId);
+    this.assertTenantAccess(user, q.tenantId);
     if (q.userId !== user.id) throw new ForbiddenException('Quotations are visible only to their owner');
     if (user.role !== 'CUSTOMER' && user.role !== 'DEALER') throw new ForbiddenException('Only customers can respond to quotations');
     if (!(QUOTATION_TRANSITIONS[q.status] || []).includes(approve ? 'APPROVED' : 'REJECTED')) {
@@ -188,6 +202,7 @@ export class WorkflowService {
   // ---------------------------------------------------------------- orders
   async changeOrderStatus(user: AuthenticatedUser, orderId: string, dto: OrderStatusDto): Promise<PlatformOrder> {
     const order = this.mustFindOrder(orderId);
+    this.assertTenantAccess(user, order.tenantId);
     const to = dto.status as any;
 
     const isCustomerCancelling = (user.role === 'CUSTOMER' || user.role === 'DEALER');

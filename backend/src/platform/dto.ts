@@ -38,6 +38,10 @@ export class LoginDto {
 
   @IsString() @Length(1, 120)
   password: string;
+
+  /** Optional business slug; defaults to primary Gurukripa tenant. Never trust client tenant IDs. */
+  @IsOptional() @IsString() @Length(2, 64)
+  tenantSlug?: string;
 }
 
 export class DealerRegisterDto extends RegisterDto {

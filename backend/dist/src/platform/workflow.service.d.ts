@@ -11,6 +11,7 @@ export declare class WorkflowService {
     constructor(store: PlatformStoreService, notify: NotifyService, pricing: PricingEngineService);
     private assertStaff;
     private assertManager;
+    assertTenantAccess(user: AuthenticatedUser, tenantId: string): void;
     private moveEnquiry;
     reviewEnquiry(user: AuthenticatedUser, enquiryId: string): Promise<PlatformEnquiry>;
     assignEnquiry(user: AuthenticatedUser, enquiryId: string, staffId: string): Promise<PlatformEnquiry>;

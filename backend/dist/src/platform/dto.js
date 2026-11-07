@@ -63,6 +63,12 @@ __decorate([
     (0, class_validator_1.Length)(1, 120),
     __metadata("design:type", String)
 ], LoginDto.prototype, "password", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.Length)(2, 64),
+    __metadata("design:type", String)
+], LoginDto.prototype, "tenantSlug", void 0);
 class DealerRegisterDto extends RegisterDto {
 }
 exports.DealerRegisterDto = DealerRegisterDto;

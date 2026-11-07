@@ -26,7 +26,7 @@ All monetary totals (CGST/SGST split of the 5 % inclusive rate) are computed **o
 |---|---|---|---|
 | POST | `/auth/register` | → CUSTOMER | `{name, phone, password, email?, language?(en\|hi\|mr), tenantSlug?}` → `{user, token}` |
 | POST | `/auth/dealer-register` | → DEALER (PENDING) | adds `firmName, gstin?, licenseNo?, dealerAddress, dealerCity` |
-| POST | `/auth/login` | any | phone + password (bcrypt verify) |
+| POST | `/auth/login` | any | `{phone, password, tenantSlug?}` — slug resolves business; no cross-tenant phone fallback |
 | GET | `/auth/me` | any | current session + account record |
 
 Passwords: bcrypt (10 rounds), never logged or mirrored in plaintext form. Administrator accounts are **not** seeded with demo data — bootstrap via `BOOTSTRAP_ADMIN_PHONE`/`BOOTSTRAP_ADMIN_PASSWORD` env on first boot, then remove the env vars.

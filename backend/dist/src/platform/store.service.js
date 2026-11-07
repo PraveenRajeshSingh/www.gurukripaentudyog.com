@@ -169,7 +169,7 @@ let PlatformStoreService = PlatformStoreService_1 = class PlatformStoreService {
         const full = { ...enq, id: this.newId('enq'), status: 'NEW', createdAt: this.now(), updatedAt: this.now() };
         this.enquiries.push(full);
         await this.mirror('platform_enquiries', full);
-        this.addEvent('ENQUIRY', full.id, 'NEW', 'NEW', 'Enquiry submitted', { id: full.userId || 'guest', name: full.contactName, role: 'CUSTOMER' });
+        this.addEvent('ENQUIRY', full.id, 'NEW', 'NEW', 'Enquiry submitted', { id: full.userId || 'guest', name: full.contactName, role: 'CUSTOMER', tenantId: full.tenantId });
         return full;
     }
     findEnquiry(id) {
@@ -232,8 +232,9 @@ let PlatformStoreService = PlatformStoreService_1 = class PlatformStoreService {
         return o;
     }
     addEvent(entityType, entityId, fromStatus, toStatus, note, actor) {
+        const tenantId = actor.tenantId || PlatformStoreService_1.GURUKRIPA_TENANT_ID;
         const ev = {
-            id: this.newId('evt'), tenantId: PlatformStoreService_1.GURUKRIPA_TENANT_ID,
+            id: this.newId('evt'), tenantId,
             entityType, entityId, fromStatus, toStatus, note,
             actorId: actor.id, actorName: actor.name, actorRole: actor.role, at: this.now(),
         };
@@ -315,7 +316,7 @@ let PlatformStoreService = PlatformStoreService_1 = class PlatformStoreService {
     }
     async audit(actor, action, entityType, entityId, meta) {
         const log = {
-            id: this.newId('aud'), tenantId: PlatformStoreService_1.GURUKRIPA_TENANT_ID,
+            id: this.newId('aud'), tenantId: actor.tenantId || PlatformStoreService_1.GURUKRIPA_TENANT_ID,
             actorId: actor.id, actorRole: actor.role, action, entityType, entityId, meta, at: this.now(),
         };
         this.auditLogs.push(log);

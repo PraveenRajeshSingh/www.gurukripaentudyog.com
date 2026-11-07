@@ -4,7 +4,8 @@
 **Rule:** Improve existing modules. No duplicate auth, no fake payments/GPS, phase-by-phase delivery.
 
 **Audits:** [Storefront inventory](8283644e-2a5f-40e7-87a6-7021d719aef8) · [Platform API backend](9ab4a0f0-8a46-4598-aa8c-db597659b2d7)  
-**Phase 1 report:** [PHASE1-CATALOG-REPORT.md](./PHASE1-CATALOG-REPORT.md)
+**Phase 1 report:** [PHASE1-CATALOG-REPORT.md](./PHASE1-CATALOG-REPORT.md)  
+**Multi-tenant SaaS:** [MULTI-TENANT-SAAS-ARCHITECTURE.md](./MULTI-TENANT-SAAS-ARCHITECTURE.md)
 
 ---
 

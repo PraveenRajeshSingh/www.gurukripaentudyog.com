@@ -45,6 +45,7 @@ export class StaffController {
   @Get('enquiries/:id')
   enquiry(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
     const enq = this.workflow.mustFindEnquiry(id);
+    this.workflow.assertTenantAccess(user, enq.tenantId);
     return { success: true, data: { ...enq, timeline: this.store.timeline('ENQUIRY', enq.id), customer: enq.userId ? { ...this.auth.freshUser(enq.userId), passwordHash: undefined } : null } };
   }
 
@@ -96,8 +97,8 @@ export class StaffController {
   // -------------------------------------------------------------- dealers
   @Get('dealers')
   @RequireRoles(...ADMIN_ROLES)
-  dealers(@Query('status') status?: string) {
-    return { success: true, data: this.store.listDealers(this.tenant(), status).map((d) => ({ ...d, passwordHash: undefined })) };
+  dealers(@CurrentUser() user: AuthenticatedUser, @Query('status') status?: string) {
+    return { success: true, data: this.store.listDealers(user.tenantId, status).map((d) => ({ ...d, passwordHash: undefined })) };
   }
 
   @Post('dealers/:id/decision')
@@ -105,6 +106,7 @@ export class StaffController {
   async dealerDecision(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string, @Body() dto: DealerApprovalDto) {
     const dealer = this.auth.freshUser(id);
     if (!dealer || dealer.role !== 'DEALER') throw new NotFoundException('Dealer application not found');
+    this.workflow.assertTenantAccess(user, dealer.tenantId);
     await this.store.updateUser(id, { dealerStatus: dto.status, dealerDiscountPct: dto.status === 'APPROVED' ? dto.dealerDiscountPct ?? 0 : undefined });
     await this.store.audit(user, `DEALER_${dto.status}`, 'USER', id, { dealerDiscountPct: dto.dealerDiscountPct });
     await this.notify.notifyUser(id, dealer.tenantId, 'ANNOUNCEMENT',
@@ -134,10 +136,12 @@ export class StaffController {
 
   @Patch('announcements/:id')
   @RequireRoles(...ADMIN_ROLES)
-  patchAnnouncement(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string, @Body() dto: Partial<AnnouncementDto>) {
+  async patchAnnouncement(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string, @Body() dto: Partial<AnnouncementDto>) {
     const a = this.store.findAnnouncement(id);
     if (!a) throw new NotFoundException('Announcement not found');
-    return this.store.saveAnnouncement({ ...a, ...dto }).then((x) => ({ success: true, data: x }));
+    this.workflow.assertTenantAccess(user, a.tenantId);
+    const x = await this.store.saveAnnouncement({ ...a, ...dto });
+    return { success: true, data: x };
   }
 
   // --------------------------------------------------------------- stats
@@ -192,11 +196,7 @@ export class StaffController {
     ].join('\n');
     await this.store.audit(user, 'CSV_EXPORT', entity, 'all');
     res.setHeader('content-type', 'text/csv; charset=utf-8');
-    res.setHeader('content-disposition', `attachment; filename="gurukripa-${entity}.csv"`);
+    res.setHeader('content-disposition', `attachment; filename="${entity}-${user.tenantId}.csv"`);
     res.send(body);
-  }
-
-  private tenant(): string {
-    return PlatformStoreService.GURUKRIPA_TENANT_ID;
   }
 }

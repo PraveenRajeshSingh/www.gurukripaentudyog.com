@@ -200,7 +200,7 @@ export class PlatformStoreService implements OnModuleInit {
     const full: PlatformEnquiry = { ...enq, id: this.newId('enq'), status: 'NEW', createdAt: this.now(), updatedAt: this.now() };
     this.enquiries.push(full);
     await this.mirror('platform_enquiries', full);
-    this.addEvent('ENQUIRY', full.id, 'NEW', 'NEW', 'Enquiry submitted', { id: full.userId || 'guest', name: full.contactName, role: 'CUSTOMER' } as any);
+    this.addEvent('ENQUIRY', full.id, 'NEW', 'NEW', 'Enquiry submitted', { id: full.userId || 'guest', name: full.contactName, role: 'CUSTOMER', tenantId: full.tenantId } as any);
     return full;
   }
 
@@ -276,9 +276,10 @@ export class PlatformStoreService implements OnModuleInit {
   }
 
   // ---------------------------------------------------------- status events
-  addEvent(entityType: StatusEvent['entityType'], entityId: string, fromStatus: string, toStatus: string, note: string | undefined, actor: { id: string; name: string; role: any }): StatusEvent {
+  addEvent(entityType: StatusEvent['entityType'], entityId: string, fromStatus: string, toStatus: string, note: string | undefined, actor: { id: string; name: string; role: any; tenantId?: string }): StatusEvent {
+    const tenantId = actor.tenantId || PlatformStoreService.GURUKRIPA_TENANT_ID;
     const ev: StatusEvent = {
-      id: this.newId('evt'), tenantId: PlatformStoreService.GURUKRIPA_TENANT_ID,
+      id: this.newId('evt'), tenantId,
       entityType, entityId, fromStatus, toStatus, note,
       actorId: actor.id, actorName: actor.name, actorRole: actor.role, at: this.now(),
     };
@@ -369,9 +370,9 @@ export class PlatformStoreService implements OnModuleInit {
   }
 
   // -------------------------------------------------------------- audit log
-  async audit(actor: { id: string; role: any }, action: string, entityType: string, entityId: string, meta?: Record<string, any>): Promise<void> {
+  async audit(actor: { id: string; role: any; tenantId?: string }, action: string, entityType: string, entityId: string, meta?: Record<string, any>): Promise<void> {
     const log: AuditLog = {
-      id: this.newId('aud'), tenantId: PlatformStoreService.GURUKRIPA_TENANT_ID,
+      id: this.newId('aud'), tenantId: actor.tenantId || PlatformStoreService.GURUKRIPA_TENANT_ID,
       actorId: actor.id, actorRole: actor.role, action, entityType, entityId, meta, at: this.now(),
     };
     this.auditLogs.push(log);
