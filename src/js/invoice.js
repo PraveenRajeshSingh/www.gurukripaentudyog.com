@@ -131,13 +131,43 @@ function renderLegacyGstInvoice(orderId) {
 }
 function closeGstInvoice() { document.getElementById('gstInvoiceModal')?.classList.remove('open'); overlayUnlock(); }
 
+/**
+ * Reorder from a past trolley order using CURRENT catalogue prices.
+ * Never reuses the historical unit price (rates change at the yard).
+ */
 function reorderTrolley(orderId) {
     const matched = orders.find(o => o.id === orderId);
     const qty = matched ? (matched.itemsCount || 4000) : 4000;
-    const price = matched ? Math.round(matched.total / qty * 100) / 100 : 7.05;
-    cart.push({ id: Date.now(), name: 'Brick Re-Order (Trolley)', price: price, unit: 'per piece', qty: qty, img: 'src/assets/images/brick_product_1.png' });
-    saveCart(); updateCartUI(); openCart();
-    showToast(t('invoice.trolleyAdded'), 'success');
+    // Prefer an explicit product id on the order; else map by name; else Awwal (id 7).
+    let product = null;
+    if (matched && matched.productId && typeof PRODUCTS !== 'undefined') {
+        product = PRODUCTS.find(p => p.id === matched.productId) || null;
+    }
+    if (!product && matched && matched.items && matched.items[0] && typeof PRODUCTS !== 'undefined') {
+        const first = matched.items[0];
+        product = PRODUCTS.find(p => p.id === first.id || p.name === first.name) || null;
+    }
+    if (!product && typeof PRODUCTS !== 'undefined') {
+        product = PRODUCTS.find(p => p.id === 7) || PRODUCTS[0] || null;
+    }
+    if (!product) {
+        showToast('Catalogue unavailable — cannot reorder at current rates.', 'warning');
+        return;
+    }
+    const currentPrice = Number(product.price);
+    const oldUnit = matched && matched.total && qty
+        ? Math.round((matched.total / qty) * 100) / 100
+        : null;
+    addToCart(product.id, qty);
+    openCart();
+    if (oldUnit != null && Math.abs(oldUnit - currentPrice) > 0.001) {
+        showToast(
+            `Re-ordered at today's rate ₹${currentPrice}/pc (was ≈ ₹${oldUnit}). Confirm in cart.`,
+            'info'
+        );
+    } else {
+        showToast(t('invoice.trolleyAdded'), 'success');
+    }
 }
 
 // ── Delivery → invoice hook (used by admin/driver actions) ───────

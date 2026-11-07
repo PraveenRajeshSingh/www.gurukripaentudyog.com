@@ -243,7 +243,8 @@
                         <path d="M21 21l-4.35-4.35" />
                     </svg>
                     <input type="search" class="nav-search-input" placeholder="Search bricks, prices... (Ctrl+K)" id="navSearch"
-                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices">
+                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices"
+                        aria-autocomplete="list" aria-controls="searchSuggestPanel">
                     <!-- Voice search button -->
                     <button id="voiceSearchBtn" type="button" class="nav-voice-btn"
                         onclick="toggleVoiceSearch()"
@@ -256,6 +257,7 @@
                             <line x1="8" y1="23" x2="16" y2="23"/>
                         </svg>
                     </button>
+                    <div id="searchSuggestPanel" class="search-suggest" role="listbox" hidden aria-label="Search suggestions"></div>
                 </div>
 
                 <!-- Primary Desktop Navigation -->
@@ -853,25 +855,30 @@
                         </div>
                     </div>
 
-                    <!-- Delivery & Verified Badges Filter -->
+                    <!-- Availability (wired to CatalogDiscovery) -->
                     <div class="catalog-filter-card">
                         <div class="filter-card-header">
-                            <span class="filter-card-title">Wholesale &amp; Dispatch</span>
+                            <span class="filter-card-title">Availability</span>
                         </div>
-                        <div class="filter-checkbox-list">
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" checked>
-                                <span>Same-Day Trolley Delivery</span>
-                            </label>
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" checked>
-                                <span>ISI Certified Grade-A</span>
-                            </label>
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox">
-                                <span>Bulk Trolley Discount Ready</span>
-                            </label>
+                        <select id="filterStock" class="products-sort" style="width:100%" onchange="handleStockFilter(this.value)" aria-label="Filter by availability">
+                            <option value="all">All stock levels</option>
+                            <option value="available">Available (not sold out)</option>
+                            <option value="in-stock">In stock only</option>
+                            <option value="low-stock">Limited stock</option>
+                        </select>
+                    </div>
+
+                    <!-- Size / type hints from catalogue features -->
+                    <div class="catalog-filter-card">
+                        <div class="filter-card-header">
+                            <span class="filter-card-title">Size / Type</span>
                         </div>
+                        <select id="filterSize" class="products-sort" style="width:100%" onchange="handleSizeFilter(this.value)" aria-label="Filter by size or type">
+                            <option value="all">All sizes</option>
+                            <option value="standard">Standard ~230×110×70</option>
+                            <option value="wirecut">Machine wirecut</option>
+                            <option value="hollow">Hollow / partition</option>
+                        </select>
                     </div>
 
                     <!-- Quick RFQ Assistance Card -->
@@ -898,13 +905,19 @@
                         <div class="products-toolbar-right">
                             <select class="products-sort" id="productsSort" onchange="sortProducts(this.value)" aria-label="Sort products">
                                 <option value="default">Sort by: Best Selling</option>
+                                <option value="relevance">Relevance</option>
                                 <option value="price-asc">Price: Low to High</option>
                                 <option value="price-desc">Price: High to Low</option>
+                                <option value="popularity">Popularity</option>
+                                <option value="newest">Newest</option>
                                 <option value="name-asc">Name: A to Z</option>
                                 <option value="rating-desc">Top Rated</option>
                             </select>
                         </div>
                     </div>
+
+                    <!-- Recently viewed (CatalogDiscovery) -->
+                    <div id="recentlyViewedStrip" class="recent-strip" hidden></div>
 
                     <!-- Products Grid -->
                     <div class="products-grid" id="productsGrid">
@@ -912,6 +925,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sticky compare tray -->
+            <div id="compareBar" class="compare-bar" hidden></div>
 
             <!-- Mobile filter bottom-sheet backdrop -->
             <div class="filter-sheet-backdrop" id="filterSheetBackdrop" onclick="toggleFilterSheet(false)"></div>
@@ -2791,6 +2807,19 @@
         </div>
     </div>
 
+    <!-- Product comparison — CatalogDiscovery -->
+    <div class="modal-overlay" id="compareModal" role="dialog" aria-modal="true" aria-labelledby="compareModalTitle" onclick="if(event.target===this)CatalogDiscovery.closeCompareModal()">
+        <div class="modal-box modal-box--lg compare-modal-box">
+            <div class="modal-head">
+                <h2 id="compareModalTitle" class="modal-title">Compare bricks</h2>
+                <button type="button" class="modal-close-btn" onclick="CatalogDiscovery.closeCompareModal()" aria-label="Close comparison">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="compareModalBody"></div>
+        </div>
+    </div>
+
     <!-- ━━━━━━━━━━━━━━━━━ PINCODE & FREIGHT RATE DELIVERY MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="pincodeModal" role="dialog" aria-modal="true" aria-label="Delivery availability check" onclick="if(event.target===this)closePincodeModal()">
         <div class="modal-box modal-box--md" id="pincodeModalBox">
@@ -3366,6 +3395,7 @@
     <script src="src/js/pincodeChecker.js" defer></script>
     <script src="src/js/voice-search.js" defer></script>
     <script src="src/js/products.js" defer></script>
+    <script src="src/js/catalog-discovery.js" defer></script>
     <script src="src/js/cart.js" defer></script>
     <script src="src/js/wishlist-drawer.js" defer></script>
     <script src="src/js/auth-modal.js" defer></script>

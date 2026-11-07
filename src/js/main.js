@@ -314,55 +314,17 @@ function sendBulkQuoteViaWhatsApp() {
     showToast(quote ? 'Enquiry opened in WhatsApp and logged on this device.' : 'Enquiry opened in WhatsApp.', 'success');
 }
 
-// Nav Search Live Filter & Shortcut
+// Nav search is owned by CatalogDiscovery (suggestions, history, unified filters).
+// Escape still clears the field when focused; overlay ESC stays in ui.js.
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('navSearch');
     if (!searchInput) return;
-
-    // Escape clears an active search field. Overlay close (ESC), drawer toggle and
-    // Ctrl/Cmd+K focus are centralised in the ui.js OVERLAY_STACK to avoid
-    // duplicate handlers double-firing (e.g. toggleDrawer toggling twice).
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && document.activeElement === searchInput) {
             searchInput.blur();
             searchInput.value = '';
-            renderProducts(currentFilter || 'all');
+            if (window.CatalogDiscovery) CatalogDiscovery.resetFilters();
+            else renderProducts(currentFilter || 'all');
         }
-    });
-
-    let debounceTimer;
-    searchInput.addEventListener('input', function () {
-        clearTimeout(debounceTimer);
-        const q = this.value.trim().toLowerCase();
-        debounceTimer = setTimeout(() => {
-            if (!q) {
-                renderProducts(currentFilter || 'all');
-                return;
-            }
-            const grid = document.getElementById('productsGrid');
-            if (!grid) return;
-            const matches = PRODUCTS.filter(p =>
-                p.name.toLowerCase().includes(q) ||
-                p.desc.toLowerCase().includes(q) ||
-                p.category.toLowerCase().includes(q) ||
-                (p.badge && p.badge.toLowerCase().includes(q))
-            );
-
-            const countEl = document.getElementById('productsCount');
-            if (countEl) countEl.textContent = `${matches.length} product${matches.length !== 1 ? 's' : ''}`;
-
-            if (!matches.length) {
-                grid.innerHTML = `
-                    <div style="grid-column:1/-1;text-align:center;padding:50px 20px;">
-                        <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
-                        <h3 style="font-family:var(--display);color:var(--ink);margin-bottom:6px">No bricks matching "${sanitizeHTML(q)}"</h3>
-                        <p style="color:var(--ink-3);font-size:.9rem;margin-bottom:18px">Try searching for "awwal", "shiv", "grade", or "red"</p>
-                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('navSearch').value='';renderProducts('all')">View All Bricks</button>
-                    </div>`;
-                return;
-            }
-            grid.innerHTML = matches.map(p => renderProductCard(p)).join('');
-            document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 220);
     });
 });

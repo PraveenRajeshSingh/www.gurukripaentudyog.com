@@ -70,25 +70,30 @@
                         </div>
                     </div>
 
-                    <!-- Delivery & Verified Badges Filter -->
+                    <!-- Availability (wired to CatalogDiscovery) -->
                     <div class="catalog-filter-card">
                         <div class="filter-card-header">
-                            <span class="filter-card-title">Wholesale &amp; Dispatch</span>
+                            <span class="filter-card-title">Availability</span>
                         </div>
-                        <div class="filter-checkbox-list">
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" checked>
-                                <span>Same-Day Trolley Delivery</span>
-                            </label>
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" checked>
-                                <span>ISI Certified Grade-A</span>
-                            </label>
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox">
-                                <span>Bulk Trolley Discount Ready</span>
-                            </label>
+                        <select id="filterStock" class="products-sort" style="width:100%" onchange="handleStockFilter(this.value)" aria-label="Filter by availability">
+                            <option value="all">All stock levels</option>
+                            <option value="available">Available (not sold out)</option>
+                            <option value="in-stock">In stock only</option>
+                            <option value="low-stock">Limited stock</option>
+                        </select>
+                    </div>
+
+                    <!-- Size / type hints from catalogue features -->
+                    <div class="catalog-filter-card">
+                        <div class="filter-card-header">
+                            <span class="filter-card-title">Size / Type</span>
                         </div>
+                        <select id="filterSize" class="products-sort" style="width:100%" onchange="handleSizeFilter(this.value)" aria-label="Filter by size or type">
+                            <option value="all">All sizes</option>
+                            <option value="standard">Standard ~230×110×70</option>
+                            <option value="wirecut">Machine wirecut</option>
+                            <option value="hollow">Hollow / partition</option>
+                        </select>
                     </div>
 
                     <!-- Quick RFQ Assistance Card -->
@@ -115,13 +120,19 @@
                         <div class="products-toolbar-right">
                             <select class="products-sort" id="productsSort" onchange="sortProducts(this.value)" aria-label="Sort products">
                                 <option value="default">Sort by: Best Selling</option>
+                                <option value="relevance">Relevance</option>
                                 <option value="price-asc">Price: Low to High</option>
                                 <option value="price-desc">Price: High to Low</option>
+                                <option value="popularity">Popularity</option>
+                                <option value="newest">Newest</option>
                                 <option value="name-asc">Name: A to Z</option>
                                 <option value="rating-desc">Top Rated</option>
                             </select>
                         </div>
                     </div>
+
+                    <!-- Recently viewed (CatalogDiscovery) -->
+                    <div id="recentlyViewedStrip" class="recent-strip" hidden></div>
 
                     <!-- Products Grid -->
                     <div class="products-grid" id="productsGrid">
@@ -129,6 +140,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sticky compare tray -->
+            <div id="compareBar" class="compare-bar" hidden></div>
 
             <!-- Mobile filter bottom-sheet backdrop -->
             <div class="filter-sheet-backdrop" id="filterSheetBackdrop" onclick="toggleFilterSheet(false)"></div>

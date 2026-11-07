@@ -566,6 +566,7 @@ const OVERLAY_STACK = [
     ['invoicePdfModal',  () => typeof closeInvoicePdf     === 'function' && closeInvoicePdf()],
     ['companyProfileModal', () => typeof closeCompanyProfile === 'function' && closeCompanyProfile()],
     ['productModal',     () => typeof closeProductModal   === 'function' && closeProductModal()],
+    ['compareModal',     () => window.CatalogDiscovery && CatalogDiscovery.closeCompareModal()],
     ['profileModal',     () => typeof closeProfile        === 'function' && closeProfile()],
     ['authModal',        () => typeof closeAuth           === 'function' && closeAuth()],
     ['trackerModal',     () => typeof closeTrackerModal   === 'function' && closeTrackerModal()],

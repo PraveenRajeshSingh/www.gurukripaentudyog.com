@@ -27,7 +27,8 @@
                         <path d="M21 21l-4.35-4.35" />
                     </svg>
                     <input type="search" class="nav-search-input" placeholder="Search bricks, prices... (Ctrl+K)" id="navSearch"
-                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices">
+                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices"
+                        aria-autocomplete="list" aria-controls="searchSuggestPanel">
                     <!-- Voice search button -->
                     <button id="voiceSearchBtn" type="button" class="nav-voice-btn"
                         onclick="toggleVoiceSearch()"
@@ -40,6 +41,7 @@
                             <line x1="8" y1="23" x2="16" y2="23"/>
                         </svg>
                     </button>
+                    <div id="searchSuggestPanel" class="search-suggest" role="listbox" hidden aria-label="Search suggestions"></div>
                 </div>
 
                 <!-- Primary Desktop Navigation -->

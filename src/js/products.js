@@ -118,20 +118,27 @@ function renderProductCard(p) {
           <button type="button" class="btn btn-outline btn-sm" onclick="openProductDetail(${p.id})">${typeof t === 'function' ? t('products.viewDetails') : 'View Details'}</button>
           <a class="btn btn-outline btn-sm" href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener">${typeof t === 'function' ? t('products.getPrice') : 'Get Price'}</a>
         </div>
+        <button type="button" class="product-compare-btn ${window.CatalogDiscovery && CatalogDiscovery.isCompared(p.id) ? 'active' : ''}"
+          data-compare-id="${p.id}" aria-pressed="${window.CatalogDiscovery && CatalogDiscovery.isCompared(p.id) ? 'true' : 'false'}"
+          onclick="CatalogDiscovery.toggleCompare(${p.id})">Compare</button>
       </div>
     </article>`;
 }
 
 function handlePriceRangeFilter(val) {
     const label = document.getElementById('currentMaxPriceLabel');
-    if (label) label.textContent = `Up to ₹${parseFloat(val).toFixed(2)}`;
-    const grid = document.getElementById('productsGrid');
-    if (!grid) return;
     const max = parseFloat(val);
-    const filtered = PRODUCTS.filter(p => p.price <= max && (currentFilter === 'all' || p.category === currentFilter));
-    grid.innerHTML = filtered.map(p => renderProductCard(p)).join('');
-    const countEl = document.getElementById('productsCount');
-    if (countEl) countEl.textContent = `Showing ${filtered.length} products (under ₹${max.toFixed(2)})`;
+    if (label) label.textContent = `Up to ₹${max.toFixed(2)}`;
+    if (window.CatalogDiscovery) CatalogDiscovery.setState({ maxPrice: max });
+    else renderProducts(currentFilter);
+}
+
+function handleStockFilter(val) {
+    if (window.CatalogDiscovery) CatalogDiscovery.setState({ stock: val || 'all' });
+}
+
+function handleSizeFilter(val) {
+    if (window.CatalogDiscovery) CatalogDiscovery.setState({ size: val || 'all' });
 }
 
 function toggleCategoryFilter(cat, checkbox) {
@@ -148,14 +155,20 @@ function filterProducts(cat, btn) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
-    // Reset sort dropdown when filter changes
-    const sortEl = document.getElementById('productsSort');
-    if (sortEl) sortEl.value = 'default';
-    renderProducts(cat);
+    if (window.CatalogDiscovery) {
+        CatalogDiscovery.setState({ category: cat || 'all' });
+    } else {
+        renderProducts(cat);
+    }
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function renderProducts(filter) {
+    if (window.CatalogDiscovery) {
+        if (filter) currentFilter = filter;
+        CatalogDiscovery.setState({ category: filter || currentFilter || 'all' });
+        return;
+    }
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
     const filtered = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
@@ -171,6 +184,10 @@ function renderProducts(filter) {
 }
 
 function sortProducts(sortBy) {
+    if (window.CatalogDiscovery) {
+        CatalogDiscovery.setState({ sort: sortBy || 'default' });
+        return;
+    }
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
     let filtered = currentFilter === 'all' ? [...PRODUCTS] : PRODUCTS.filter(p => p.category === currentFilter);
@@ -223,6 +240,8 @@ function toggleFilterSheet(force) {
 function openProductDetail(id) {
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;
+    if (window.CatalogDiscovery) CatalogDiscovery.recordView(p.id);
+    const related = window.CatalogDiscovery ? CatalogDiscovery.relatedFor(p.id, 3) : [];
     const content = document.getElementById('pdContent');
     if (!content) return;
     content.innerHTML = `
@@ -262,7 +281,9 @@ function openProductDetail(id) {
             <a href="${waOrderURL(p.name, 1000)}" target="_blank" rel="noopener" class="btn pd-wa-btn" style="flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:0 14px" aria-label="Order on WhatsApp">${_waSVG}</a>
             <a href="tel:+919198923230" class="btn btn-outline" style="flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px">${_phoneSVG} Call</a>
           </div>
+          <button type="button" class="btn btn-outline btn-full" style="margin-top:8px;min-height:42px" onclick="CatalogDiscovery.toggleCompare(${p.id})">${window.CatalogDiscovery && CatalogDiscovery.isCompared(p.id) ? 'Remove from Compare' : 'Add to Compare'}</button>
           <button type="button" class="btn btn-primary btn-full" style="margin-top:10px;min-height:46px" onclick="closeProductModal();openBulkQuoteModal()">${typeof t === 'function' ? t('products.requestQuote') : 'Request Quotation'}</button>
+          ${related.length ? `<div class="pd-related"><div class="pd-related__title">Related products</div><div class="pd-related__row">${related.map(r => `<button type="button" class="pd-related__chip" onclick="openProductDetail(${r.id})"><img src="${sanitizeHTML(r.img)}" alt="" width="36" height="36" loading="lazy"><span>${sanitizeHTML(r.name)}</span><strong>₹${r.price}</strong></button>`).join('')}</div></div>` : ''}
         </div>`;
     document.getElementById('productModal').classList.add('open');
     overlayLock();

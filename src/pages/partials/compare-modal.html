@@ -1,0 +1,12 @@
+    <!-- Product comparison — CatalogDiscovery -->
+    <div class="modal-overlay" id="compareModal" role="dialog" aria-modal="true" aria-labelledby="compareModalTitle" onclick="if(event.target===this)CatalogDiscovery.closeCompareModal()">
+        <div class="modal-box modal-box--lg compare-modal-box">
+            <div class="modal-head">
+                <h2 id="compareModalTitle" class="modal-title">Compare bricks</h2>
+                <button type="button" class="modal-close-btn" onclick="CatalogDiscovery.closeCompareModal()" aria-label="Close comparison">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="compareModalBody"></div>
+        </div>
+    </div>
