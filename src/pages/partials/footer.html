@@ -1,44 +1,58 @@
-    <!-- ━━━━━━━━━━━━━━━━━ FOOTER ━━━━━━━━━━━━━━━━━ -->
-    <footer class="footer" role="contentinfo">
-        <div class="container">
-            <div class="footer-grid">
-                <!-- Column 1: Brand & Kiln Details -->
+    <!-- ━━━━━━━━━━━━━━━━━ FOOTER REDESIGN ━━━━━━━━━━━━━━━━━
+         Parts: footer grid · accordion · newsletter · payment chips · legal row -->
+    <footer class="footer footer-studio" id="siteFooter" role="contentinfo">
+        <div class="container footer-studio__container">
+
+            <!-- FOOTER GRID -->
+            <div class="footer-grid footer-studio__grid">
+
+                <!-- Brand & contact -->
                 <div class="footer-col footer-col-brand">
                     <div class="footer-brand-title">
                         <span class="footer-logo-badge">GBI</span>
-                        गुरुकृपा ईंट उद्योग
+                        <span data-i18n="footer.brandName">Gurukripa Bricks Industry</span>
                     </div>
+                    <p class="footer-brand-hi" lang="hi">गुरुकृपा ईंट उद्योग</p>
                     <p class="footer-brand-desc" data-i18n="footer.brandDesc">
                         Jaunpur's premier brick manufacturer since 1998. 25+ years of double-fired Grade-A quality, compressive strength, and trust you can build your home on.
                     </p>
                     <div class="footer-compliance-badges">
-                        <span class="compliance-badge">GSTIN: 09AAACG7481M1Z2</span>
-                        <span class="compliance-badge">Kiln: GBI/JNP/1998/412</span>
+                        <span class="compliance-badge">
+                            <span data-i18n="footer.gstinLabel">GSTIN</span>: <span id="footerGstin">09AAACG7481M1Z2</span>
+                            <button type="button" class="compliance-copy" onclick="copyFooterGstin()" aria-label="Copy GSTIN" title="Copy GSTIN">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            </button>
+                        </span>
+                        <span class="compliance-badge"><span data-i18n="footer.kilnLabel">Kiln</span>: GBI/JNP/1998/412</span>
                     </div>
                     <div class="footer-contacts">
                         <div class="footer-contact-row">
-                            <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></span>
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></span>
                             <a href="tel:+919198923230">+91 91989 23230</a>
                         </div>
                         <div class="footer-contact-row">
-                            <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
                             <a href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a>
                         </div>
                         <div class="footer-contact-row">
-                            <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-                            <a class="footer-map-link" href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf" target="_blank" rel="noopener">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                            <a class="footer-map-link" id="footerAddressLink"
+                               href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf"
+                               target="_blank" rel="noopener noreferrer"
+                               data-i18n="footer.address">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
                         </div>
                         <div class="footer-contact-row">
-                            <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-                            <span>Mon–Sat | 8:00 AM – 6:00 PM (Sunday Closed)</span>
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                            <span data-i18n="footer.hours">Mon–Sat | 8:00 AM – 6:00 PM (Sunday Closed)</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Column 2: Quick Links -->
-                <div class="footer-col">
-                    <h4 class="footer-col-title" data-i18n="footer.quickLinks">Quick Links</h4>
-                    <ul class="footer-links">
+                <!-- Quick Links (accordion on mobile) -->
+                <div class="footer-col footer-accordion">
+                    <button type="button" class="footer-col-title footer-acc-btn" aria-expanded="false" aria-controls="footerQuickLinks" data-i18n="footer.quickLinks">Quick Links</button>
+                    <h4 class="footer-col-title footer-acc-heading" data-i18n="footer.quickLinks">Quick Links</h4>
+                    <ul class="footer-links" id="footerQuickLinks">
                         <li><a href="#home" data-i18n="nav.home">Home</a></li>
                         <li><a href="#products" data-i18n="nav.products">Products</a></li>
                         <li><a href="#calculator" data-i18n="nav.calculator">Estimator</a></li>
@@ -50,67 +64,77 @@
                     </ul>
                 </div>
 
-                <!-- Column 3: Products & Standard Trolleys -->
-                <div class="footer-col">
-                    <h4 class="footer-col-title" data-i18n="footer.ourProducts">Our Products</h4>
-                    <ul class="footer-links">
-                        <li><a href="#products">Shiv Eent (Grade-A)</a></li>
-                        <li><a href="#products">Awwal Bricks (₹28,200/trolley)</a></li>
-                        <li><a href="#products">Laal Peti (₹25,000/trolley)</a></li>
-                        <li><a href="#products">Premium Red Bricks</a></li>
-                        <li><a href="#products">Machine Made Wirecut</a></li>
-                        <li><a href="#products">First Class Bricks</a></li>
-                        <li><a href="#products">Lightweight Hollow Bricks</a></li>
+                <!-- Our Products (filled from PRODUCTS; accordion on mobile) -->
+                <div class="footer-col footer-accordion">
+                    <button type="button" class="footer-col-title footer-acc-btn" aria-expanded="false" aria-controls="footerProductLinks" data-i18n="footer.ourProducts">Our Products</button>
+                    <h4 class="footer-col-title footer-acc-heading" data-i18n="footer.ourProducts">Our Products</h4>
+                    <ul class="footer-links" id="footerProductLinks">
+                        <!-- Populated by fab-stack.js / footer init from PRODUCTS -->
                     </ul>
                 </div>
 
-                <!-- Column 4: Newsletter, Social & Deliveries -->
+                <!-- Connect + newsletter -->
                 <div class="footer-col">
                     <h4 class="footer-col-title" data-i18n="footer.connect">Connect With Us</h4>
                     <div class="footer-social">
-                        <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="social-btn" aria-label="WhatsApp" title="WhatsApp"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg></a>
-                        <a href="https://www.facebook.com/profile.php?id=100080293837397" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook" title="Facebook">f</a>
-                        <a href="https://www.instagram.com/prem_narayan_singh" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram" title="Instagram">ig</a>
-                        <a href="tel:+919198923230" class="social-btn" aria-label="Call Kiln Direct" title="Call Kiln"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></a>
+                        <a href="https://wa.me/919198923230" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="WhatsApp">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=100080293837397" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Facebook">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.4V9.41c0-2.37 1.41-3.68 3.56-3.68 1.03 0 2.11.18 2.11.18v2.32h-1.19c-1.17 0-1.54.73-1.54 1.48v1.78h2.62l-.42 2.9h-2.2V22c4.78-.75 8.44-4.91 8.44-9.93z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/prem_narayan_singh" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Instagram">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                        </a>
+                        <a href="tel:+919198923230" class="social-btn" aria-label="Call Kiln Direct">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+                        </a>
                     </div>
-                    <div class="newsletter-wrap">
-                        <p class="newsletter-desc" data-i18n="footer.newsletterDesc">Get offers &amp; updates</p>
-                        <form onsubmit="handleNewsletter(event)" class="newsletter-form">
-                            <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Your email address" data-i18n="footer.emailPh">
-                            <button type="submit" class="newsletter-submit" data-i18n="footer.subscribe">Subscribe</button>
+
+                    <!-- NEWSLETTER → WhatsApp rate updates (no backend) -->
+                    <div class="newsletter-wrap" id="footerNewsletter">
+                        <p class="newsletter-desc" data-i18n="footer.newsletterDesc">Get rate updates on WhatsApp</p>
+                        <form class="newsletter-form" id="footerRateForm" onsubmit="handleNewsletter(event)" novalidate>
+                            <label class="sr-only" for="footerWaPhone" data-i18n="footer.phoneLabel">Mobile number for WhatsApp updates</label>
+                            <div class="newsletter-row">
+                                <input type="tel" id="footerWaPhone" class="newsletter-input" name="phone"
+                                    placeholder="10-digit mobile" inputmode="tel" autocomplete="tel"
+                                    maxlength="14" aria-describedby="footerNewsStatus" data-i18n="footer.phonePh">
+                                <button type="submit" class="newsletter-submit" id="footerNewsBtn" data-i18n="footer.whatsappUpdates">Get updates</button>
+                            </div>
+                            <p class="newsletter-status" id="footerNewsStatus" role="status" aria-live="polite"></p>
                         </form>
                     </div>
+
                     <p class="footer-delivery-note">
-                        <strong>Same-Day Delivery:</strong> Jaunpur, Varanasi, Jalalpur, Trilochan, Shahganj, Mariahu &amp; surrounding sites.
+                        <strong data-i18n="footer.sameDay">Same-Day Delivery</strong>:
+                        <span data-i18n="footer.sameDayCities">Jaunpur, Varanasi, Jalalpur, Trilochan, Shahganj, Mariahu &amp; surrounding sites.</span>
                     </p>
                 </div>
             </div>
 
-            <!-- Accepted Payments -->
-            <div class="footer-payments">
+            <!-- PAYMENT CHIPS (checkout-supported methods only) -->
+            <div class="footer-payments" id="footerPayments" aria-label="Accepted payment methods">
                 <span class="pay-title" data-i18n="footer.weAccept">We Accept:</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> UPI / QR</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Google Pay</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg> PhonePe</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 11-9-9"/><polyline points="21 3 21 9 15 9"/></svg> Paytm</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="21" x2="21" y2="21"/><polygon points="4 17 12 6 20 17"/><line x1="7" y1="17" x2="7" y2="11"/><line x1="17" y1="17" x2="17" y2="11"/></svg> NEFT / RTGS</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg> Cash at Site</span>
+                <span class="pay-pill" data-pay="upi"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span data-i18n="footer.payUpi">UPI (manual)</span></span>
+                <span class="pay-pill" data-pay="neft"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="21" x2="21" y2="21"/><polygon points="4 17 12 6 20 17"/></svg> <span data-i18n="footer.payNeft">NEFT / RTGS</span></span>
+                <span class="pay-pill" data-pay="cod"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg> <span data-i18n="footer.payCod">Cash on Delivery / Cash at Site</span></span>
             </div>
 
             <hr class="footer-divider">
 
-            <!-- Bottom Credits & Legal Links -->
+            <!-- LEGAL ROW -->
             <div class="footer-bottom">
                 <p class="footer-copy" data-i18n="footer.rights">© 2026 Gurukripa Bricks Industry. All rights reserved.</p>
-                <div class="footer-bottom-links">
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('privacy')">Privacy Policy</button>
-                    <span class="footer-legal-dot">•</span>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')">Terms of Sale</button>
-                    <span class="footer-legal-dot">•</span>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('shipping')">Shipping &amp; Delivery</button>
-                    <span class="footer-legal-dot">•</span>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('quality')">Quality Standards</button>
-                </div>
+                <nav class="footer-bottom-links" aria-label="Legal">
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('privacy')" data-i18n="footer.privacy">Privacy Policy</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')" data-i18n="footer.terms">Terms of Sale</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('shipping')" data-i18n="footer.shipping">Shipping &amp; Delivery</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('quality')" data-i18n="footer.quality">Quality Standards</button>
+                </nav>
             </div>
         </div>
+
+        <!-- Bottom-nav spacer INSIDE footer (mobile only) — same bg, no cream strip -->
+        <div class="footer-nav-spacer" aria-hidden="true"></div>
     </footer>

@@ -22,11 +22,14 @@
     // Capture-phase: block rapid re-clicks on submit/checkout only.
     // Never guard plain links (map Directions / Open in Maps) or navigation.
     document.addEventListener('click', function (e) {
+        // CHANGE: also guard Add to Cart / Place Order / RFQ / Save Estimate (polish §1)
         var btn = e.target && e.target.closest && e.target.closest(
             'form button[type="submit"], form input[type="submit"],' +
             '#checkoutModal button.btn-primary, #authModal button.btn-primary,' +
             '#contactForm button[type="submit"], #contactForm button.btn-primary,' +
-            'button[data-busy-guard]'
+            'button[data-busy-guard], button.product-add-btn,' +
+            '#calcSaveBtn, #calcSaveEstimate, button[data-action="add-to-cart"],' +
+            '#bulkQuoteForm button.btn-primary, #placeOrderBtn, #checkoutPlaceBtn'
         );
         if (!btn || btn.tagName === 'A') return;
         if (btn.disabled || btn.getAttribute('aria-disabled') === 'true') return;

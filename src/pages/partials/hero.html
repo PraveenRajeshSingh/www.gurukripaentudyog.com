@@ -1,7 +1,11 @@
     <!-- ━━━━━━━━━━━━━━━━━ HERO ━━━━━━━━━━━━━━━━━ -->
     <section id="home" class="hero hero-compact">
         <div class="hero-img">
-            <img src="src/assets/images/hero-banner.png" alt="Premium red clay bricks at Gurukripa Bricks Industry kiln" width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async">
+            <!-- CHANGE: responsive optimized hero (polish §6) — real photo, JPEG cascade; AVIF/WebP deferred (no encoder in CI) -->
+            <picture>
+                <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" sizes="(max-width:768px) 100vw, 60vw">
+                <img src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks at Gurukripa Bricks Industry kiln" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
+            </picture>
             <div class="hero-img-overlay"></div>
             <div class="hero-cert">
                 <div class="hero-cert-icon" aria-hidden="true"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg></div>

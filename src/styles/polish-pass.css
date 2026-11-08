@@ -1,0 +1,119 @@
+/* ══════════════════════════════════════════════════════════════════
+   POLISH PASS — skeletons, content-visibility, tap targets, busy
+   CHANGE: new stylesheet for reliability/perf/visual polish (§3–§4)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Below-the-fold sections: skip layout/paint until near viewport */
+#about,
+#factory,
+#reviews,
+#faq,
+#contact,
+.cities-sec,
+.cta-banner,
+.trust-marquee {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 720px;
+}
+
+/* Product card soft contact shadow (CSS only — no fake renders) */
+.product-card-img {
+  box-shadow: 0 8px 18px -12px rgba(123, 36, 28, 0.45);
+}
+
+/* Skeleton placeholders */
+.gbi-skel {
+  display: grid;
+  gap: 12px;
+}
+.gbi-skel__card {
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f0e8e0 25%, #faf6f2 37%, #f0e8e0 63%);
+  background-size: 400% 100%;
+  animation: gbiSkel 1.2s ease-in-out infinite;
+  min-height: 180px;
+}
+.gbi-skel__line {
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0e8e0 25%, #faf6f2 37%, #f0e8e0 63%);
+  background-size: 400% 100%;
+  animation: gbiSkel 1.2s ease-in-out infinite;
+}
+@keyframes gbiSkel {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gbi-skel__card,
+  .gbi-skel__line { animation: none; background: #f0e8e0; }
+}
+
+#productsGrid:empty::before,
+#productsGrid.is-loading::before {
+  content: '';
+  display: block;
+  grid-column: 1 / -1;
+  min-height: 220px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f0e8e0 25%, #faf6f2 37%, #f0e8e0 63%);
+  background-size: 400% 100%;
+  animation: gbiSkel 1.2s ease-in-out infinite;
+}
+
+/* Tap targets ≥ 44px for icon / qty / fab controls */
+.qty-btn,
+.wishlist-btn,
+.cart-item-remove,
+.filter-chip,
+.product-details-link,
+.hub-nav__row,
+.drawer-link {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.qty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pressed / busy feedback */
+button:active:not(:disabled),
+[data-action]:active {
+  transform: scale(0.98);
+}
+button.is-busy,
+[data-action].is-busy,
+[data-busy-guard].is-busy {
+  opacity: 0.72;
+  pointer-events: none;
+  cursor: wait;
+}
+button.is-load-error {
+  outline: 2px solid #A93226;
+}
+
+/* Diagnostics row — visually quiet but keyboard-reachable */
+.hub-nav__row--diagnostics {
+  opacity: 0.72;
+  font-size: 0.92em;
+}
+
+/* Prefer transform/opacity only for large surfaces; kill infinite offscreen motion */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .reveal,
+  .marquee-track {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* dvh fallback: tokens may already set --vh; reinforce overlay height */
+.modal.open .modal-sheet,
+.drawer.open {
+  max-height: 100vh;
+  max-height: 100dvh;
+}

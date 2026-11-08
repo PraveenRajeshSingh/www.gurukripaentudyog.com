@@ -1,0 +1,237 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FAB-STACK — single fixed container for WhatsApp / Help / Back-to-top
+   Marks: fab-stack container · tooltip · footer-aware offset ·
+   modal-open hide · keyboard hide · print
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root {
+    --z-fab-stack: 950; /* content < header(900) < fab < drawers(1010) < modals(1100) < toasts */
+    --fab-size-wa: 52px;
+    --fab-size-sec: 44px;
+    --fab-gap: 12px;
+    --fab-footer-lift: 0px;
+    --fab-stack-h: calc(var(--fab-size-wa) + var(--fab-size-sec) + var(--fab-size-sec) + (var(--fab-gap) * 2));
+}
+
+/* Kill legacy floating anchors so they cannot fight the stack */
+.wa-float,
+.fab-wrap:not(.fab-stack),
+#fabWrap:not(.fab-stack) {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* ── FAB-STACK CONTAINER ── */
+.fab-stack {
+    position: fixed;
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px) + var(--bottom-nav-h, 0px) + var(--fab-footer-lift, 0px));
+    z-index: var(--z-fab-stack);
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: var(--fab-gap);
+    pointer-events: none;
+    transition: opacity .2s ease, visibility .2s ease, bottom .2s ease;
+}
+
+.fab-stack > *,
+.fab-stack__item,
+.fab-stack__btn,
+.fab-stack__menu {
+    pointer-events: auto;
+}
+
+.fab-stack__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.fab-stack__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--fab-size-sec);
+    height: var(--fab-size-sec);
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(28, 16, 9, .22);
+    color: #fff;
+    background: var(--brand, #A93226);
+    text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.fab-stack__btn:focus-visible {
+    outline: 2px solid var(--brand-amber, #D66A45);
+    outline-offset: 3px;
+}
+
+.fab-stack__btn--wa {
+    width: var(--fab-size-wa);
+    height: var(--fab-size-wa);
+    background: #25D366;
+    color: #fff;
+}
+
+.fab-stack__btn--help {
+    background: var(--brand-dark, #7B241C);
+}
+
+.fab-stack__btn--top {
+    background: var(--ink, #252525);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    pointer-events: none;
+}
+
+.fab-stack__btn--top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+}
+
+.fab-stack__btn--top[hidden] { display: none !important; }
+
+.fab-stack__ico-close { display: none; }
+.fab-stack__btn--help.is-open .fab-stack__ico-help { display: none; }
+.fab-stack__btn--help.is-open .fab-stack__ico-close { display: block; }
+
+/* ── TOOLTIP (left of WA, hover/focus desktop) ── */
+.fab-stack__tooltip {
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(28, 16, 9, .92);
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 600;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .18s ease, visibility .18s ease;
+    z-index: 1;
+}
+
+.fab-stack__wa-wrap:hover .fab-stack__tooltip,
+.fab-stack__wa-wrap:focus-within .fab-stack__tooltip,
+.fab-stack__tooltip.is-peek {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Help menu */
+.fab-stack__menu {
+    position: absolute;
+    right: calc(100% + 10px);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 148px;
+    padding: 8px;
+    border-radius: 12px;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--line, #E5E1DC);
+    box-shadow: 0 10px 28px rgba(28, 16, 9, .18);
+}
+
+.fab-stack__menu[hidden] { display: none !important; }
+
+.fab-stack__menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ink, #252525);
+    font-family: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.fab-stack__menu-btn:hover,
+.fab-stack__menu-btn:focus-visible {
+    background: var(--brand-light, #F6E8E5);
+    color: var(--brand-dark, #7B241C);
+}
+
+/* ── MODAL-OPEN / KEYBOARD HIDE (class toggled on the stack itself) ── */
+.fab-stack.is-suppressed {
+    display: none !important;
+}
+
+@media print {
+    .fab-stack { display: none !important; }
+}
+
+/* Mobile sizes + bottom nav clearance */
+@media (max-width: 767.98px) {
+    :root {
+        --fab-size-wa: 48px;
+        --fab-size-sec: 44px;
+        --bottom-nav-h: 64px;
+    }
+
+    .fab-stack {
+        right: calc(12px + env(safe-area-inset-right, 0px));
+    }
+
+    /* Touch: tooltip only via .is-peek (first visit) */
+    .fab-stack__wa-wrap:hover .fab-stack__tooltip {
+        opacity: 0;
+        visibility: hidden;
+    }
+    .fab-stack__tooltip.is-peek {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@media (max-width: 767.98px) and (orientation: landscape) {
+    :root {
+        --fab-size-wa: 44px;
+        --fab-size-sec: 40px;
+        --fab-gap: 8px;
+    }
+    .fab-stack {
+        right: calc(10px + env(safe-area-inset-right, 0px));
+        left: auto;
+    }
+}
+
+@media (min-width: 768px) {
+    :root { --bottom-nav-h: 0px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fab-stack,
+    .fab-stack__btn,
+    .fab-stack__tooltip,
+    .fab-stack__btn--top {
+        transition: none !important;
+    }
+}
+
+/* Clear page content of the stack */
+main#main-content {
+    scroll-padding-bottom: calc(var(--fab-stack-h) + 24px);
+    padding-bottom: calc(var(--fab-stack-h) + 16px);
+}

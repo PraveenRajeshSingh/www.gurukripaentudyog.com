@@ -12,7 +12,7 @@
    Hash routes (#products, #calculator) stay on index.html offline.
    ═══════════════════════════════════════════════════════════════════ */
 
-const CACHE_VER = 'v5';
+const CACHE_VER = 'v8';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -21,7 +21,7 @@ const ALL_CACHES = [SHELL, PAGES, IMGS, DATA];
 const IMG_MAX = 60;
 const NAV_TIMEOUT_MS = 3000;
 
-/** App shell — cache-first. Relative paths for subpath hosting. */
+/** App shell — CHANGE: critical shell only during install (polish §3); rest idle after load. */
 const SHELL_ASSETS = [
     './',
     './index.html',
@@ -29,26 +29,21 @@ const SHELL_ASSETS = [
     './manifest.json',
     './sw.js',
     './src/assets/fonts/offline-fonts.css',
+    './src/assets/images/logo.svg',
     './src/assets/images/logo-new.svg',
-    './src/assets/images/gurukripaLogo.jpg',
+    './src/assets/images/favicon.svg',
     './src/assets/images/favicon.ico',
+    './src/assets/images/optimized/hero-480.jpg',
     './src/styles/tokens.css',
     './src/styles/base.css',
     './src/styles/sections.css',
     './src/styles/overlays.css',
-    './src/styles/popups.css',
-    './src/styles/extras.css',
     './src/styles/app.css',
-    './src/styles/mobile-fixes.css',
-    './src/styles/refinements.css',
-    './src/styles/account.css',
-    './src/styles/ops-console.css',
-    './src/styles/ux-responsive.css',
-    './src/styles/ecommerce.css',
-    './src/styles/popup-polish.css',
-    './src/styles/interaction-fixes.css',
-    './src/styles/compact-catalog-account.css',
+    './src/styles/polish-pass.css',
+    './src/styles/catalog-premium.css',
     './src/styles/pwa-offline.css',
+    './src/js/reliability.js',
+    './src/js/action-delegate.js',
     './src/js/utils.js',
     './src/js/data.js',
     './src/js/i18n.js',
@@ -58,11 +53,32 @@ const SHELL_ASSETS = [
     './src/js/pwa.js',
     './src/js/ui.js',
     './src/js/products.js',
-    './src/js/catalog-discovery.js',
     './src/js/cart.js',
+    './src/js/main.js'
+];
+
+/** Runtime warm cache after window load (posted from pwa.js) */
+const RUNTIME_WARM = [
+    './src/styles/popups.css',
+    './src/styles/extras.css',
+    './src/styles/mobile-fixes.css',
+    './src/styles/refinements.css',
+    './src/styles/account.css',
+    './src/styles/ops-console.css',
+    './src/styles/ux-responsive.css',
+    './src/styles/ecommerce.css',
+    './src/styles/popup-polish.css',
+    './src/styles/interaction-fixes.css',
+    './src/styles/compact-catalog-account.css',
+    './src/styles/calculator-studio.css',
+    './src/styles/fab-stack.css',
+    './src/styles/footer-studio.css',
+    './src/js/catalog-discovery.js',
     './src/js/calculator.js',
     './src/js/whatsapp-order.js',
-    './src/js/main.js'
+    './src/assets/images/optimized/product-1-320.jpg',
+    './src/assets/images/optimized/product-2-320.jpg',
+    './src/assets/images/optimized/product-3-320.jpg'
 ];
 
 /** Catalogue / rate-card scripts — stale-while-revalidate. */
@@ -291,8 +307,8 @@ self.addEventListener('push', (event) => {
     const title = payload.title || 'Gurukripa Bricks Industry';
     const options = {
         body: payload.body || 'You have a new update from the Jalalpur yard.',
-        icon: payload.icon || './src/assets/images/gurukripaLogo.jpg',
-        badge: './src/assets/images/gurukripaLogo.jpg',
+        icon: payload.icon || './src/assets/images/logo.svg',
+        badge: './src/assets/images/logo.svg',
         tag: payload.tag || 'gbi-alert',
         renotify: Boolean(payload.renotify),
         data: {
@@ -330,13 +346,19 @@ self.addEventListener('message', (event) => {
         self.skipWaiting();
         return;
     }
+    // CHANGE: runtime warm cache after first paint (polish §3) — skip on Save-Data
+    if (message.type === 'WARM_CACHE') {
+        const list = Array.isArray(message.assets) && message.assets.length ? message.assets : RUNTIME_WARM;
+        event.waitUntil(precacheList(SHELL, list));
+        return;
+    }
     if (message.type === 'SHOW_NOTIFICATION') {
         const payload = message.payload || {};
         event.waitUntil(
             self.registration.showNotification(payload.title || 'Gurukripa Bricks Industry', {
                 body: payload.body || '',
-                icon: payload.icon || './src/assets/images/gurukripaLogo.jpg',
-                badge: './src/assets/images/gurukripaLogo.jpg',
+                icon: payload.icon || './src/assets/images/logo.svg',
+                badge: './src/assets/images/logo.svg',
                 tag: payload.tag || 'gbi-local',
                 data: payload.data || { url: './' }
             })

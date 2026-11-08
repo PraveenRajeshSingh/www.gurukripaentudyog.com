@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Gurukripa Bricks Industry">
+  <!-- CHANGE: one-color mark for dark backgrounds (cream on transparent) -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#FAF6F2"/>
+  <text x="32" y="36" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="22" font-weight="700" fill="#A93226">GE</text>
+  <g fill="#A93226">
+    <rect x="15" y="42" width="10" height="5" rx="1"/>
+    <rect x="27" y="42" width="10" height="5" rx="1"/>
+    <rect x="39" y="42" width="10" height="5" rx="1"/>
+  </g>
+  <g fill="#7B241C">
+    <rect x="21" y="49" width="10" height="5" rx="1"/>
+    <rect x="33" y="49" width="10" height="5" rx="1"/>
+  </g>
+</svg>

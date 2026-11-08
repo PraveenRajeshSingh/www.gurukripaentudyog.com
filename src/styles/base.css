@@ -431,7 +431,8 @@
             border: 1.5px solid var(--line)
         }
 
-        .nav-logo-mark img {
+        .nav-logo-mark img,
+        .nav-logo-mark svg {
             width: 100%;
             height: 100%;
             object-fit: cover;

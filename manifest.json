@@ -15,62 +15,50 @@
   "categories": ["business", "shopping"],
   "icons": [
     {
-      "src": "./src/assets/images/gurukripaLogo.jpg",
-      "sizes": "48x48",
-      "type": "image/jpeg",
+      "src": "./src/assets/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "./src/assets/images/gurukripaLogo.jpg",
-      "sizes": "72x72",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "./src/assets/images/gurukripaLogo.jpg",
-      "sizes": "96x96",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "./src/assets/images/gurukripaLogo.jpg",
-      "sizes": "144x144",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "./src/assets/images/gurukripaLogo.jpg",
+      "src": "./src/assets/images/optimized/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./src/assets/images/gurukripaLogo.jpg",
+      "src": "./src/assets/images/optimized/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./src/assets/images/gurukripaLogo.jpg",
+      "src": "./src/assets/images/optimized/icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./src/assets/images/optimized/icons/icon-512-maskable.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "./src/assets/images/redbrick1.jpg",
-      "sizes": "1280x720",
+      "src": "./src/assets/images/optimized/og-1200x630.jpg",
+      "sizes": "1200x630",
       "type": "image/jpeg",
       "form_factor": "wide",
       "label": "Gurukripa Bricks Industry — Product Catalog"
     },
     {
-      "src": "./src/assets/images/redbrick1.jpg",
-      "sizes": "360x640",
+      "src": "./src/assets/images/optimized/hero-480.jpg",
+      "sizes": "480x270",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "Gurukripa Bricks Industry — 3-in-1 Estimator"
+      "label": "Gurukripa Bricks Industry — Yard"
     }
   ],
   "shortcuts": [
@@ -79,28 +67,28 @@
       "short_name": "Products",
       "description": "View our range of premium bricks",
       "url": "./#products",
-      "icons": [{ "src": "./src/assets/images/gurukripaLogo.jpg", "sizes": "96x96" }]
+      "icons": [{ "src": "./src/assets/images/optimized/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "3-in-1 Estimator",
       "short_name": "Estimator",
       "description": "Calculate bricks, cement & budget instantly",
       "url": "./#calculator",
-      "icons": [{ "src": "./src/assets/images/gurukripaLogo.jpg", "sizes": "96x96" }]
+      "icons": [{ "src": "./src/assets/images/optimized/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "WhatsApp Order",
       "short_name": "Order Now",
       "description": "Place your brick order via WhatsApp",
       "url": "https://wa.me/919198923230",
-      "icons": [{ "src": "./src/assets/images/gurukripaLogo.jpg", "sizes": "96x96" }]
+      "icons": [{ "src": "./src/assets/images/optimized/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Contact Us",
       "short_name": "Contact",
       "description": "Get in touch with us",
       "url": "./#contact",
-      "icons": [{ "src": "./src/assets/images/gurukripaLogo.jpg", "sizes": "96x96" }]
+      "icons": [{ "src": "./src/assets/images/optimized/icons/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "related_applications": [

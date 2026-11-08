@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://www.gurukripaentudyog.com/">
     <meta property="og:title" content="Gurukripa Bricks Industry | Premium Red Clay Bricks — Jaunpur">
     <meta property="og:description" content="25+ years of premium brick manufacturing. Trusted by 10,000+ customers across Jaunpur, Varanasi & Uttar Pradesh. Grade-A, ISI certified, same-day delivery.">
-    <meta property="og:image" content="https://www.gurukripaentudyog.com/src/assets/images/redbrick1.jpg">
+    <meta property="og:image" content="https://www.gurukripaentudyog.com/src/assets/images/optimized/og-1200x630.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Premium Red Clay Bricks by Gurukripa Bricks Industry, Jaunpur">
@@ -32,7 +32,7 @@
     <meta name="twitter:url" content="https://www.gurukripaentudyog.com/">
     <meta name="twitter:title" content="Gurukripa Bricks Industry | Premium Red Clay Bricks — Jaunpur">
     <meta name="twitter:description" content="25+ years of premium brick manufacturing. Trusted by 10,000+ customers across Jaunpur & Varanasi. Same-day delivery available.">
-    <meta name="twitter:image" content="https://www.gurukripaentudyog.com/src/assets/images/redbrick1.jpg">
+    <meta name="twitter:image" content="https://www.gurukripaentudyog.com/src/assets/images/optimized/og-1200x630.jpg">
 
     <!-- PWA / App -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -64,10 +64,13 @@
     <meta name="push-subscribe-endpoint" content="">
     <meta name="order-status-endpoint" content="">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="src/assets/images/gurukripaLogo.jpg">
-    <link rel="apple-touch-icon" href="src/assets/images/gurukripaLogo.jpg">
-    <link rel="shortcut icon" href="src/assets/images/gurukripaLogo.jpg">
+    <!-- Favicon — CHANGE: SVG + ico + apple-touch (polish §5); relative paths for GH Pages -->
+    <link rel="icon" type="image/svg+xml" href="src/assets/images/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="src/assets/images/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="src/assets/images/icon-180.png" sizes="180x180">
+    <link rel="shortcut icon" href="src/assets/images/favicon.ico">
+    <!-- Preload hero for LCP (polish §3/§6) -->
+    <link rel="preload" as="image" href="src/assets/images/optimized/hero-1200.jpg" imagesrcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
     <!-- Structured Data: LocalBusiness -->
     <script type="application/ld+json">
@@ -77,8 +80,8 @@
       "name": "Gurukripa Bricks Industry",
       "alternateName": "गुरुकृपा ईंट उद्योग",
       "url": "https://www.gurukripaentudyog.com",
-      "logo": "https://www.gurukripaentudyog.com/src/assets/images/logo-new.svg",
-      "image": "https://www.gurukripaentudyog.com/src/assets/images/redbrick1.jpg",
+      "logo": "https://www.gurukripaentudyog.com/src/assets/images/logo.svg",
+      "image": "https://www.gurukripaentudyog.com/src/assets/images/optimized/og-1200x630.jpg",
       "description": "Premium red clay brick manufacturer in Jaunpur, Uttar Pradesh. Grade-A certified bricks since 1998.",
       "telephone": "+91-91989-23230",
       "email": "info@gurukripaentudyog.com",
@@ -164,9 +167,89 @@
     <!-- PWA offline banner / update toast / rate stamps. -->
     <link rel="stylesheet" href="src/styles/pwa-offline.css">
     <link rel="stylesheet" href="src/styles/calculator-studio.css">
+    <link rel="stylesheet" href="src/styles/fab-stack.css">
+    <link rel="stylesheet" href="src/styles/footer-studio.css">
+    <!-- CHANGE: polish pass skeletons / content-visibility / tap targets -->
+    <link rel="stylesheet" href="src/styles/polish-pass.css">
+    <!-- CHANGE: premium #products redesign (mobile-first) — loads last for catalog -->
+    <link rel="stylesheet" href="src/styles/catalog-premium.css">
 </head>
 
 <body>
+<!-- CHANGE: branded page loader (§4) — inline critical CSS + SVG, <2KB, no external assets.
+     Shows only if not interactive within ~300ms; removed on DOMContentLoaded+hero decode or 2.5s; hard failsafe 6s. -->
+<style id="gbi-loader-css">
+#gbi-page-loader{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:linear-gradient(160deg,#7B241C 0%,#A93226 55%,#C0392B 100%);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;opacity:0;pointer-events:none;transition:opacity .35s ease}
+#gbi-page-loader.is-on{opacity:1;pointer-events:auto}
+#gbi-page-loader.is-out{opacity:0;pointer-events:none}
+#gbi-page-loader .gbi-ld-mark{width:64px;height:64px}
+#gbi-page-loader .gbi-ld-bricks{display:flex;flex-direction:column;gap:4px;width:56px}
+#gbi-page-loader .gbi-ld-bricks span{display:block;height:10px;border-radius:2px;background:rgba(255,255,255,.85);transform-origin:center;animation:gbiBrick 1.1s ease-in-out infinite}
+#gbi-page-loader .gbi-ld-bricks span:nth-child(1){width:100%;animation-delay:0s}
+#gbi-page-loader .gbi-ld-bricks span:nth-child(2){width:78%;margin-left:11%;animation-delay:.15s}
+#gbi-page-loader .gbi-ld-bricks span:nth-child(3){width:56%;margin-left:22%;animation-delay:.3s}
+#gbi-page-loader .gbi-ld-text{font-size:13px;letter-spacing:.02em;text-align:center;line-height:1.35;max-width:16rem;opacity:.95}
+#gbi-page-loader .gbi-ld-fail{display:none;font-size:13px;text-align:center;max-width:18rem}
+#gbi-page-loader.is-fail .gbi-ld-bricks,#gbi-page-loader.is-fail .gbi-ld-text{display:none}
+#gbi-page-loader.is-fail .gbi-ld-fail{display:block}
+#gbi-page-loader .gbi-ld-fail a{color:#fff;font-weight:600;text-decoration:underline}
+@keyframes gbiBrick{0%,100%{opacity:.35;transform:scaleX(.92)}50%{opacity:1;transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){#gbi-page-loader .gbi-ld-bricks span{animation:none;opacity:.85}}
+html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08 0%,#7B241C 60%,#A93226 100%)}
+</style>
+<div id="gbi-page-loader" role="status" aria-live="polite" aria-busy="true" aria-label="Loading Gurukripa Bricks Industry">
+  <svg class="gbi-ld-mark" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false">
+    <rect x="2" y="2" width="60" height="60" rx="14" fill="#FAF6F2"/>
+    <text x="32" y="36" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#A93226">GE</text>
+    <rect x="16" y="42" width="10" height="5" rx="1" fill="#A93226"/>
+    <rect x="27" y="42" width="10" height="5" rx="1" fill="#A93226"/>
+    <rect x="38" y="42" width="10" height="5" rx="1" fill="#7B241C"/>
+  </svg>
+  <div class="gbi-ld-bricks" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="gbi-ld-text">गुरुकृपा ईंट उद्योग<br>Gurukripa Bricks Industry</div>
+  <div class="gbi-ld-fail">Could not load. <a href="./">Retry</a> / <a href="tel:+919198923230">Call the yard</a></div>
+</div>
+<script>
+(function(){
+  /* CHANGE: loader show/hide logic — delayed show, early dismiss, 6s failsafe */
+  var el=document.getElementById('gbi-page-loader');
+  if(!el)return;
+  var shown=false,gone=false,showT,capT,failT;
+  function removeLoader(){
+    if(gone)return;gone=true;
+    el.classList.add('is-out');el.classList.remove('is-on');
+    el.setAttribute('aria-busy','false');
+    setTimeout(function(){try{el.remove();var c=document.getElementById('gbi-loader-css');if(c)c.remove();}catch(e){}},400);
+  }
+  function show(){
+    if(gone||shown)return;shown=true;el.classList.add('is-on');
+  }
+  showT=setTimeout(show,300);
+  function ready(){
+    clearTimeout(showT);
+    var hero=document.querySelector('.hero img, #hero img, img[fetchpriority="high"]');
+    var finish=function(){clearTimeout(capT);removeLoader();};
+    if(hero&&typeof hero.decode==='function'){
+      var p=hero.decode();
+      if(p&&p.then)p.then(finish).catch(finish);
+      else finish();
+    }else finish();
+  }
+  capT=setTimeout(function(){clearTimeout(showT);removeLoader();},2500);
+  failT=setTimeout(function(){
+    if(gone)return;
+    if(shown){el.classList.add('is-fail');el.setAttribute('aria-busy','false');}
+    setTimeout(removeLoader,1500);
+  },6000);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);
+  else ready();
+  window.addEventListener('pageshow',function(e){if(e.persisted)removeLoader();});
+})();
+</script>
+<noscript>
+<style>#gbi-page-loader{display:none!important}</style>
+</noscript>
+
 <!-- Scroll Progress Bar -->
     <div id="spbar"></div>
 
@@ -174,20 +257,7 @@
     <div id="toast-container"></div>
 
 
-    <!-- ━━━━━━━━━━━━━━━━━ WHATSAPP FLOAT ━━━━━━━━━━━━━━━━━ -->
-    <div class="wa-float">
-        <div class="wa-float-bubble">Order on WhatsApp</div>
-        <a class="wa-float-btn"
-            href="https://wa.me/919198923230?text=Namaste!%20I%20want%20to%20order%20bricks.%20Please%20share%20availability%20and%20pricing."
-            target="_blank" rel="noopener" aria-label="Order on WhatsApp">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
-                <path
-                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </svg>
-        </a>
-    </div>
-
-    <!-- LIGHTBOX -->
+    <!-- WhatsApp float removed — lives in .fab-stack (fab.html). Lightbox only. -->
     <div class="lb-overlay" id="lb" onclick="lbClose(event)">
         <img class="lb-img" id="lbImg" src="" alt="">
         <button type="button" class="lb-close" onclick="lbClose()">✕</button>
@@ -234,7 +304,16 @@
                      needed - and the hash still lands in history for back/forward. -->
                 <a href="#home" class="nav-brand" onclick="setActiveNav(this)" aria-label="Gurukripa Bricks Industry Home">
                     <div class="nav-logo-mark">
-                        <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks Logo" width="40" height="40">
+                        <!-- Inline SVG so the mark never depends on a failed img request -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40" role="img" aria-label="Gurukripa Bricks Logo" focusable="false">
+                            <rect x="2" y="2" width="60" height="60" rx="14" fill="#A93226"/>
+                            <text x="32" y="36" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#FFFFFF">GE</text>
+                            <g fill="#F5D0A9">
+                                <rect x="15" y="42" width="10" height="5" rx="1"/>
+                                <rect x="27" y="42" width="10" height="5" rx="1"/>
+                                <rect x="39" y="42" width="10" height="5" rx="1"/>
+                            </g>
+                        </svg>
                     </div>
                     <div class="nav-brand-text">
                         गुरुकृपा ईंट उद्योग
@@ -513,7 +592,15 @@
         <div class="drawer-head">
             <div class="nav-brand">
                 <div class="nav-logo-mark">
-                    <img src="src/assets/images/logo-new.svg" alt="Gurukripa Logo" width="36" height="36">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="36" height="36" role="img" aria-label="Gurukripa Logo" focusable="false">
+                        <rect x="2" y="2" width="60" height="60" rx="14" fill="#A93226"/>
+                        <text x="32" y="36" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#FFFFFF">GE</text>
+                        <g fill="#F5D0A9">
+                            <rect x="15" y="42" width="10" height="5" rx="1"/>
+                            <rect x="27" y="42" width="10" height="5" rx="1"/>
+                            <rect x="39" y="42" width="10" height="5" rx="1"/>
+                        </g>
+                    </svg>
                 </div>
                 <div class="nav-brand-text">
                     गुरुकृपा
@@ -684,7 +771,11 @@
     <!-- ━━━━━━━━━━━━━━━━━ HERO ━━━━━━━━━━━━━━━━━ -->
     <section id="home" class="hero hero-compact">
         <div class="hero-img">
-            <img src="src/assets/images/hero-banner.png" alt="Premium red clay bricks at Gurukripa Bricks Industry kiln" width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async">
+            <!-- CHANGE: responsive optimized hero (polish §6) — real photo, JPEG cascade; AVIF/WebP deferred (no encoder in CI) -->
+            <picture>
+                <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" sizes="(max-width:768px) 100vw, 60vw">
+                <img src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks at Gurukripa Bricks Industry kiln" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
+            </picture>
             <div class="hero-img-overlay"></div>
             <div class="hero-cert">
                 <div class="hero-cert-icon" aria-hidden="true"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg></div>
@@ -835,128 +926,160 @@
         </div>
     </section>
 
-    <!-- ━━━━━━━━━━━━━━━━━ PRODUCTS CATALOG SECTION (BUILDMART INDUSTRIAL STYLE) ━━━━━━━━━━━━━━━━━ -->
-    <section class="sec products-sec" id="products">
-        <div class="container">
-            <div class="text-center products-intro">
-                <span class="sec-tag" data-i18n="products.tag">Verified Kiln Quality</span>
-                <h2 class="sec-title" data-i18n="products.title">Building Materials &amp; Brick Catalog</h2>
-                <p class="sec-sub" data-i18n="products.desc">Direct manufacturer pricing on Grade-A red clay bricks, high-strength blocks, and custom masonry units</p>
+    <!-- ━━━━━━━━━━━━━━━━━ PRODUCTS CATALOG — premium mobile-first redesign ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec products-sec catalog-premium" id="products" data-catalog="premium">
+        <div class="container catalog-container">
+
+            <!-- Compact section header -->
+            <header class="products-intro catalog-intro">
+                <span class="sec-tag catalog-eyebrow" data-i18n="products.tag">Verified Kiln Quality</span>
+                <h2 class="sec-title catalog-title" data-i18n="products.title">Building Materials &amp; Brick Catalog</h2>
+                <p class="sec-sub catalog-sub" data-i18n="products.desc">Direct manufacturer pricing on Grade-A red clay bricks, high-strength blocks, and custom masonry units</p>
+            </header>
+
+            <!-- sticky toolbar: search icon / Filters / Sort / grid·list -->
+            <div class="catalog-sticky-bar" id="catalogStickyBar">
+                <div class="catalog-toolbar" role="toolbar" aria-label="Catalog controls">
+                    <div class="catalog-search-wrap" id="catalogSearchWrap">
+                        <button type="button" class="catalog-icon-btn" id="catalogSearchToggle" aria-expanded="false" aria-controls="catalogSearchInput" aria-label="Search products">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                        </button>
+                        <label class="visually-hidden" for="catalogSearchInput">Search bricks</label>
+                        <input type="search" id="catalogSearchInput" class="catalog-search-input" placeholder="Search bricks…" autocomplete="off" enterkeyhint="search">
+                    </div>
+
+                    <button type="button" class="catalog-tool-btn" id="catalogFiltersBtn" onclick="toggleFilterSheet()" aria-controls="catalogSidebar" aria-expanded="false">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+                        <span data-i18n="products.filters">Filters</span>
+                        <span class="catalog-badge" id="catalogFilterBadge" hidden>0</span>
+                    </button>
+
+                    <button type="button" class="catalog-tool-btn catalog-sort-btn" id="catalogSortBtn" aria-haspopup="dialog" aria-controls="catalogSortSheet" aria-expanded="false">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+                        <span id="catalogSortLabel">Best Selling</span>
+                    </button>
+
+                    <div class="products-view-toggle catalog-view-toggle" role="group" aria-label="Product layout">
+                        <button type="button" class="view-toggle-btn is-active" data-view-mode="grid" aria-pressed="true" aria-label="Grid view" onclick="setProductsView('grid')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        </button>
+                        <button type="button" class="view-toggle-btn" data-view-mode="list" aria-pressed="false" aria-label="List view" onclick="setProductsView('list')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- live region under toolbar (sr-friendly; visually compact) -->
+                <p class="catalog-live-count" id="productsCount" aria-live="polite">8 products</p>
+
+                <!-- category chip scroller inside sticky band (≤~100px with toolbar) -->
+                <div class="catalog-chip-scroller" id="catalogChipScroller" role="tablist" aria-label="Product categories">
+                    <div class="catalog-chip-track">
+                        <button type="button" class="catalog-chip is-active" role="tab" aria-selected="true" data-cat="all" onclick="filterProducts('all',this)">All</button>
+                        <button type="button" class="catalog-chip" role="tab" aria-selected="false" data-cat="shiv-eent" onclick="filterProducts('shiv-eent',this)">Shiv Eent (Grade-A)</button>
+                        <button type="button" class="catalog-chip" role="tab" aria-selected="false" data-cat="awwal" onclick="filterProducts('awwal',this)">Awwal ईंट (Heavy Duty)</button>
+                        <button type="button" class="catalog-chip" role="tab" aria-selected="false" data-cat="laal-peti" onclick="filterProducts('laal-peti',this)">Laal Peti (Popular)</button>
+                        <button type="button" class="catalog-chip" role="tab" aria-selected="false" data-cat="premium" onclick="filterProducts('premium',this)">First Class Red</button>
+                        <button type="button" class="catalog-chip" role="tab" aria-selected="false" data-cat="machine-made" onclick="filterProducts('machine-made',this)">Machine Wirecut</button>
+                        <button type="button" class="catalog-chip" role="tab" aria-selected="false" data-cat="standard" onclick="filterProducts('standard',this)">Standard Bricks</button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Category Top Pills Navigation -->
-            <div class="products-filters">
-                <button type="button" class="filter-btn active" onclick="filterProducts('all',this)">All Materials</button>
-                <button type="button" class="filter-btn" onclick="filterProducts('shiv-eent',this)">Shiv Eent (Grade-A)</button>
-                <button type="button" class="filter-btn" onclick="filterProducts('awwal',this)">Awwal ईंट (Heavy Duty)</button>
-                <button type="button" class="filter-btn" onclick="filterProducts('laal-peti',this)">Laal Peti (Popular)</button>
-                <button type="button" class="filter-btn" onclick="filterProducts('premium',this)">First Class Red</button>
-                <button type="button" class="filter-btn" onclick="filterProducts('machine-made',this)">Machine Wirecut</button>
-                <button type="button" class="filter-btn" onclick="filterProducts('standard',this)">Standard Bricks</button>
-            </div>
+            <!-- active filter chips (only when filters applied) -->
+            <div class="active-filter-chips catalog-active-chips" id="activeFilterChips" hidden></div>
 
-            <!-- Industrial Bento Layout: Left Filter Sidebar + Right 3-Column Catalog -->
             <div class="catalog-layout-grid">
-                <!-- Left Sidebar Filters (BuildMart Style) -->
-                <aside class="catalog-sidebar" id="catalogSidebar" role="region" aria-label="Product filters">
-                    <div class="filter-sheet-bar">
-                        <span>Refine Results</span>
-                        <button type="button" class="filter-sheet-close" onclick="toggleFilterSheet(false)" aria-label="Close filters">✕</button>
-                    </div>
-                    <!-- Price Range Filter Card -->
-                    <div class="catalog-filter-card">
-                        <div class="filter-card-header">
-                            <span class="filter-card-title">Price Range (per pc)</span>
+                <!-- filter bottom sheet / desktop rail -->
+                <aside class="catalog-sidebar" id="catalogSidebar" role="dialog" aria-modal="true" aria-labelledby="catalogFiltersTitle" hidden>
+                    <div class="filter-sheet-bar catalog-sheet-head">
+                        <div>
+                            <h3 id="catalogFiltersTitle">Filters</h3>
+                            <p class="catalog-sheet-count" id="catalogSheetCount">8 products</p>
                         </div>
-                        <div class="price-range-slider-wrap">
-                            <div class="price-range-live" aria-live="polite">Max <strong id="priceRangeLive">₹15.00</strong></div>
-                            <input type="range" id="filterPriceRange" class="brand-range" min="5" max="15" step="0.25" value="15" oninput="handlePriceRangeFilter(this.value)" aria-valuemin="5" aria-valuemax="15" aria-valuenow="15" aria-label="Maximum price per piece">
-                            <div class="price-range-labels">
-                                <span>₹5.00</span>
-                                <span id="currentMaxPriceLabel">Up to ₹15.00</span>
-                                <span>₹15.00</span>
+                        <button type="button" class="filter-sheet-close catalog-sheet-close" onclick="toggleFilterSheet(false)" aria-label="Close filters">✕</button>
+                    </div>
+
+                    <div class="catalog-sheet-body">
+                        <!-- Price range -->
+                        <details class="catalog-filter-group" open>
+                            <summary class="catalog-filter-summary">Price range (per pc)</summary>
+                            <div class="catalog-filter-panel">
+                                <div class="price-range-slider-wrap">
+                                    <div class="price-range-live" aria-live="polite">Max <strong id="priceRangeLive">₹15.00</strong></div>
+                                    <div class="catalog-price-inputs">
+                                        <label>Min <input type="number" id="filterPriceMin" min="5" max="15" step="0.25" value="5" inputmode="decimal" aria-label="Minimum price"></label>
+                                        <label>Max <input type="number" id="filterPriceMax" min="5" max="15" step="0.25" value="15" inputmode="decimal" aria-label="Maximum price"></label>
+                                    </div>
+                                    <input type="range" id="filterPriceRange" class="brand-range" min="5" max="15" step="0.25" value="15" oninput="handlePriceRangeFilter(this.value)" aria-valuemin="5" aria-valuemax="15" aria-valuenow="15" aria-label="Maximum price per piece">
+                                    <div class="price-range-labels">
+                                        <span>₹5.00</span>
+                                        <span id="currentMaxPriceLabel">Up to ₹15.00</span>
+                                        <span>₹15.00</span>
+                                    </div>
+                                </div>
                             </div>
+                        </details>
+
+                        <!-- Categories -->
+                        <details class="catalog-filter-group" open>
+                            <summary class="catalog-filter-summary">Categories</summary>
+                            <div class="catalog-filter-panel filter-checkbox-list">
+                                <label class="filter-checkbox-item"><input type="checkbox" checked onchange="toggleCategoryFilter('all', this)"><span>All Brick Types</span></label>
+                                <label class="filter-checkbox-item"><input type="checkbox" onchange="toggleCategoryFilter('awwal', this)"><span>Awwal Heavy-Duty Bricks</span></label>
+                                <label class="filter-checkbox-item"><input type="checkbox" onchange="toggleCategoryFilter('shiv-eent', this)"><span>Shiv Eent Double-Fired</span></label>
+                                <label class="filter-checkbox-item"><input type="checkbox" onchange="toggleCategoryFilter('laal-peti', this)"><span>Laal Peti Standard Clay</span></label>
+                                <label class="filter-checkbox-item"><input type="checkbox" onchange="toggleCategoryFilter('machine-made', this)"><span>Machine-Made Wirecut</span></label>
+                            </div>
+                        </details>
+
+                        <!-- Availability -->
+                        <details class="catalog-filter-group" open>
+                            <summary class="catalog-filter-summary">Availability</summary>
+                            <div class="catalog-filter-panel">
+                                <select id="filterStock" class="products-sort catalog-select" onchange="handleStockFilter(this.value)" aria-label="Filter by availability">
+                                    <option value="all">All stock levels</option>
+                                    <option value="available">Available (not sold out)</option>
+                                    <option value="in-stock">In stock only</option>
+                                    <option value="low-stock">Limited stock</option>
+                                </select>
+                            </div>
+                        </details>
+
+                        <!-- Size / Type -->
+                        <details class="catalog-filter-group">
+                            <summary class="catalog-filter-summary">Size / Type</summary>
+                            <div class="catalog-filter-panel">
+                                <select id="filterSize" class="products-sort catalog-select" onchange="handleSizeFilter(this.value)" aria-label="Filter by size or type">
+                                    <option value="all">All sizes</option>
+                                    <option value="standard">Standard ~230×110×70</option>
+                                    <option value="wirecut">Machine wirecut</option>
+                                    <option value="hollow">Hollow / partition</option>
+                                </select>
+                            </div>
+                        </details>
+
+                        <div class="catalog-assistance-card">
+                            <div class="catalog-assistance-title">Need custom project rates?</div>
+                            <p class="catalog-assistance-text">Talk with our Bhatta Manager for 10,000+ brick requirements.</p>
+                            <button type="button" class="btn btn-primary btn-full btn-sm" onclick="openBulkQuoteModal()">Request Bulk Quote</button>
                         </div>
                     </div>
 
-                    <!-- Category Checkboxes -->
-                    <div class="catalog-filter-card">
-                        <div class="filter-card-header">
-                            <span class="filter-card-title">Categories</span>
-                        </div>
-                        <div class="filter-checkbox-list">
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" checked onchange="toggleCategoryFilter('all', this)">
-                                <span>All Brick Types</span>
-                            </label>
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" onchange="toggleCategoryFilter('awwal', this)">
-                                <span>Awwal Heavy-Duty Bricks</span>
-                            </label>
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" onchange="toggleCategoryFilter('shiv-eent', this)">
-                                <span>Shiv Eent Double-Fired</span>
-                            </label>
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" onchange="toggleCategoryFilter('laal-peti', this)">
-                                <span>Laal Peti Standard Clay</span>
-                            </label>
-                            <label class="filter-checkbox-item">
-                                <input type="checkbox" onchange="toggleCategoryFilter('machine-made', this)">
-                                <span>Machine-Made Wirecut</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Availability (wired to CatalogDiscovery) -->
-                    <div class="catalog-filter-card">
-                        <div class="filter-card-header">
-                            <span class="filter-card-title">Availability</span>
-                        </div>
-                        <select id="filterStock" class="products-sort" style="width:100%" onchange="handleStockFilter(this.value)" aria-label="Filter by availability">
-                            <option value="all">All stock levels</option>
-                            <option value="available">Available (not sold out)</option>
-                            <option value="in-stock">In stock only</option>
-                            <option value="low-stock">Limited stock</option>
-                        </select>
-                    </div>
-
-                    <!-- Size / type hints from catalogue features -->
-                    <div class="catalog-filter-card">
-                        <div class="filter-card-header">
-                            <span class="filter-card-title">Size / Type</span>
-                        </div>
-                        <select id="filterSize" class="products-sort" style="width:100%" onchange="handleSizeFilter(this.value)" aria-label="Filter by size or type">
-                            <option value="all">All sizes</option>
-                            <option value="standard">Standard ~230×110×70</option>
-                            <option value="wirecut">Machine wirecut</option>
-                            <option value="hollow">Hollow / partition</option>
-                        </select>
-                    </div>
-
-                    <!-- Quick RFQ Assistance Card -->
-                    <div class="catalog-assistance-card">
-                        <div style="font-size:1.4rem;margin-bottom:8px">💬</div>
-                        <div style="font-weight:700;font-size:0.92rem;margin-bottom:4px">Need Custom Project Rates?</div>
-                        <p style="font-size:0.8rem;color:var(--ink-3);margin-bottom:12px">Talk directly with our Bhatta Manager for 10,000+ brick requirements.</p>
-                        <button type="button" class="btn btn-primary btn-full btn-sm" onclick="openBulkQuoteModal()">Request Bulk Quote</button>
-                    </div>
-
-                    <div class="filter-sheet-actions">
-                        <button type="button" class="btn btn-primary btn-full" onclick="toggleFilterSheet(false)">Show Results</button>
+                    <div class="filter-sheet-actions catalog-sheet-foot">
+                        <button type="button" class="btn btn-outline" onclick="CatalogDiscovery.resetFilters();renderActiveFilterChips();updateCatalogFilterBadge()">Clear</button>
+                        <button type="button" class="btn btn-primary" id="catalogShowResultsBtn" onclick="toggleFilterSheet(false)">Show <span id="catalogShowN">8</span> results</button>
                     </div>
                 </aside>
 
-                <!-- Right Main Column: Toolbar + Product Grid -->
                 <div class="catalog-main">
-                    <!-- Slim toolbar: result count, sort, grid/list toggle -->
-                    <div class="products-toolbar">
+                    <!-- desktop toolbar extras (hidden on mobile; sticky bar covers mobile) -->
+                    <div class="products-toolbar catalog-desktop-toolbar" aria-hidden="false">
                         <div class="products-toolbar-left">
-                            <button type="button" class="btn btn-outline btn-sm mobile-filter-toggle sticky-filters-btn" onclick="toggleFilterSheet()" aria-controls="catalogSidebar" aria-expanded="false">Filters</button>
-                            <span class="products-count" id="productsCount">Showing 7 verified products</span>
+                            <span class="products-count" id="productsCountDesktop">Showing verified products</span>
                         </div>
                         <div class="products-toolbar-right">
-                            <select class="products-sort" id="productsSort" onchange="sortProducts(this.value)" aria-label="Sort products">
+                            <select class="products-sort" id="productsSort" onchange="sortProducts(this.value);syncCatalogSortLabel(this.value)" aria-label="Sort products">
                                 <option value="default">Sort by: Best Selling</option>
                                 <option value="relevance">Relevance</option>
                                 <option value="price-asc">Price: Low to High</option>
@@ -966,39 +1089,61 @@
                                 <option value="name-asc">Name: A to Z</option>
                                 <option value="rating-desc">Top Rated</option>
                             </select>
-                            <div class="products-view-toggle" role="group" aria-label="Product layout">
-                                <button type="button" class="view-toggle-btn is-active" data-view-mode="grid" aria-pressed="true" aria-label="Grid view" onclick="setProductsView('grid')">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                                </button>
-                                <button type="button" class="view-toggle-btn" data-view-mode="list" aria-pressed="false" aria-label="List view" onclick="setProductsView('list')">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                                </button>
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Selected category / filter chips -->
-                    <div class="active-filter-chips" id="activeFilterChips" hidden></div>
-
-                    <!-- Recently viewed (CatalogDiscovery) -->
                     <div id="recentlyViewedStrip" class="recent-strip" hidden></div>
 
-                    <!-- Products Grid — compact cards rendered by products.js -->
-                    <div class="products-grid is-grid" id="productsGrid">
-                        <!-- Skeleton loading cards (same compact size) -->
-                        <div class="product-card industrial-card compact-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></div>
-                        <div class="product-card industrial-card compact-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></div>
-                        <div class="product-card industrial-card compact-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></div>
-                        <div class="product-card industrial-card compact-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></div>
+                    <!-- products grid: ul of li cards — CHANGE: semantic list + content-visibility -->
+                    <ul class="products-grid is-grid catalog-grid" id="productsGrid" aria-label="Brick products">
+                        <!-- skeleton cards -->
+                        <li class="product-card catalog-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></li>
+                        <li class="product-card catalog-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></li>
+                        <li class="product-card catalog-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></li>
+                        <li class="product-card catalog-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></li>
+                    </ul>
+
+                    <!-- end of list -->
+                    <div class="catalog-end" id="catalogEnd">
+                        <p class="catalog-showing" id="catalogShowing">Showing 8 of 8</p>
+                        <a class="catalog-ask-card" href="https://wa.me/919198923230?text=Namaste!%20I%20can%27t%20find%20the%20brick%20I%20need.%20Please%20help." target="_blank" rel="noopener">
+                            <strong>Can’t find your brick?</strong>
+                            <span>Ask on WhatsApp</span>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Sticky compare tray -->
             <div id="compareBar" class="compare-bar" hidden></div>
-
-            <!-- Mobile filter bottom-sheet backdrop -->
             <div class="filter-sheet-backdrop" id="filterSheetBackdrop" onclick="toggleFilterSheet(false)"></div>
+        </div>
+
+        <!-- sort sheet (mobile) -->
+        <div class="catalog-sort-sheet" id="catalogSortSheet" role="dialog" aria-modal="true" aria-labelledby="catalogSortTitle" hidden>
+            <div class="catalog-sort-sheet__panel">
+                <div class="catalog-sheet-head">
+                    <h3 id="catalogSortTitle">Sort by</h3>
+                    <button type="button" class="catalog-sheet-close" id="catalogSortClose" aria-label="Close sort">✕</button>
+                </div>
+                <div class="catalog-sort-options" role="radiogroup" aria-labelledby="catalogSortTitle">
+                    <label class="catalog-sort-option"><input type="radio" name="catalogSort" value="default" checked> Best Selling</label>
+                    <label class="catalog-sort-option"><input type="radio" name="catalogSort" value="relevance"> Relevance</label>
+                    <label class="catalog-sort-option"><input type="radio" name="catalogSort" value="price-asc"> Price: Low to High</label>
+                    <label class="catalog-sort-option"><input type="radio" name="catalogSort" value="price-desc"> Price: High to Low</label>
+                    <label class="catalog-sort-option"><input type="radio" name="catalogSort" value="popularity"> Popularity</label>
+                    <label class="catalog-sort-option"><input type="radio" name="catalogSort" value="newest"> Newest</label>
+                    <label class="catalog-sort-option"><input type="radio" name="catalogSort" value="name-asc"> Name: A to Z</label>
+                    <label class="catalog-sort-option"><input type="radio" name="catalogSort" value="rating-desc"> Top Rated</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- mini cart bar (above bottom nav when cart has items) -->
+        <div class="catalog-mini-cart" id="catalogMiniCart" hidden>
+            <button type="button" class="catalog-mini-cart__btn" onclick="openCart()">
+                <span id="catalogMiniCartText">0 items · ₹0</span>
+                <strong>View cart</strong>
+            </button>
         </div>
     </section>
 
@@ -1765,47 +1910,61 @@
 
 </main>
 
-    <!-- ━━━━━━━━━━━━━━━━━ FOOTER ━━━━━━━━━━━━━━━━━ -->
-    <footer class="footer" role="contentinfo">
-        <div class="container">
-            <div class="footer-grid">
-                <!-- Column 1: Brand & Kiln Details -->
+    <!-- ━━━━━━━━━━━━━━━━━ FOOTER REDESIGN ━━━━━━━━━━━━━━━━━
+         Parts: footer grid · accordion · newsletter · payment chips · legal row -->
+    <footer class="footer footer-studio" id="siteFooter" role="contentinfo">
+        <div class="container footer-studio__container">
+
+            <!-- FOOTER GRID -->
+            <div class="footer-grid footer-studio__grid">
+
+                <!-- Brand & contact -->
                 <div class="footer-col footer-col-brand">
                     <div class="footer-brand-title">
                         <span class="footer-logo-badge">GBI</span>
-                        गुरुकृपा ईंट उद्योग
+                        <span data-i18n="footer.brandName">Gurukripa Bricks Industry</span>
                     </div>
+                    <p class="footer-brand-hi" lang="hi">गुरुकृपा ईंट उद्योग</p>
                     <p class="footer-brand-desc" data-i18n="footer.brandDesc">
                         Jaunpur's premier brick manufacturer since 1998. 25+ years of double-fired Grade-A quality, compressive strength, and trust you can build your home on.
                     </p>
                     <div class="footer-compliance-badges">
-                        <span class="compliance-badge">GSTIN: 09AAACG7481M1Z2</span>
-                        <span class="compliance-badge">Kiln: GBI/JNP/1998/412</span>
+                        <span class="compliance-badge">
+                            <span data-i18n="footer.gstinLabel">GSTIN</span>: <span id="footerGstin">09AAACG7481M1Z2</span>
+                            <button type="button" class="compliance-copy" onclick="copyFooterGstin()" aria-label="Copy GSTIN" title="Copy GSTIN">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            </button>
+                        </span>
+                        <span class="compliance-badge"><span data-i18n="footer.kilnLabel">Kiln</span>: GBI/JNP/1998/412</span>
                     </div>
                     <div class="footer-contacts">
                         <div class="footer-contact-row">
-                            <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></span>
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></span>
                             <a href="tel:+919198923230">+91 91989 23230</a>
                         </div>
                         <div class="footer-contact-row">
-                            <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
                             <a href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a>
                         </div>
                         <div class="footer-contact-row">
-                            <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-                            <a class="footer-map-link" href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf" target="_blank" rel="noopener">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                            <a class="footer-map-link" id="footerAddressLink"
+                               href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf"
+                               target="_blank" rel="noopener noreferrer"
+                               data-i18n="footer.address">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
                         </div>
                         <div class="footer-contact-row">
-                            <span class="footer-contact-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-                            <span>Mon–Sat | 8:00 AM – 6:00 PM (Sunday Closed)</span>
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                            <span data-i18n="footer.hours">Mon–Sat | 8:00 AM – 6:00 PM (Sunday Closed)</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Column 2: Quick Links -->
-                <div class="footer-col">
-                    <h4 class="footer-col-title" data-i18n="footer.quickLinks">Quick Links</h4>
-                    <ul class="footer-links">
+                <!-- Quick Links (accordion on mobile) -->
+                <div class="footer-col footer-accordion">
+                    <button type="button" class="footer-col-title footer-acc-btn" aria-expanded="false" aria-controls="footerQuickLinks" data-i18n="footer.quickLinks">Quick Links</button>
+                    <h4 class="footer-col-title footer-acc-heading" data-i18n="footer.quickLinks">Quick Links</h4>
+                    <ul class="footer-links" id="footerQuickLinks">
                         <li><a href="#home" data-i18n="nav.home">Home</a></li>
                         <li><a href="#products" data-i18n="nav.products">Products</a></li>
                         <li><a href="#calculator" data-i18n="nav.calculator">Estimator</a></li>
@@ -1817,69 +1976,79 @@
                     </ul>
                 </div>
 
-                <!-- Column 3: Products & Standard Trolleys -->
-                <div class="footer-col">
-                    <h4 class="footer-col-title" data-i18n="footer.ourProducts">Our Products</h4>
-                    <ul class="footer-links">
-                        <li><a href="#products">Shiv Eent (Grade-A)</a></li>
-                        <li><a href="#products">Awwal Bricks (₹28,200/trolley)</a></li>
-                        <li><a href="#products">Laal Peti (₹25,000/trolley)</a></li>
-                        <li><a href="#products">Premium Red Bricks</a></li>
-                        <li><a href="#products">Machine Made Wirecut</a></li>
-                        <li><a href="#products">First Class Bricks</a></li>
-                        <li><a href="#products">Lightweight Hollow Bricks</a></li>
+                <!-- Our Products (filled from PRODUCTS; accordion on mobile) -->
+                <div class="footer-col footer-accordion">
+                    <button type="button" class="footer-col-title footer-acc-btn" aria-expanded="false" aria-controls="footerProductLinks" data-i18n="footer.ourProducts">Our Products</button>
+                    <h4 class="footer-col-title footer-acc-heading" data-i18n="footer.ourProducts">Our Products</h4>
+                    <ul class="footer-links" id="footerProductLinks">
+                        <!-- Populated by fab-stack.js / footer init from PRODUCTS -->
                     </ul>
                 </div>
 
-                <!-- Column 4: Newsletter, Social & Deliveries -->
+                <!-- Connect + newsletter -->
                 <div class="footer-col">
                     <h4 class="footer-col-title" data-i18n="footer.connect">Connect With Us</h4>
                     <div class="footer-social">
-                        <a href="https://wa.me/919198923230" target="_blank" rel="noopener" class="social-btn" aria-label="WhatsApp" title="WhatsApp"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg></a>
-                        <a href="https://www.facebook.com/profile.php?id=100080293837397" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook" title="Facebook">f</a>
-                        <a href="https://www.instagram.com/prem_narayan_singh" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram" title="Instagram">ig</a>
-                        <a href="tel:+919198923230" class="social-btn" aria-label="Call Kiln Direct" title="Call Kiln"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></a>
+                        <a href="https://wa.me/919198923230" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="WhatsApp">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=100080293837397" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Facebook">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.4V9.41c0-2.37 1.41-3.68 3.56-3.68 1.03 0 2.11.18 2.11.18v2.32h-1.19c-1.17 0-1.54.73-1.54 1.48v1.78h2.62l-.42 2.9h-2.2V22c4.78-.75 8.44-4.91 8.44-9.93z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/prem_narayan_singh" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Instagram">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                        </a>
+                        <a href="tel:+919198923230" class="social-btn" aria-label="Call Kiln Direct">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+                        </a>
                     </div>
-                    <div class="newsletter-wrap">
-                        <p class="newsletter-desc" data-i18n="footer.newsletterDesc">Get offers &amp; updates</p>
-                        <form onsubmit="handleNewsletter(event)" class="newsletter-form">
-                            <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Your email address" data-i18n="footer.emailPh">
-                            <button type="submit" class="newsletter-submit" data-i18n="footer.subscribe">Subscribe</button>
+
+                    <!-- NEWSLETTER → WhatsApp rate updates (no backend) -->
+                    <div class="newsletter-wrap" id="footerNewsletter">
+                        <p class="newsletter-desc" data-i18n="footer.newsletterDesc">Get rate updates on WhatsApp</p>
+                        <form class="newsletter-form" id="footerRateForm" onsubmit="handleNewsletter(event)" novalidate>
+                            <label class="sr-only" for="footerWaPhone" data-i18n="footer.phoneLabel">Mobile number for WhatsApp updates</label>
+                            <div class="newsletter-row">
+                                <input type="tel" id="footerWaPhone" class="newsletter-input" name="phone"
+                                    placeholder="10-digit mobile" inputmode="tel" autocomplete="tel"
+                                    maxlength="14" aria-describedby="footerNewsStatus" data-i18n="footer.phonePh">
+                                <button type="submit" class="newsletter-submit" id="footerNewsBtn" data-i18n="footer.whatsappUpdates">Get updates</button>
+                            </div>
+                            <p class="newsletter-status" id="footerNewsStatus" role="status" aria-live="polite"></p>
                         </form>
                     </div>
+
                     <p class="footer-delivery-note">
-                        <strong>Same-Day Delivery:</strong> Jaunpur, Varanasi, Jalalpur, Trilochan, Shahganj, Mariahu &amp; surrounding sites.
+                        <strong data-i18n="footer.sameDay">Same-Day Delivery</strong>:
+                        <span data-i18n="footer.sameDayCities">Jaunpur, Varanasi, Jalalpur, Trilochan, Shahganj, Mariahu &amp; surrounding sites.</span>
                     </p>
                 </div>
             </div>
 
-            <!-- Accepted Payments -->
-            <div class="footer-payments">
+            <!-- PAYMENT CHIPS (checkout-supported methods only) -->
+            <div class="footer-payments" id="footerPayments" aria-label="Accepted payment methods">
                 <span class="pay-title" data-i18n="footer.weAccept">We Accept:</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> UPI / QR</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Google Pay</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg> PhonePe</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 11-9-9"/><polyline points="21 3 21 9 15 9"/></svg> Paytm</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="21" x2="21" y2="21"/><polygon points="4 17 12 6 20 17"/><line x1="7" y1="17" x2="7" y2="11"/><line x1="17" y1="17" x2="17" y2="11"/></svg> NEFT / RTGS</span>
-                <span class="pay-pill"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg> Cash at Site</span>
+                <span class="pay-pill" data-pay="upi"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span data-i18n="footer.payUpi">UPI (manual)</span></span>
+                <span class="pay-pill" data-pay="neft"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="21" x2="21" y2="21"/><polygon points="4 17 12 6 20 17"/></svg> <span data-i18n="footer.payNeft">NEFT / RTGS</span></span>
+                <span class="pay-pill" data-pay="cod"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg> <span data-i18n="footer.payCod">Cash on Delivery / Cash at Site</span></span>
             </div>
 
             <hr class="footer-divider">
 
-            <!-- Bottom Credits & Legal Links -->
+            <!-- LEGAL ROW -->
             <div class="footer-bottom">
                 <p class="footer-copy" data-i18n="footer.rights">© 2026 Gurukripa Bricks Industry. All rights reserved.</p>
-                <div class="footer-bottom-links">
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('privacy')">Privacy Policy</button>
-                    <span class="footer-legal-dot">•</span>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')">Terms of Sale</button>
-                    <span class="footer-legal-dot">•</span>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('shipping')">Shipping &amp; Delivery</button>
-                    <span class="footer-legal-dot">•</span>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('quality')">Quality Standards</button>
-                </div>
+                <nav class="footer-bottom-links" aria-label="Legal">
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('privacy')" data-i18n="footer.privacy">Privacy Policy</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')" data-i18n="footer.terms">Terms of Sale</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('shipping')" data-i18n="footer.shipping">Shipping &amp; Delivery</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('quality')" data-i18n="footer.quality">Quality Standards</button>
+                </nav>
             </div>
         </div>
+
+        <!-- Bottom-nav spacer INSIDE footer (mobile only) — same bg, no cream strip -->
+        <div class="footer-nav-spacer" aria-hidden="true"></div>
     </footer>
 
     <!-- ━━━━━━━━━━━━━━━━━ CART DRAWER ━━━━━━━━━━━━━━━━━ -->
@@ -2400,6 +2569,11 @@
                             <button type="button" class="hub-nav__row" onclick="openProfileTab('gst')">
                                 <span>Account Settings — GSTIN &amp; Business Info</span>
                                 <span class="hub-nav__aside" id="hubNavGst">Not on file</span>
+                            </button>
+                            <!-- CHANGE: Diagnostics copy for support (polish §2) — hidden until Settings tab focus; always in DOM for a11y -->
+                            <button type="button" class="hub-nav__row hub-nav__row--diagnostics" data-action="copy-diagnostics" aria-label="Copy diagnostics for support">
+                                <span>Diagnostics (copy for support)</span>
+                                <span class="hub-nav__aside">Last 50 errors</span>
                             </button>
                             <button type="button" class="hub-nav__row" onclick="openNotificationCenter()">
                                 <span>Notifications</span>
@@ -3453,33 +3627,54 @@
         </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━ FAB ━━━━━━━━━━━━━━━━━ -->
-    <div class="fab-wrap" id="fabWrap">
-        <div class="fab-actions" id="fabActions">
-            <div class="fab-action-btn">
-                <span class="fab-label">Chat with us</span>
-                <button type="button" class="fab-icon-btn fab-chat-btn" onclick="toggleChatbot()" title="Chat" aria-label="Chat with our assistant"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></button>
-            </div>
-            <div class="fab-action-btn">
-                <span class="fab-label">WhatsApp</span>
-                <a class="fab-icon-btn fab-wa-btn" href="https://wa.me/919198923230" target="_blank" rel="noopener" title="WhatsApp" aria-label="Order on WhatsApp">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+    <!-- ━━━━━━━━━━━━━━━━━ FAB-STACK CONTAINER (single source of truth) ━━━━━━━━━━━━━━━━━
+         Order bottom→top via column-reverse: WhatsApp · Help · Back-to-top.
+         Children are NOT position:fixed — the stack alone is fixed. -->
+    <div class="fab-stack" id="fabStack" data-fab-stack aria-label="Quick actions">
+
+        <!-- WhatsApp primary + tooltip -->
+        <div class="fab-stack__item fab-stack__wa-wrap">
+            <span class="fab-stack__tooltip" id="fabWaTooltip" role="tooltip">Order on WhatsApp</span>
+            <a class="fab-stack__btn fab-stack__btn--wa"
+               id="fabWaBtn"
+               href="https://wa.me/919198923230?text=Namaste!%20I%20want%20to%20order%20bricks.%20Please%20share%20availability%20and%20pricing."
+               target="_blank" rel="noopener noreferrer"
+               aria-label="Order on WhatsApp"
+               aria-describedby="fabWaTooltip">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+        </div>
+
+        <!-- Help / Kiln Assistant (opens panel with Chat, Call, WhatsApp) -->
+        <div class="fab-stack__item fab-stack__help-wrap">
+            <div class="fab-stack__menu" id="fabHelpMenu" hidden>
+                <button type="button" class="fab-stack__menu-btn" onclick="toggleChatbot(true); closeFabHelp();" aria-label="Open kiln assistant chat">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                    <span data-i18n="fab.chat">Chat</span>
+                </button>
+                <a class="fab-stack__menu-btn" href="tel:+919198923230" aria-label="Call Gurukripa kiln">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+                    <span data-i18n="fab.call">Call</span>
+                </a>
+                <a class="fab-stack__menu-btn" href="https://wa.me/919198923230?text=Namaste!%20I%20need%20help%20with%20bricks." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp help">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    <span data-i18n="fab.whatsapp">WhatsApp</span>
                 </a>
             </div>
-            <div class="fab-action-btn">
-                <span class="fab-label">Call Us</span>
-                <a class="fab-icon-btn fab-call-btn" href="tel:+919198923230" title="Call" aria-label="Call Gurukripa"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></a>
-            </div>
+            <button type="button" class="fab-stack__btn fab-stack__btn--help" id="fabHelpBtn"
+                onclick="toggleFabHelp()" aria-expanded="false" aria-controls="fabHelpMenu"
+                aria-label="Open help and chat">
+                <svg class="fab-stack__ico-help" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <svg class="fab-stack__ico-close" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
         </div>
-        <button type="button" class="fab-main-btn" id="fabMainBtn" onclick="toggleFab()" aria-expanded="false" aria-label="Support options">
-            <svg class="fab-icon-help" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <svg class="fab-icon-close" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+
+        <!-- Back to top (shown after ~600px scroll) -->
+        <button type="button" class="fab-stack__btn fab-stack__btn--top" id="scrollTopBtn"
+            onclick="scrollDocumentTop()" hidden aria-label="Back to top" title="Back to top">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
         </button>
     </div>
-
-    <!-- Scroll to Top -->
-    <button type="button" class="scroll-top" id="scrollTopBtn" onclick="scrollDocumentTop()"
-        aria-label="Back to top" title="Back to top"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 
     <!-- ━━━━━━━━━━━━━━━━━ MOBILE BOTTOM NAVIGATION BAR ━━━━━━━━━━━━━━━━━ -->
     <!-- Five flat, native-style destinations. Everything secondary (wishlist,
@@ -3551,6 +3746,9 @@
     </nav>
 
     <!-- ━━━━━━━━━━━━━━━━━ JAVASCRIPT MODULES ━━━━━━━━━━━━━━━━━ -->
+    <!-- CHANGE: reliability + action-delegate load first (polish §1–§2) -->
+    <script src="src/js/reliability.js" defer></script>
+    <script src="src/js/action-delegate.js" defer></script>
     <script src="src/js/utils.js" defer></script>
     <script src="src/js/data.js" defer></script>
     <script src="src/services/index.js" defer></script>
@@ -3597,6 +3795,7 @@
     <script src="src/js/push-notifications.js" defer></script>
     <script src="src/js/native-camera.js" defer></script>
     <script src="src/js/chatbot.js" defer></script>
+    <script src="src/js/fab-stack.js" defer></script>
     <script src="src/js/invoice.js" defer></script>
     <script src="src/js/platform.js" defer></script>
     <script src="src/js/main.js" defer></script>

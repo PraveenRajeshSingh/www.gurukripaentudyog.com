@@ -11,7 +11,16 @@
                      needed - and the hash still lands in history for back/forward. -->
                 <a href="#home" class="nav-brand" onclick="setActiveNav(this)" aria-label="Gurukripa Bricks Industry Home">
                     <div class="nav-logo-mark">
-                        <img src="src/assets/images/logo-new.svg" alt="Gurukripa Bricks Logo" width="40" height="40">
+                        <!-- Inline SVG so the mark never depends on a failed img request -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40" role="img" aria-label="Gurukripa Bricks Logo" focusable="false">
+                            <rect x="2" y="2" width="60" height="60" rx="14" fill="#A93226"/>
+                            <text x="32" y="36" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#FFFFFF">GE</text>
+                            <g fill="#F5D0A9">
+                                <rect x="15" y="42" width="10" height="5" rx="1"/>
+                                <rect x="27" y="42" width="10" height="5" rx="1"/>
+                                <rect x="39" y="42" width="10" height="5" rx="1"/>
+                            </g>
+                        </svg>
                     </div>
                     <div class="nav-brand-text">
                         गुरुकृपा ईंट उद्योग

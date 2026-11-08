@@ -848,14 +848,7 @@ html[lang="hi"] #calculator .studio-btn {
     cursor: pointer;
 }
 
-/* Keep floating actions below modals and clear of form fields */
-.fab-wrap,
-.fab-stack,
-#scrollTopBtn,
-.wa-float,
-.scroll-top {
-    z-index: var(--studio-z-fab) !important;
-}
+/* Legacy float overrides retired — positioning owned by fab-stack.css */
 
 @media (max-width: 1023px) {
     #calculator .studio-grid {

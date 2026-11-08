@@ -3,28 +3,14 @@
 // ══════════════════════════════════════════
 
 // ── Global error resilience ──────────────────────────────
-// One unexpected error should never leave a customer staring at a broken,
-// frozen page. We log the technical detail for developers and show a calm,
-// friendly message to the user (rate-limited so it can never spam).
+// CHANGE: primary handlers live in reliability.js (ring buffer + Diagnostics).
+// Keep a thin console mirror here so DevTools still shows [GBI] tags.
 (function initGlobalErrorHandling() {
-    let lastNotice = 0;
-    const notify = () => {
-        const now = Date.now();
-        if (now - lastNotice < 8000) return; // max one notice per 8s
-        lastNotice = now;
-        try {
-            if (typeof showToast === 'function') {
-                showToast('Something didn\u2019t load as expected. Please pull down to refresh \u2014 your cart &amp; details are safe.', 'error');
-            }
-        } catch (_) { /* never let the error handler itself throw */ }
-    };
     window.addEventListener('error', (e) => {
-        console.error('[GBI]', e.error || e.message || e);
-        if (e.error) notify(); // ignore benign resource load failures
+        try { console.error('[GBI]', e.error || e.message || e); } catch (_) { /* ignore */ }
     });
     window.addEventListener('unhandledrejection', (e) => {
-        console.error('[GBI] Unhandled promise rejection:', e.reason);
-        notify();
+        try { console.error('[GBI] Unhandled promise rejection:', e.reason); } catch (_) { /* ignore */ }
     });
 })();
 
@@ -153,19 +139,48 @@ function handleContactSubmit(e) {
     openWhatsApp();
 }
 
-// Newsletter: there is no mailing backend on the static site, so instead of a
-// fake "subscribed" toast we open the visitor's mail app addressed to the yard
-// office. Honest, and the request genuinely reaches the business.
+// Newsletter / rate updates: no mailing backend on the static site.
+// Opens a pre-filled WhatsApp message so the yard can add the number to alerts.
 function handleNewsletter(e) {
     e.preventDefault();
-    const input = e.target.querySelector('input');
+    const form = e.target;
+    const input = form.querySelector('input');
+    const status = document.getElementById('footerNewsStatus');
+    const btn = document.getElementById('footerNewsBtn');
     if (!input) return;
-    const email = input.value.trim();
-    if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast(t('toast.invalidEmail'), 'error'); return; }
-    window.location.href = 'mailto:info@gurukripaentudyog.com?subject=' +
-        encodeURIComponent('Newsletter signup request') +
-        '&body=' + encodeURIComponent('Please add ' + email + ' to your offers & new-rate alerts.');
-    showToast(t('toast.newsletterHandoff'), 'info');
+
+    const setStatus = (msg, kind) => {
+        if (!status) return;
+        status.textContent = msg || '';
+        status.classList.remove('is-error', 'is-success');
+        if (kind) status.classList.add(kind);
+    };
+
+    let raw = input.value.trim().replace(/[\s\-()]/g, '');
+    if (raw.startsWith('+91')) raw = raw.slice(3);
+    if (raw.startsWith('91') && raw.length === 12) raw = raw.slice(2);
+    if (!/^[6-9]\d{9}$/.test(raw)) {
+        setStatus(t('footer.phoneInvalid') || 'Enter a valid 10-digit Indian mobile number.', 'is-error');
+        input.focus();
+        return;
+    }
+
+    if (btn) btn.classList.add('is-loading');
+    setStatus(t('footer.phoneOpening') || 'Opening WhatsApp…', null);
+
+    const text = encodeURIComponent(
+        'Namaste Gurukripa Ent Udyog!\nPlease add +91' + raw +
+        ' for brick rate updates and dispatch alerts.\nThank you.'
+    );
+    const url = 'https://wa.me/919198923230?text=' + text;
+    try {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        setStatus(t('footer.phoneSuccess') || 'WhatsApp opened — send the message to get rate updates.', 'is-success');
+        if (typeof showToast === 'function') showToast(t('footer.phoneSuccess') || 'WhatsApp opened for rate updates.', 'success');
+    } catch (_err) {
+        setStatus(t('footer.phoneError') || 'Could not open WhatsApp. Call +91 91989 23230.', 'is-error');
+    }
+    if (btn) btn.classList.remove('is-loading');
 }
 
 // Bulk RFQ Modal Handlers

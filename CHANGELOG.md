@@ -1,0 +1,127 @@
+# CHANGELOG — Reliability, Performance & Visual Polish Pass
+
+Date: 2026-11-08  
+Scope: static site (HTML/CSS/JS, GitHub Pages, PWA). No new npm dependencies. Business formulas / rates / saved-data shapes preserved.
+
+---
+
+## Bugs found and fixed
+
+| Bug | Root cause | Fix |
+|---|---|---|
+| Reliability layer never booted (`window.GBI` undefined) | `querySelectorAll('img[data-fallback!="bound"]')` is an invalid selector; threw on boot and aborted the IIFE | Use `img:not([data-fallback="bound"])` in `reliability.js` |
+| Product / cart dynamic buttons relied only on inline `onclick` | Re-renders required rebinding; easy to miss handlers | `data-action` + `action-delegate.js` for add-to-cart, open-product, wishlist, qty, remove |
+| Double-tap risk on cart / checkout / RFQ | Partial busy-guard only on some submit buttons | Extended `interaction-guard.js` to product-add, place-order, bulk RFQ, estimate save |
+| No diagnostics for support | Errors only hit `console.error` | Ring buffer (50) + Account Settings → **Diagnostics (copy for support)** |
+| Favicon / manifest used large JPEG logo repeatedly | Duplicate requests + wrong sizes declared | SVG favicon + PNG 180/192/512 (+ maskable) + manifest update |
+| Hero / products shipped megabyte PNG/JPEG | Unoptimized originals (hero ~850KB–1MB, products ~620KB+) | `scripts/optimize-images.ps1` → `optimized/*` JPEG srcset; hero mobile ≈24KB |
+| SW install competed with first paint | Large SHELL_ASSETS list | Cache `v6`: critical shell only at install; `WARM_CACHE` after load (skip Save-Data) |
+| No branded first-paint loader | Nothing prevented blank flash / failed load UX | Inline SVG loader (`page-loader.html`): 300ms delay, DCL+hero/2.5s dismiss, 6s failsafe |
+| Logo sources split (`logo-new.svg` + `gurukripaLogo.jpg`) | Duplicate identity | Master `logo.svg` (+ horizontal / mono / on-dark); header/drawer/SW/manifest aligned |
+
+---
+
+## Deliverables added / updated
+
+### New
+- `src/js/reliability.js` — error ring, safe storage/JSON/fetch, feature detect, clipboard/share, diagnostics, image fallbacks
+- `src/js/action-delegate.js` — delegated `data-action` map + namespace aliases
+- `src/pages/partials/page-loader.html` — branded loader
+- `src/styles/polish-pass.css` — skeletons, content-visibility, 44px taps, busy/pressed, reduced-motion
+- `src/assets/images/logo.svg`, `logo-horizontal.svg`, `logo-mono.svg`, `logo-on-dark.svg`, `favicon.svg`
+- `src/assets/images/optimized/**` — hero/product/gallery/OG/icons
+- `src/assets/images/icon-180.png`, `favicon-32.png`
+- `scripts/optimize-images.ps1`, `scripts/build-button-map.js`, `scripts/audit-interactives.js`
+- `BUTTON_MAP.md`, `SHOT_LIST.md`, this `CHANGELOG.md`
+
+### Updated
+- `src/pages/index.src.html`, `head.html`, `hero.html`, `navbar.html`, `mobile-drawer.html`, `profile-modal.html`, `javascript-modules.html`
+- `src/js/products.js`, `cart.js`, `main.js`, `interaction-guard.js`, `pwa.js`, `data.js`
+- `sw.js` (CACHE_VER **v6**), `manifest.json`
+- Built `index.html` via `node scripts/build.js`
+
+---
+
+## Performance — measured vs not measured
+
+### Measured (Chrome browser tool @ `http://127.0.0.1:8765/?v=2`, mid session)
+
+| Metric | After (this pass) | Notes |
+|---|---|---|
+| Loader removed from DOM | **Yes** | `loaderGone: true` after ready |
+| Reliability boot | **OK** | `GBI.Reliability` present; `errors: 0` |
+| Add to cart (direct) | **PASS** | cart 0 → 1 |
+| data-action add-to-cart | **PASS** | merges same SKU (stays 1) |
+| Cart/profile open·close ×5 | **PASS** | `openCloseOk: true` |
+| Language switch EN | **PASS** | `lang: en` |
+| DOM nodes | **~3304** | after products rendered |
+| Resource entries | **~90** | includes fonts/CSS/JS; over “&lt;40 requests” target |
+| Hero file (mobile) | **~24 KB** (`hero-480.jpg`) | was ~850KB–1MB source |
+| Product 480w | **~16–32 KB** | was ~620–687 KB PNG |
+| OG image | **~87 KB** (`og-1200x630.jpg`) | real `redbricks.jpg` + brand panel |
+
+### Not measured in this environment (do not treat as pass)
+
+| Item | Status |
+|---|---|
+| Lighthouse / INP / LCP / CLS / TBT with 4× CPU + Slow 4G | **Not run** (no Lighthouse CLI in session) |
+| Heap growth after 20 cart/account cycles | Partial (5 cycles smoke only) |
+| Full BUTTON_MAP live trigger × 6 widths × EN/HI × touch/keyboard | Static audit + Chrome smoke only |
+| Firefox / Edge / Android Chrome / iOS Safari / installed PWA | **Not run** |
+| Console/Network “zero warnings” full session DevTools panels | CDP smoke only; not a full DevTools panel export |
+| AVIF / WebP encodes | **Not produced** (System.Drawing JPEG only) |
+
+**Honest before numbers:** prior hero/product byte sizes are from filesystem (`Get-ChildItem` / Node stat). Prior INP/LCP/CLS were **not** captured with DevTools before edits, so no fabricated “before” Core Web Vitals table.
+
+---
+
+## Test matrix (honest checklist)
+
+| Scenario | Result |
+|---|---|
+| Page loads; loader dismisses | **PASS** (Chrome local) |
+| Reliability + Diagnostics present | **PASS** |
+| Add to cart via `data-action` | **PASS** |
+| EN/HI switch while page open | **PASS** (EN verified) |
+| Online cart/profile open-close | **PASS** (5×) |
+| Offline / offline→online mid-action | **Not run this pass** |
+| Slow 4G + 4× CPU | **Not run** |
+| localStorage disabled / full / corrupt | Helpers added; **not runtime-proven** |
+| Private/incognito | **Not run** |
+| Injected JS error in one feature | Ring buffer wired; **not injected in test** |
+| Pop-up blocked / clipboard denied / notifications denied | Fallbacks coded; **not permission-tested** |
+| SW update mid-session | v6 + update toast path unchanged; **not force-updated in test** |
+| Two tabs storage sync | `BroadcastChannel` + `storage` listeners added; **not dual-tab tested** |
+| Double-tap debounce | Guard extended; **not rapid-fire timed** |
+| Back button with modal | Existing hash/modal stack; **not re-verified** |
+| Refresh at every checkout step | **Not run** |
+| Empty / huge cart / Hindi digits / zero totals | Parsers added (`parseSafeNumber`); **not data-fuzzed** |
+| Failed hero / failed script → loader gone | Failsafe coded (6s); failed-hero `onerror` fallback present; **failed-script path not injected** |
+| Keyboard-only / AA contrast / SR labels | Tap min 44px CSS; full a11y audit **not run** |
+| Images within budgets | **PASS** for optimized set (filesystem sizes) |
+
+---
+
+## Still open
+
+1. Full static `onclick` → `data-action` migration for ~260 chrome controls (dynamic lists done; static kept wired to same function names).
+2. AVIF/WebP + true multi-width `<picture>` for gallery; LQIP base64 under 1KB per image.
+3. True `.ico` multi-size favicon (currently SVG + PNG 32 + existing `favicon.ico`).
+4. Lighthouse evidence table (INP/LCP/CLS/TBT) on Slow 4G / mid-range Android.
+5. Dual-tab cart reconciliation end-to-end test.
+6. Physical device + installed PWA matrix.
+7. First-load request count still above 40 (many CSS modules + deferred JS) — further code-split / CSS merge needed for that target.
+8. Gallery lightbox keyboard/swipe/pinch — existing lightbox not fully re-audited this pass.
+9. Photo gaps in `SHOT_LIST.md` (kiln close, hand-scale, yard entrance).
+
+---
+
+## How to rebuild
+
+```bash
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/optimize-images.ps1
+node scripts/build.js
+node scripts/build-button-map.js
+```
+
+Bump `CACHE_VER` in `sw.js` on every production deploy (currently `v6`).

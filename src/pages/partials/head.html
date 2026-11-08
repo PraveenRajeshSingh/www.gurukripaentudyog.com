@@ -17,7 +17,7 @@
     <meta property="og:url" content="https://www.gurukripaentudyog.com/">
     <meta property="og:title" content="Gurukripa Bricks Industry | Premium Red Clay Bricks — Jaunpur">
     <meta property="og:description" content="25+ years of premium brick manufacturing. Trusted by 10,000+ customers across Jaunpur, Varanasi & Uttar Pradesh. Grade-A, ISI certified, same-day delivery.">
-    <meta property="og:image" content="https://www.gurukripaentudyog.com/src/assets/images/redbrick1.jpg">
+    <meta property="og:image" content="https://www.gurukripaentudyog.com/src/assets/images/optimized/og-1200x630.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Premium Red Clay Bricks by Gurukripa Bricks Industry, Jaunpur">
@@ -29,7 +29,7 @@
     <meta name="twitter:url" content="https://www.gurukripaentudyog.com/">
     <meta name="twitter:title" content="Gurukripa Bricks Industry | Premium Red Clay Bricks — Jaunpur">
     <meta name="twitter:description" content="25+ years of premium brick manufacturing. Trusted by 10,000+ customers across Jaunpur & Varanasi. Same-day delivery available.">
-    <meta name="twitter:image" content="https://www.gurukripaentudyog.com/src/assets/images/redbrick1.jpg">
+    <meta name="twitter:image" content="https://www.gurukripaentudyog.com/src/assets/images/optimized/og-1200x630.jpg">
 
     <!-- PWA / App -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -61,10 +61,13 @@
     <meta name="push-subscribe-endpoint" content="">
     <meta name="order-status-endpoint" content="">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="src/assets/images/gurukripaLogo.jpg">
-    <link rel="apple-touch-icon" href="src/assets/images/gurukripaLogo.jpg">
-    <link rel="shortcut icon" href="src/assets/images/gurukripaLogo.jpg">
+    <!-- Favicon — CHANGE: SVG + ico + apple-touch (polish §5); relative paths for GH Pages -->
+    <link rel="icon" type="image/svg+xml" href="src/assets/images/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="src/assets/images/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="src/assets/images/icon-180.png" sizes="180x180">
+    <link rel="shortcut icon" href="src/assets/images/favicon.ico">
+    <!-- Preload hero for LCP (polish §3/§6) -->
+    <link rel="preload" as="image" href="src/assets/images/optimized/hero-1200.jpg" imagesrcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
     <!-- Structured Data: LocalBusiness -->
     <script type="application/ld+json">
@@ -74,8 +77,8 @@
       "name": "Gurukripa Bricks Industry",
       "alternateName": "गुरुकृपा ईंट उद्योग",
       "url": "https://www.gurukripaentudyog.com",
-      "logo": "https://www.gurukripaentudyog.com/src/assets/images/logo-new.svg",
-      "image": "https://www.gurukripaentudyog.com/src/assets/images/redbrick1.jpg",
+      "logo": "https://www.gurukripaentudyog.com/src/assets/images/logo.svg",
+      "image": "https://www.gurukripaentudyog.com/src/assets/images/optimized/og-1200x630.jpg",
       "description": "Premium red clay brick manufacturer in Jaunpur, Uttar Pradesh. Grade-A certified bricks since 1998.",
       "telephone": "+91-91989-23230",
       "email": "info@gurukripaentudyog.com",
@@ -161,4 +164,10 @@
     <!-- PWA offline banner / update toast / rate stamps. -->
     <link rel="stylesheet" href="src/styles/pwa-offline.css">
     <link rel="stylesheet" href="src/styles/calculator-studio.css">
+    <link rel="stylesheet" href="src/styles/fab-stack.css">
+    <link rel="stylesheet" href="src/styles/footer-studio.css">
+    <!-- CHANGE: polish pass skeletons / content-visibility / tap targets -->
+    <link rel="stylesheet" href="src/styles/polish-pass.css">
+    <!-- CHANGE: premium #products redesign (mobile-first) — loads last for catalog -->
+    <link rel="stylesheet" href="src/styles/catalog-premium.css">
 </head>

@@ -185,6 +185,11 @@
                                 <span>Account Settings — GSTIN &amp; Business Info</span>
                                 <span class="hub-nav__aside" id="hubNavGst">Not on file</span>
                             </button>
+                            <!-- CHANGE: Diagnostics copy for support (polish §2) — hidden until Settings tab focus; always in DOM for a11y -->
+                            <button type="button" class="hub-nav__row hub-nav__row--diagnostics" data-action="copy-diagnostics" aria-label="Copy diagnostics for support">
+                                <span>Diagnostics (copy for support)</span>
+                                <span class="hub-nav__aside">Last 50 errors</span>
+                            </button>
                             <button type="button" class="hub-nav__row" onclick="openNotificationCenter()">
                                 <span>Notifications</span>
                                 <span class="hub-nav__aside" id="hubNavAlerts">Order &amp; rate alerts</span>

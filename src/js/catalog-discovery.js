@@ -127,26 +127,38 @@ const CatalogDiscovery = (() => {
         const list = filterList();
         const grid = document.getElementById('productsGrid');
         const count = document.getElementById('productsCount');
-        if (count) {
-            const q = String(state.query || '').trim();
-            count.textContent = list.length + ' product' + (list.length !== 1 ? 's' : '') +
-                (q ? ' for “' + q + '”' : '');
-        }
+        const q = String(state.query || '').trim();
+        const countText = list.length + ' product' + (list.length !== 1 ? 's' : '') +
+            (q ? ' for “' + q + '”' : '');
+        if (count) count.textContent = countText;
+        // CHANGE: sync premium catalog live regions / sheet footer
+        const desk = document.getElementById('productsCountDesktop');
+        if (desk) desk.textContent = countText;
+        const sheetCount = document.getElementById('catalogSheetCount');
+        if (sheetCount) sheetCount.textContent = countText;
+        const showN = document.getElementById('catalogShowN');
+        if (showN) showN.textContent = String(list.length);
+        const showing = document.getElementById('catalogShowing');
+        if (showing) showing.textContent = 'Showing ' + list.length + ' of ' + (typeof PRODUCTS !== 'undefined' ? PRODUCTS.length : list.length);
+        if (typeof updateCatalogFilterBadge === 'function') updateCatalogFilterBadge();
+
         if (!grid) return list;
         if (typeof renderActiveFilterChips === 'function') renderActiveFilterChips();
         if (!list.length) {
             const emptyMsg = typeof t === 'function' ? t('products.empty') : 'No products found.';
             grid.innerHTML =
-                '<div class="products-empty catalog-empty" role="status">' +
+                '<li class="products-empty catalog-empty" role="status">' +
                 '<div class="products-empty__icon" aria-hidden="true">🧱</div>' +
-                '<p class="products-empty__title">No matching bricks</p>' +
+                '<p class="products-empty__title">No bricks match these filters</p>' +
                 '<p class="products-empty__text">' + emptyMsg + '</p>' +
-                '<button type="button" class="btn btn-outline btn-sm" onclick="CatalogDiscovery.resetFilters();if(typeof renderActiveFilterChips===\'function\')renderActiveFilterChips()">Clear all filters</button>' +
-                '</div>';
+                '<div class="catalog-empty__actions">' +
+                '<button type="button" class="btn btn-outline btn-sm" onclick="CatalogDiscovery.resetFilters();if(typeof renderActiveFilterChips===\'function\')renderActiveFilterChips()">Clear filters</button>' +
+                '<a class="btn btn-primary btn-sm" href="https://wa.me/919198923230?text=Namaste!%20I%20need%20help%20finding%20bricks." target="_blank" rel="noopener">Ask on WhatsApp</a>' +
+                '</div></li>';
             return list;
         }
         if (typeof renderProductCard === 'function') {
-            grid.innerHTML = list.map((p) => renderProductCard(p)).join('');
+            grid.innerHTML = list.map((p, i) => renderProductCard(p, i)).join('');
         }
         renderRecentStrip();
         renderCompareBar();

@@ -111,9 +111,24 @@ const GbiPwa = (function () {
     }
 
     function warmShellCache() {
-        // Touch key shell URLs so iOS Safari refreshes site data while online
+        // CHANGE: critical URLs + idle runtime warm via SW (polish §3); skip on Save-Data
         const urls = ['./', './index.html', './offline.html', './manifest.json'];
         urls.forEach((u) => { try { fetch(u, { cache: 'no-cache' }).catch(() => {}); } catch (_e) {} });
+        try {
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (conn && conn.saveData) return;
+        } catch (_e) { /* ignore */ }
+        const warm = function () {
+            if (!navigator.serviceWorker || !navigator.serviceWorker.controller) return;
+            try {
+                navigator.serviceWorker.controller.postMessage({ type: 'WARM_CACHE' });
+            } catch (_e2) { /* ignore */ }
+        };
+        if (typeof requestIdleCallback === 'function') {
+            requestIdleCallback(warm, { timeout: 4000 });
+        } else {
+            setTimeout(warm, 2500);
+        }
     }
 
     function ensureRatesCached() {

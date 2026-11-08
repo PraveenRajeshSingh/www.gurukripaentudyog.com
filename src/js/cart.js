@@ -143,12 +143,13 @@ function renderCartItems() {
                 <div class="cart-item-name">${sanitizeHTML(item.name)}</div>
                 <div class="cart-item-price">${formatINR(item.price * item.qty)} <span style="font-size:.72rem;color:var(--ink-3)">(₹${item.price}/${item.unit || 'pc'})</span></div>
                 <div class="cart-item-qty">
-                  <button type="button" class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+                  <!-- CHANGE: data-action delegation for cart rows (polish §1) -->
+                  <button type="button" class="qty-btn" data-action="change-qty" data-id="${item.id}" data-delta="-1" aria-label="Decrease quantity">−</button>
                   <span class="qty-val">${item.qty}</span>
-                  <button type="button" class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+                  <button type="button" class="qty-btn" data-action="change-qty" data-id="${item.id}" data-delta="1" aria-label="Increase quantity">+</button>
                 </div>
               </div>
-              <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="${t('cart.remove')}" aria-label="${t('cart.remove')}">${_trashSVG}</button>
+              <button type="button" class="cart-item-remove" data-action="remove-from-cart" data-id="${item.id}" title="${t('cart.remove')}" aria-label="${t('cart.remove')}">${_trashSVG}</button>
             </div>
         `).join('');
     }
