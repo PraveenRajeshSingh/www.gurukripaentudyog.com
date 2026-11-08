@@ -213,6 +213,10 @@ const OfflineStore = (function () {
         }).catch(() => false);
     }
 
+    function deleteEstimate(id) {
+        return deleteRow('estimates', id);
+    }
+
     // ── Offline order outbox ─────────────────────────────────────
     function queueOrder(order) {
         const row = Object.assign({ createdAt: Date.now(), synced: false }, order);
@@ -319,6 +323,7 @@ const OfflineStore = (function () {
         getCachedCatalog,
         saveEstimate,
         listEstimates,
+        deleteEstimate,
         clearEstimates,
         queueOrder,
         listOutbox,

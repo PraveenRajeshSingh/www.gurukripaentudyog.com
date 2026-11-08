@@ -1,13 +1,16 @@
-    <!-- ━━━━━━━━━━━━━━━━━ SMART CONSTRUCTION STUDIO — 3-in-1 ESTIMATOR ━━━━━━━━━━━━━━━━━ -->
-    <section class="sec studio-section" id="calculator">
-        <div class="container">
+    <!-- ━━━━━━━━━━━━━━━━━ SMART CONSTRUCTION STUDIO — 3-in-1 ESTIMATOR ━━━━━━━━━━━━━━━━━
+         Section header and chips · mode tabs · offline strip · main grid · form cards ·
+         results panel · sticky mobile result bar · preview · saved estimates and sites
+         Formula logic lives in calculator.js (unchanged). -->
+    <section class="sec studio-section" id="calculator" aria-labelledby="studioTitle">
+        <div class="container studio-container">
             <div class="studio-shell">
 
-                <!-- Header + 3-function indicator -->
+                <!-- ── SECTION HEADER AND CHIPS ── -->
                 <header class="studio-head">
                     <div class="studio-head__main">
                         <span class="studio-eyebrow" data-i18n="calculator.tag">Smart Construction Studio</span>
-                        <h2 class="studio-title" data-i18n="calculator.title">3-in-1 Building Material &amp; Cost Estimator</h2>
+                        <h2 class="studio-title" id="studioTitle" data-i18n="calculator.title">3-in-1 Building Material &amp; Cost Estimator</h2>
                         <p class="studio-sub" data-i18n="calculator.sub">Plan your construction, estimate building materials and understand project costs with one simple tool.</p>
                     </div>
                     <ul class="studio-modes" aria-label="What this estimator does">
@@ -26,148 +29,215 @@
                     </ul>
                 </header>
 
-                <!-- Segmented mode tabs -->
-                <div class="studio-tabs" role="tablist" aria-label="Estimator mode">
-                    <button type="button" class="studio-tab active" id="cTabWallBtn" role="tab" aria-selected="true" aria-controls="calcTabWall" onclick="switchCalcTab('wall')">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="4" rx="0.5"/><rect x="3" y="14" width="18" height="4" rx="0.5"/><line x1="9" y1="6" x2="9" y2="10"/><line x1="15" y1="14" x2="15" y2="18"/></svg>
-                        <span data-i18n="calculator.tab1">Wall / Brick Estimate</span>
-                    </button>
-                    <button type="button" class="studio-tab" id="cTabHouseBtn" role="tab" aria-selected="false" aria-controls="calcTabHouse" onclick="switchCalcTab('house')">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
-                        <span data-i18n="calculator.tab2">Full Building Materials</span>
-                    </button>
-                    <button type="button" class="studio-tab" id="cTabBoundaryBtn" role="tab" aria-selected="false" aria-controls="calcTabBoundary" onclick="switchCalcTab('boundary')">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="9" width="18" height="9" rx="0.5"/><line x1="8" y1="9" x2="8" y2="18"/><line x1="13" y1="9" x2="13" y2="18"/><line x1="18" y1="9" x2="18" y2="18"/></svg>
-                        <span data-i18n="calculator.tab3">Boundary Wall</span>
-                    </button>
+                <!-- ── MODE TABS ── -->
+                <div class="studio-tabs-wrap">
+                    <div class="studio-tabs" role="tablist" aria-label="Estimator mode" id="studioTablist">
+                        <button type="button" class="studio-tab active" id="cTabWallBtn" role="tab" aria-selected="true" aria-controls="calcTabWall" tabindex="0" data-calc-tab="wall">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="4" rx="0.5"/><rect x="3" y="14" width="18" height="4" rx="0.5"/><line x1="9" y1="6" x2="9" y2="10"/><line x1="15" y1="14" x2="15" y2="18"/></svg>
+                            <span data-i18n="calculator.tab1">Wall / Brick Estimate</span>
+                        </button>
+                        <button type="button" class="studio-tab" id="cTabHouseBtn" role="tab" aria-selected="false" aria-controls="calcTabHouse" tabindex="-1" data-calc-tab="house">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+                            <span data-i18n="calculator.tab2">Full Building Materials</span>
+                        </button>
+                        <button type="button" class="studio-tab" id="cTabBoundaryBtn" role="tab" aria-selected="false" aria-controls="calcTabBoundary" tabindex="-1" data-calc-tab="boundary">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="9" width="18" height="9" rx="0.5"/><line x1="8" y1="9" x2="8" y2="18"/><line x1="13" y1="9" x2="13" y2="18"/><line x1="18" y1="9" x2="18" y2="18"/></svg>
+                            <span data-i18n="calculator.tab3">Boundary Wall</span>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Offline-first strip (rate card cached on device) -->
-                <div class="calc-offline-strip">
+                <!-- ── OFFLINE STRIP ── -->
+                <div class="calc-offline-strip" id="calcOfflineStrip" data-state="ready">
                     <span class="calc-offline-badge">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v13"/><polyline points="6 9 12 15 18 9"/><path d="M4 21h16"/></svg>
-                        <span id="calcOfflineState">Estimator runs offline · rates are stored on this device</span>
+                        <span class="calc-offline-dot" aria-hidden="true"></span>
+                        <span id="calcOfflineState" aria-live="polite">Estimator runs offline · rates are stored on this device</span>
                     </span>
-                    <button type="button" class="calc-offline-btn" onclick="PushNotifications.downloadRateCard()">Refresh offline rates</button>
+                    <button type="button" class="calc-offline-btn" id="calcRefreshRatesBtn" onclick="refreshCalcRates()">Refresh rates</button>
                 </div>
 
-                <!-- Studio grid: inputs (left) + results (right) -->
+                <!-- ── MAIN GRID: form + sticky results ── -->
                 <div class="studio-grid">
-                    <!-- INPUT COLUMN -->
-                    <div class="studio-form">
+                    <!-- FORM CARDS -->
+                    <div class="studio-form" id="studioForm">
                         <div class="studio-form__bar">
-                            <label class="studio-unit" for="calcUnit">
-                                <span data-i18n="calculator.unit">Measure in</span>
-                                <select class="studio-unit__sel" id="calcUnit" onchange="onCalcUnitChange()">
-                                    <option value="ft" selected>Feet (ft)</option>
-                                    <option value="m">Metres (m)</option>
-                                </select>
-                            </label>
+                            <span class="studio-unit-label" data-i18n="calculator.unit">Unit of measure</span>
+                            <!-- Hidden select kept for existing getUnit() / restore -->
+                            <select class="studio-unit__sel sr-only" id="calcUnit" tabindex="-1" aria-hidden="true" onchange="onCalcUnitChange()">
+                                <option value="ft" selected>Feet (ft)</option>
+                                <option value="m">Metres (m)</option>
+                            </select>
+                            <div class="studio-seg" role="group" aria-label="Unit of measure">
+                                <button type="button" class="studio-seg__btn is-active" data-unit="ft" aria-pressed="true" onclick="setCalcUnit('ft')">Feet</button>
+                                <button type="button" class="studio-seg__btn" data-unit="m" aria-pressed="false" onclick="setCalcUnit('m')">Metres</button>
+                            </div>
                         </div>
 
                         <!-- Mode 1 — Wall / Brick -->
                         <fieldset class="studio-pane calc-tab-panel active" id="calcTabWall" role="tabpanel" aria-labelledby="cTabWallBtn">
-                            <h4 class="studio-legend" data-i18n="calculator.wallGroup">Wall dimensions</h4>
-                            <div class="studio-row">
-                                <div class="studio-field">
-                                    <label class="studio-label" for="calcLength"><span data-i18n="calculator.length">Wall length</span> <em class="studio-unit-suffix" data-unit-suffix>ft</em></label>
-                                    <input type="number" class="studio-input" id="calcLength" min="0" step="0.5" value="20" inputmode="decimal" autocomplete="off">
-                                    <p class="studio-err" id="calcLengthErr"></p>
+                            <div class="studio-card">
+                                <h3 class="studio-legend"><span class="studio-step">1</span> <span data-i18n="calculator.wallGroup">Measure</span></h3>
+                                <div class="studio-row studio-row--pair">
+                                    <div class="studio-field">
+                                        <label class="studio-label" for="calcLength" data-i18n="calculator.length">Wall length</label>
+                                        <div class="studio-input-group">
+                                            <button type="button" class="studio-stepper" aria-label="Decrease length" data-stepper="-0.5" data-target="calcLength">−</button>
+                                            <input type="number" class="studio-input" id="calcLength" min="0.5" step="0.5" value="20" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-describedby="calcLengthErr">
+                                            <span class="studio-suffix studio-unit-suffix" data-unit-suffix>ft</span>
+                                            <button type="button" class="studio-stepper" aria-label="Increase length" data-stepper="0.5" data-target="calcLength">+</button>
+                                        </div>
+                                        <p class="studio-err" id="calcLengthErr" role="status" aria-live="polite"></p>
+                                    </div>
+                                    <div class="studio-field">
+                                        <label class="studio-label" for="calcHeight" data-i18n="calculator.height">Wall height</label>
+                                        <div class="studio-input-group">
+                                            <button type="button" class="studio-stepper" aria-label="Decrease height" data-stepper="-0.5" data-target="calcHeight">−</button>
+                                            <input type="number" class="studio-input" id="calcHeight" min="0.5" step="0.5" value="10" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-describedby="calcHeightErr">
+                                            <span class="studio-suffix studio-unit-suffix" data-unit-suffix>ft</span>
+                                            <button type="button" class="studio-stepper" aria-label="Increase height" data-stepper="0.5" data-target="calcHeight">+</button>
+                                        </div>
+                                        <p class="studio-err" id="calcHeightErr" role="status" aria-live="polite"></p>
+                                    </div>
                                 </div>
-                                <div class="studio-field">
-                                    <label class="studio-label" for="calcHeight"><span data-i18n="calculator.height">Wall height</span> <em class="studio-unit-suffix" data-unit-suffix>ft</em></label>
-                                    <input type="number" class="studio-input" id="calcHeight" min="0" step="0.5" value="10" inputmode="decimal" autocomplete="off">
-                                    <p class="studio-err" id="calcHeightErr"></p>
-                                </div>
-                            </div>
-                            <div class="studio-field">
-                                <label class="studio-label" for="calcThickness" data-i18n="calculator.thickness">Wall thickness</label>
-                                <select class="studio-input" id="calcThickness">
-                                    <option value="4.5" data-i18n="calculator.th45">4.5 inch — single partition wall</option>
-                                    <option value="9" selected data-i18n="calculator.th9">9 inch — main load-bearing wall</option>
-                                    <option value="13.5" data-i18n="calculator.th135">13.5 inch — foundation / triple wall</option>
-                                </select>
                             </div>
 
-                            <h4 class="studio-legend studio-legend--sub" data-i18n="calculator.openingsGroup">Openings (optional)</h4>
-                            <div class="studio-field">
-                                <label class="studio-label" for="calcOpenings"><span data-i18n="calculator.openings">Door &amp; window area to deduct</span> <em class="studio-unit-area" data-unit-area>sq ft</em></label>
-                                <input type="number" class="studio-input" id="calcOpenings" min="0" step="1" value="0" inputmode="decimal" autocomplete="off" aria-describedby="calcOpeningsHint">
-                                <p class="studio-hint" id="calcOpeningsHint" data-i18n="calculator.openingsHint">Total area of doors/windows in the wall. Deducted before calculating bricks.</p>
-                                <p class="studio-err" id="calcOpeningsErr"></p>
+                            <div class="studio-card">
+                                <h3 class="studio-legend"><span class="studio-step">2</span> <span data-i18n="calculator.thickness">Wall details</span></h3>
+                                <div class="studio-field">
+                                    <span class="studio-label" id="calcThicknessLabel" data-i18n="calculator.thickness">Wall thickness</span>
+                                    <select class="studio-input sr-only" id="calcThickness" tabindex="-1" aria-hidden="true">
+                                        <option value="4.5" data-i18n="calculator.th45">4.5 inch — single partition wall</option>
+                                        <option value="9" selected data-i18n="calculator.th9">9 inch — main load-bearing wall</option>
+                                        <option value="13.5" data-i18n="calculator.th135">13.5 inch — foundation / triple wall</option>
+                                    </select>
+                                    <div class="studio-thick" role="radiogroup" aria-labelledby="calcThicknessLabel">
+                                        <button type="button" class="studio-thick__btn" role="radio" aria-checked="false" data-thick="4.5" onclick="setWallThickness('4.5')">
+                                            <strong>4.5″</strong><small>Partition wall</small>
+                                        </button>
+                                        <button type="button" class="studio-thick__btn is-active" role="radio" aria-checked="true" data-thick="9" onclick="setWallThickness('9')">
+                                            <strong>9″</strong><small>Load-bearing</small>
+                                        </button>
+                                        <button type="button" class="studio-thick__btn" role="radio" aria-checked="false" data-thick="13.5" onclick="setWallThickness('13.5')">
+                                            <strong>13.5″</strong><small>Foundation</small>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
-                            <h4 class="studio-legend studio-legend--sub" data-i18n="calculator.rateGroup">Brick grade &amp; rate</h4>
-                            <div class="studio-field">
-                                <label class="studio-label" for="calcBrickType" data-i18n="calculator.grade">Brick grade</label>
-                                <select class="studio-input" id="calcBrickType" onchange="onBrickGradeChange('calcBrickType','calcRate')">
-                                    <option value="7.05">Awwal (आव्वल) — ₹7.05/pc</option>
-                                    <option value="6.25">Laal Peti (लाल पेटी) — ₹6.25/pc</option>
-                                    <option value="12" selected>Shiv Eent Grade-A — ₹12/pc</option>
-                                    <option value="10">Premium Red — ₹10/pc</option>
-                                    <option value="8">Standard — ₹8/pc</option>
-                                </select>
-                            </div>
-                            <div class="studio-field">
-                                <label class="studio-label" for="calcRate"><span data-i18n="calculator.rate">Brick rate</span> <em>₹ / pc</em></label>
-                                <input type="number" class="studio-input" id="calcRate" min="0" step="0.05" value="12" inputmode="decimal" autocomplete="off">
-                                <p class="studio-hint" data-i18n="calculator.rateHint">Editable. Sets the cost below — it does not change quantities.</p>
-                                <p class="studio-err" id="calcRateErr"></p>
+                            <details class="studio-card studio-accordion" id="calcOpeningsAccordion">
+                                <summary class="studio-legend studio-legend--sum"><span class="studio-step">3</span> <span data-i18n="calculator.openingsGroup">Openings (optional)</span></summary>
+                                <div class="studio-field" style="margin-top:10px">
+                                    <label class="studio-label" for="calcOpenings" data-i18n="calculator.openings">Door &amp; window area to deduct</label>
+                                    <div class="studio-input-group">
+                                        <input type="number" class="studio-input" id="calcOpenings" min="0" step="1" value="0" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-describedby="calcOpeningsHint calcOpeningsErr">
+                                        <span class="studio-suffix studio-unit-area" data-unit-area>sq ft</span>
+                                    </div>
+                                    <p class="studio-hint" id="calcOpeningsHint" data-i18n="calculator.openingsHint">Total area of doors/windows in the wall. Deducted before calculating bricks.</p>
+                                    <p class="studio-err" id="calcOpeningsErr" role="status" aria-live="polite"></p>
+                                </div>
+                            </details>
+
+                            <div class="studio-card">
+                                <h3 class="studio-legend"><span class="studio-step">4</span> <span data-i18n="calculator.rateGroup">Brick grade and rate</span></h3>
+                                <div class="studio-field">
+                                    <label class="studio-label" for="calcBrickType" data-i18n="calculator.grade">Brick grade</label>
+                                    <select class="studio-input" id="calcBrickType" onchange="onBrickGradeChange('calcBrickType','calcRate')">
+                                        <option value="7.05">Awwal (आव्वल) — ₹7.05/pc</option>
+                                        <option value="6.25">Laal Peti (लाल पेटी) — ₹6.25/pc</option>
+                                        <option value="12" selected>Shiv Eent Grade-A — ₹12/pc</option>
+                                        <option value="10">Premium Red — ₹10/pc</option>
+                                        <option value="8">Standard — ₹8/pc</option>
+                                    </select>
+                                </div>
+                                <div class="studio-field">
+                                    <label class="studio-label" for="calcRate" data-i18n="calculator.rate">Brick rate</label>
+                                    <div class="studio-input-group">
+                                        <input type="number" class="studio-input" id="calcRate" min="0.05" step="0.05" value="12" inputmode="decimal" enterkeyhint="done" autocomplete="off" aria-describedby="calcRateHint calcRateErr">
+                                        <span class="studio-suffix">₹/pc</span>
+                                    </div>
+                                    <p class="studio-hint" id="calcRateHint" data-i18n="calculator.rateHint">Changes cost only, not quantity.</p>
+                                    <p class="studio-err" id="calcRateErr" role="status" aria-live="polite"></p>
+                                </div>
                             </div>
                         </fieldset>
 
                         <!-- Mode 2 — Full Building Materials -->
-                        <fieldset class="studio-pane calc-tab-panel" id="calcTabHouse" role="tabpanel" aria-labelledby="cTabHouseBtn">
-                            <h4 class="studio-legend" data-i18n="calculator.houseGroup">Building scope</h4>
-                            <div class="studio-field">
-                                <label class="studio-label" for="houseArea"><span data-i18n="calculator.area">Built-up area per floor</span> <em class="studio-unit-area" data-unit-area>sq ft</em></label>
-                                <input type="number" class="studio-input" id="houseArea" min="0" step="10" value="1000" inputmode="decimal" autocomplete="off">
-                                <p class="studio-err" id="houseAreaErr"></p>
-                            </div>
-                            <div class="studio-row">
+                        <fieldset class="studio-pane calc-tab-panel" id="calcTabHouse" role="tabpanel" aria-labelledby="cTabHouseBtn" hidden>
+                            <div class="studio-card">
+                                <h3 class="studio-legend"><span class="studio-step">1</span> <span data-i18n="calculator.houseGroup">Building scope</span></h3>
                                 <div class="studio-field">
-                                    <label class="studio-label" for="houseFloors" data-i18n="calculator.floors">Floors</label>
-                                    <select class="studio-input" id="houseFloors">
-                                        <option value="1" data-i18n="calculator.fg">Ground floor only (G)</option>
-                                        <option value="2" selected data-i18n="calculator.fg1">Ground + 1st (G+1)</option>
-                                        <option value="3" data-i18n="calculator.fg2">Ground + 2 (G+2)</option>
-                                    </select>
+                                    <label class="studio-label" for="houseArea" data-i18n="calculator.area">Built-up area per floor</label>
+                                    <div class="studio-input-group">
+                                        <button type="button" class="studio-stepper" aria-label="Decrease area" data-stepper="-10" data-target="houseArea">−</button>
+                                        <input type="number" class="studio-input" id="houseArea" min="10" step="10" value="1000" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-describedby="houseAreaErr">
+                                        <span class="studio-suffix studio-unit-area" data-unit-area>sq ft</span>
+                                        <button type="button" class="studio-stepper" aria-label="Increase area" data-stepper="10" data-target="houseArea">+</button>
+                                    </div>
+                                    <p class="studio-err" id="houseAreaErr" role="status" aria-live="polite"></p>
+                                </div>
+                                <div class="studio-row">
+                                    <div class="studio-field">
+                                        <label class="studio-label" for="houseFloors" data-i18n="calculator.floors">Floors</label>
+                                        <select class="studio-input" id="houseFloors">
+                                            <option value="1" data-i18n="calculator.fg">Ground floor only (G)</option>
+                                            <option value="2" selected data-i18n="calculator.fg1">Ground + 1st (G+1)</option>
+                                            <option value="3" data-i18n="calculator.fg2">Ground + 2 (G+2)</option>
+                                        </select>
+                                    </div>
+                                    <div class="studio-field">
+                                        <label class="studio-label" for="houseBrickRate" data-i18n="calculator.grade">Brick grade</label>
+                                        <select class="studio-input" id="houseBrickRate" onchange="onBrickGradeChange('houseBrickRate','houseRate')">
+                                            <option value="12">Shiv Eent Grade-A — ₹12/pc</option>
+                                            <option value="7.05" selected>Awwal — ₹7.05/pc</option>
+                                            <option value="6.25">Laal Peti — ₹6.25/pc</option>
+                                            <option value="10">Premium Red — ₹10/pc</option>
+                                            <option value="8">Standard — ₹8/pc</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="studio-field">
-                                    <label class="studio-label" for="houseBrickRate" data-i18n="calculator.grade">Brick grade</label>
-                                    <select class="studio-input" id="houseBrickRate" onchange="onBrickGradeChange('houseBrickRate','houseRate')">
-                                        <option value="12">Shiv Eent Grade-A — ₹12/pc</option>
-                                        <option value="7.05" selected>Awwal — ₹7.05/pc</option>
-                                        <option value="6.25">Laal Peti — ₹6.25/pc</option>
-                                    </select>
+                                    <label class="studio-label" for="houseRate" data-i18n="calculator.rate">Brick rate</label>
+                                    <div class="studio-input-group">
+                                        <input type="number" class="studio-input" id="houseRate" min="0.05" step="0.05" value="7.05" inputmode="decimal" enterkeyhint="done" autocomplete="off" aria-describedby="houseRateErr">
+                                        <span class="studio-suffix">₹/pc</span>
+                                    </div>
+                                    <p class="studio-hint" data-i18n="calculator.rateHint">Changes cost only, not quantity.</p>
+                                    <p class="studio-err" id="houseRateErr" role="status" aria-live="polite"></p>
                                 </div>
-                            </div>
-                            <div class="studio-field">
-                                <label class="studio-label" for="houseRate"><span data-i18n="calculator.rate">Brick rate</span> <em>₹ / pc</em></label>
-                                <input type="number" class="studio-input" id="houseRate" min="0" step="0.05" value="7.05" inputmode="decimal" autocomplete="off">
-                                <p class="studio-err" id="houseRateErr"></p>
                             </div>
                         </fieldset>
 
                         <!-- Mode 3 — Boundary Wall -->
-                        <fieldset class="studio-pane calc-tab-panel" id="calcTabBoundary" role="tabpanel" aria-labelledby="cTabBoundaryBtn">
-                            <h4 class="studio-legend" data-i18n="calculator.boundGroup">Boundary perimeter</h4>
-                            <div class="studio-row">
-                                <div class="studio-field">
-                                    <label class="studio-label" for="boundaryLength"><span data-i18n="calculator.perimeter">Perimeter length</span> <em class="studio-unit-suffix" data-unit-suffix>ft</em></label>
-                                    <input type="number" class="studio-input" id="boundaryLength" min="0" step="1" value="150" inputmode="decimal" autocomplete="off">
-                                    <p class="studio-err" id="boundaryLengthErr"></p>
+                        <fieldset class="studio-pane calc-tab-panel" id="calcTabBoundary" role="tabpanel" aria-labelledby="cTabBoundaryBtn" hidden>
+                            <div class="studio-card">
+                                <h3 class="studio-legend"><span class="studio-step">1</span> <span data-i18n="calculator.boundGroup">Boundary perimeter</span></h3>
+                                <div class="studio-row studio-row--pair">
+                                    <div class="studio-field">
+                                        <label class="studio-label" for="boundaryLength" data-i18n="calculator.perimeter">Perimeter length</label>
+                                        <div class="studio-input-group">
+                                            <button type="button" class="studio-stepper" aria-label="Decrease perimeter" data-stepper="-1" data-target="boundaryLength">−</button>
+                                            <input type="number" class="studio-input" id="boundaryLength" min="1" step="1" value="150" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-describedby="boundaryLengthErr">
+                                            <span class="studio-suffix studio-unit-suffix" data-unit-suffix>ft</span>
+                                            <button type="button" class="studio-stepper" aria-label="Increase perimeter" data-stepper="1" data-target="boundaryLength">+</button>
+                                        </div>
+                                        <p class="studio-err" id="boundaryLengthErr" role="status" aria-live="polite"></p>
+                                    </div>
+                                    <div class="studio-field">
+                                        <label class="studio-label" for="boundaryHeight" data-i18n="calculator.height">Wall height</label>
+                                        <div class="studio-input-group">
+                                            <button type="button" class="studio-stepper" aria-label="Decrease height" data-stepper="-0.5" data-target="boundaryHeight">−</button>
+                                            <input type="number" class="studio-input" id="boundaryHeight" min="0.5" step="0.5" value="6" inputmode="decimal" enterkeyhint="done" autocomplete="off" aria-describedby="boundaryHeightErr">
+                                            <span class="studio-suffix studio-unit-suffix" data-unit-suffix>ft</span>
+                                            <button type="button" class="studio-stepper" aria-label="Increase height" data-stepper="0.5" data-target="boundaryHeight">+</button>
+                                        </div>
+                                        <p class="studio-err" id="boundaryHeightErr" role="status" aria-live="polite"></p>
+                                    </div>
                                 </div>
-                                <div class="studio-field">
-                                    <label class="studio-label" for="boundaryHeight"><span data-i18n="calculator.height">Wall height</span> <em class="studio-unit-suffix" data-unit-suffix>ft</em></label>
-                                    <input type="number" class="studio-input" id="boundaryHeight" min="0" step="0.5" value="6" inputmode="decimal" autocomplete="off">
-                                    <p class="studio-err" id="boundaryHeightErr"></p>
-                                </div>
+                                <p class="studio-hint" data-i18n="calculator.boundHint">Boundary walls are estimated at the standard Awwal rate of ₹7.05/pc with 9″ brickwork.</p>
                             </div>
-                            <p class="studio-hint" data-i18n="calculator.boundHint">Boundary walls are estimated at the standard Awwal rate of ₹7.05/pc with 9″ brickwork.</p>
                         </fieldset>
 
-                        <div class="studio-actions">
+                        <div class="studio-actions" id="studioActions">
                             <button type="button" class="studio-btn studio-btn--primary" id="studioCalculate" onclick="runEstimate()">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="11" x2="8" y2="11"/><line x1="12" y1="11" x2="12" y2="11"/><line x1="16" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="8" y2="15"/><line x1="12" y1="15" x2="12" y2="15"/><line x1="16" y1="15" x2="16" y2="18"/></svg>
                                 <span data-i18n="calculator.calculate">Calculate Estimate</span>
@@ -179,33 +249,37 @@
                         </div>
                     </div>
 
-                    <!-- RESULTS COLUMN -->
+                    <!-- ── RESULTS PANEL ── -->
                     <aside class="studio-panel" id="calcResult" aria-live="polite">
                         <div class="studio-panel__title" data-i18n="calculator.resultTitle">Estimate summary</div>
                         <div id="calcResultsBody">
-                            <!-- Empty state / results injected by calculator.js -->
+                            <!-- Empty / result state injected by calculator.js -->
                         </div>
 
-                        <!-- Live 2D wall preview (kept for Wall & Boundary modes) -->
-                        <div class="studio-preview" id="wallPreviewWrap">
+                        <!-- Live wall preview -->
+                        <div class="studio-preview" id="wallPreviewWrap" hidden>
                             <div class="studio-preview__head" data-i18n="calculator.preview">Live wall preview</div>
-                            <svg id="wallPreviewSvg" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wall brick pattern preview"></svg>
+                            <div class="studio-preview__frame">
+                                <svg id="wallPreviewSvg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wall brick pattern preview" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid meet"></svg>
+                            </div>
                         </div>
 
-                        <!-- Pincode delivery checker -->
+                        <!-- Delivery pincode check -->
                         <div class="calc-pin-checker">
                             <div class="calc-pin-checker__title" data-i18n="calculator.pinTitle">Delivery pincode check</div>
                             <div class="calc-pin-checker__row">
                                 <label class="sr-only" for="pincodeInput">6-digit delivery pincode</label>
-                                <input type="tel" id="pincodeInput" class="calc-input" maxlength="6" placeholder="Enter 6-digit pincode"
-                                    inputmode="numeric" autocomplete="postal-code"
-                                    onkeydown="if(event.key==='Enter'){event.preventDefault();runEstimatorPincodeCheck()}">
+                                <div class="studio-input-group calc-pin-group">
+                                    <input type="tel" id="pincodeInput" class="studio-input" maxlength="6" placeholder="6-digit PIN"
+                                        inputmode="numeric" autocomplete="postal-code"
+                                        onkeydown="if(event.key==='Enter'){event.preventDefault();runEstimatorPincodeCheck()}">
+                                </div>
                                 <button type="button" id="pincodeCheckBtn" class="btn btn-outline btn-sm" onclick="runEstimatorPincodeCheck()" data-i18n="calculator.pinBtn">Check</button>
                             </div>
                             <div id="pincodeResult" class="calc-pin-checker__result" role="status" aria-live="polite"></div>
                         </div>
 
-                        <!-- Saved estimates (device) -->
+                        <!-- Saved estimates -->
                         <div class="calc-saved-head">
                             <span data-i18n="calculator.savedHead">Saved estimates (this device)</span>
                             <button type="button" class="calc-saved-clear" onclick="clearSavedEstimates()" data-i18n="calculator.savedClear">Clear</button>
@@ -217,7 +291,7 @@
                 </div>
             </div>
 
-            <!-- Saved construction sites / quick re-order -->
+            <!-- ── SAVED ESTIMATES AND SITES ── -->
             <div class="studio-sites">
                 <div class="studio-sites__bar">
                     <div>
@@ -230,10 +304,19 @@
                     </button>
                 </div>
                 <div id="saveSitePanel" class="hidden studio-save-panel">
-                    <input type="text" id="siteNameInput" class="studio-input" placeholder='Site name e.g. "Jalalpur Site #2"' style="flex:1;min-width:200px" maxlength="40">
+                    <input type="text" id="siteNameInput" class="studio-input" placeholder='Site name e.g. "Jalalpur Site #2"' maxlength="40" autocomplete="off">
                     <button type="button" class="btn btn-primary" onclick="saveConstructionSite()" data-i18n="calculator.saveSiteBtn">Save site</button>
                 </div>
-                <div id="savedSitesContainer"></div>
+                <div id="savedSitesContainer" class="studio-sites-grid"></div>
             </div>
+        </div>
+
+        <!-- ── STICKY MOBILE RESULT BAR ── -->
+        <div class="studio-mobile-bar" id="studioMobileBar" hidden>
+            <div class="studio-mobile-bar__meta">
+                <strong id="studioMobileBricks">—</strong>
+                <span id="studioMobileCost">—</span>
+            </div>
+            <button type="button" class="studio-mobile-bar__btn" onclick="scrollToCalcResult()">View result</button>
         </div>
     </section>
