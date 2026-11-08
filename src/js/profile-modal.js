@@ -56,6 +56,12 @@ function openProfile() {
     renderWishlistInProfile();
     renderEnquiriesInProfile();
 
+    // Scroll-lock JavaScript: openOverlay -> overlayLock() pins body scroll
+    // and restores the prior scrollY on close. Popup content scrolls inside
+    // #profileModalScroll so other dashboard tabs are unaffected.
+    const scrollHost = document.getElementById('profileModalScroll');
+    if (scrollHost) scrollHost.scrollTop = 0;
+
     if (typeof openOverlay === 'function') openOverlay('profileModal');
     else {
         document.getElementById('profileModal')?.classList.add('open');
@@ -65,6 +71,7 @@ function openProfile() {
     if (window.RoleAccess && typeof RoleAccess.applyVisibility === 'function') {
         RoleAccess.applyVisibility(document.getElementById('profileModal'));
     }
+    if (typeof renderOfflineSettings === 'function') renderOfflineSettings();
 }
 
 /**
@@ -159,11 +166,25 @@ function renderEnquiriesInProfile() {
     if (!host) return;
     const svc = window.GurukripaServices && window.GurukripaServices.QuotationService;
     const rows = svc ? svc.getAllQuotations() : [];
-    if (!rows.length) {
-        host.innerHTML = '<div class="hub-empty">' + t('profile.enquiries.empty') + '</div>';
-        return;
-    }
-    host.innerHTML = rows.map(q => `
+    const paint = (pendingExtra) => {
+        const pending = pendingExtra || [];
+        if (!rows.length && !pending.length) {
+            host.innerHTML = '<div class="hub-empty">' + t('profile.enquiries.empty') + '</div>';
+            return;
+        }
+        const pendingHtml = pending.map((p) => `
+        <div class="enquiry-row enquiry-row--pending">
+            <div class="enquiry-row__top">
+                <span class="enquiry-row__ref">${sanitizeHTML(p.ref || p.id || 'DRAFT')}</span>
+                <span class="enquiry-row__status gbi-badge-waiting">Waiting to send</span>
+            </div>
+            <div class="enquiry-row__title">${sanitizeHTML(p.label || 'Pending, not sent yet')}</div>
+            <div class="enquiry-row__meta">${new Date(p.createdAt || Date.now()).toLocaleString('en-IN')}</div>
+            <button type="button" class="enquiry-row__action" onclick="OfflineQueue.openWhatsAppDraft('${String(p.id).replace(/'/g, '')}')">Send via WhatsApp when online</button>
+            <button type="button" class="enquiry-row__action" onclick="OfflineQueue.flush()">Retry now</button>
+            <button type="button" class="enquiry-row__action" onclick="OfflineQueue.remove('${String(p.id).replace(/'/g, '')}').then(renderEnquiriesInProfile)">Delete</button>
+        </div>`).join('');
+        const rowsHtml = rows.map(q => `
         <div class="enquiry-row">
             <div class="enquiry-row__top">
                 <span class="enquiry-row__ref">${sanitizeHTML(q.id)}</span>
@@ -173,6 +194,13 @@ function renderEnquiriesInProfile() {
             <div class="enquiry-row__meta">${sanitizeHTML(q.site || 'Site not specified')} · ${new Date(q.createdAt || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
             <a class="enquiry-row__action" href="${waOrderURL(q.product || 'Bulk enquiry', q.qty || 1000)}" target="_blank" rel="noopener">Follow up on WhatsApp</a>
         </div>`).join('');
+        host.innerHTML = pendingHtml + rowsHtml;
+    };
+    if (window.OfflineQueue) {
+        OfflineQueue.listPending().then((pending) => paint(pending.filter((p) => /rfq|enquiry|contact/i.test(p.type || '')))).catch(() => paint([]));
+    } else {
+        paint([]);
+    }
 }
 
 // Live GSTIN validity feedback while the buyer types. Says what was checked

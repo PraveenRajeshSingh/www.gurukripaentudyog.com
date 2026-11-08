@@ -338,7 +338,7 @@ function loadServiceWorker(opts = {}) {
     const mockSelf = {
         addEventListener: (type, fn) => { listeners[type] = fn; },
         skipWaiting: () => {},
-        location: { origin: 'https://www.gurukripaentudyog.com' },
+        location: { origin: 'https://www.gurukripaentudyog.com', href: 'https://www.gurukripaentudyog.com/' },
         registration: {
             showNotification: (title, options) => {
                 shown.push({ title, options });
@@ -347,11 +347,16 @@ function loadServiceWorker(opts = {}) {
         },
         clients: {
             matchAll: () => Promise.resolve(clients),
+            claim: () => Promise.resolve(),
             openWindow: (url) => { opened.push(url); return Promise.resolve(); }
         }
     };
 
-    new Function('self', read('sw.js'))(mockSelf);
+    new Function('self', 'caches', 'fetch', read('sw.js'))(
+        mockSelf,
+        { open: async () => ({ put: async () => {}, match: async () => null, keys: async () => [] }), keys: async () => [], delete: async () => true, match: async () => null },
+        async () => ({ ok: true, status: 200, clone() { return this; } })
+    );
     return { listeners, shown, focused, posted, opened };
 }
 

@@ -109,21 +109,19 @@
     }
     </script>
 
-    <!-- Service Worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(err => console.error('SW registration failed:', err));
-        });
-      }
-    </script>
+    <!-- Service Worker registration lives in src/js/pwa.js (relative ./sw.js, scope ./). -->
 
-    <!-- Fonts -->
+    <!-- Offline-safe local font aliases first; Google Fonts are progressive enhancement only. -->
+    <link rel="stylesheet" href="src/assets/fonts/offline-fonts.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap"
-        rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap">
+    </noscript>
 
     <!-- Theme: single consistent LIGHT theme (pinned before paint to avoid any flash) -->
     <script>
@@ -156,6 +154,10 @@
     <link rel="stylesheet" href="src/styles/ecommerce.css">
     <!-- Final popup/sheet/dialog polish — wins over earlier radius/overflow conflicts. -->
     <link rel="stylesheet" href="src/styles/popup-polish.css">
-    <!-- Interaction / map / scroll / breakpoint hardening (last CSS). -->
+    <!-- Interaction / map / scroll / breakpoint hardening. -->
     <link rel="stylesheet" href="src/styles/interaction-fixes.css">
+    <!-- Compact catalog grid + My Account popup scroll/design (final override). -->
+    <link rel="stylesheet" href="src/styles/compact-catalog-account.css">
+    <!-- PWA offline banner / update toast / rate stamps. -->
+    <link rel="stylesheet" href="src/styles/pwa-offline.css">
 </head>

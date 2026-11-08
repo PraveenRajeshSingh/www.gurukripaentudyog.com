@@ -288,6 +288,29 @@ const OfflineStore = (function () {
         } catch (_e) { /* unsupported */ }
     }
 
+    function clearStore(name) {
+        return open().then((db) => {
+            if (!db) { lsWrite(name, []); return true; }
+            return new Promise((resolve, reject) => {
+                let tx;
+                try { tx = db.transaction(name, 'readwrite'); } catch (e) { reject(e); return; }
+                tx.objectStore(name).clear();
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => reject(tx.error);
+            });
+        }).catch(() => false);
+    }
+
+    /** Sign-out: wipe user outbox/photos/estimates; keep public rate card. */
+    function clearUserData() {
+        return Promise.all([
+            clearStore('outbox'),
+            clearStore('photos'),
+            clearEstimates(),
+            setMeta('userClearedAt', Date.now())
+        ]);
+    }
+
     return {
         isAvailable: hasIDB,
         requestPersistence,
@@ -305,7 +328,9 @@ const OfflineStore = (function () {
         listPhotos,
         setMeta,
         getMeta,
-        status
+        status,
+        clearUserData,
+        clearStore
     };
 })();
 

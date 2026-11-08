@@ -133,13 +133,15 @@ const CatalogDiscovery = (() => {
                 (q ? ' for “' + q + '”' : '');
         }
         if (!grid) return list;
+        if (typeof renderActiveFilterChips === 'function') renderActiveFilterChips();
         if (!list.length) {
             const emptyMsg = typeof t === 'function' ? t('products.empty') : 'No products found.';
             grid.innerHTML =
-                '<div class="products-empty catalog-empty" style="grid-column:1/-1;text-align:center;padding:40px 16px;color:var(--ink-3)">' +
-                '<div style="font-size:2rem;margin-bottom:8px" aria-hidden="true">🔍</div>' +
-                '<p>' + emptyMsg + '</p>' +
-                '<button type="button" class="btn btn-outline btn-sm" style="margin-top:12px" onclick="CatalogDiscovery.resetFilters()">Clear filters</button>' +
+                '<div class="products-empty catalog-empty" role="status">' +
+                '<div class="products-empty__icon" aria-hidden="true">🧱</div>' +
+                '<p class="products-empty__title">No matching bricks</p>' +
+                '<p class="products-empty__text">' + emptyMsg + '</p>' +
+                '<button type="button" class="btn btn-outline btn-sm" onclick="CatalogDiscovery.resetFilters();if(typeof renderActiveFilterChips===\'function\')renderActiveFilterChips()">Clear all filters</button>' +
                 '</div>';
             return list;
         }
@@ -174,6 +176,7 @@ const CatalogDiscovery = (() => {
         if (sizeSel) sizeSel.value = 'all';
         hideSuggestions();
         apply();
+        if (typeof renderActiveFilterChips === 'function') renderActiveFilterChips();
     }
 
     // ── Suggestions & history ──────────────────────────────────

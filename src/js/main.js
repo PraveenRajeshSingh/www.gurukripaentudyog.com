@@ -223,24 +223,6 @@ function handleBulkQuoteSubmit(e) {
         console.error('[GBI] RFQ submit failed:', err); // falls back to manual notice below
     }
 
-    const finishUi = () => {
-        if (notice) {
-            notice.style.display = 'block';
-            notice.innerHTML = `✓ RFQ Generated: <strong>${quote ? quote.id : 'QT-LOCAL'}</strong>. Our Jaunpur Bhatta Sales Manager will call ${sanitizeHTML(payload.phone)} within 30 minutes with official rate quote.`;
-        }
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = 'RFQ Successfully Sent ✓';
-        }
-        showToast('Bulk Quotation Request Logged!', 'success');
-        setTimeout(() => {
-            closeBulkQuoteModal();
-            e.target.reset();
-            if (notice) notice.style.display = 'none';
-            if (btn) btn.textContent = 'Submit Bulk RFQ Quotation Request →';
-        }, 3000);
-    };
-
     const enquiryBody = {
         name: payload.name,
         phone: String(payload.phone || '').replace(/\D/g, '').slice(-10),
@@ -257,11 +239,68 @@ function handleBulkQuoteSubmit(e) {
         localQuoteId: quote ? quote.id : undefined
     };
 
-    if (window.GBApi && GBApi.enabled()) {
-        GBApi.submitEnquiry(enquiryBody).then(finishUi).catch(finishUi);
+    const finishUi = (opts) => {
+        const pending = !!(opts && opts.pending);
+        if (notice) {
+            notice.style.display = 'block';
+            notice.innerHTML = pending
+                ? `⏳ Saved on this device as <strong>Pending, not sent yet</strong> (${quote ? quote.id : 'QT-LOCAL'}). Waiting to send when you are back online.`
+                : `✓ RFQ Generated: <strong>${quote ? quote.id : 'QT-LOCAL'}</strong>. Our Jaunpur Bhatta Sales Manager will call ${sanitizeHTML(payload.phone)} within 30 minutes with official rate quote.`;
+        }
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = pending ? 'Saved — Waiting to send' : 'RFQ Successfully Sent ✓';
+        }
+        showToast(pending
+            ? 'RFQ saved offline — not sent yet.'
+            : 'Bulk Quotation Request Logged!', pending ? 'warning' : 'success');
+        setTimeout(() => {
+            closeBulkQuoteModal();
+            e.target.reset();
+            if (notice) notice.style.display = 'none';
+            if (btn) btn.textContent = 'Submit Bulk RFQ Quotation Request →';
+        }, pending ? 2200 : 3000);
+    };
+
+    // Offline: never claim "sent" — queue as Waiting to send
+    if (!navigator.onLine) {
+        const waMsg = [
+            '*BULK RFQ — Gurukripa Bricks Industry*',
+            quote && quote.id ? `Enquiry ref: *${quote.id}*` : '',
+            `Name: ${payload.name}`,
+            `Phone: ${payload.phone}`,
+            `Quantity: ${payload.qty}`,
+            `Site: ${payload.site}`
+        ].filter(Boolean).join('\n');
+        if (window.OfflineQueue) {
+            OfflineQueue.enqueue('rfq', enquiryBody, {
+                ref: quote ? quote.id : ('RFQ-' + Date.now()),
+                message: waMsg,
+                waLink: window.WhatsAppOrder ? WhatsAppOrder.buildLink(waMsg) : '',
+                status: 'pending',
+                label: 'Pending, not sent yet'
+            }).then(() => finishUi({ pending: true }));
+        } else {
+            finishUi({ pending: true });
+        }
         return;
     }
-    setTimeout(finishUi, 600);
+
+    if (window.GBApi && GBApi.enabled()) {
+        GBApi.submitEnquiry(enquiryBody).then(() => finishUi()).catch((err) => {
+            if (err && err.code === 'network' && window.OfflineQueue) {
+                OfflineQueue.enqueue('rfq', enquiryBody, {
+                    ref: quote ? quote.id : undefined,
+                    status: 'pending',
+                    label: 'Pending, not sent yet'
+                }).then(() => finishUi({ pending: true }));
+            } else {
+                finishUi();
+            }
+        });
+        return;
+    }
+    setTimeout(() => finishUi(), 600);
 }
 
 // One-tap WhatsApp route for the same form: the enquiry is logged locally first

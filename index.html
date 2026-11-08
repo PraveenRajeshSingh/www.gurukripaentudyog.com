@@ -112,21 +112,19 @@
     }
     </script>
 
-    <!-- Service Worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(err => console.error('SW registration failed:', err));
-        });
-      }
-    </script>
+    <!-- Service Worker registration lives in src/js/pwa.js (relative ./sw.js, scope ./). -->
 
-    <!-- Fonts -->
+    <!-- Offline-safe local font aliases first; Google Fonts are progressive enhancement only. -->
+    <link rel="stylesheet" href="src/assets/fonts/offline-fonts.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap"
-        rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap">
+    </noscript>
 
     <!-- Theme: single consistent LIGHT theme (pinned before paint to avoid any flash) -->
     <script>
@@ -159,8 +157,12 @@
     <link rel="stylesheet" href="src/styles/ecommerce.css">
     <!-- Final popup/sheet/dialog polish — wins over earlier radius/overflow conflicts. -->
     <link rel="stylesheet" href="src/styles/popup-polish.css">
-    <!-- Interaction / map / scroll / breakpoint hardening (last CSS). -->
+    <!-- Interaction / map / scroll / breakpoint hardening. -->
     <link rel="stylesheet" href="src/styles/interaction-fixes.css">
+    <!-- Compact catalog grid + My Account popup scroll/design (final override). -->
+    <link rel="stylesheet" href="src/styles/compact-catalog-account.css">
+    <!-- PWA offline banner / update toast / rate stamps. -->
+    <link rel="stylesheet" href="src/styles/pwa-offline.css">
 </head>
 
 <body>
@@ -866,10 +868,11 @@
                             <span class="filter-card-title">Price Range (per pc)</span>
                         </div>
                         <div class="price-range-slider-wrap">
-                            <input type="range" id="filterPriceRange" min="5" max="15" step="0.25" value="15" oninput="handlePriceRangeFilter(this.value)">
+                            <div class="price-range-live" aria-live="polite">Max <strong id="priceRangeLive">₹15.00</strong></div>
+                            <input type="range" id="filterPriceRange" class="brand-range" min="5" max="15" step="0.25" value="15" oninput="handlePriceRangeFilter(this.value)" aria-valuemin="5" aria-valuemax="15" aria-valuenow="15" aria-label="Maximum price per piece">
                             <div class="price-range-labels">
                                 <span>₹5.00</span>
-                                <span id="currentMaxPriceLabel" style="color:var(--brand);font-weight:700">Up to ₹15.00</span>
+                                <span id="currentMaxPriceLabel">Up to ₹15.00</span>
                                 <span>₹15.00</span>
                             </div>
                         </div>
@@ -945,10 +948,10 @@
 
                 <!-- Right Main Column: Toolbar + Product Grid -->
                 <div class="catalog-main">
-                    <!-- Top Toolbar -->
+                    <!-- Slim toolbar: result count, sort, grid/list toggle -->
                     <div class="products-toolbar">
                         <div class="products-toolbar-left">
-                            <button type="button" class="btn btn-outline btn-sm mobile-filter-toggle" onclick="toggleFilterSheet()" aria-controls="catalogSidebar" aria-expanded="false">⚙︎ Filters</button>
+                            <button type="button" class="btn btn-outline btn-sm mobile-filter-toggle sticky-filters-btn" onclick="toggleFilterSheet()" aria-controls="catalogSidebar" aria-expanded="false">Filters</button>
                             <span class="products-count" id="productsCount">Showing 7 verified products</span>
                         </div>
                         <div class="products-toolbar-right">
@@ -962,15 +965,30 @@
                                 <option value="name-asc">Name: A to Z</option>
                                 <option value="rating-desc">Top Rated</option>
                             </select>
+                            <div class="products-view-toggle" role="group" aria-label="Product layout">
+                                <button type="button" class="view-toggle-btn is-active" data-view-mode="grid" aria-pressed="true" aria-label="Grid view" onclick="setProductsView('grid')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                </button>
+                                <button type="button" class="view-toggle-btn" data-view-mode="list" aria-pressed="false" aria-label="List view" onclick="setProductsView('list')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Selected category / filter chips -->
+                    <div class="active-filter-chips" id="activeFilterChips" hidden></div>
 
                     <!-- Recently viewed (CatalogDiscovery) -->
                     <div id="recentlyViewedStrip" class="recent-strip" hidden></div>
 
-                    <!-- Products Grid -->
-                    <div class="products-grid" id="productsGrid">
-                        <!-- Rendered dynamically by JS -->
+                    <!-- Products Grid — compact cards rendered by products.js -->
+                    <div class="products-grid is-grid" id="productsGrid">
+                        <!-- Skeleton loading cards (same compact size) -->
+                        <div class="product-card industrial-card compact-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></div>
+                        <div class="product-card industrial-card compact-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></div>
+                        <div class="product-card industrial-card compact-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></div>
+                        <div class="product-card industrial-card compact-card skeleton-card" aria-hidden="true"><div class="skeleton skeleton-img product-skel-img"></div><div class="product-card-body"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text short"></div><div class="skeleton skeleton-btn"></div></div></div>
                     </div>
                 </div>
             </div>
@@ -2118,11 +2136,12 @@
          All geometry lives in refinements.css / overlays.css / popups.css - no inline styles,
          because inline styles cannot respond to viewport or open mobile keyboard.
     -->
+    <!-- My Account popup markup -->
     <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileHeaderName" onclick="handleProfileOverlayClick(event)">
         <div class="modal-box modal-box--lg profile-modal-box">
-            <!-- Compact header card: who is buying + what proof is on file -->
+            <!-- Sticky profile header (title + close stay accessible) -->
             <div class="profile-header">
-                <button type="button" class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close profile">
+                <button type="button" class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close My Account">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
                 <div class="profile-header-inner">
@@ -2138,9 +2157,12 @@
                             <span id="profileBuyerBadgeText">Retail Buyer</span>
                         </span>
                     </div>
-                    <button type="button" class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()">Edit</button>
+                    <button type="button" class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()" aria-label="Edit Profile">Edit Profile</button>
                 </div>
             </div>
+
+            <!-- Popup scroll container CSS target: independent vertical scrolling -->
+            <div class="profile-modal-scroll" id="profileModalScroll">
 
             <!-- Quick account metrics — counted from this device's ledger -->
             <div class="profile-hub-metrics">
@@ -2426,8 +2448,17 @@
 
                     <p class="gst-note"><strong>What the tick means:</strong> the number is checked on this device against the Indian GSTIN structure (state code, 5 letters, 4 digits, check digit, entity, Z, checksum). It is not a government verification — the yard confirms the registration on the GST portal before a tax invoice with CGST/SGST or IGST is issued.</p>
                     <p class="gst-note">With a GST business on file, invoices print your firm name and GSTIN, and inter-state loads are billed as IGST instead of CGST + SGST.</p>
+
+                    <!-- Offline data (PWA) — rates, pending queue, storage -->
+                    <section class="gbi-offline-settings" aria-labelledby="gbiOfflineSettingsTitle">
+                        <div class="gbi-offline-settings__title" id="gbiOfflineSettingsTitle">Offline data</div>
+                        <div id="gbiOfflineSettings">
+                            <p class="gbi-pending-empty">Loading offline status…</p>
+                        </div>
+                    </section>
                 </div>
             </div>
+            </div><!-- /.profile-modal-scroll -->
         </div>
     </div>
 
@@ -3317,6 +3348,7 @@
                 </button>
                 <button type="button" class="chatbot-head-close" onclick="toggleChatbot(false)" aria-label="Close chat" title="Close">✕</button>
             </div>
+            <p class="gbi-gsi-offline" id="gbiChatOfflineNote" hidden>Offline helper: answers prices, delivery and estimate topics from saved data. Questions that need a human — call or WhatsApp the yard.</p>
             <div class="chatbot-messages" id="chatMessages" role="log" aria-live="polite">
                 <div class="chat-msg bot">Namaste! 🙏 I'm the Gurukripa Kiln helper. I can share brick rates, delivery &amp; tracking info, and help you estimate material. Tap a topic below, or ask in Hindi / English.</div>
             </div>
@@ -3444,6 +3476,8 @@
     <script src="src/js/state.js" defer></script>
     <script src="src/js/api-client.js" defer></script>
     <script src="src/js/offline-store.js" defer></script>
+    <script src="src/js/offline-queue.js" defer></script>
+    <script src="src/js/pwa.js" defer></script>
     <!-- Address book + buyer type load before checkout/profile use them -->
     <script src="src/js/saved-sites.js" defer></script>
     <script src="src/js/erp-core.js" defer></script>

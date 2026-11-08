@@ -735,49 +735,10 @@ body.account-popup-open .user-dropdown.account-popup.open {
     }
 }
 
-/* My Account hub (#profileModal): fixed header/tabs, scrollable body only */
-#profileModal.modal-overlay.open > .profile-modal-box {
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important;
-    max-height: min(var(--vv-height, 100dvh), 92dvh) !important;
-}
-#profileModal.open .profile-header,
-#profileModal.open .profile-hub-metrics,
-#profileModal.open .hub-quick,
-#profileModal.open .profile-tabs {
-    flex-shrink: 0;
-}
-#profileModal.open .profile-modal-body {
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    overscroll-behavior: contain !important;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-}
+/* My Account hub (#profileModal): sticky header + dedicated scroll container.
+   Geometry for max-height / .profile-modal-scroll lives in
+   compact-catalog-account.css (loaded after this file). */
 #profileModal.open .profile-tab-panel:not(.active) {
     display: none !important;
     pointer-events: none !important;
-}
-@media (max-width: 480px) {
-    #profileModal.open > .profile-modal-box {
-        max-height: min(var(--vv-height, 100dvh), 94dvh) !important;
-        border-radius: 18px 18px 0 0 !important;
-    }
-}
-@media (min-width: 481px) and (max-width: 1024px) {
-    #profileModal.open > .profile-modal-box {
-        max-width: min(560px, 94vw) !important;
-        max-height: min(var(--vv-height, 100dvh), 90dvh) !important;
-    }
-}
-@media (min-width: 1025px) {
-    #profileModal.open > .profile-modal-box {
-        max-width: min(620px, 92vw) !important;
-        max-height: min(var(--vv-height, 100dvh), 86dvh) !important;
-        border-radius: var(--r-xl, 16px) !important;
-    }
 }

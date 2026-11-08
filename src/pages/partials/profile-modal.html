@@ -4,11 +4,12 @@
          All geometry lives in refinements.css / overlays.css / popups.css - no inline styles,
          because inline styles cannot respond to viewport or open mobile keyboard.
     -->
+    <!-- My Account popup markup -->
     <div class="modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileHeaderName" onclick="handleProfileOverlayClick(event)">
         <div class="modal-box modal-box--lg profile-modal-box">
-            <!-- Compact header card: who is buying + what proof is on file -->
+            <!-- Sticky profile header (title + close stay accessible) -->
             <div class="profile-header">
-                <button type="button" class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close profile">
+                <button type="button" class="modal-close-btn profile-close-btn" onclick="closeProfile()" aria-label="Close My Account">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
                 <div class="profile-header-inner">
@@ -24,9 +25,12 @@
                             <span id="profileBuyerBadgeText">Retail Buyer</span>
                         </span>
                     </div>
-                    <button type="button" class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()">Edit</button>
+                    <button type="button" class="profile-header-edit" onclick="switchProfileTab('info');switchToEditProfile()" aria-label="Edit Profile">Edit Profile</button>
                 </div>
             </div>
+
+            <!-- Popup scroll container CSS target: independent vertical scrolling -->
+            <div class="profile-modal-scroll" id="profileModalScroll">
 
             <!-- Quick account metrics — counted from this device's ledger -->
             <div class="profile-hub-metrics">
@@ -312,7 +316,16 @@
 
                     <p class="gst-note"><strong>What the tick means:</strong> the number is checked on this device against the Indian GSTIN structure (state code, 5 letters, 4 digits, check digit, entity, Z, checksum). It is not a government verification — the yard confirms the registration on the GST portal before a tax invoice with CGST/SGST or IGST is issued.</p>
                     <p class="gst-note">With a GST business on file, invoices print your firm name and GSTIN, and inter-state loads are billed as IGST instead of CGST + SGST.</p>
+
+                    <!-- Offline data (PWA) — rates, pending queue, storage -->
+                    <section class="gbi-offline-settings" aria-labelledby="gbiOfflineSettingsTitle">
+                        <div class="gbi-offline-settings__title" id="gbiOfflineSettingsTitle">Offline data</div>
+                        <div id="gbiOfflineSettings">
+                            <p class="gbi-pending-empty">Loading offline status…</p>
+                        </div>
+                    </section>
                 </div>
             </div>
+            </div><!-- /.profile-modal-scroll -->
         </div>
     </div>

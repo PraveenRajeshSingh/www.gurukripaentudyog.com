@@ -472,6 +472,10 @@ function logoutUser() {
     user = null;
     persistUserSession(null, false);
     if (window.GBApi) GBApi.logout();
+    // Clear user-specific IndexedDB / outbox; keep public catalogue + shell caches
+    if (window.GbiPwa && typeof GbiPwa.clearUserSpecificData === 'function') {
+        try { GbiPwa.clearUserSpecificData(); } catch (_e) { /* ignore */ }
+    }
     updateAuthUI();
     closeUserDropdown();
     showToast(t('auth.signedOut'));

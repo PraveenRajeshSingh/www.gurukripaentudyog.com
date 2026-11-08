@@ -317,16 +317,28 @@ const WhatsAppOrder = (function () {
 
     // ── Offline outbox ───────────────────────────────────────────
     function queueOffline(payload) {
-        if (!payload || !window.OfflineStore) return Promise.resolve(null);
-        return OfflineStore.queueOrder({
+        if (!payload) return Promise.resolve(null);
+        const message = payload.text || buildMessage(payload);
+        const rowBase = {
             ref: payload.ref,
-            message: payload.text || buildMessage(payload),
+            message: message,
+            waLink: buildLink(message),
             total: payload.total,
             payment: payload.payment,
             pincode: payload.delivery ? payload.delivery.pincode : '',
-            itemCount: (payload.items || []).reduce((s, i) => s + Number(i.qty || 0), 0)
-        }).then((row) => {
+            itemCount: (payload.items || []).reduce((s, i) => s + Number(i.qty || 0), 0),
+            status: 'pending',
+            label: 'Pending, not sent yet',
+            type: 'order'
+        };
+        const enqueue = window.OfflineQueue
+            ? OfflineQueue.enqueue('order', payload, rowBase)
+            : (window.OfflineStore
+                ? OfflineStore.queueOrder(Object.assign({ synced: false, createdAt: Date.now() }, rowBase))
+                : Promise.resolve(null));
+        return enqueue.then((row) => {
             renderQueuedNotice();
+            if (typeof renderOfflineQueueUI === 'function') renderOfflineQueueUI();
             return row;
         });
     }
@@ -369,10 +381,10 @@ const WhatsAppOrder = (function () {
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v13"/><polyline points="6 9 12 15 18 9"/><path d="M4 21h16"/></svg>
                     </span>
                     <span class="outbox-text">
-                        <strong>${rows.length} offline order${rows.length > 1 ? 's' : ''} queued</strong>
-                        <span>${sanitizeHTML(first.ref || 'Saved order')} is stored on this device.</span>
+                        <strong>${rows.length} item${rows.length > 1 ? 's' : ''} <span class="gbi-badge-waiting">Waiting to send</span></strong>
+                        <span>${sanitizeHTML(first.ref || 'Saved order')} — Pending, not sent yet.</span>
                     </span>
-                    <button type="button" class="outbox-send" onclick="WhatsAppOrder.sendQueuedOrders()">Send</button>
+                    <button type="button" class="outbox-send" data-needs-network data-offline-label="Send via WhatsApp when online" onclick="navigator.onLine ? WhatsAppOrder.sendQueuedOrders() : (typeof showToast==='function'&&showToast('WhatsApp opens when you are back online. Draft is saved.', 'warning'))">${navigator.onLine ? 'Send' : 'Send when online'}</button>
                 </div>`;
         });
     }

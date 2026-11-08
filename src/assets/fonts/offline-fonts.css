@@ -1,0 +1,32 @@
+/* Self-hosted / offline-safe font stack.
+   Maps brand font names to local system faces so text never disappears
+   when Google Fonts CDN is unreachable. Google Fonts remain progressive
+   enhancement only (never cached by the service worker). */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: local('Inter'), local('Inter Variable'), local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial');
+}
+@font-face {
+    font-family: 'Noto Sans Devanagari';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: local('Noto Sans Devanagari'), local('Nirmala UI'), local('Mangal'), local('Arial Unicode MS');
+}
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 300 800;
+    font-display: swap;
+    src: local('Plus Jakarta Sans'), local('Inter'), local('Segoe UI'), local('system-ui');
+}
+@font-face {
+    font-family: 'Fraunces';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: local('Fraunces'), local('Georgia'), local('Times New Roman'), local('serif');
+}

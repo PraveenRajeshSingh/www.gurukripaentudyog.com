@@ -8,16 +8,16 @@
 :root {
     /* ─── 1. Brand Palette ─── */
     /* Canonical brand hex = theme-color / apps/web / Capacitor shells */
-    --brand: #A83226;                   /* Deep brick red — primary CTAs */
-    --brand-dark: #7F241C;              /* Hover / active states */
+    --brand: #A93226;                   /* Deep brick red — primary CTAs */
+    --brand-dark: #7B241C;              /* Hover / active states */
     --brand-light: #F6E8E5;             /* Soft brand backgrounds */
     --brand-amber: #D66A45;             /* Warm terracotta accent */
     --brand-secondary: #252525;         /* Charcoal supporting accent */
-    --brand-glow: rgba(168, 50, 38, 0.15);
-    --brand-glow-strong: rgba(168, 50, 38, 0.30);
+    --brand-glow: rgba(169, 50, 38, 0.15);
+    --brand-glow-strong: rgba(169, 50, 38, 0.30);
 
     /* ─── 2. Surface & Backgrounds (Light Default) ─── */
-    --bg: #F8F7F4;                      /* Main page background */
+    --bg: #FAF6F2;                      /* Main page background */
     --bg-card: #FFFFFF;                 /* Cards, dialogs, forms */
     --bg-elevated: #FFFFFF;             /* Floating modal / sheet */
     --bg-subtle: #F1EEE8;               /* Alternating content sections */

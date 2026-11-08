@@ -398,7 +398,11 @@ function scheduleEstimateSave(payload) {
         const duplicate = last && last.tab === payload.tab && last.bricks === payload.bricks
             && last.cost === payload.cost && (Date.now() - (last.createdAt || 0)) < 10 * 60 * 1000;
         if (duplicate) { updateCalcOfflineState(); return; }
-        OfflineStore.saveEstimate(payload).then(() => renderSavedEstimates());
+        OfflineStore.saveEstimate(payload).then(() => {
+            renderSavedEstimates();
+            try { document.dispatchEvent(new CustomEvent('gb:estimate-saved')); } catch (_e) { /* ignore */ }
+            if (window.GbiPwa) GbiPwa.requestPersist();
+        });
     }, 1400);
 }
 
