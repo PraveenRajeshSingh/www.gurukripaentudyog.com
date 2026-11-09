@@ -132,6 +132,12 @@ function setCheckoutBusy(on) {
 
 function openCheckout() {
     if (!cart.length) { showToast(t('checkout.emptyCart')); return; }
+    if (typeof syncCartWithLivePrices === 'function') syncCartWithLivePrices({ notify: true });
+    if (window.GurukripaCatalogPricing && GurukripaCatalogPricing.needsCheckoutConfirmation(cart)) {
+        openCart();
+        showToast('Prices changed since items were added. Confirm the new rates in your cart before checkout.', 'warning');
+        return;
+    }
     closeCart();
     resetCheckout();
     buildCheckoutSummary();

@@ -10,7 +10,7 @@
     "smoke": "node scripts/smoke.js",
     "seed:demo": "ts-node scripts/seed-demo-accounts.ts",
     "seed:demo:reset": "ts-node scripts/seed-demo-accounts.ts --reset",
-    "test": "node --test test/isolation_and_pricing.test.js dist/test/backend.test.js dist/test/platform.test.js dist/test/demo_accounts.test.js",
+    "test": "node --test test/isolation_and_pricing.test.js test/pricing_idempotency.test.js dist/test/backend.test.js dist/test/platform.test.js dist/test/demo_accounts.test.js",
     "test:demo-accounts": "node --test dist/test/demo_accounts.test.js"
   },
   "dependencies": {

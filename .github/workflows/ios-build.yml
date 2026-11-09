@@ -1,0 +1,46 @@
+name: iOS Structure & CI Gate
+
+# Capacitor iOS shell exists under ios/. Full signing, archive, TestFlight and
+# App Store upload require Apple certificates in GitHub Environments and are
+# intentionally NOT claimed complete by this workflow.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ios/**'
+      - 'capacitor.config.json'
+      - '.github/workflows/ios-build.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'ios/**'
+      - 'capacitor.config.json'
+  workflow_dispatch:
+
+jobs:
+  validate-ios-project:
+    name: Validate iOS project files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm Capacitor iOS shell present
+        run: |
+          set -euo pipefail
+          test -f ios/App/App.xcodeproj/project.pbxproj
+          test -f ios/App/App/Info.plist
+          test -f ios/App/Podfile
+          test -f capacitor.config.json
+          echo "iOS Capacitor shell present."
+          echo "Signed archive / TestFlight requires macOS runner + Apple credentials in GitHub Environment secrets (APP_STORE_CONNECT_API_KEY, etc.)."
+
+  # Optional signed build — only runs when explicitly dispatched on macOS with secrets configured.
+  build-ios-unsigned-check:
+    name: Xcode project list (macOS)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: xcodebuild -list
+        working-directory: ios/App
+        run: xcodebuild -list -project App.xcodeproj || xcodebuild -list -workspace App.xcworkspace

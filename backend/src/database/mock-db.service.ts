@@ -38,7 +38,7 @@ export class MockDatabaseService {
     },
   ];
 
-  private products = [
+  private products: any[] = [
     // Tenant 1: Gurukripa
     {
       id: 'prod-001',
@@ -49,6 +49,11 @@ export class MockDatabaseService {
       unitPrice: 7.05,
       trolleyCapacity: 4000,
       trolleyRate: 28200,
+      gstRate: 5,
+      minOrderQty: 1000,
+      stockQty: 50000,
+      retailPrice: 7.05,
+      wholesalePrice: 6.8,
       description: 'High-strength Awwal bricks for heavy load-bearing structural walls.',
       features: ['Double-fired', 'Uniform 230x110x70mm', 'IS:1077 compliant'],
       isActive: true,
@@ -62,6 +67,11 @@ export class MockDatabaseService {
       unitPrice: 6.25,
       trolleyCapacity: 4000,
       trolleyRate: 25000,
+      gstRate: 5,
+      minOrderQty: 1000,
+      stockQty: 80000,
+      retailPrice: 6.25,
+      wholesalePrice: 6.0,
       description: 'All-purpose natural clay bricks for homes and boundary walls.',
       features: ['Natural clay', 'Affordable', '25,000 per trolley'],
       isActive: true,
@@ -75,6 +85,10 @@ export class MockDatabaseService {
       unitPrice: 12.00,
       trolleyCapacity: 4000,
       trolleyRate: 48000,
+      gstRate: 5,
+      minOrderQty: 1000,
+      stockQty: 20000,
+      retailPrice: 12,
       description: 'Ultra-premium Grade-A brick with double-fired durability.',
       features: ['Double-fired process', 'Weather resistant'],
       isActive: true,
@@ -89,6 +103,10 @@ export class MockDatabaseService {
       unitPrice: 7.50,
       trolleyCapacity: 4000,
       trolleyRate: 30000,
+      gstRate: 5,
+      minOrderQty: 1000,
+      stockQty: 30000,
+      retailPrice: 7.5,
       description: 'Awadh regional standard construction bricks.',
       features: ['Well fired', 'Batch certified'],
       isActive: true,
@@ -111,6 +129,26 @@ export class MockDatabaseService {
 
   getProductById(tenantId: string, productId: string) {
     return this.products.find((p) => p.tenantId === tenantId && p.id === productId);
+  }
+
+  /** Apply a verified price change — returns the updated product row. */
+  updateProductPrice(tenantId: string, productId: string, patch: Record<string, any>) {
+    const product = this.getProductById(tenantId, productId);
+    if (!product) return null;
+    Object.assign(product, patch, { updatedAt: new Date().toISOString() });
+    this.auditLogs.push({
+      tenantId,
+      action: 'PRODUCT_PRICE_CHANGED',
+      entityType: 'PRODUCT',
+      entityId: productId,
+      meta: {
+        unitPrice: patch.unitPrice,
+        oldPrice: patch.oldPrice,
+        priceUpdatedBy: patch.priceUpdatedBy,
+      },
+      timestamp: new Date().toISOString(),
+    });
+    return product;
   }
 
   createOrder(tenantId: string, orderData: any) {

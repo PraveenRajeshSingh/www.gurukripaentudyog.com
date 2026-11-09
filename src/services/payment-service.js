@@ -12,13 +12,28 @@ window.GurukripaPayment = window.GurukripaPayment || {};
 
     exports.KeyId = RZP_KEY_ID;
 
-    // Create server-trusted order payload
+    /** Stable idempotency key for one logical payment attempt (client + server). */
+    exports.createIdempotencyKey = function(seed) {
+        const base = String(seed || ('pay-' + Date.now() + '-' + Math.random().toString(36).slice(2)));
+        let h = 0;
+        for (let i = 0; i < base.length; i++) h = ((h << 5) - h) + base.charCodeAt(i);
+        return 'idem_' + Math.abs(h).toString(36) + '_' + Date.now().toString(36);
+    };
+
+    // Create server-trusted order payload (deterministic when idempotencyKey provided)
     exports.createPaymentOrder = function(orderDetails) {
         const amountPaise = Math.round((orderDetails.total || 0) * 100);
         const receiptId = 'RCPT-' + Date.now().toString().slice(-8);
+        const idem = orderDetails.idempotencyKey || exports.createIdempotencyKey(
+            [amountPaise, orderDetails.customer?.phone, orderDetails.shipping?.address].join('|')
+        );
+        // Derive a stable order id from the idempotency key so retries do not mint duplicates.
+        let hash = 0;
+        for (let i = 0; i < idem.length; i++) hash = ((hash << 5) - hash) + idem.charCodeAt(i);
+        const orderId = 'order_' + Math.abs(hash).toString(36).padStart(10, '0').slice(0, 14);
 
         return {
-            id: 'order_' + Math.random().toString(36).substring(2, 14),
+            id: orderId,
             entity: 'order',
             amount: amountPaise,
             amount_due: amountPaise,
@@ -27,10 +42,12 @@ window.GurukripaPayment = window.GurukripaPayment || {};
             receipt: receiptId,
             status: 'created',
             attempts: 0,
+            idempotencyKey: idem,
             notes: {
                 siteAddress: orderDetails.shipping?.address || 'Site Jaunpur',
                 customerPhone: orderDetails.customer?.phone || '',
-                bhattaUnit: 'Gurukripa Unit 1'
+                bhattaUnit: 'Gurukripa Unit 1',
+                idempotencyKey: idem
             }
         };
     };

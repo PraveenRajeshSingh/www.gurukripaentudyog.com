@@ -1,0 +1,91 @@
+.daily-prices-sec {
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-subtle) 100%);
+}
+
+.daily-prices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.daily-price-card {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--bg-card);
+}
+
+.daily-price-card__img {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    background: var(--bg-muted);
+}
+
+.daily-price-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.daily-price-card__rate {
+    margin-top: 4px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--brand);
+}
+
+.daily-price-card__rate span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink-3);
+}
+
+.daily-price-card__was {
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    text-decoration: line-through;
+}
+
+.daily-prices-note {
+    margin-top: 14px;
+    font-size: 0.78rem;
+    color: var(--ink-3);
+    text-align: center;
+}
+
+.cart-price-change-banner {
+    margin: 0 0 12px;
+    padding: 12px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--warning-border);
+    background: var(--warning-bg);
+    color: var(--ink-2);
+    font-size: 0.82rem;
+    display: grid;
+    gap: 8px;
+}
+
+.cart-item--price-changed {
+    border-color: var(--warning-border);
+}
+
+.cart-price-was {
+    color: var(--ink-3);
+    text-decoration: line-through;
+    margin-left: 6px;
+}
+
+html[data-theme="dark"] .daily-price-card {
+    background: var(--bg-elevated);
+}
+
+@media (max-width: 480px) {
+    .daily-price-card { grid-template-columns: 56px 1fr; }
+    .daily-price-card__img { width: 56px; height: 56px; }
+}

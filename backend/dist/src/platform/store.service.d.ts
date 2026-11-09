@@ -21,6 +21,7 @@ export declare class PlatformStoreService implements OnModuleInit {
     newId(prefix: string): string;
     now(): string;
     onModuleInit(): Promise<void>;
+    private loadDemoSnapshotIfAllowed;
     private runMigrationsIfPresent;
     private hydrate;
     mirror(table: string, row: Record<string, any>): Promise<void>;

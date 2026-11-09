@@ -13,6 +13,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlatformStoreService = void 0;
 const common_1 = require("@nestjs/common");
 const crypto_1 = require("crypto");
+const fs = require("fs");
+const path = require("path");
 const postgres_service_1 = require("../database/postgres.service");
 const mock_db_service_1 = require("../database/mock-db.service");
 let PlatformStoreService = PlatformStoreService_1 = class PlatformStoreService {
@@ -43,16 +45,59 @@ let PlatformStoreService = PlatformStoreService_1 = class PlatformStoreService {
         this.dbReady = conn.ok;
         if (!this.dbReady) {
             console.log('[platform] PostgreSQL not reachable - running in-memory store (dev mode).');
+        }
+        else {
+            try {
+                await this.runMigrationsIfPresent();
+                await this.hydrate();
+                console.log('[platform] hydrated platform collections from PostgreSQL.');
+            }
+            catch (err) {
+                console.warn('[platform] hydration failed, continuing in-memory:', err.message);
+                this.dbReady = false;
+            }
+        }
+        this.loadDemoSnapshotIfAllowed();
+    }
+    loadDemoSnapshotIfAllowed() {
+        if (process.env.NODE_ENV === 'production')
+            return;
+        if (process.env.ALLOW_DEMO_SEED !== '1' && process.env.ALLOW_DEMO_SEED !== 'true')
+            return;
+        const candidates = [
+            path.resolve(process.cwd(), '../.demo/platform-seed-snapshot.local.json'),
+            path.resolve(process.cwd(), '.demo/platform-seed-snapshot.local.json'),
+            path.resolve(__dirname, '../../../.demo/platform-seed-snapshot.local.json'),
+        ];
+        const file = candidates.find((p) => fs.existsSync(p));
+        if (!file) {
+            console.log('[platform] ALLOW_DEMO_SEED set but no .demo/platform-seed-snapshot.local.json — run npm run seed:demo');
             return;
         }
         try {
-            await this.runMigrationsIfPresent();
-            await this.hydrate();
-            console.log('[platform] hydrated platform collections from PostgreSQL.');
+            const snap = JSON.parse(fs.readFileSync(file, 'utf8'));
+            const mergeById = (current, incoming) => {
+                if (!incoming?.length)
+                    return current;
+                const map = new Map(current.map((x) => [x.id, x]));
+                for (const row of incoming)
+                    map.set(row.id, row);
+                return [...map.values()];
+            };
+            this.users = mergeById(this.users, snap.users);
+            this.addresses = mergeById(this.addresses, snap.addresses);
+            this.enquiries = mergeById(this.enquiries, snap.enquiries);
+            this.quotations = mergeById(this.quotations, snap.quotations);
+            this.orders = mergeById(this.orders, snap.orders);
+            this.events = mergeById(this.events, snap.events);
+            this.notifications = mergeById(this.notifications, snap.notifications);
+            this.announcements = mergeById(this.announcements, snap.announcements);
+            this.savedSites = mergeById(this.savedSites, snap.savedSites);
+            this.auditLogs = mergeById(this.auditLogs, snap.auditLogs);
+            console.log(`[platform] loaded demo seed snapshot (${snap.users?.length || 0} test users) from ${file}`);
         }
         catch (err) {
-            console.warn('[platform] hydration failed, continuing in-memory:', err.message);
-            this.dbReady = false;
+            console.warn('[platform] demo snapshot load failed:', err.message);
         }
     }
     async runMigrationsIfPresent() {

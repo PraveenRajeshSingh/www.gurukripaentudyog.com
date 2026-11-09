@@ -66,4 +66,12 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Nearby brick bhatta finder -->
+  <url>
+    <loc>https://www.gurukripaentudyog.com/#nearby-bhatta</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
 </urlset>

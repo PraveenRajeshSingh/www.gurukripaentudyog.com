@@ -639,6 +639,21 @@ async function runDemoSeed(options) {
     fs.mkdirSync(demoDir, { recursive: true });
     writeCredentialsMarkdown(seeded, credentialsPath);
     fs.writeFileSync(datasetPath, JSON.stringify(buildSidecarDataset(store, mockDb), null, 2), 'utf8');
+    const snapshotPath = path.join(demoDir, 'platform-seed-snapshot.local.json');
+    fs.writeFileSync(snapshotPath, JSON.stringify({
+        mark: 'TEST DATA snapshot — bcrypt hashes only',
+        generatedAt: new Date().toISOString(),
+        users: store.users.filter((u) => u.isTestAccount),
+        addresses: store.addresses,
+        enquiries: store.enquiries,
+        quotations: store.quotations,
+        orders: store.orders,
+        events: store.events,
+        notifications: store.notifications,
+        announcements: store.announcements,
+        savedSites: store.savedSites,
+        auditLogs: store.auditLogs.filter((a) => true),
+    }, null, 2), 'utf8');
     const byRole = {};
     for (const a of seeded)
         byRole[a.jobTitle] = (byRole[a.jobTitle] || 0) + 1;

@@ -1,0 +1,103 @@
+    <!-- ━━━━━━━━━━━━━━━━━ NEARBY BRICK BHATTA & EENT FINDER ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec nearby-sec" id="nearby-bhatta" aria-labelledby="nearbyTitle">
+        <div class="container">
+            <div class="text-center nearby-sec__intro">
+                <span class="sec-tag" data-i18n="nearby.tag">Smart Local Discovery</span>
+                <h2 class="sec-title" id="nearbyTitle" data-i18n="nearby.title">Brick Bhatta &amp; Eent Suppliers Near You</h2>
+                <p class="sec-sub" data-i18n="nearby.lead">Find trusted brick manufacturers and eent suppliers near your current location.</p>
+            </div>
+
+            <div class="nearby-loc-bar" id="nearbyLocBar">
+                <div class="nearby-loc-bar__status" id="nearbyLocStatus" role="status">
+                    <span class="nearby-loc-dot" aria-hidden="true"></span>
+                    <div>
+                        <strong data-i18n="nearby.locPending">Location not set</strong>
+                        <span id="nearbyLocLabel">Allow location or enter your area to search nearby bhattas.</span>
+                    </div>
+                </div>
+                <div class="nearby-loc-bar__actions">
+                    <button type="button" class="btn btn-primary" id="nearbyDetectBtn" data-i18n="nearby.useGps">Use My Location</button>
+                    <button type="button" class="btn btn-outline" id="nearbyChangeBtn" data-i18n="nearby.changeLoc">Change Location</button>
+                </div>
+            </div>
+
+            <div class="nearby-manual" id="nearbyManualPanel" hidden>
+                <label class="auth-label" for="nearbyManualInput" data-i18n="nearby.manualLabel">Enter locality, city, or PIN code</label>
+                <div class="nearby-manual__row">
+                    <input type="search" id="nearbyManualInput" class="auth-input" placeholder="e.g. Jalalpur, Jaunpur or 222001" autocomplete="postal-code" enterkeyhint="search">
+                    <button type="button" class="btn btn-primary" id="nearbyManualSearchBtn" data-i18n="nearby.searchLoc">Search</button>
+                </div>
+                <div class="nearby-manual__hints" id="nearbyManualHints" role="listbox" aria-label="Location suggestions"></div>
+                <p class="nearby-privacy-note" data-i18n="nearby.privacy">Your precise coordinates stay on this device for this session only and are not stored on our servers.</p>
+            </div>
+
+            <div class="nearby-smart" id="nearbySmartRecs" hidden>
+                <h3 class="nearby-smart__title" data-i18n="nearby.smartTitle">Location-based recommendations</h3>
+                <div class="nearby-smart__grid" id="nearbySmartGrid"></div>
+            </div>
+
+            <div class="nearby-brick-types" id="nearbyBrickTypes">
+                <div class="nearby-brick-types__head">
+                    <h3 data-i18n="nearby.recTitle">Smart Eent Recommendation</h3>
+                    <p data-i18n="nearby.recLead">Choose a brick category to see typical uses and nearby suppliers. Structural suitability always depends on tested specs and your project engineer.</p>
+                </div>
+                <div class="nearby-brick-types__grid" id="nearbyBrickTypeGrid"></div>
+            </div>
+
+            <div class="nearby-toolbar">
+                <div class="nearby-search">
+                    <label class="visually-hidden" for="nearbySearchInput">Search suppliers</label>
+                    <input type="search" id="nearbySearchInput" class="auth-input" placeholder="Search bhatta, locality, PIN, city, brick type…" autocomplete="off">
+                </div>
+                <div class="nearby-filters" id="nearbyFilters" role="group" aria-label="Supplier filters">
+                    <select id="nearbySort" class="auth-input nearby-select" aria-label="Sort suppliers">
+                        <option value="nearest">Nearest First</option>
+                        <option value="price">Lowest Price</option>
+                        <option value="rating">Highest Rated</option>
+                    </select>
+                    <select id="nearbyBrickFilter" class="auth-input nearby-select" aria-label="Brick type filter">
+                        <option value="">All Brick Types</option>
+                        <option value="first-class">First-Class Red Clay</option>
+                        <option value="second-class">Second-Class</option>
+                        <option value="fly-ash">Fly Ash</option>
+                        <option value="wire-cut">Wire-Cut</option>
+                        <option value="aac">AAC Blocks</option>
+                        <option value="concrete-block">Concrete Blocks</option>
+                    </select>
+                    <select id="nearbyRadius" class="auth-input nearby-select" aria-label="Search radius">
+                        <option value="5">Within 5 km</option>
+                        <option value="10">Within 10 km</option>
+                        <option value="25" selected>Within 25 km</option>
+                        <option value="50">Within 50 km</option>
+                    </select>
+                    <label class="nearby-check"><input type="checkbox" id="nearbyDeliveryOnly"> Delivery Available</label>
+                    <label class="nearby-check"><input type="checkbox" id="nearbyMfgOnly"> Manufacturer Only</label>
+                    <label class="nearby-check"><input type="checkbox" id="nearbyWholesaleOnly"> Wholesale Supplier</label>
+                </div>
+            </div>
+
+            <div class="nearby-layout">
+                <div class="nearby-map-panel">
+                    <div class="nearby-map-toolbar">
+                        <strong data-i18n="nearby.mapTitle">Nearby Bhatta Map</strong>
+                        <div class="nearby-map-toolbar__acts">
+                            <button type="button" class="btn btn-outline btn-sm" id="nearbyLocateMeBtn">Locate Me</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="nearbyMapRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <div id="nearbyMap" class="nearby-map gb-map-host" role="region" aria-label="Interactive map of nearby brick suppliers"></div>
+                    <p class="nearby-map-note" id="nearbyMapNote">Markers show OpenStreetMap / verified yard locations. Zoom and pan freely on mobile.</p>
+                </div>
+
+                <div class="nearby-list-panel">
+                    <div class="nearby-list-head">
+                        <strong id="nearbyResultCount">0 suppliers</strong>
+                        <button type="button" class="btn btn-outline btn-sm" id="nearbyCompareOpenBtn" disabled>Compare Prices (<span id="nearbyCompareCount">0</span>)</button>
+                    </div>
+                    <div class="nearby-list" id="nearbySupplierList" aria-live="polite"></div>
+                    <p class="nearby-empty" id="nearbyEmpty" hidden>No suppliers matched these filters. Try a wider radius or clear brick-type filters.</p>
+                    <p class="nearby-error" id="nearbyError" role="alert" hidden></p>
+                </div>
+            </div>
+        </div>
+    </section>

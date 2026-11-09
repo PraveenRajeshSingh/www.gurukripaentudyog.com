@@ -5,11 +5,19 @@ const _trashSVG = `<svg width="16" height="16" fill="none" stroke="currentColor"
 const _tagSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`;
 
 function addToCart(id, qty = 1) {
+    if (window.GurukripaCatalogPricing) GurukripaCatalogPricing.applyToProducts();
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;
+    const livePrice = window.GurukripaCatalogPricing
+        ? GurukripaCatalogPricing.getProductPrice(id)
+        : p.price;
     const existing = cart.find(i => i.id === id);
-    if (existing) { existing.qty += qty; }
-    else { cart.push({ ...p, qty }); }
+    if (existing) {
+        existing.qty += qty;
+        existing.price = livePrice != null ? livePrice : p.price;
+    } else {
+        cart.push({ ...p, price: livePrice != null ? livePrice : p.price, qty });
+    }
     saveCart();
     updateCartUI();
     bounceCartBadges();
@@ -95,6 +103,42 @@ function updateCartUI() {
     }
 }
 
+function syncCartWithLivePrices(opts) {
+    opts = opts || {};
+    if (!window.GurukripaCatalogPricing || !Array.isArray(cart) || !cart.length) {
+        return { changes: [] };
+    }
+    const result = GurukripaCatalogPricing.syncCartPrices(cart);
+    if (result.changes.length) {
+        saveCart();
+        if (opts.notify !== false && typeof showToast === 'function') {
+            showToast(
+                'Catalogue prices updated for ' + result.changes.length +
+                ' cart item(s). Review the new rates before checkout.',
+                'warning'
+            );
+        }
+        const banner = document.getElementById('cartPriceChangeBanner');
+        if (banner) {
+            banner.hidden = false;
+            banner.innerHTML = result.changes.map(function (c) {
+                return '<div><strong>' + (typeof sanitizeHTML === 'function' ? sanitizeHTML(c.name) : c.name) +
+                    '</strong>: ₹' + c.previousPrice + ' → <strong>₹' + c.currentPrice + '</strong></div>';
+            }).join('') +
+                '<button type="button" class="btn btn-primary btn-sm" id="cartPriceAckBtn">I understand — use new prices</button>';
+            const ack = document.getElementById('cartPriceAckBtn');
+            if (ack) {
+                ack.onclick = function () {
+                    GurukripaCatalogPricing.acknowledgeCartPrices(result.changes);
+                    banner.hidden = true;
+                    if (typeof showToast === 'function') showToast('Updated prices confirmed for checkout.', 'success');
+                };
+            }
+        }
+    }
+    return result;
+}
+
 function openCart() {
     const overlay = document.getElementById('cartOverlay');
     const drawer = document.getElementById('cartDrawer');
@@ -102,6 +146,7 @@ function openCart() {
     overlay?.classList.add('open');
     drawer?.classList.add('open');
     if (!alreadyOpen) overlayLock();
+    syncCartWithLivePrices();
     renderCartItems();
     if (window.WhatsAppOrder) WhatsAppOrder.renderQueuedNotice();
 }
@@ -137,11 +182,11 @@ function renderCartItems() {
 
     if (list) {
         list.innerHTML = cart.map(item => `
-            <div class="cart-item">
+            <div class="cart-item${item.priceChanged ? ' cart-item--price-changed' : ''}">
               <div class="cart-item-img"><img src="${item.img}" alt="${sanitizeHTML(item.name)}"></div>
               <div class="cart-item-info">
                 <div class="cart-item-name">${sanitizeHTML(item.name)}</div>
-                <div class="cart-item-price">${formatINR(item.price * item.qty)} <span style="font-size:.72rem;color:var(--ink-3)">(₹${item.price}/${item.unit || 'pc'})</span></div>
+                <div class="cart-item-price">${formatINR(item.price * item.qty)} <span style="font-size:.72rem;color:var(--ink-3)">(₹${item.price}/${item.unit || 'pc'})</span>${item.priceChanged && item.previousPrice != null ? ` <span class="cart-price-was">was ₹${item.previousPrice}</span>` : ''}</div>
                 <div class="cart-item-qty">
                   <!-- CHANGE: data-action delegation for cart rows (polish §1) -->
                   <button type="button" class="qty-btn" data-action="change-qty" data-id="${item.id}" data-delta="-1" aria-label="Decrease quantity">−</button>

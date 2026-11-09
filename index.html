@@ -173,6 +173,11 @@
     <link rel="stylesheet" href="src/styles/polish-pass.css">
     <!-- CHANGE: premium #products redesign (mobile-first) — loads last for catalog -->
     <link rel="stylesheet" href="src/styles/catalog-premium.css">
+    <!-- Nearby brick bhatta & eent finder -->
+    <link rel="stylesheet" href="src/styles/nearby-bhatta.css">
+    <link rel="stylesheet" href="src/styles/daily-prices.css">
+    <!-- Final: dynamic full-page + every popup sized to live visual viewport -->
+    <link rel="stylesheet" href="src/styles/viewport-adaptive.css">
 </head>
 
 <body>
@@ -350,6 +355,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                 <nav class="nav-links" aria-label="Primary Navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)" aria-current="true" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
+                    <a href="#nearby-bhatta" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.nearby">Nearby Bhatta</a>
+                    <a href="#price-list" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.prices">Price List</a>
                     <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.categories">Categories</a>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
@@ -633,6 +640,10 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                 </svg>
                 <span data-i18n="nav.home">Home</span>
             </a>
+            <a href="#nearby-bhatta" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-4.5 7-11a7 7 0 10-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                <span data-i18n="nav.nearby">Nearby Bhatta</span>
+            </a>
             <a href="#products" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
@@ -806,6 +817,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
                 <div class="hero-cta">
                     <a href="#products" class="btn btn-primary btn-lg" data-i18n="hero.cta1">Explore Products</a>
+                    <a href="#nearby-bhatta" class="btn btn-outline btn-lg" data-i18n="hero.ctaNearby">Find Nearby Bhatta</a>
                     <button type="button" class="btn btn-outline btn-lg" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
                 </div>
 
@@ -923,6 +935,19 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                     <div class="cat-card-arrow">→</div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━ DAILY UPDATED BRICK PRICES ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec daily-prices-sec" id="price-list" aria-labelledby="dailyPricesTitle">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:var(--space-5)">
+                <span class="sec-tag">Live Catalogue</span>
+                <h2 class="sec-title" id="dailyPricesTitle">Today’s Brick Prices</h2>
+                <p class="sec-sub">Rates below come from the centralized catalogue. Cart and checkout always revalidate against these figures.</p>
+            </div>
+            <div class="daily-prices-grid" id="dailyPricesGrid" aria-live="polite"></div>
+            <p class="daily-prices-note" id="dailyPricesNote">Prices are GST-inclusive catalogue rates. Confirm stock and freight before dispatch.</p>
         </div>
     </section>
 
@@ -1714,6 +1739,110 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
         </div>
     </section>
 
+    <!-- ━━━━━━━━━━━━━━━━━ NEARBY BRICK BHATTA & EENT FINDER ━━━━━━━━━━━━━━━━━ -->
+    <section class="sec nearby-sec" id="nearby-bhatta" aria-labelledby="nearbyTitle">
+        <div class="container">
+            <div class="text-center nearby-sec__intro">
+                <span class="sec-tag" data-i18n="nearby.tag">Smart Local Discovery</span>
+                <h2 class="sec-title" id="nearbyTitle" data-i18n="nearby.title">Brick Bhatta &amp; Eent Suppliers Near You</h2>
+                <p class="sec-sub" data-i18n="nearby.lead">Find trusted brick manufacturers and eent suppliers near your current location.</p>
+            </div>
+
+            <div class="nearby-loc-bar" id="nearbyLocBar">
+                <div class="nearby-loc-bar__status" id="nearbyLocStatus" role="status">
+                    <span class="nearby-loc-dot" aria-hidden="true"></span>
+                    <div>
+                        <strong data-i18n="nearby.locPending">Location not set</strong>
+                        <span id="nearbyLocLabel">Allow location or enter your area to search nearby bhattas.</span>
+                    </div>
+                </div>
+                <div class="nearby-loc-bar__actions">
+                    <button type="button" class="btn btn-primary" id="nearbyDetectBtn" data-i18n="nearby.useGps">Use My Location</button>
+                    <button type="button" class="btn btn-outline" id="nearbyChangeBtn" data-i18n="nearby.changeLoc">Change Location</button>
+                </div>
+            </div>
+
+            <div class="nearby-manual" id="nearbyManualPanel" hidden>
+                <label class="auth-label" for="nearbyManualInput" data-i18n="nearby.manualLabel">Enter locality, city, or PIN code</label>
+                <div class="nearby-manual__row">
+                    <input type="search" id="nearbyManualInput" class="auth-input" placeholder="e.g. Jalalpur, Jaunpur or 222001" autocomplete="postal-code" enterkeyhint="search">
+                    <button type="button" class="btn btn-primary" id="nearbyManualSearchBtn" data-i18n="nearby.searchLoc">Search</button>
+                </div>
+                <div class="nearby-manual__hints" id="nearbyManualHints" role="listbox" aria-label="Location suggestions"></div>
+                <p class="nearby-privacy-note" data-i18n="nearby.privacy">Your precise coordinates stay on this device for this session only and are not stored on our servers.</p>
+            </div>
+
+            <div class="nearby-smart" id="nearbySmartRecs" hidden>
+                <h3 class="nearby-smart__title" data-i18n="nearby.smartTitle">Location-based recommendations</h3>
+                <div class="nearby-smart__grid" id="nearbySmartGrid"></div>
+            </div>
+
+            <div class="nearby-brick-types" id="nearbyBrickTypes">
+                <div class="nearby-brick-types__head">
+                    <h3 data-i18n="nearby.recTitle">Smart Eent Recommendation</h3>
+                    <p data-i18n="nearby.recLead">Choose a brick category to see typical uses and nearby suppliers. Structural suitability always depends on tested specs and your project engineer.</p>
+                </div>
+                <div class="nearby-brick-types__grid" id="nearbyBrickTypeGrid"></div>
+            </div>
+
+            <div class="nearby-toolbar">
+                <div class="nearby-search">
+                    <label class="visually-hidden" for="nearbySearchInput">Search suppliers</label>
+                    <input type="search" id="nearbySearchInput" class="auth-input" placeholder="Search bhatta, locality, PIN, city, brick type…" autocomplete="off">
+                </div>
+                <div class="nearby-filters" id="nearbyFilters" role="group" aria-label="Supplier filters">
+                    <select id="nearbySort" class="auth-input nearby-select" aria-label="Sort suppliers">
+                        <option value="nearest">Nearest First</option>
+                        <option value="price">Lowest Price</option>
+                        <option value="rating">Highest Rated</option>
+                    </select>
+                    <select id="nearbyBrickFilter" class="auth-input nearby-select" aria-label="Brick type filter">
+                        <option value="">All Brick Types</option>
+                        <option value="first-class">First-Class Red Clay</option>
+                        <option value="second-class">Second-Class</option>
+                        <option value="fly-ash">Fly Ash</option>
+                        <option value="wire-cut">Wire-Cut</option>
+                        <option value="aac">AAC Blocks</option>
+                        <option value="concrete-block">Concrete Blocks</option>
+                    </select>
+                    <select id="nearbyRadius" class="auth-input nearby-select" aria-label="Search radius">
+                        <option value="5">Within 5 km</option>
+                        <option value="10">Within 10 km</option>
+                        <option value="25" selected>Within 25 km</option>
+                        <option value="50">Within 50 km</option>
+                    </select>
+                    <label class="nearby-check"><input type="checkbox" id="nearbyDeliveryOnly"> Delivery Available</label>
+                    <label class="nearby-check"><input type="checkbox" id="nearbyMfgOnly"> Manufacturer Only</label>
+                    <label class="nearby-check"><input type="checkbox" id="nearbyWholesaleOnly"> Wholesale Supplier</label>
+                </div>
+            </div>
+
+            <div class="nearby-layout">
+                <div class="nearby-map-panel">
+                    <div class="nearby-map-toolbar">
+                        <strong data-i18n="nearby.mapTitle">Nearby Bhatta Map</strong>
+                        <div class="nearby-map-toolbar__acts">
+                            <button type="button" class="btn btn-outline btn-sm" id="nearbyLocateMeBtn">Locate Me</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="nearbyMapRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <div id="nearbyMap" class="nearby-map gb-map-host" role="region" aria-label="Interactive map of nearby brick suppliers"></div>
+                    <p class="nearby-map-note" id="nearbyMapNote">Markers show OpenStreetMap / verified yard locations. Zoom and pan freely on mobile.</p>
+                </div>
+
+                <div class="nearby-list-panel">
+                    <div class="nearby-list-head">
+                        <strong id="nearbyResultCount">0 suppliers</strong>
+                        <button type="button" class="btn btn-outline btn-sm" id="nearbyCompareOpenBtn" disabled>Compare Prices (<span id="nearbyCompareCount">0</span>)</button>
+                    </div>
+                    <div class="nearby-list" id="nearbySupplierList" aria-live="polite"></div>
+                    <p class="nearby-empty" id="nearbyEmpty" hidden>No suppliers matched these filters. Try a wider radius or clear brick-type filters.</p>
+                    <p class="nearby-error" id="nearbyError" role="alert" hidden></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ━━━━━━━━━━━━━━━━━ FAQ ━━━━━━━━━━━━━━━━━ -->
     <section class="sec" id="faq">
         <div class="container">
@@ -1967,6 +2096,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                     <ul class="footer-links" id="footerQuickLinks">
                         <li><a href="#home" data-i18n="nav.home">Home</a></li>
                         <li><a href="#products" data-i18n="nav.products">Products</a></li>
+                        <li><a href="#nearby-bhatta" data-i18n="nav.nearby">Nearby Bhatta</a></li>
                         <li><a href="#calculator" data-i18n="nav.calculator">Estimator</a></li>
                         <li><a href="#about" data-i18n="nav.about">About</a></li>
                         <li><a href="#gallery" data-i18n="nav.gallery">Gallery</a></li>
@@ -2088,6 +2218,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
             </div>
         </div>
         <div class="cart-body" id="cartBody">
+            <div id="cartPriceChangeBanner" class="cart-price-change-banner" hidden role="status"></div>
             <div class="cart-empty" id="cartEmpty">
                 <div class="cart-empty-anim">
                     <svg width="48" height="48" fill="none" stroke="var(--brand)" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -3079,6 +3210,94 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
         </div>
     </div>
 
+    <!-- Nearby supplier detail -->
+    <div class="modal-overlay" id="nearbyDetailModal" role="dialog" aria-modal="true" aria-labelledby="nearbyDetailTitle" onclick="if(event.target===this)NearbyBhatta.closeDetail()">
+        <div class="modal-box modal-box--lg nearby-detail-box">
+            <div class="modal-head">
+                <div>
+                    <h3 class="modal-title" id="nearbyDetailTitle">Supplier details</h3>
+                    <p class="modal-subtitle" id="nearbyDetailSub"></p>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="NearbyBhatta.closeDetail()" aria-label="Close supplier details">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="nearbyDetailBody"></div>
+            <div class="modal-foot nearby-detail-foot" id="nearbyDetailFoot"></div>
+        </div>
+    </div>
+
+    <!-- Nearby supplier comparison -->
+    <div class="modal-overlay" id="nearbyCompareModal" role="dialog" aria-modal="true" aria-labelledby="nearbyCompareTitle" onclick="if(event.target===this)NearbyBhatta.closeCompare()">
+        <div class="modal-box modal-box--lg">
+            <div class="modal-head">
+                <div>
+                    <h3 class="modal-title" id="nearbyCompareTitle">Compare suppliers</h3>
+                    <p class="modal-subtitle">Only verified fields are shown. Missing values mean the data is not publicly confirmed.</p>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="NearbyBhatta.closeCompare()" aria-label="Close comparison">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="nearbyCompareBody"></div>
+        </div>
+    </div>
+
+    <!-- Nearby quotation request (reuses QuotationService ledger) -->
+    <div class="modal-overlay" id="nearbyQuoteModal" role="dialog" aria-modal="true" aria-labelledby="nearbyQuoteTitle" onclick="if(event.target===this)NearbyBhatta.closeQuote()">
+        <div class="modal-box modal-box--md">
+            <div class="modal-head">
+                <div>
+                    <h3 class="modal-title" id="nearbyQuoteTitle">Request brick quotation</h3>
+                    <p class="modal-subtitle" id="nearbyQuoteSub">Logged to your existing enquiries on this device.</p>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="NearbyBhatta.closeQuote()" aria-label="Close quotation form">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="nearbyQuoteForm" novalidate>
+                    <input type="hidden" id="nqSupplierId">
+                    <input type="hidden" id="nqSupplierName">
+                    <div class="auth-field">
+                        <label class="auth-label" for="nqName">Your name *</label>
+                        <input type="text" id="nqName" class="auth-input" required autocomplete="name">
+                    </div>
+                    <div class="auth-field">
+                        <label class="auth-label" for="nqPhone">Mobile (10 digits) *</label>
+                        <input type="tel" id="nqPhone" class="auth-input" required pattern="[0-9]{10}" inputmode="numeric" autocomplete="tel">
+                    </div>
+                    <div class="nearby-quote-grid">
+                        <div class="auth-field">
+                            <label class="auth-label" for="nqBrickType">Brick type *</label>
+                            <select id="nqBrickType" class="auth-input" required>
+                                <option value="first-class">First-Class Red Clay</option>
+                                <option value="second-class">Second-Class</option>
+                                <option value="fly-ash">Fly Ash</option>
+                                <option value="wire-cut">Wire-Cut</option>
+                                <option value="aac">AAC Blocks</option>
+                                <option value="concrete-block">Concrete Blocks</option>
+                                <option value="awwal">Awwal (Gurukripa catalogue)</option>
+                                <option value="laal-peti">Laal Peti (Gurukripa catalogue)</option>
+                            </select>
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label" for="nqQty">Quantity (pcs) *</label>
+                            <input type="number" id="nqQty" class="auth-input" min="1000" step="500" value="4000" required>
+                        </div>
+                    </div>
+                    <div class="auth-field">
+                        <label class="auth-label" for="nqAddress">Delivery address *</label>
+                        <textarea id="nqAddress" class="auth-input" rows="3" required placeholder="Site address, landmark, PIN"></textarea>
+                    </div>
+                    <div id="nqCostPreview" class="nearby-cost-preview" hidden></div>
+                    <p class="auth-error-msg" id="nqError" role="alert" hidden></p>
+                    <button type="submit" class="btn btn-primary btn-full">Submit enquiry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 ﻿    <!-- ━━━━━━━━━━━━━━━━━ ADMIN & OPERATIONS PORTAL MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="adminPortalModal" role="dialog" aria-modal="true" aria-labelledby="adminPortalTitle" onclick="if(event.target===this)closeAdminPortal()">
         <div class="modal-box modal-box--full admin-modal-box">
@@ -3109,6 +3328,10 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                     <button type="button" class="admin-nav-item" onclick="switchAdminTab('orders', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         <span>Customer Orders</span>
+                    </button>
+                    <button type="button" class="admin-nav-item" onclick="switchAdminTab('pricing', this)">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <span>Daily Pricing</span>
                     </button>
                     <button type="button" class="admin-nav-item" onclick="switchAdminTab('inventory', this)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
@@ -3753,6 +3976,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/data.js" defer></script>
     <script src="src/services/index.js" defer></script>
     <script src="src/services/maps-service.js" defer></script>
+    <script src="src/services/nearby-suppliers-service.js" defer></script>
+    <script src="src/services/catalog-pricing-service.js" defer></script>
     <script src="src/services/payment-service.js" defer></script>
     <script src="src/js/i18n.js" defer></script>
     <script src="src/js/state.js" defer></script>
@@ -3777,6 +4002,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/pincodeChecker.js" defer></script>
     <script src="src/js/voice-search.js" defer></script>
     <script src="src/js/products.js" defer></script>
+    <script src="src/js/daily-prices.js" defer></script>
     <script src="src/js/catalog-discovery.js" defer></script>
     <script src="src/js/cart.js" defer></script>
     <script src="src/js/wishlist-drawer.js" defer></script>
@@ -3796,6 +4022,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/native-camera.js" defer></script>
     <script src="src/js/chatbot.js" defer></script>
     <script src="src/js/fab-stack.js" defer></script>
+    <script src="src/js/nearby-bhatta.js" defer></script>
     <script src="src/js/invoice.js" defer></script>
     <script src="src/js/platform.js" defer></script>
     <script src="src/js/main.js" defer></script>

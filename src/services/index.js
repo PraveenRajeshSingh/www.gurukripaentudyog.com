@@ -104,6 +104,9 @@ window.GurukripaServices = window.GurukripaServices || {};
                 site: formData.site,
                 roadAccess: formData.roadAccess || 'wide',
                 unloadingReq: formData.unloadingReq || 'self',
+                supplierId: formData.supplierId || null,
+                supplierName: formData.supplierName || null,
+                source: formData.source || 'bulk-rfq',
                 status: 'Under Review by Bhatta Manager',
                 createdAt: new Date().toISOString()
             };

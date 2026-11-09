@@ -211,8 +211,14 @@ describe('Dialog system integration (static checks)', () => {
         assert.match(polish, /popup-radius-sheet/);
         assert.match(polish, /align-items:\s*flex-end/);
         assert.match(polish, /font-size:\s*16px/);
+        const adaptive = read('src/styles/viewport-adaptive.css');
+        assert.match(adaptive, /--vv-height/);
+        assert.match(adaptive, /--popup-max-h-full/);
+        assert.match(adaptive, /#nearbyDetailModal/);
+        assert.match(adaptive, /visual viewport|vv-height|100dvh/i);
         const head = read('src/pages/partials/head.html');
         assert.match(head, /popup-polish\.css/);
+        assert.match(head, /viewport-adaptive\.css/);
     });
 
     test('native popups removed from the storefront (no window.confirm/prompt left)', () => {

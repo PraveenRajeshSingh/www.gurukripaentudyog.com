@@ -23,32 +23,9 @@ export declare class MockDatabaseService {
         secondaryColor: string;
         isActive: boolean;
     };
-    getProductsForTenant(tenantId: string): {
-        id: string;
-        tenantId: string;
-        sku: string;
-        name: string;
-        category: string;
-        unitPrice: number;
-        trolleyCapacity: number;
-        trolleyRate: number;
-        description: string;
-        features: string[];
-        isActive: boolean;
-    }[];
-    getProductById(tenantId: string, productId: string): {
-        id: string;
-        tenantId: string;
-        sku: string;
-        name: string;
-        category: string;
-        unitPrice: number;
-        trolleyCapacity: number;
-        trolleyRate: number;
-        description: string;
-        features: string[];
-        isActive: boolean;
-    };
+    getProductsForTenant(tenantId: string): any[];
+    getProductById(tenantId: string, productId: string): any;
+    updateProductPrice(tenantId: string, productId: string, patch: Record<string, any>): any;
     createOrder(tenantId: string, orderData: any): {
         id: string;
         tenantId: string;

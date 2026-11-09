@@ -66,6 +66,32 @@ function switchAdminTab(tab, btn) {
     renderAdminTab(tab);
 }
 
+/** Persist a daily catalogue price through the centralized pricing service. */
+function adminSaveProductPrice(productId) {
+    const input = document.getElementById('adminPrice_' + productId);
+    if (!input || !window.GurukripaCatalogPricing) {
+        showToast('Pricing service unavailable', 'warning');
+        return;
+    }
+    const next = Number(input.value);
+    if (isNaN(next) || next < 0) {
+        showToast('Enter a valid non-negative price', 'warning');
+        return;
+    }
+    try {
+        GurukripaCatalogPricing.setProductPrice(productId, next, {
+            updatedBy: (user && (user.name || user.phone)) || 'admin',
+            reason: 'Daily admin price update'
+        });
+        if (typeof renderProducts === 'function') renderProducts();
+        if (typeof renderDailyPrices === 'function') renderDailyPrices();
+        showToast('Price updated across catalogue, cart will revalidate on open.', 'success');
+        renderAdminTab('pricing');
+    } catch (err) {
+        showToast((err && err.message) || 'Price update failed', 'error');
+    }
+}
+
 // CSV exports from real ERP records (uses Analytics + browser download)
 function erpExport(kind) {
     if (!(window.GurukripaERP && GurukripaERP.Analytics)) { showToast('ERP analytics unavailable', 'warning'); return; }
@@ -331,6 +357,48 @@ function renderAdminTab(tab) {
                     <strong>Bank / UPI:</strong> ${sanitizeHTML(p.bank.bank || '—')}${p.bank.upi ? ' · UPI ' + sanitizeHTML(p.bank.upi) : ''}<br/>
                     <strong>Signatory:</strong> ${sanitizeHTML(p.signatory.name || '—')}
                 </div>
+            </div>
+        `;
+    } else if (tab === 'pricing') {
+        if (window.GurukripaCatalogPricing) GurukripaCatalogPricing.applyToProducts();
+        const rows = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).map((p) => `
+            <tr style="border-bottom:1px solid var(--line)">
+                <td style="padding:10px 8px"><strong>${sanitizeHTML(p.name)}</strong><br><small style="color:var(--ink-3)">${sanitizeHTML(p.category)}</small></td>
+                <td style="padding:10px 8px;text-align:right">${p.oldPrice != null ? '₹' + p.oldPrice : '—'}</td>
+                <td style="padding:10px 8px;text-align:right;font-weight:700">₹${p.price}</td>
+                <td style="padding:10px 8px;text-align:right">
+                    <input type="number" min="0" step="0.01" id="adminPrice_${p.id}" value="${p.price}" style="width:96px;padding:6px 8px;border:1px solid var(--line);border-radius:8px">
+                </td>
+                <td style="padding:10px 8px;text-align:right">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="adminSaveProductPrice(${p.id})">Update</button>
+                </td>
+            </tr>`).join('') || '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--ink-3)">No catalogue products loaded.</td></tr>';
+        const hist = (window.GurukripaCatalogPricing ? GurukripaCatalogPricing.getHistory() : []).slice(0, 8).map((h) =>
+            `<li style="margin-bottom:6px"><strong>#${sanitizeHTML(String(h.productId))}</strong> ₹${h.previousPrice} → ₹${h.newPrice} <span style="color:var(--ink-3)">· ${sanitizeHTML(h.reason || '')} · ${sanitizeHTML(h.at || '')}</span></li>`
+        ).join('') || '<li style="color:var(--ink-3)">No price changes recorded on this device yet.</li>';
+        stage.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap">
+                <div>
+                    <h4 style="font-family:var(--display);font-size:1.3rem;color:var(--ink);margin:0">Daily Dynamic Pricing</h4>
+                    <p style="font-size:0.82rem;color:var(--ink-3);margin-top:2px">Updates sync to homepage, product cards, nearby quotes context, cart and checkout on this device. Platform API sync uses /catalog/prices when gb-api-base is configured.</p>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="if(window.GurukripaCatalogPricing){GurukripaCatalogPricing.syncFromApi().then(function(r){showToast('Catalogue source: '+r.source,'info');renderAdminTab('pricing');});}">Sync from API</button>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:12px;overflow-x:auto;margin-bottom:16px">
+                <table style="width:100%;border-collapse:collapse;font-size:0.84rem;text-align:left">
+                    <thead><tr style="border-bottom:1.5px solid var(--line);color:var(--ink-3)">
+                        <th style="padding:10px 8px">Product</th>
+                        <th style="padding:10px 8px;text-align:right">Previous</th>
+                        <th style="padding:10px 8px;text-align:right">Current</th>
+                        <th style="padding:10px 8px;text-align:right">New price</th>
+                        <th style="padding:10px 8px;text-align:right">Action</th>
+                    </tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:16px">
+                <strong>Recent price audit (this device)</strong>
+                <ul style="margin:10px 0 0;padding-left:18px;font-size:0.82rem">${hist}</ul>
             </div>
         `;
     } else if (tab === 'inventory') {

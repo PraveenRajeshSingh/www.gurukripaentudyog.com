@@ -3,6 +3,9 @@ import { JwtModule } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { ApiController } from './controllers/api.controller';
 import { PricingEngineService } from './pricing/pricing.service';
+import { CatalogPricingService } from './pricing/catalog-pricing.service';
+import { PricingController } from './pricing/pricing.controller';
+import { PaymentIdempotencyService } from './payments/payment-idempotency.service';
 import { MockDatabaseService } from './database/mock-db.service';
 import { TenantIsolationGuard } from './security/tenant.guard';
 import { PlatformStoreService } from './platform/store.service';
@@ -34,12 +37,19 @@ const jwtSecret =
       signOptions: { expiresIn: process.env.JWT_EXPIRATION || '12h' },
     }),
   ],
-  controllers: [ApiController, AuthController, PublicController, MeController, StaffController, HealthController],
+  controllers: [
+    ApiController, AuthController, PublicController, MeController,
+    StaffController, HealthController, PricingController,
+  ],
   providers: [
-    PricingEngineService, MockDatabaseService, TenantIsolationGuard,
+    PricingEngineService, CatalogPricingService, PaymentIdempotencyService,
+    MockDatabaseService, TenantIsolationGuard,
     PlatformStoreService, AuthService, NotifyService, WorkflowService,
     JwtAuthGuard, RolesGuard, RateLimitGuard,
   ],
-  exports: [PricingEngineService, MockDatabaseService, PlatformStoreService, WorkflowService],
+  exports: [
+    PricingEngineService, CatalogPricingService, PaymentIdempotencyService,
+    MockDatabaseService, PlatformStoreService, WorkflowService,
+  ],
 })
 export class AppModule {}

@@ -1,0 +1,54 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+jobs:
+  dependency-audit:
+    name: npm audit (root + backend)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install root workspaces
+        run: npm ci
+      - name: Audit root production dependencies
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true
+      - name: Install backend
+        working-directory: backend
+        run: npm ci
+      - name: Audit backend production dependencies
+        working-directory: backend
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true
+
+  secret-patterns:
+    name: Block obvious committed secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan tracked source for private keys / live gateway secrets
+        run: |
+          set -euo pipefail
+          matches=$(git grep -nE 'BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY|rzp_live_[A-Za-z0-9]+|sk_live_[A-Za-z0-9]{16,}' -- \
+            ':!.github/workflows/security-scan.yml' \
+            ':!docs/**' \
+            ':!**/*.md' \
+            ':!TEST_ACCOUNTS.local.md' \
+            ':!**/*.example' || true)
+          if [ -n "$matches" ]; then
+            echo "$matches"
+            echo "::error::Possible secret material detected in the repository"
+            exit 1
+          fi
+          echo "No high-confidence secret patterns found in tracked source."

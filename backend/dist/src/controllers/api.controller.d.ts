@@ -33,19 +33,7 @@ export declare class ApiController {
     } | {
         success: boolean;
         count: number;
-        data: {
-            id: string;
-            tenantId: string;
-            sku: string;
-            name: string;
-            category: string;
-            unitPrice: number;
-            trolleyCapacity: number;
-            trolleyRate: number;
-            description: string;
-            features: string[];
-            isActive: boolean;
-        }[];
+        data: any[];
         message?: undefined;
     };
     calculateEstimate(params: EstimationParams): {

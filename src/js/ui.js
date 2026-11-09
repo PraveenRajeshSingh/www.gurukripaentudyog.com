@@ -798,28 +798,50 @@ function lbClose(e) {
     }
 }
 
-// Visual viewport → CSS vars for keyboard / sheet height on mobile
+// Visual viewport → CSS vars for keyboard / full-page sheets on any screen
 (function initVisualViewportVars() {
     function sync() {
         const vv = window.visualViewport;
-        const h = vv ? vv.height : window.innerHeight;
-        const offsetTop = vv ? vv.offsetTop : 0;
-        document.documentElement.style.setProperty('--vv-height', h + 'px');
-        document.documentElement.style.setProperty('--vv-offset-top', offsetTop + 'px');
-        document.documentElement.style.setProperty('--gb-chat-vh', h + 'px');
+        const h = Math.round(vv ? vv.height : window.innerHeight);
+        const offsetTop = Math.round(vv ? vv.offsetTop : 0);
+        const root = document.documentElement;
+        root.style.setProperty('--vv-height', h + 'px');
+        root.style.setProperty('--vv-offset-top', offsetTop + 'px');
+        root.style.setProperty('--app-vh', h + 'px');
+        root.style.setProperty('--gb-chat-vh', h + 'px');
+        root.style.setProperty('--popup-max-h', Math.min(h * 0.96, h) + 'px');
+        root.style.setProperty('--popup-max-h-desk', Math.min(h * 0.88, 900) + 'px');
+        root.style.setProperty('--popup-max-h-full', h + 'px');
+
+        // Keep open overlays pinned to the live visual viewport (mobile keyboard).
+        document.querySelectorAll('.modal-overlay.open, .lb-overlay.open').forEach(function (el) {
+            el.style.top = offsetTop + 'px';
+            el.style.height = h + 'px';
+            el.style.maxHeight = h + 'px';
+        });
+
+        if (document.body && document.body.classList.contains('overlay-open')) {
+            try {
+                window.dispatchEvent(new CustomEvent('gb:overlay-layout', { detail: { reason: 'vv-sync' } }));
+            } catch (_e) { /* ignore */ }
+            if (window.GurukripaMaps) {
+                if (typeof GurukripaMaps.invalidateAll === 'function') GurukripaMaps.invalidateAll();
+                else if (typeof GurukripaMaps.invalidateMapIn === 'function') {
+                    GurukripaMaps.invalidateMapIn('trackerMapContainer');
+                    GurukripaMaps.invalidateMapIn('nearbyMap');
+                }
+            }
+        }
     }
     sync();
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', sync, { passive: true });
         window.visualViewport.addEventListener('scroll', sync, { passive: true });
     }
+    window.addEventListener('resize', sync, { passive: true });
     window.addEventListener('orientationchange', function () {
         setTimeout(sync, 120);
-        setTimeout(function () {
-            if (window.GurukripaMaps && GurukripaMaps.invalidateMapIn) {
-                GurukripaMaps.invalidateMapIn('trackerMapContainer');
-            }
-        }, 320);
+        setTimeout(sync, 360);
     }, { passive: true });
 })();
 
