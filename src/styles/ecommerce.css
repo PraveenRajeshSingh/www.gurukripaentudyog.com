@@ -20,7 +20,7 @@
 .hub-metric,
 .studio-shell,
 .enquiry-row,
-.order-item,
+.order-card,
 .wishlist-item {
     border-radius: var(--ecom-radius);
     transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease), border-color var(--t) var(--ease);
@@ -277,16 +277,19 @@
 
 /* ── Orders / enquiries / sites cards ── */
 .enquiry-row,
-.order-item,
+.order-card,
 .wishlist-item {
     border: 1px solid var(--line);
     background: var(--bg-card);
     box-shadow: var(--sh-sm);
     border-radius: var(--ecom-radius-sm);
+}
+.enquiry-row,
+.wishlist-item {
     padding: 14px;
 }
 .enquiry-row:hover,
-.order-item:hover {
+.order-card:hover {
     border-color: var(--line-mid);
     box-shadow: var(--ecom-shadow);
 }

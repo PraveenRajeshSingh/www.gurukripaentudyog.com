@@ -1,0 +1,20 @@
+    <!-- Order Details popup — sticky header/footer, independent body scroll -->
+    <div class="modal-overlay" id="orderDetailsModal" role="dialog" aria-modal="true" aria-labelledby="orderDetailsTitle" onclick="if(event.target.id==='orderDetailsModal')closeOrderDetailsModal()">
+        <div class="modal-box modal-box--lg order-modal" role="document">
+            <div class="modal-head order-modal__header">
+                <div>
+                    <div class="modal-title" id="orderDetailsTitle">Order Details</div>
+                    <div class="modal-subtitle" id="orderDetailsSub">Historical totals locked at purchase</div>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closeOrderDetailsModal()" aria-label="Close order details">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body order-modal__content" id="orderDetailsBody">
+                <!-- Filled by openOrderDetailsModal() -->
+            </div>
+            <div class="modal-foot order-modal__footer" id="orderDetailsFoot">
+                <button type="button" class="btn btn-outline" onclick="closeOrderDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>

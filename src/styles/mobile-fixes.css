@@ -708,16 +708,36 @@
         .profile-tab-panel { display: none; padding: 20px }
         .profile-tab-panel.active { display: block; animation: slideUp 0.22s var(--ease) }
 
-        /* Order history */
-        .order-item {
+        /* Order history — stacked cards (never one horizontal flex of icon+buttons) */
+        .order-history-list {
             display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--line);
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
-        .order-item:last-child { border-bottom: none }
-        .order-icon {
+        .order-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+            background: var(--bg-card);
+            overflow: hidden;
+        }
+        .order-card__top {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            min-width: 0;
+            width: 100%;
+        }
+        .order-card__icon {
             width: 42px;
             height: 42px;
             border-radius: var(--r-sm);
@@ -726,24 +746,98 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
             flex-shrink: 0;
         }
-        .order-info { flex: 1; min-width: 0 }
-        .order-id { font-size: .82rem; font-weight: 700; color: var(--ink) }
-        .order-date { font-size: .74rem; color: var(--ink-3); margin-top: 1px }
+        .order-card__meta {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .order-card__id {
+            font-size: .84rem;
+            font-weight: 700;
+            color: var(--ink);
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+        .order-card__date {
+            font-size: .74rem;
+            color: var(--ink-3);
+            margin-top: 2px;
+        }
+        .order-card__products {
+            font-size: .76rem;
+            color: var(--ink-2, var(--ink-3));
+            margin-top: 4px;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .order-card__side {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            flex-shrink: 0;
+            max-width: 42%;
+        }
+        .order-card__amount {
+            font-family: var(--display);
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--brand);
+            white-space: nowrap;
+        }
+        .order-card__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .order-card__btn {
+            flex: 1 1 auto;
+            min-width: min(100%, 9.5rem);
+            max-width: 100%;
+            justify-content: center;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.25;
+            min-height: 40px;
+            box-sizing: border-box;
+        }
+        .order-card__btn--reorder {
+            background: #16a34a;
+            border-color: #16a34a;
+        }
         .order-status {
             font-size: .68rem;
             font-weight: 700;
             padding: 3px 9px;
             border-radius: var(--radius-pill);
             white-space: nowrap;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .order-status.delivered { background: rgba(22,163,74,.12); color: var(--success) }
         .order-status.processing { background: rgba(245,158,11,.12); color: #d97706 }
         .order-status.pending { background: rgba(99,102,241,.12); color: #4f46e5 }
-        .order-amount { font-family: var(--display); font-size: .95rem; font-weight: 700; color: var(--brand); white-space: nowrap }
+        .order-status.cancelled { background: rgba(220,38,38,.12); color: #dc2626 }
         .order-empty { text-align: center; padding: 32px; color: var(--ink-3); font-size: .88rem }
+
+        @media (max-width: 380px) {
+            .order-card__actions {
+                flex-direction: column;
+            }
+            .order-card__btn {
+                width: 100%;
+                min-width: 0;
+            }
+            .order-card__side {
+                max-width: 46%;
+            }
+        }
 
         /* Wishlist in profile */
         .wishlist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }

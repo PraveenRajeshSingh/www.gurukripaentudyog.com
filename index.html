@@ -3497,46 +3497,69 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
         </div>
     </div>
 
+    <!-- Order Details popup — sticky header/footer, independent body scroll -->
+    <div class="modal-overlay" id="orderDetailsModal" role="dialog" aria-modal="true" aria-labelledby="orderDetailsTitle" onclick="if(event.target.id==='orderDetailsModal')closeOrderDetailsModal()">
+        <div class="modal-box modal-box--lg order-modal" role="document">
+            <div class="modal-head order-modal__header">
+                <div>
+                    <div class="modal-title" id="orderDetailsTitle">Order Details</div>
+                    <div class="modal-subtitle" id="orderDetailsSub">Historical totals locked at purchase</div>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closeOrderDetailsModal()" aria-label="Close order details">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body order-modal__content" id="orderDetailsBody">
+                <!-- Filled by openOrderDetailsModal() -->
+            </div>
+            <div class="modal-foot order-modal__footer" id="orderDetailsFoot">
+                <button type="button" class="btn btn-outline" onclick="closeOrderDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
 ﻿    <!-- ━━━━━━━━━━━━━━━━━ GST TAX INVOICE MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="gstInvoiceModal" role="dialog" aria-modal="true" aria-label="GST tax invoice" onclick="if(event.target.id==='gstInvoiceModal')closeGstInvoice()">
-        <div class="modal-box modal-box--xl gst-invoice-box">
-            <div class="modal-head">
+        <div class="modal-box modal-box--xl gst-invoice-box order-modal" role="document">
+            <div class="modal-head order-modal__header">
                 <div>
                     <div class="modal-title">Tax Invoice / Cash Memo</div>
                     <div class="modal-subtitle">Gurukripa Bricks Industry Official GST Invoice</div>
                 </div>
-                <button type="button" class="modal-close-btn" onclick="closeGstInvoice()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                <button type="button" class="modal-close-btn" onclick="closeGstInvoice()" aria-label="Close GST invoice">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             </div>
-            <div class="modal-body" style="padding:0;max-height:75vh;overflow-y:auto">
+            <div class="modal-body order-modal__content" id="gstInvoiceModalBody">
                 <div class="gst-invoice-paper" id="gstInvoicePrintArea">
                     <!-- Dynamic GST Invoice Content -->
                 </div>
             </div>
-            <div style="padding:12px 20px;background:var(--bg-subtle);border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px">
+            <div class="modal-foot order-modal__footer">
                 <button type="button" class="btn btn-outline btn-sm" onclick="closeGstInvoice()">Close</button>
-                <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">Print / Save PDF</button>
             </div>
         </div>
     </div>
 
 ﻿    <!-- ━━━━━━━━━━━━━━━━━ INVOICE PREVIEW / PDF MODAL ━━━━━━━━━━━━━━━━━ -->
     <div class="modal-overlay" id="invoicePdfModal" role="dialog" aria-modal="true" aria-label="Invoice preview" onclick="if(event.target.id==='invoicePdfModal')closeInvoicePdf()">
-        <div class="modal-box modal-box--xl inv-pdf-box">
-            <div class="modal-head">
+        <div class="modal-box modal-box--xl inv-pdf-box order-modal" role="document">
+            <div class="modal-head order-modal__header">
                 <div>
                     <div class="modal-title">Invoice &amp; PDF</div>
                     <div class="modal-subtitle" id="invPdfSubtitle">Preview, download or print a GST invoice</div>
                 </div>
                 <button type="button" class="modal-close-btn" onclick="closeInvoicePdf()" aria-label="Close"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
             </div>
-            <div class="modal-body inv-pdf-body">
+            <div class="modal-body order-modal__content inv-pdf-body">
                 <iframe id="invPdfFrame" class="inv-pdf-frame" title="Invoice preview"></iframe>
             </div>
-            <div class="inv-pdf-actions">
-                <button type="button" class="btn btn-outline btn-sm" onclick="printCurrentInvoice()">🖨️ Print / Save PDF</button>
-                <button type="button" class="btn btn-outline btn-sm" onclick="downloadCurrentInvoice()">⬇️ Download</button>
-                <button type="button" class="btn btn-outline btn-sm" onclick="shareCurrentInvoice()">🔗 Share</button>
-                <button type="button" class="btn btn-outline btn-sm" onclick="resendCurrentInvoice()">✉️ Resend</button>
+            <div class="modal-foot order-modal__footer inv-pdf-actions">
+                <button type="button" class="btn btn-outline btn-sm" onclick="printCurrentInvoice()">Print / Save PDF</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="downloadCurrentInvoice()">Download</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="shareCurrentInvoice()">Share</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="resendCurrentInvoice()">Resend</button>
                 <button type="button" class="btn btn-primary btn-sm" onclick="closeInvoicePdf()">Close</button>
             </div>
         </div>

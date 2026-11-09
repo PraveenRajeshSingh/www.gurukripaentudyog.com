@@ -40,15 +40,13 @@ jobs:
       - name: Scan tracked source for private keys / live gateway secrets
         run: |
           set -euo pipefail
-          matches=$(git grep -nE 'BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY|rzp_live_[A-Za-z0-9]+|sk_live_[A-Za-z0-9]{16,}' -- \
-            ':!.github/workflows/security-scan.yml' \
-            ':!docs/**' \
-            ':!**/*.md' \
-            ':!TEST_ACCOUNTS.local.md' \
-            ':!**/*.example' || true)
-          if [ -n "$matches" ]; then
-            echo "$matches"
-            echo "::error::Possible secret material detected in the repository"
+          node scripts/run-secret-scan.js
+      - name: Production env validator dry-run (must skip / fail closed)
+        run: |
+          set -euo pipefail
+          node scripts/validate-production-env.js
+          if NODE_ENV=production node scripts/validate-production-env.js; then
+            echo "::error::Validator must fail when production secrets are unset"
             exit 1
           fi
-          echo "No high-confidence secret patterns found in tracked source."
+          echo "validate-production-env fails closed without secrets (expected)."

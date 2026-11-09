@@ -673,6 +673,7 @@ const OVERLAY_STACK = [
     ['bulkQuoteModal',   () => typeof closeBulkQuoteModal === 'function' && closeBulkQuoteModal()],
     ['checkoutModal',    () => typeof closeCheckout       === 'function' && closeCheckout()],
     ['adminPortalModal', () => typeof closeAdminPortal    === 'function' && closeAdminPortal()],
+    ['orderDetailsModal', () => typeof closeOrderDetailsModal === 'function' && closeOrderDetailsModal()],
     ['gstInvoiceModal',  () => typeof closeGstInvoice     === 'function' && closeGstInvoice()],
     ['invoicePdfModal',  () => typeof closeInvoicePdf     === 'function' && closeInvoicePdf()],
     ['companyProfileModal', () => typeof closeCompanyProfile === 'function' && closeCompanyProfile()],

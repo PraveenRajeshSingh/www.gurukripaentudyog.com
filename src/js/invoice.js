@@ -31,7 +31,13 @@ function openInvoicePdf(idOrNumber, subtitle) {
     if (sub) sub.textContent = subtitle || ('Invoice ' + idOrNumber);
     modal.classList.add('open'); overlayLock();
 }
-function closeInvoicePdf() { const m = document.getElementById('invoicePdfModal'); if (m) { m.classList.remove('open'); overlayUnlock(); } }
+function closeInvoicePdf() {
+    if (typeof closeOverlay === 'function') closeOverlay('invoicePdfModal');
+    else {
+        const m = document.getElementById('invoicePdfModal');
+        if (m) { m.classList.remove('open'); overlayUnlock(); }
+    }
+}
 function printCurrentInvoice() { if (_currentInvoiceRef) GurukripaERP.Invoices.printInvoice(_currentInvoiceRef); }
 function downloadCurrentInvoice() { if (_currentInvoiceRef) { const r = GurukripaERP.Invoices.downloadInvoice(_currentInvoiceRef); if (r.ok) showToast('Invoice downloaded', 'success'); } }
 function shareCurrentInvoice() { if (_currentInvoiceRef) { const r = GurukripaERP.Invoices.shareInvoice(_currentInvoiceRef); if (!r.ok && r.error !== 'cancelled') showToast('Sharing not supported here — use Download', 'info'); } }
@@ -129,7 +135,13 @@ function renderLegacyGstInvoice(orderId) {
     modal.classList.add('open');
     overlayLock();
 }
-function closeGstInvoice() { document.getElementById('gstInvoiceModal')?.classList.remove('open'); overlayUnlock(); }
+function closeGstInvoice() {
+    if (typeof closeOverlay === 'function') closeOverlay('gstInvoiceModal');
+    else {
+        document.getElementById('gstInvoiceModal')?.classList.remove('open');
+        overlayUnlock();
+    }
+}
 
 /**
  * Reorder from a past trolley order using CURRENT catalogue prices.
@@ -187,6 +199,23 @@ function markOrderDelivered(orderId) {
 }
 
 // ── Customer order history (scoped to the signed-in user) ────────
+function _orderStatusClass(status) {
+    const s = String(status || '').toLowerCase();
+    if (/deliver/.test(s)) return 'delivered';
+    if (/cancel/.test(s)) return 'cancelled';
+    if (/pending|confirm|placed/.test(s)) return 'pending';
+    return 'processing';
+}
+
+function _orderItemSummary(o) {
+    if (Array.isArray(o.items) && o.items.length) {
+        return o.items.map(function (it) {
+            return (it.name || 'Brick') + ' × ' + (it.qty || it.quantity || 1);
+        }).join(', ');
+    }
+    return (o.itemsCount || 1) + ' item(s)';
+}
+
 function renderOrderHistory() {
     const container = document.getElementById('orderHistoryList');
     if (!container) return;
@@ -207,27 +236,138 @@ function renderOrderHistory() {
             </div>`;
         return;
     }
-    container.innerHTML = orders.map(o => {
+    container.innerHTML = '<div class="order-history-list">' + orders.map(o => {
         const inv = invByOrder[o.id];
+        const statusCls = _orderStatusClass(o.status);
+        const oid = sanitizeHTML(String(o.id));
         const invBtn = inv
-            ? `<button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openInvoicePdf('${sanitizeHTML(inv.number)}','Order ${sanitizeHTML(o.id)}')">${_invDocSVG} Invoice PDF</button>`
-            : `<button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openGstInvoice('${sanitizeHTML(o.id)}')">${_invDocSVG} GST Invoice</button>`;
+            ? `<button type="button" class="btn btn-outline btn-sm order-card__btn" onclick="openInvoicePdf('${sanitizeHTML(inv.number)}','Order ${oid}')">${_invDocSVG} Download Invoice</button>`
+            : `<button type="button" class="btn btn-outline btn-sm order-card__btn" onclick="openGstInvoice('${oid}')">${_invDocSVG} Download Invoice</button>`;
+        const payPending = /pending|unpaid|cod/i.test(String(o.paymentStatus || o.paymentMethod || ''));
         return `
-        <div class="order-item">
-            <div class="order-icon">${_invBrickSVG}</div>
-            <div class="order-info">
-                <div class="order-id">${sanitizeHTML(o.id)}</div>
-                <div class="order-date">${sanitizeHTML(o.date)} · ${o.itemsCount || 1} item(s)</div>
+        <article class="order-card" data-order-id="${oid}">
+            <div class="order-card__top">
+                <div class="order-card__icon" aria-hidden="true">${_invBrickSVG}</div>
+                <div class="order-card__meta">
+                    <div class="order-card__id">${oid}</div>
+                    <div class="order-card__date">${sanitizeHTML(o.date || '')}</div>
+                    <div class="order-card__products">${sanitizeHTML(_orderItemSummary(o))}</div>
+                </div>
+                <div class="order-card__side">
+                    <span class="order-status ${statusCls}">${sanitizeHTML(o.status || 'Processing')}</span>
+                    <div class="order-card__amount">${formatINR(o.total)}</div>
+                </div>
             </div>
-            <span class="order-status ${o.status === 'Delivered' ? 'delivered' : 'processing'}">${sanitizeHTML(o.status || 'Processing')}</span>
-            <div class="order-amount">${formatINR(o.total)}</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-                <button class="btn btn-outline btn-sm" style="font-size:.76rem" onclick="openTrackerModal('${o.id}')">${_invTruckSVG} Track Delivery</button>
+            <div class="order-card__actions" role="group" aria-label="Order actions">
+                <button type="button" class="btn btn-outline btn-sm order-card__btn" onclick="openOrderDetailsModal('${oid}')">View Details</button>
+                <button type="button" class="btn btn-outline btn-sm order-card__btn" onclick="openTrackerModal('${oid}')">${_invTruckSVG} Track Order</button>
                 ${invBtn}
-                <button class="btn btn-primary btn-sm" style="font-size:.76rem;background:#16a34a" onclick="reorderTrolley('${o.id}')">${_invReorderSVG} Re-Order Trolley</button>
+                <button type="button" class="btn btn-outline btn-sm order-card__btn" onclick="openWhatsAppBhattaManager()">Contact Supplier</button>
+                <button type="button" class="btn btn-primary btn-sm order-card__btn order-card__btn--reorder" onclick="reorderTrolley('${oid}')">${_invReorderSVG} Reorder</button>
+                ${payPending ? `<button type="button" class="btn btn-outline btn-sm order-card__btn" onclick="openOrderDetailsModal('${oid}')">Pay Now</button>` : ''}
             </div>
+        </article>`;
+    }).join('') + '</div>';
+}
+
+/** Order details popup — shows frozen historical totals, never live catalogue rates. */
+function openOrderDetailsModal(orderId) {
+    const order = (orders || []).find(function (o) {
+        return String(o.id).toLowerCase() === String(orderId || '').toLowerCase();
+    });
+    if (!order) {
+        showToast('Order not found on this device.', 'warning');
+        return;
+    }
+    const title = document.getElementById('orderDetailsTitle');
+    const sub = document.getElementById('orderDetailsSub');
+    const body = document.getElementById('orderDetailsBody');
+    const foot = document.getElementById('orderDetailsFoot');
+    if (!body) {
+        openGstInvoice(orderId);
+        return;
+    }
+    if (title) title.textContent = 'Order ' + order.id;
+    if (sub) sub.textContent = (order.date || '') + ' · Historical totals locked at purchase';
+
+    const items = Array.isArray(order.items) && order.items.length
+        ? order.items
+        : [{ name: 'Brick supply', qty: order.itemsCount || 1, price: null }];
+    const linesHtml = items.map(function (it) {
+        const qty = it.qty || it.quantity || 1;
+        const unit = it.price != null ? Number(it.price) : null;
+        const lineTotal = unit != null ? unit * qty : null;
+        const img = it.img
+            ? `<img class="order-detail__thumb" src="${sanitizeHTML(it.img)}" alt="" width="48" height="48" loading="lazy">`
+            : `<div class="order-detail__thumb order-detail__thumb--ph" aria-hidden="true">${_invBrickSVG}</div>`;
+        return `<div class="order-detail__line">
+            ${img}
+            <div class="order-detail__line-info">
+                <strong>${sanitizeHTML(it.name || 'Item')}</strong>
+                <span>Qty ${sanitizeHTML(String(qty))}${unit != null ? ' · ₹' + unit + '/pc (order rate)' : ''}</span>
+            </div>
+            <div class="order-detail__line-amt">${lineTotal != null ? formatINR(lineTotal) : '—'}</div>
         </div>`;
     }).join('');
+
+    const total = Number(order.total) || 0;
+    const taxable = Math.round(total / 1.05);
+    const tax = total - taxable;
+    const cgst = Math.round(tax / 2);
+    const sgst = tax - cgst;
+    const supplier = order.supplierName || 'Gurukripa Bricks Industry';
+    const payStatus = order.paymentStatus || order.paymentMethod || 'Recorded on device';
+    const delivery = order.shipping && (order.shipping.address || order.shipping.city)
+        ? [order.shipping.address, order.shipping.city, order.shipping.pincode].filter(Boolean).join(', ')
+        : (order.site || order.address || (user && user.address) || 'Not recorded');
+
+    body.innerHTML = `
+        <div class="order-detail__grid">
+            <div><strong>Order ID</strong><span>${sanitizeHTML(String(order.id))}</span></div>
+            <div><strong>Date</strong><span>${sanitizeHTML(order.date || '—')}</span></div>
+            <div><strong>Status</strong><span class="order-status ${_orderStatusClass(order.status)}">${sanitizeHTML(order.status || 'Processing')}</span></div>
+            <div><strong>Payment</strong><span>${sanitizeHTML(String(payStatus))}</span></div>
+            <div><strong>Supplier / Bhatta</strong><span>${sanitizeHTML(supplier)}</span></div>
+            <div><strong>Customer</strong><span>${sanitizeHTML((order.customer && order.customer.name) || (typeof order.customer === 'string' ? order.customer : '') || (user && user.name) || '—')}</span></div>
+        </div>
+        <div class="order-detail__block">
+            <h4>Products</h4>
+            ${linesHtml}
+            <p class="order-detail__price-note">Line rates above are the prices locked on this order. Today's catalogue may differ — use Reorder to buy again at current rates.</p>
+        </div>
+        <div class="order-detail__totals">
+            <div><span>Taxable (indicative)</span><strong>${formatINR(taxable)}</strong></div>
+            <div><span>CGST 2.5%</span><strong>${formatINR(cgst)}</strong></div>
+            <div><span>SGST 2.5%</span><strong>${formatINR(sgst)}</strong></div>
+            <div><span>Delivery</span><strong>${order.deliveryFee != null ? formatINR(order.deliveryFee) : 'As quoted'}</strong></div>
+            <div class="order-detail__grand"><span>Order total</span><strong>${formatINR(total)}</strong></div>
+        </div>
+        <div class="order-detail__block">
+            <h4>Delivery</h4>
+            <p>${sanitizeHTML(delivery)}</p>
+        </div>`;
+
+    if (foot) {
+        const oid = sanitizeHTML(String(order.id));
+        foot.innerHTML = `
+            <button type="button" class="btn btn-outline" onclick="closeOrderDetailsModal()">Close</button>
+            <button type="button" class="btn btn-outline" onclick="openTrackerModal('${oid}')">Track Order</button>
+            <button type="button" class="btn btn-outline" onclick="openGstInvoice('${oid}')">Invoice</button>
+            <button type="button" class="btn btn-primary" onclick="reorderTrolley('${oid}');closeOrderDetailsModal()">Reorder at today's rate</button>`;
+    }
+    if (typeof openOverlay === 'function') openOverlay('orderDetailsModal');
+    else {
+        const modal = document.getElementById('orderDetailsModal');
+        if (modal) { modal.classList.add('open'); overlayLock(); }
+    }
+}
+
+function closeOrderDetailsModal() {
+    if (typeof closeOverlay === 'function') closeOverlay('orderDetailsModal');
+    else {
+        document.getElementById('orderDetailsModal')?.classList.remove('open');
+        overlayUnlock();
+    }
 }
 
 // ══════════════════════════════════════════

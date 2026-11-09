@@ -249,37 +249,40 @@ function renderAdminTab(tab) {
             const c = o.customer;
             return (c && typeof c === 'object') ? (c.name || c.businessName || '') : String(c || '');
         };
-        const rows = list.length ? list.map(o => {
+        const cards = list.length ? list.map(o => {
             const inv = link[o.id] && IV ? IV.invoiceForOrder(o.id) : null;
             const delivered = /deliver/i.test(o.status || '');
             const firm = o.businessName || (o.customer && o.customer.businessName) || '';
             const orderGstin = o.gstin || (o.customer && o.customer.gstin) || '';
+            const oid = sanitizeHTML(o.id);
             const action = inv
-                ? `<button class="btn btn-outline btn-sm" onclick="openInvoicePdf('${sanitizeHTML(inv.number)}','Order ${sanitizeHTML(o.id)}')">📄 Invoice PDF</button>`
+                ? `<button type="button" class="btn btn-outline btn-sm order-card__btn" onclick="openInvoicePdf('${sanitizeHTML(inv.number)}','Order ${oid}')">Invoice PDF</button>`
                 : (delivered
-                    ? `<button class="btn btn-primary btn-sm" onclick="markOrderDelivered('${sanitizeHTML(o.id)}')">Issue invoice</button>`
-                    : `<button class="btn btn-outline btn-sm" onclick="markOrderDelivered('${sanitizeHTML(o.id)}')">✓ Mark delivered</button>`);
-            return `<tr style="border-bottom:1px solid var(--line)">
-                <td style="padding:10px 8px"><strong style="color:var(--brand)">${sanitizeHTML(o.id)}</strong><br><small style="color:var(--ink-3)">${sanitizeHTML(o.date || '')}</small></td>
-                <td style="padding:10px 8px">${sanitizeHTML(buyerName(o) || '—')}${firm || orderGstin ? `<br><small style="color:var(--ink-3)">${sanitizeHTML(firm || '')}${orderGstin ? ' · ' + sanitizeHTML(orderGstin) : ''}</small>` : ''}</td>
-                <td style="padding:10px 8px;text-align:right">${money(o.total)}</td>
-                <td style="padding:10px 8px"><span style="background:${delivered ? 'var(--success-bg,rgba(22,163,74,.12))' : 'var(--warning-bg)'};color:${delivered ? 'var(--success)' : 'var(--warning)'};padding:3px 8px;border-radius:12px;font-size:.75rem;font-weight:700">${sanitizeHTML(o.status || 'Processing')}</span></td>
-                <td style="padding:10px 8px;text-align:right">${inv ? '<span style="color:var(--success);font-size:.75rem;font-weight:700">Invoiced</span>' : '<span style="color:var(--ink-3);font-size:.75rem">Not billed</span>'}</td>
-                <td style="padding:10px 8px;text-align:right">${action}</td>
-            </tr>`;
-        }).join('') : `<tr><td colspan="6" style="padding:22px;text-align:center;color:var(--ink-3)">No orders yet.</td></tr>`;
+                    ? `<button type="button" class="btn btn-primary btn-sm order-card__btn" onclick="markOrderDelivered('${oid}')">Issue invoice</button>`
+                    : `<button type="button" class="btn btn-outline btn-sm order-card__btn" onclick="markOrderDelivered('${oid}')">Mark delivered</button>`);
+            return `<article class="order-card admin-order-card">
+                <div class="order-card__top">
+                    <div class="order-card__meta">
+                        <div class="order-card__id">${oid}</div>
+                        <div class="order-card__date">${sanitizeHTML(o.date || '')}</div>
+                        <div class="order-card__products">${sanitizeHTML(buyerName(o) || '—')}${firm || orderGstin ? ' · ' + sanitizeHTML([firm, orderGstin].filter(Boolean).join(' · ')) : ''}</div>
+                    </div>
+                    <div class="order-card__side">
+                        <span class="order-status ${delivered ? 'delivered' : 'processing'}">${sanitizeHTML(o.status || 'Processing')}</span>
+                        <div class="order-card__amount">${money(o.total)}</div>
+                        <small style="color:var(--ink-3)">${inv ? 'Invoiced' : 'Not billed'}</small>
+                    </div>
+                </div>
+                <div class="order-card__actions">${action}</div>
+            </article>`;
+        }).join('') : `<div class="order-empty">No orders yet.</div>`;
         stage.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div class="admin-orders-head">
                 <div><h4 style="font-family:var(--display);font-size:1.3rem;color:var(--ink);margin:0">Customer &amp; Dealer Orders</h4>
                 <p style="font-size:.82rem;color:var(--ink-3);margin-top:2px">Real orders from checkout &amp; B2B. Marking an order delivered issues its GST invoice (idempotent — retried events never double-bill).</p></div>
-                <button class="btn btn-outline btn-sm" onclick="switchAdminTab('invoices')">Open Invoice Manager</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="switchAdminTab('invoices')">Open Invoice Manager</button>
             </div>
-            <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:12px;overflow-x:auto">
-                <table style="width:100%;border-collapse:collapse;font-size:.84rem;text-align:left">
-                    <thead><tr style="border-bottom:1.5px solid var(--line);color:var(--ink-3)"><th style="padding:10px 8px">Order</th><th style="padding:10px 8px">Customer</th><th style="padding:10px 8px;text-align:right">Total</th><th style="padding:10px 8px">Status</th><th style="padding:10px 8px;text-align:right">Billing</th><th style="padding:10px 8px;text-align:right">Action</th></tr></thead>
-                    <tbody>${rows}</tbody>
-                </table>
-            </div>
+            <div class="order-history-list admin-orders-list">${cards}</div>
         `;
     } else if (tab === 'invoices') {
         const IV = _erpInv();

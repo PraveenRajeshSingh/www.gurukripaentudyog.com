@@ -1,12 +1,21 @@
 node_modules/
 *twa/
 *.keystore
+# Real secrets — never commit (examples like .env.example remain tracked)
 .env
 .env.local
+.env.development
+.env.production
 .env.*.local
 *.env
+!*.env.example
 backend/.env
+backend/.env.local
+backend/.env.production
 flutter_app/.env
+apps/web/.env
+apps/web/.env.local
+apps/web/.env.production
 
 # Confidential local-only QA credentials (never commit)
 TEST_ACCOUNTS.local.md

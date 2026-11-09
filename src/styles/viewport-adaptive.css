@@ -327,6 +327,193 @@ table {
     -webkit-overflow-scrolling: touch;
 }
 
+/* Order / invoice modal shell — sticky chrome, independent body scroll.
+   Use a definite height (not only max-height) so flex children can shrink
+   and .order-modal__content scrolls instead of pushing the footer off-screen. */
+.order-modal {
+    display: flex !important;
+    flex-direction: column !important;
+    height: min(calc(100vh - 32px), var(--vv-height, 100vh));
+    height: min(calc(100dvh - 32px), var(--vv-height, 100dvh));
+    max-height: min(calc(100vh - 32px), var(--vv-height, 100vh));
+    max-height: min(calc(100dvh - 32px), var(--vv-height, 100dvh));
+    overflow: hidden !important;
+    min-height: 0;
+}
+.order-modal__header,
+.order-modal__footer,
+#orderDetailsModal .order-modal__header,
+#orderDetailsModal .order-modal__footer,
+#gstInvoiceModal .order-modal__header,
+#gstInvoiceModal .order-modal__footer,
+#invoicePdfModal .order-modal__header,
+#invoicePdfModal .order-modal__footer {
+    flex-shrink: 0 !important;
+}
+.order-modal__content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+#orderDetailsModal .modal-box.order-modal,
+#gstInvoiceModal .modal-box.order-modal,
+#invoicePdfModal .modal-box.order-modal {
+    height: min(92vh, var(--vv-height, 100vh)) !important;
+    height: min(92dvh, var(--vv-height, 100dvh)) !important;
+    max-height: min(92vh, var(--vv-height, 100vh)) !important;
+    max-height: min(92dvh, var(--vv-height, 100dvh)) !important;
+}
+@media (max-width: 767px) {
+    #orderDetailsModal .modal-box.order-modal,
+    #gstInvoiceModal .modal-box.order-modal,
+    #invoicePdfModal .modal-box.order-modal {
+        height: min(96vh, var(--vv-height, 100vh)) !important;
+        height: min(96dvh, var(--vv-height, 100dvh)) !important;
+        max-height: min(96vh, var(--vv-height, 100vh)) !important;
+        max-height: min(96dvh, var(--vv-height, 100dvh)) !important;
+    }
+}
+
+/* Order details content */
+.order-detail__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.order-detail__grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+.order-detail__grid strong {
+    font-size: .68rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 700;
+}
+.order-detail__grid span {
+    font-size: .86rem;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+}
+.order-detail__block {
+    margin-bottom: 16px;
+}
+.order-detail__block h4 {
+    margin: 0 0 10px;
+    font-size: .9rem;
+    color: var(--ink);
+}
+.order-detail__line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    min-width: 0;
+}
+.order-detail__thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-sm, 8px);
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--bg-subtle);
+}
+.order-detail__thumb--ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+}
+.order-detail__line-info {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.order-detail__line-info strong {
+    font-size: .86rem;
+    overflow-wrap: anywhere;
+}
+.order-detail__line-info span {
+    font-size: .74rem;
+    color: var(--ink-3);
+}
+.order-detail__line-amt {
+    flex-shrink: 0;
+    font-weight: 700;
+    color: var(--brand);
+    font-size: .9rem;
+}
+.order-detail__price-note {
+    margin: 10px 0 0;
+    font-size: .74rem;
+    color: var(--ink-3);
+    line-height: 1.4;
+}
+.order-detail__totals {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--r-md, 12px);
+    background: var(--bg-subtle);
+    margin-bottom: 16px;
+}
+.order-detail__totals > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: .84rem;
+}
+.order-detail__grand {
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: .95rem !important;
+}
+.order-detail__grand strong {
+    color: var(--brand);
+    font-size: 1.05rem;
+}
+#orderDetailsFoot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    max-width: 100%;
+}
+#orderDetailsFoot .btn {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+    min-height: 40px;
+    justify-content: center;
+}
+.admin-orders-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+#pTabOrders,
+#orderHistoryList,
+.admin-orders-list {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
     .modal-overlay,
