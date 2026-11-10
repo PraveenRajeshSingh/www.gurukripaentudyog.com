@@ -1,0 +1,92 @@
+/* Phase 6: cascade layer patches — bilingual + accessibility */
+@layer patches {
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   A11Y / BILINGUAL PHASE 6
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root {
+    --focus-ring: 0 0 0 3px color-mix(in srgb, var(--brand, #A83226) 45%, transparent);
+}
+
+/* Visible keyboard focus (skip mouse-only :focus where browsers support it) */
+:where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+    outline: 2px solid var(--brand, #A83226) !important;
+    outline-offset: 2px !important;
+    box-shadow: var(--focus-ring) !important;
+}
+
+/* Icon-only controls need a minimum hit area */
+button.icon-btn,
+.catalog-icon-btn,
+.catalog-wish,
+.nav-icon-btn,
+.mn-item,
+.fab-stack button,
+.view-toggle-btn {
+    min-width: var(--touch-min, 44px);
+    min-height: var(--touch-min, 44px);
+}
+
+/* Hindi: never clip chips / badges / titles */
+html[lang="hi"] .catalog-chip,
+html[lang="hi"] .sec-tag,
+html[lang="hi"] .catalog-card-badge,
+html[lang="hi"] .btn,
+html[lang="hi"] .mn-item span,
+html[lang="hi"] .nav-links a {
+    overflow-wrap: anywhere;
+    line-height: 1.45;
+    white-space: normal;
+}
+
+html[lang="hi"] .catalog-card-name,
+html[lang="hi"] .sec-title,
+html[lang="hi"] .faq-q span {
+    overflow-wrap: anywhere;
+    line-height: var(--lh-tight-hi, 1.35);
+}
+
+/* en-IN friendly number/price tabular figures where supported */
+.catalog-price-current,
+.product-price-current,
+.cart-total,
+[data-money] {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Light theme is canonical; keep contrast floors */
+body {
+    color: var(--ink, #1c1917);
+    background: var(--bg, #faf6f2);
+}
+
+a:not(.btn) {
+    text-underline-offset: 0.15em;
+}
+
+/* Reduced motion: kill decorative motion site-wide */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Skip link always reachable */
+.skip-link:focus {
+    position: fixed !important;
+    top: 8px;
+    left: 8px;
+    z-index: 10000;
+    width: auto !important;
+    height: auto !important;
+    padding: 10px 14px !important;
+    clip: auto !important;
+    background: var(--brand, #A83226);
+    color: #fff !important;
+}
+}
