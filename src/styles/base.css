@@ -1,100 +1,11 @@
+/* Phase 1: cascade layer base — do not remove wrapper */
+@layer base {
 /* ==========================================================================
-   Base: tokens, reset, scroll progress, utilities, buttons, topbar, navbar, mobile drawer
-   File: base.css (part 1 of 7)
-   Loaded via <link> in index.html / 404.html / 500.html in the exact order
-   defined by the original src/styles/main.css.
-   ==========================================================================
+   Base: chrome (topbar, navbar, mobile drawer) + legacy button helpers.
+   Reset / tokens / shared primitives live in tokens.css + design-system.css.
+   ========================================================================== */
 
-/* tokens.css is loaded via <link> in <head> — single source of design tokens.
-   Do not re-declare :root brand/surface variables here (avoids palette drift). */
-
-        /* ─── RESET & BASE ─── */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0
-        }
-
-        html {
-            scroll-behavior: smooth;
-            /* Offset anchor jumps so the sticky navbar (64px) never hides section headings */
-            scroll-padding-top: 78px;
-            -webkit-text-size-adjust: 100%
-        }
-
-        body {
-            font-family: var(--body);
-            background: var(--bg);
-            color: var(--ink-2);
-            line-height: 1.65;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: clip
-        }
-
-        img {
-            max-width: 100%;
-            display: block
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none
-        }
-
-        button {
-            font-family: var(--body);
-            cursor: pointer;
-            border: none;
-            background: none
-        }
-
-        input,
-        textarea,
-        select {
-            font-family: var(--body)
-        }
-
-        ul {
-            list-style: none
-        }
-
-        svg {
-            display: block
-        }
-
-        @media(prefers-reduced-motion:reduce) {
-            * {
-                animation-duration: .01ms !important;
-                transition-duration: .01ms !important
-            }
-        }
-
-        /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
-   SCROLL PROGRESS
-   鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
-        #spbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--brand), var(--brand-amber));
-            z-index: 9999;
-            pointer-events: none;
-            transition: width .1s linear
-        }
-
-        /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
-   UTILITIES
-   鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
-        .container {
-            max-width: var(--container-max);
-            margin: 0 auto;
-            padding: 0 clamp(var(--space-4), 4vw, var(--space-6))
-        }
-
+        /* Legacy section helpers kept for markup compatibility */
         .sec {
             padding: clamp(var(--space-7), 8vw, var(--space-8)) 0
         }
@@ -900,3 +811,4 @@
         }
 
         /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
+}

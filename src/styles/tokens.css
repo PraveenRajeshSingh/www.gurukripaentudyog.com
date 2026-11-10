@@ -1,352 +1,268 @@
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   GURUKRIPA BRICKS — UNIFIED DESIGN TOKENS & SYSTEM BASE
-   Platform: Web · Android · iOS
-   WCAG 2.1 AA Compliant Contrast & Responsive Typography
-   Master Palette v5.0 — Industrial redesign Nov 2026
+   GURUKRIPA BRICKS — UNIFIED DESIGN TOKENS
+   Phase 1: tokens live in @layer tokens; global reset in @layer reset.
+   Palette v5.1 — Industrial warm brick (no navy/neon drift)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-:root {
-    /* ─── 1. Brand Palette ─── */
-    /* Canonical brand hex = theme-color / apps/web / Capacitor shells */
-    --brand: #A93226;                   /* Deep brick red — primary CTAs */
-    --brand-dark: #7B241C;              /* Hover / active states */
-    --brand-light: #F6E8E5;             /* Soft brand backgrounds */
-    --brand-amber: #D66A45;             /* Warm terracotta accent */
-    --brand-secondary: #252525;         /* Charcoal supporting accent */
-    --brand-glow: rgba(169, 50, 38, 0.15);
-    --brand-glow-strong: rgba(169, 50, 38, 0.30);
+@layer tokens {
+    :root {
+        /* ─── 1. Brand Palette ─── */
+        --brand: #A93226;
+        --brand-dark: #7B241C;
+        --brand-light: #F6E8E5;
+        --brand-amber: #D66A45;
+        --brand-secondary: #252525;
+        --brand-glow: rgba(169, 50, 38, 0.15);
+        --brand-glow-strong: rgba(169, 50, 38, 0.30);
 
-    /* ─── 2. Surface & Backgrounds (Light Default) ─── */
-    --bg: #FAF6F2;                      /* Main page background */
-    --bg-card: #FFFFFF;                 /* Cards, dialogs, forms */
-    --bg-elevated: #FFFFFF;             /* Floating modal / sheet */
-    --bg-subtle: #F1EEE8;               /* Alternating content sections */
-    --bg-muted: #E8E4DD;                /* Input / pill neutral */
-    --nav-glass: rgba(248, 247, 244, 0.94);
-    --bottom-nav-glass: rgba(248, 247, 244, 0.96);
+        /* ─── 2. Surface & Backgrounds (Light Default) ─── */
+        --bg: #FAF6F2;
+        --bg-card: #FFFFFF;
+        --bg-elevated: #FFFFFF;
+        --bg-subtle: #F1EEE8;
+        --bg-muted: #E8E4DD;
+        --nav-glass: rgba(248, 247, 244, 0.94);
+        --bottom-nav-glass: rgba(248, 247, 244, 0.96);
 
-    /* ─── 3. Typography & Contrast (WCAG AA >= 4.5:1) ─── */
-    --ink: #252525;                     /* Headlines / high emphasis */
-    --ink-2: #3F3F46;                   /* Primary body text */
-    --ink-3: #6B7280;                   /* Helper / secondary text */
-    --ink-inverse: #FFFFFF;             /* Text on brand/dark surfaces */
+        /* ─── 3. Typography & Contrast (WCAG AA >= 4.5:1) ─── */
+        --ink: #252525;
+        --ink-2: #3F3F46;
+        --ink-3: #6B7280;
+        --ink-inverse: #FFFFFF;
 
-    /* ─── 4. Borders & Dividers ─── */
-    --line: #E5E1DC;                    /* Card borders / dividers */
-    --line-mid: rgba(168, 50, 38, 0.18);
-    --line-strong: rgba(168, 50, 38, 0.35);
+        /* ─── 4. Borders & Dividers ─── */
+        --line: #E5E1DC;
+        --line-mid: rgba(168, 50, 38, 0.18);
+        --line-strong: rgba(168, 50, 38, 0.35);
 
-    /* ─── 5. Semantic Feedback States ─── */
-    --success: #198754;
-    --success-bg: rgba(25, 135, 84, 0.10);
-    --success-border: rgba(25, 135, 84, 0.25);
+        /* ─── 5. Semantic Feedback States ─── */
+        --success: #198754;
+        --success-bg: rgba(25, 135, 84, 0.10);
+        --success-border: rgba(25, 135, 84, 0.25);
 
-    --warning: #E6A23C;
-    --warning-bg: rgba(230, 162, 60, 0.12);
-    --warning-border: rgba(230, 162, 60, 0.28);
+        --warning: #E6A23C;
+        --warning-bg: rgba(230, 162, 60, 0.12);
+        --warning-border: rgba(230, 162, 60, 0.28);
 
-    --danger: #DC3545;
-    --danger-bg: rgba(220, 53, 69, 0.10);
-    --danger-border: rgba(220, 53, 69, 0.25);
+        --danger: #DC3545;
+        --danger-bg: rgba(220, 53, 69, 0.10);
+        --danger-border: rgba(220, 53, 69, 0.25);
 
-    --info: #0369a1;
-    --info-bg: rgba(3, 105, 161, 0.10);
-    --info-border: rgba(3, 105, 161, 0.25);
+        --info: #0369a1;
+        --info-bg: rgba(3, 105, 161, 0.10);
+        --info-border: rgba(3, 105, 161, 0.25);
 
-    /* ─── 6. Footer ─── */
-    --footer-bg: #252525;               /* Footer / dark sections */
+        /* ─── 6. Footer ─── */
+        --footer-bg: #252525;
 
-    /* ─── 7. Interactive States & Accessibility ─── */
-    --focus-ring: 0 0 0 3px rgba(168, 50, 38, 0.35);
-    --focus-ring-offset: 2px;
-    --disabled-opacity: 0.55;
-    --btn-primary-hover: #8F2A20;
-    --btn-primary-active: #7F241C;
+        /* ─── 7. Interactive States & Accessibility ─── */
+        --focus-ring: 0 0 0 3px rgba(168, 50, 38, 0.35);
+        --focus-ring-offset: 2px;
+        --disabled-opacity: 0.55;
+        --btn-primary-hover: #8F2A20;
+        --btn-primary-active: #7F241C;
 
-    /* ─── 8. Radii Scale ─── */
-    --r-xs: 4px;
-    --r-sm: 8px;
-    --r-md: 12px;
-    --r-lg: 18px;
-    --r-xl: 24px;
-    --radius-pill: 50px;
+        /* ─── 8. Radii Scale ─── */
+        --r-xs: 4px;
+        --r-sm: 8px;
+        --r-md: 12px;
+        --r-lg: 18px;
+        --r-xl: 24px;
+        --radius-pill: 50px;
 
-    /* ─── 9. Shadows & Elevation ─── */
-    --sh-sm: 0 1px 3px rgba(37, 37, 37, 0.06);
-    --sh-card: 0 2px 16px rgba(37, 37, 37, 0.07);
-    --sh-hover: 0 10px 40px rgba(168, 50, 38, 0.14);
-    --sh-modal: 0 32px 80px rgba(0, 0, 0, 0.22);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        /* ─── 9. Shadows & Elevation ─── */
+        --sh-sm: 0 1px 3px rgba(37, 37, 37, 0.06);
+        --sh-card: 0 2px 16px rgba(37, 37, 37, 0.07);
+        --sh-hover: 0 10px 40px rgba(168, 50, 38, 0.14);
+        --sh-modal: 0 32px 80px rgba(0, 0, 0, 0.22);
+        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 
-    /* ─── 10. Typography Stacks & Scale ─── */
-    --display: 'Fraunces', Georgia, 'Noto Sans Devanagari', serif;
-    --body: 'Plus Jakarta Sans', 'Noto Sans Devanagari', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-devanagari: 'Noto Sans Devanagari', 'Plus Jakarta Sans', system-ui, sans-serif;
-}
+        /* ─── 10. Typography Stacks & Scale ─── */
+        --display: 'Fraunces', Georgia, 'Noto Sans Devanagari', serif;
+        --body: 'Plus Jakarta Sans', 'Noto Sans Devanagari', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --font-devanagari: 'Noto Sans Devanagari', 'Plus Jakarta Sans', system-ui, sans-serif;
 
-html[lang="hi"] body,
-html[lang="hi"] button,
-html[lang="hi"] input,
-html[lang="hi"] textarea,
-html[lang="hi"] select {
-    font-family: var(--font-devanagari);
-}
+        --fs-h1: clamp(2rem, 4.5vw, 3.25rem);
+        --fs-h2: clamp(1.65rem, 3.2vw, 2.5rem);
+        --fs-h3: clamp(1.2rem, 2vw, 1.45rem);
+        --fs-body: clamp(0.95rem, 1.2vw, 1.05rem);
+        --fs-small: 0.875rem;
+        --fs-caption: 0.75rem;
+        --lh-tight: 1.2;
+        --lh-body: 1.65;
+        --lh-hi: 1.75;
 
-/* Restore :root continuation — spacing tokens below remain on :root */
-:root {
-    /* (typography scale continues) */
-    --fs-h1: clamp(2rem, 4.5vw, 3.25rem);
-    --fs-h2: clamp(1.65rem, 3.2vw, 2.5rem);
-    --fs-h3: clamp(1.2rem, 2vw, 1.45rem);
-    --fs-body: clamp(0.95rem, 1.2vw, 1.05rem);
-    --fs-small: 0.875rem;
-    --fs-caption: 0.75rem;
-    --lh-tight: 1.2;
-    --lh-body: 1.65;
+        /* ─── 11. Spacing & Layout Scale ─── */
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 24px;
+        --space-6: 32px;
+        --space-7: 48px;
+        --space-8: 72px;
+        --container-max: 1200px;
+        --container-wide: 1280px;
+        --filter-rail: 240px;
 
-    /* ─── 11. Spacing & Layout Scale ─── */
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 12px;
-    --space-4: 16px;
-    --space-5: 24px;
-    --space-6: 32px;
-    --space-7: 48px;
-    --space-8: 72px;
-    --container-max: 1200px;
+        /* ─── 12. Breakpoints (reference; media queries use raw px) ─── */
+        --bp-xs: 360px;
+        --bp-sm: 480px;
+        --bp-md: 768px;
+        --bp-lg: 1024px;
+        --bp-xl: 1280px;
+        --bp-2xl: 1366px;
+        --bp-3xl: 1536px;
 
-    /* ─── 12. Motion & Transitions ─── */
-    --ease: cubic-bezier(0.4, 0, 0.2, 1);
-    --t: 0.22s;
-    --t-fast: 0.15s;
-    --transition-fast: 180ms ease;
-    --transition-normal: 280ms ease;
+        /* ─── 13. Touch & interaction ─── */
+        --touch-min: 44px;
+        --tap-highlight: transparent;
 
-    /* ─── 12b. Semantic aliases (account UI + shared components) ─── */
-    --color-primary: var(--brand);
-    --color-primary-hover: #87271F;
-    --color-secondary: var(--brand-secondary);
-    --color-accent: var(--brand-amber);
-    --color-background: var(--bg);
-    --color-surface: var(--bg-card);
-    --color-text: var(--ink);
-    --color-muted: var(--ink-3);
-    --color-border: var(--line);
-    --radius-small: 6px;
-    --radius-medium: var(--r-md);
-    --radius-large: var(--r-lg);
-    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.07);
-    --shadow-modal: 0 16px 48px rgba(0, 0, 0, 0.18);
+        /* ─── 14. Fluid grids ─── */
+        --grid-gap: clamp(12px, 2vw, 24px);
+        --grid-cols-1: repeat(1, minmax(0, 1fr));
+        --grid-cols-2: repeat(2, minmax(0, 1fr));
+        --grid-cols-3: repeat(3, minmax(0, 1fr));
+        --grid-cols-4: repeat(4, minmax(0, 1fr));
+        --grid-cols-5: repeat(5, minmax(0, 1fr));
+        --card-media-ratio: 4 / 3;
 
-    /* ─── 13. Glassmorphism Tokens ─── */
-    --glass-bg: rgba(255, 255, 255, 0.15);
-    --glass-border: rgba(255, 255, 255, 0.25);
+        /* ─── 15. Motion & Transitions ─── */
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --t: 0.22s;
+        --t-fast: 0.15s;
+        --transition-fast: 180ms ease;
+        --transition-normal: 280ms ease;
 
-    /* ─── 14. Safe Area Insets (iOS notch, Android navigation bar) ─── */
-    --sat: env(safe-area-inset-top, 0px);
-    --sab: env(safe-area-inset-bottom, 0px);
-    --sal: env(safe-area-inset-left, 0px);
-    --sar: env(safe-area-inset-right, 0px);
+        /* ─── 16. Semantic aliases ─── */
+        --color-primary: var(--brand);
+        --color-primary-hover: #87271F;
+        --color-secondary: var(--brand-secondary);
+        --color-accent: var(--brand-amber);
+        --color-background: var(--bg);
+        --color-surface: var(--bg-card);
+        --color-text: var(--ink);
+        --color-muted: var(--ink-3);
+        --color-border: var(--line);
+        --radius-small: 6px;
+        --radius-medium: var(--r-md);
+        --radius-large: var(--r-lg);
+        --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.07);
+        --shadow-modal: 0 16px 48px rgba(0, 0, 0, 0.18);
 
-    /* ─── 15. Z-Index Scale ───
-       The sticky navbar is z:900. Every popup surface (search overlay,
-       drawers, modals, lightbox) MUST stack above it; transient toasts
-       stack above everything. Values below were mis-scaled, which caused
-       modals/drawers to render *behind* the header. */
-    --z-negative: -1;
-    --z-base: 1;
-    --z-sticky: 100;
-    --z-fixed: 900;                    /* mobile bottom nav & floating bars */
-    --z-header: 900;                   /* sticky navbar */
-    --z-overlay: 1000;                 /* search overlay / dimming */
-    --z-drawer: 1010;                  /* cart, wishlist, mobile drawers */
-    --z-modal: 1100;                   /* dialogs — above header */
-    --z-chat: 1150;                    /* kiln assistant sheet — above modals when open */
-    --z-lightbox: 1200;                /* full-screen image viewer */
-    --z-toast: 9999;                   /* transient notices — always on top */
-}
+        /* ─── 17. Glassmorphism ─── */
+        --glass-bg: rgba(255, 255, 255, 0.15);
+        --glass-border: rgba(255, 255, 255, 0.25);
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DARK THEME TOKENS — LEGACY / INACTIVE
-   The product now ships a single LIGHT theme: <html> is pinned to
-   data-theme="light" in head.html + platform.js, so the blocks below
-   can no longer activate on their own. The former
-   @media (prefers-color-scheme: dark) activation was removed here —
-   it was leaking dark colors to dark-OS visitors with no way back.
-   Kept only so a future, deliberate opt-in (Platform.setTheme('dark'))
-   would still find its tokens defined.
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-html[data-theme="dark"] {
-    --bg: #151210;
-    --bg-card: #1E1915;
-    --bg-elevated: #241D18;
-    --bg-subtle: #241D18;
-    --bg-muted: #2E2419;
+        /* ─── 18. Safe Area Insets ─── */
+        --sat: env(safe-area-inset-top, 0px);
+        --sab: env(safe-area-inset-bottom, 0px);
+        --sal: env(safe-area-inset-left, 0px);
+        --sar: env(safe-area-inset-right, 0px);
 
-    --ink: #F5EDE6;
-    --ink-2: #CDB49E;
-    --ink-3: #8F7665;
-    --ink-inverse: #1E1915;
+        /* ─── 19. Z-Index Scale ─── */
+        --z-negative: -1;
+        --z-base: 1;
+        --z-sticky: 100;
+        --z-fixed: 900;
+        --z-header: 900;
+        --z-overlay: 1000;
+        --z-drawer: 1010;
+        --z-modal: 1100;
+        --z-chat: 1150;
+        --z-lightbox: 1200;
+        --z-toast: 9999;
+    }
 
-    --line: rgba(229, 225, 218, 0.12);
-    --line-mid: rgba(200, 62, 10, 0.30);
-    --line-strong: rgba(200, 62, 10, 0.48);
+    html[lang="hi"] {
+        --lh-tight: 1.35;
+        --lh-body: var(--lh-hi);
+    }
 
-    --nav-glass: rgba(30, 25, 21, 0.94);
-    --bottom-nav-glass: rgba(21, 18, 16, 0.96);
+    html[lang="hi"] body,
+    html[lang="hi"] button,
+    html[lang="hi"] input,
+    html[lang="hi"] textarea,
+    html[lang="hi"] select {
+        font-family: var(--font-devanagari);
+    }
 
-    --footer-bg: #0F0D0B;
+    /* Dark tokens — opt-in only via data-theme="dark" */
+    html[data-theme="dark"] {
+        --bg: #151210;
+        --bg-card: #1E1915;
+        --bg-elevated: #241D18;
+        --bg-subtle: #241D18;
+        --bg-muted: #2E2419;
 
-    --sh-card: 0 4px 20px rgba(0, 0, 0, 0.45);
-    --sh-hover: 0 12px 40px rgba(168, 50, 38, 0.22);
-    --focus-ring: 0 0 0 3px rgba(214, 106, 69, 0.45);
-}
+        --ink: #F5EDE6;
+        --ink-2: #CDB49E;
+        --ink-3: #8F7665;
+        --ink-inverse: #1E1915;
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   GLOBAL CSS RESET & ACCESSIBILITY BASE
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+        --line: rgba(229, 225, 218, 0.12);
+        --line-mid: rgba(200, 62, 10, 0.30);
+        --line-strong: rgba(200, 62, 10, 0.48);
 
-html {
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
-    /* `clip` rather than `hidden`: hidden on the root propagates to the
-       viewport and creates a scroll container, which breaks position:sticky
-       and iOS momentum scrolling. See refinements.css global reset. */
-    overflow-x: clip;
-    scrollbar-gutter: stable;
-}
+        --nav-glass: rgba(30, 25, 21, 0.94);
+        --bottom-nav-glass: rgba(21, 18, 16, 0.96);
 
-body {
-    font-family: var(--body);
-    background: var(--bg);
-    color: var(--ink-2);
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: clip;
-    padding-top: var(--sat);
-}
+        --footer-bg: #0F0D0B;
 
-/* JS toggles `el.hidden` across the storefront (wishlist drawer lists, tab
-   panels, empty states). Author `display` rules always beat the UA's
-   [hidden]{display:none}, so promote it once, globally, instead of
-   scattering !important through every component. */
-[hidden] { display: none !important; }
-
-img { max-width: 100%; display: block; height: auto; }
-a { color: inherit; text-decoration: none; }
-button { font-family: var(--body); cursor: pointer; border: none; background: none; }
-input, textarea, select { font-family: var(--body); }
-ul { list-style: none; }
-svg { display: block; }
-
-/* Interactive focus indicators (WCAG 2.4.7 Focus Visible) */
-:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-    border-radius: var(--r-xs);
-}
-
-/* Accessibility: Skip to Main Content Link */
-.skip-link {
-    position: absolute;
-    top: -100px;
-    left: 16px;
-    background: var(--brand);
-    color: #FFFFFF !important;
-    font-weight: 700;
-    padding: 10px 18px;
-    border-radius: var(--r-sm);
-    z-index: var(--z-toast);
-    box-shadow: var(--sh-modal);
-    transition: top var(--t-fast) var(--ease);
-}
-.skip-link:focus {
-    top: 16px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-        scroll-behavior: auto !important;
+        --sh-card: 0 4px 20px rgba(0, 0, 0, 0.45);
+        --sh-hover: 0 12px 40px rgba(168, 50, 38, 0.22);
+        --focus-ring: 0 0 0 3px rgba(214, 106, 69, 0.45);
     }
 }
 
-#spbar {
-    position: fixed;
-    top: 0; left: 0;
-    width: 0%; height: 3px;
-    background: linear-gradient(90deg, var(--brand), var(--brand-amber));
-    z-index: var(--z-toast);
-    pointer-events: none;
-    transition: width .1s linear;
-}
+@layer reset {
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-.container {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: 0 clamp(var(--space-4), 4vw, var(--space-6));
-}
+    html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        overflow-x: clip;
+        scrollbar-gutter: stable;
+        scroll-padding-top: 78px;
+    }
 
-.sec {
-    padding: clamp(var(--space-7), 8vw, var(--space-8)) 0;
-}
+    body {
+        font-family: var(--body);
+        background: var(--bg);
+        color: var(--ink-2);
+        line-height: var(--lh-body);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: clip;
+        padding-top: var(--sat);
+    }
 
-.sec-tag {
-    display: inline-block;
-    background: var(--brand-glow);
-    color: var(--brand);
-    font-size: var(--fs-caption);
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding: 5px 14px;
-    border-radius: var(--radius-pill);
-    margin-bottom: var(--space-3);
-}
+    /* Author display rules must not override [hidden] */
+    [hidden] { display: none !important; }
 
-.sec-title {
-    font-family: var(--display);
-    font-size: var(--fs-h2);
-    font-weight: 700;
-    color: var(--ink);
-    line-height: var(--lh-tight);
-    margin-bottom: var(--space-3);
-}
+    img { max-width: 100%; display: block; height: auto; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: var(--body); cursor: pointer; border: none; background: none; }
+    input, textarea, select { font-family: var(--body); }
+    ul { list-style: none; }
+    svg { display: block; }
 
-.sec-sub {
-    font-size: var(--fs-body);
-    color: var(--ink-3);
-    max-width: 600px;
-    margin: 0 auto var(--space-7);
-    line-height: var(--lh-body);
-}
+    :focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+        border-radius: var(--r-xs);
+    }
 
-.text-center { text-align: center; }
-.hidden { display: none !important; }
-.fade-in { animation: fadeIn .5s var(--ease) forwards; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-@keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.88); }
-    to { opacity: 1; transform: scale(1); }
-}
-@keyframes shakeX {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-6px); }
-    40%, 80% { transform: translateX(6px); }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
 }

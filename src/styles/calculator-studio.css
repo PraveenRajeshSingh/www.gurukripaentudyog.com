@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    #calculator — 3-in-1 Estimator Studio Redesign
    Presentation only. Formulas live in calculator.js (unchanged).
@@ -1023,4 +1025,5 @@ html[lang="hi"] #calculator .studio-btn {
     #calculator .studio-notes summary::before {
         transition: none !important;
     }
+}
 }

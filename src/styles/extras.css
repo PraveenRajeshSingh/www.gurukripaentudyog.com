@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer pages — do not remove wrapper */
+@layer pages {
 /* ==========================================================================
    Extras: scroll-top, mobile bottom nav, toasts, product detail modal, misc, WhatsApp float, lightbox, gallery, price comparison, delivery photos, profile modal, fluid responsive vars
    File: extras.css (part 4 of 7)
@@ -1529,3 +1531,4 @@
 
 
 /* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺�
+}

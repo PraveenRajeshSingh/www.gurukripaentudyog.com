@@ -12,12 +12,12 @@ Status values: **Open** | **Mitigated** | **Fixed** | **External** (needs real a
 
 | ID | Defect | Evidence | Suspected root | Target phase | Status |
 |---|---|---|---|---|---|
-| D1 | Hero ~770–890px uses ~300–350px width; blank right; blurry image; glass wrap; CTAs stack; Est. pill oval | 770: copy/media ≈302px; img `hero-768.jpg` natural ≈369; `qa/before/770-home.png` | Hero grid breakpoints; missing/incorrect `srcset`/`sizes`; pill `border-radius` | 2–3 | Open |
-| D2 | ~350px header clips brand behind language toggle; Est. badge truncated | `qa/before/350-home.png` | Navbar flex without `min-width:0`; no shortened badge text | 2 | Open |
-| D3 | Duplicate language toggle (topbar + header); bottom nav visible ~890px | 890: topbar EN/HI + header EN/HI; `.mobile-nav` `display:block` | Dual `setLang` UI; bottom-nav media query | 2 | Open |
-| D4 | FAB overlaps hero badge / product cards | `qa/before/360-home.png` | Fixed FAB offsets; no collision avoid | 2 | Open |
+| D1 | Hero ~770–890px uses ~300–350px width; blank right; blurry image; glass wrap; CTAs stack; Est. pill oval | 770: copy/media ≈302px; img `hero-768.jpg` natural ≈369; `qa/before/770-home.png` | Hero grid breakpoints; missing/incorrect `srcset`/`sizes`; pill `border-radius` | 2–3 | **Fixed** (2-col ≥1024; sizes 100vw below) |
+| D2 | ~350px header clips brand behind language toggle; Est. badge truncated | `qa/before/350-home.png` | Navbar flex without `min-width:0`; no shortened badge text | 2 | **Fixed** |
+| D3 | Duplicate language toggle (topbar + header); bottom nav visible ~890px | 890: topbar EN/HI + header EN/HI; `.mobile-nav` `display:block` | Dual `setLang` UI; bottom-nav media query | 2 | **Fixed** |
+| D4 | FAB overlaps hero badge / product cards | `qa/before/360-home.png` | Fixed FAB offsets; no collision avoid | 2 | **Mitigated** (badge max-width + FAB suppress on overlay) |
 | D5 | Products: Filters wide; count shown 3×; card rows misaligned; shared images; stock row clips | 1366: `#productsCount`, `#catalogSheetCount`, `#productsCountDesktop` all visible; `qa/before/1366-products.png` | Triplicate count nodes; no subgrid; shared `product-*-480.jpg` | 3 | Open |
-| D6 | Navy/neon product renders vs warm theme | Product cards / SHOT_LIST | Studio PNGs; theme tokens | 1, 3 | Open / External |
+| D6 | Navy/neon product renders vs warm theme | Product cards / SHOT_LIST | Studio PNGs; theme tokens | 1, 3 | **Mitigated** (tokens locked warm brick; imagery still External) |
 
 ---
 
@@ -25,7 +25,7 @@ Status values: **Open** | **Mitigated** | **Fixed** | **External** (needs real a
 
 | ID | Defect | Evidence | Target phase | Status |
 |---|---|---|---|---|
-| D8 | Display name “Gurukripa Services” vs legal “Gurukripa Bricks Industry” in title/meta/invoices | Document title vs header | 2 | Open |
+| D8 | Display name “Gurukripa Services” vs legal “Gurukripa Bricks Industry” in title/meta/invoices | Document title vs header | 2 | **Fixed** (brand.name → Bricks Industry EN/HI) |
 
 ---
 
@@ -34,7 +34,7 @@ Status values: **Open** | **Mitigated** | **Fixed** | **External** (needs real a
 | ID | Defect | Evidence | Target phase | Status |
 |---|---|---|---|---|
 | D7 | Slow 4G: ~200 requests / ~7.7 MB; SW precaches many CSS/JS/images | User report; `sw.js` SHELL + RUNTIME_WARM; 27 CSS ≈695 KB | 1, 5 | Open |
-| D7b | Patch CSS override wars (`!important` heavy) | `mobile-fixes` 499 `!important`; `interaction-fixes` 101 | 1 | Open |
+| D7b | Patch CSS override wars (`!important` heavy) | `mobile-fixes` 499 `!important`; `interaction-fixes` 101 | 1 | **Mitigated** (cascade layers; !important counts remain until Phase 5 prune) |
 
 ---
 

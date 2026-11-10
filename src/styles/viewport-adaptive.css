@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer patches — do not remove wrapper */
+@layer patches {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    VIEWPORT ADAPTIVE — final cascade (loads last)
    Dynamic full-page layout + every popup/drawer/sheet sized to the
@@ -524,4 +526,5 @@ table {
         transition: none !important;
         animation: none !important;
     }
+}
 }

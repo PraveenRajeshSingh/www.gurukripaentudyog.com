@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 .daily-prices-sec {
     background: linear-gradient(180deg, var(--bg) 0%, var(--bg-subtle) 100%);
 }
@@ -88,4 +90,5 @@ html[data-theme="dark"] .daily-price-card {
 @media (max-width: 480px) {
     .daily-price-card { grid-template-columns: 56px 1fr; }
     .daily-price-card__img { width: 56px; height: 56px; }
+}
 }

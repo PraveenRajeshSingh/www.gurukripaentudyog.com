@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ACCOUNT SYSTEM — My Profile popup (portaled, fixed)
    Fixes: navbar clipping, overflow conflicts, z-index stacking
@@ -388,4 +390,5 @@ body.account-popup-open {
 .hub-tile:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
+}
 }

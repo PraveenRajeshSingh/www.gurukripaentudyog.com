@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    PWA / OFFLINE UX — banner, toasts, rate stamps, pending badges
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -207,4 +209,5 @@ body.is-offline .contact-map-frame { display: none; }
     .gbi-offline-banner {
         transition: none !important;
     }
+}
 }

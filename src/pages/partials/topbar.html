@@ -16,9 +16,10 @@
                 </div>
                 <div class="topbar-right">
                     <span class="topbar-hours" data-i18n="topbar.hours">Mon–Sat | 8:00 AM – 6:00 PM</span>
-                    <div class="topbar-controls" role="group" aria-label="Language">
-                        <button type="button" class="lang-btn active" onclick="setLang('en')" id="langEn" aria-pressed="true" aria-label="Switch language to English">EN</button>
-                        <button type="button" class="lang-btn" onclick="setLang('hi')" id="langHi" aria-pressed="false" aria-label="हिंदी भाषा चुनें">HI</button>
+                    <!-- Language IDs kept for setLang sync; visible control is header .nav-lang only -->
+                    <div class="topbar-controls" role="group" aria-label="Language" hidden aria-hidden="true">
+                        <button type="button" class="lang-btn active" onclick="setLang('en')" id="langEn" aria-pressed="true" tabindex="-1" aria-label="Switch language to English">EN</button>
+                        <button type="button" class="lang-btn" onclick="setLang('hi')" id="langHi" aria-pressed="false" tabindex="-1" aria-label="हिंदी भाषा चुनें">HI</button>
                     </div>
                 </div>
             </div>
