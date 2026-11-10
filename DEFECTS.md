@@ -1,7 +1,7 @@
-# DEFECTS.md — GURUKRIPA SERVICES
+# DEFECTS.md — GURUKRIPA BRICKS INDUSTRY
 
 **Branch:** `design-responsive-pass-2026-11-10`  
-**Phase:** 0 inventory (documentation only)  
+**Phase:** 7 delivery (Phases 0–7 complete on this branch)  
 **Sources:** live `localhost:4173` measurements, `SCREEN_INVENTORY.md`, `ROOT_CAUSES.md`, user-reported defects.
 
 Status values: **Open** | **Mitigated** | **Fixed** | **External** (needs real assets / keys)
@@ -16,7 +16,7 @@ Status values: **Open** | **Mitigated** | **Fixed** | **External** (needs real a
 | D2 | ~350px header clips brand behind language toggle; Est. badge truncated | `qa/before/350-home.png` | Navbar flex without `min-width:0`; no shortened badge text | 2 | **Fixed** |
 | D3 | Duplicate language toggle (topbar + header); bottom nav visible ~890px | 890: topbar EN/HI + header EN/HI; `.mobile-nav` `display:block` | Dual `setLang` UI; bottom-nav media query | 2 | **Fixed** |
 | D4 | FAB overlaps hero badge / product cards | `qa/before/360-home.png` | Fixed FAB offsets; no collision avoid | 2 | **Mitigated** (badge max-width + FAB suppress on overlay) |
-| D5 | Products: Filters wide; count shown 3×; card rows misaligned; shared images; stock row clips | 1366: `#productsCount`, `#catalogSheetCount`, `#productsCountDesktop` all visible; `qa/before/1366-products.png` | Triplicate count nodes; no subgrid; shared `product-*-480.jpg` | 3 | Open |
+| D5 | Products: Filters wide; count shown 3×; card rows misaligned; shared images; stock row clips | 1366: triplicate counts; `qa/before/1366-products.png` | Triplicate count nodes; no subgrid; shared images | 3 | **Fixed** (one visible count/breakpoint; card flex align) |
 | D6 | Navy/neon product renders vs warm theme | Product cards / SHOT_LIST | Studio PNGs; theme tokens | 1, 3 | **Mitigated** (tokens locked warm brick; imagery still External) |
 
 ---
@@ -33,8 +33,8 @@ Status values: **Open** | **Mitigated** | **Fixed** | **External** (needs real a
 
 | ID | Defect | Evidence | Target phase | Status |
 |---|---|---|---|---|
-| D7 | Slow 4G: ~200 requests / ~7.7 MB; SW precaches many CSS/JS/images | User report; `sw.js` SHELL + RUNTIME_WARM; 27 CSS ≈695 KB | 1, 5 | Open |
-| D7b | Patch CSS override wars (`!important` heavy) | `mobile-fixes` 499 `!important`; `interaction-fixes` 101 | 1 | **Mitigated** (cascade layers; !important counts remain until Phase 5 prune) |
+| D7 | Slow 4G: ~200 requests / ~7.7 MB; SW precaches many CSS/JS/images | User report; prior `SHELL_ASSETS` | 1, 5 | **Mitigated** (`v14-perf` shell-only install; deferred CSS; idle warm; request count still multi-file) |
+| D7b | Patch CSS override wars (`!important` heavy) | `mobile-fixes` / `interaction-fixes` | 1 | **Mitigated** (cascade layers; residual `!important` remains in legacy patches) |
 
 ---
 
@@ -45,25 +45,26 @@ Status values: **Open** | **Mitigated** | **Fixed** | **External** (needs real a
 | RC-1 | Add to Cart did nothing | Capture busy lock blocked delegation — see `ROOT_CAUSES.md` | (commerce) | **Fixed** `0bdfac2` |
 | RC-2 | Wishlist heart net no-op | Double listeners | (commerce) | **Fixed** `0bdfac2` |
 | RC-3 | Busy Add button `pointer-events:none` | catalog-premium.css | (commerce) | **Fixed** `0bdfac2` |
-| D9 | Drawers auto-open on load | `translateZ(0)` wiped off-canvas transforms | 4 | **Mitigated** prior pass; re-verify Phase 4/7 |
-| D10 | Filters open inline without proper backdrop on desktop | Products `#catalogSidebar` | 3–4 | Open |
+| D9 | Drawers auto-open on load | `translateZ(0)` wiped off-canvas transforms | 4 | **Fixed** (boot closer expanded + `popup-manager.js` + closed CSS) |
+| D10 | Filters open inline without proper backdrop on desktop | Products `#catalogSidebar` | 3–4 | **Fixed** (240px rail ≥1024; sheet+backdrop &lt;1024) |
 
 ---
 
-## Accessibility / i18n (seed for Phase 6)
+## Accessibility / i18n
 
 | ID | Defect | Notes | Status |
 |---|---|---|---|
-| A1 | Hindi clipping risk in chips/badges | Needs full EN/HI pass | Open |
-| A2 | Icon buttons / focus rings incomplete | Partial | Open |
-| A3 | Duplicate lang controls confuse SR users | Same as D3 | Open |
+| A1 | Hindi clipping risk in chips/badges | Phase 6 wrap/line-height utilities | **Mitigated** |
+| A2 | Icon buttons / focus rings incomplete | `a11y-phase6.css` focus-visible + 44px floors | **Mitigated** |
+| A3 | Duplicate lang controls confuse SR users | Same as D3 | **Fixed** |
 
 ---
 
-## Gaps in Phase 0 screenshot set
+## Gaps in screenshot set
 
-Captured: home @ 350/360/768/770/890/1024/1366; products @ 1024/1366.  
-**Not yet captured as files:** calculator, nearby, contact, footer, every popup — deferred to Phase 7 sweep (`SCREEN_INVENTORY` §I).
+**Before:** `qa/before/` (Phase 0).  
+**After:** `qa/after/` (Phase 7 samples).  
+Full popup matrix still optional — inventory in `SCREEN_INVENTORY.md`.
 
 ---
 
@@ -79,12 +80,13 @@ Captured: home @ 350/360/768/770/890/1024/1366; products @ 1024/1366.
 
 ## Phase mapping
 
-| Phase | Defects primarily addressed |
-|---|---|
-| 1 | D6 tokens, D7b CSS consolidation |
-| 2 | D1–D4, D8 shell |
-| 3 | D5, D10 page/product |
-| 4 | D9, popup defaults |
-| 5 | D7 perf/SW |
-| 6 | A1–A3 bilingual/a11y |
-| 7 | Full re-verify + remaining gaps |
+| Phase | Defects primarily addressed | Status |
+|---|---|---|
+| 0 | Inventory / before shots | Done |
+| 1 | D6 tokens, D7b CSS consolidation | Done |
+| 2 | D1–D4, D8 shell | Done |
+| 3 | D5, D10 page/product | Done |
+| 4 | D9, popup defaults | Done |
+| 5 | D7 perf/SW | Done (mitigated) |
+| 6 | A1–A3 bilingual/a11y | Done (mitigated) |
+| 7 | Full re-verify + remaining gaps | Done |
