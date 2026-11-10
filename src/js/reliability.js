@@ -379,8 +379,25 @@
 
     // ── Diagnostics (Account Settings copy) ────────────────────────
     function getDiagnostics() {
+        var buildMeta = (document.querySelector('meta[name="gb-build"]') || {}).content || '';
+        var cartCount = 0;
+        var wishCount = 0;
+        try {
+            if (global.GBI && GBI.Commerce) {
+                cartCount = (GBI.Commerce.get() || []).reduce(function (s, i) { return s + (Number(i.qty) || 0); }, 0);
+                wishCount = (GBI.Commerce.getWishlist() || []).length;
+            } else if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+                cartCount = cart.reduce(function (s, i) { return s + (Number(i.qty) || 0); }, 0);
+            }
+            if (!wishCount && typeof wishlist !== 'undefined' && Array.isArray(wishlist)) wishCount = wishlist.length;
+        } catch (_e) { /* ignore */ }
+        var swState = 'unsupported';
+        if ('serviceWorker' in navigator) {
+            swState = navigator.serviceWorker.controller ? 'controlled' : 'registered-or-pending';
+        }
         return {
             ts: new Date().toISOString(),
+            build: buildMeta,
             ua: navigator.userAgent,
             online: navigator.onLine,
             lang: document.documentElement.lang || '',
@@ -388,6 +405,10 @@
             viewport: { w: window.innerWidth, h: window.innerHeight },
             features: features,
             dataVersion: localGet(DATA_VERSION_KEY, '1'),
+            serviceWorker: swState,
+            storageMemoryOnly: !!(global.GBI && GBI.Commerce && GBI.Commerce.isMemoryOnly && GBI.Commerce.isMemoryOnly()),
+            cartCount: cartCount,
+            wishlistCount: wishCount,
             errors: errorRing.slice()
         };
     }

@@ -88,10 +88,11 @@ function loadPersistedUser() {
     return getSafeStorage('gb_user', null) || getSessionStorage('gb_user', null);
 }
 
-let cart         = getSafeStorage('gb_cart', []);
-let user         = loadPersistedUser();
-let wishlist     = getSafeStorage('gb_wishlist', []);
-let orders       = getSafeStorage('gb_orders', []);
+// Use var (not let) so window.cart / window.wishlist exist for GBI.Commerce sync.
+var cart         = getSafeStorage('gb_cart', []);
+var user         = loadPersistedUser();
+var wishlist     = getSafeStorage('gb_wishlist', []);
+var orders       = getSafeStorage('gb_orders', []);
 let couponDiscount   = 0;
 let appliedCoupon    = '';
 let currentFilter    = 'all';
