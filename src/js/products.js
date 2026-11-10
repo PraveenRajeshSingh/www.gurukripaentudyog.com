@@ -140,7 +140,7 @@ function renderProductCard(p, idx) {
         <h3 class="catalog-card-name product-card-name">
           <button type="button" class="catalog-card-name-btn product-card-name-btn" data-action="open-product" data-id="${p.id}">${name}</button>
         </h3>
-        ${nameHi ? `<p class="catalog-card-name-hi product-card-name-hi" lang="hi">${nameHi}</p>` : ''}
+        <p class="catalog-card-name-hi product-card-name-hi" lang="hi">${nameHi || ''}</p>
         <p class="catalog-desc-one">${sanitizeHTML(p.desc || '')}</p>
 
         <div class="catalog-meta">
@@ -374,15 +374,44 @@ function handleAddToCart(btn, id) {
 
 // Mobile/app filter bottom sheet — the desktop sidebar becomes a slide-up sheet
 // on small screens so phone users keep full filtering without a shrunk desktop.
+function isCatalogDesktopRail() {
+    return !!(window.matchMedia && window.matchMedia('(min-width: 1024px)').matches);
+}
+
+/** Keep sidebar as sticky rail ≥1024; modal sheet only below. */
+function syncCatalogSidebarMode() {
+    const sb = document.getElementById('catalogSidebar');
+    if (!sb) return;
+    const bd = document.getElementById('filterSheetBackdrop');
+    const btn = document.getElementById('catalogFiltersBtn') || document.querySelector('.mobile-filter-toggle');
+    if (isCatalogDesktopRail()) {
+        sb.classList.remove('open');
+        sb.removeAttribute('hidden');
+        sb.setAttribute('role', 'complementary');
+        sb.removeAttribute('aria-modal');
+        if (bd) bd.classList.remove('open');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+        return;
+    }
+    sb.setAttribute('role', 'dialog');
+    sb.setAttribute('aria-modal', 'true');
+    if (!sb.classList.contains('open')) sb.setAttribute('hidden', '');
+}
+
 function toggleFilterSheet(force) {
     const sb = document.getElementById('catalogSidebar');
     if (!sb) return;
+    // Desktop: persistent 240px rail — never open as a modal sheet
+    if (isCatalogDesktopRail()) {
+        syncCatalogSidebarMode();
+        return;
+    }
     const bd = document.getElementById('filterSheetBackdrop');
     const btn = document.getElementById('catalogFiltersBtn') || document.querySelector('.mobile-filter-toggle');
     const isOpen = (typeof force === 'boolean') ? force : !sb.classList.contains('open');
     sb.classList.toggle('open', isOpen);
     if (isOpen) sb.removeAttribute('hidden');
-    else if (window.matchMedia && window.matchMedia('(max-width: 1023.98px)').matches) sb.setAttribute('hidden', '');
+    else sb.setAttribute('hidden', '');
     if (bd) bd.classList.toggle('open', isOpen);
     isOpen ? overlayLock() : overlayUnlock();
     if (btn) btn.setAttribute('aria-expanded', String(isOpen));
@@ -646,6 +675,18 @@ function closeCatalogSortSheet() {
 }
 
 function initCatalogPremiumUI() {
+    syncCatalogSidebarMode();
+    let _railMq = window.matchMedia ? window.matchMedia('(min-width: 1024px)') : null;
+    const onRailChange = () => {
+        const wasOpen = document.getElementById('catalogSidebar')?.classList.contains('open');
+        if (wasOpen && typeof overlayUnlock === 'function') overlayUnlock();
+        syncCatalogSidebarMode();
+    };
+    if (_railMq) {
+        if (typeof _railMq.addEventListener === 'function') _railMq.addEventListener('change', onRailChange);
+        else if (typeof _railMq.addListener === 'function') _railMq.addListener(onRailChange);
+    }
+
     const searchWrap = document.getElementById('catalogSearchWrap');
     const searchToggle = document.getElementById('catalogSearchToggle');
     const searchInput = document.getElementById('catalogSearchInput');
