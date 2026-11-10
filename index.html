@@ -157,8 +157,9 @@
     <link rel="stylesheet" href="src/styles/mobile-fixes.css">
     <link rel="stylesheet" href="src/styles/refinements.css">
     <link rel="stylesheet" href="src/styles/account.css">
-    <!-- Checkout / yard console override generic bottom-sheet rules. -->
-    <link rel="stylesheet" href="src/styles/ops-console.css">
+    <!-- Checkout / yard console — deferred (Phase 5: non-critical first paint) -->
+    <link rel="stylesheet" href="src/styles/ops-console.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="src/styles/ops-console.css"></noscript>
     <!-- Final pass: mobile overflow, button overlap, estimator & account fixes. -->
     <link rel="stylesheet" href="src/styles/ux-responsive.css">
     <!-- Premium e-commerce chrome (grids, cards, modals) — brand tokens unchanged. -->
@@ -178,9 +179,13 @@
     <link rel="stylesheet" href="src/styles/polish-pass.css">
     <!-- CHANGE: premium #products redesign (mobile-first) — loads last for catalog -->
     <link rel="stylesheet" href="src/styles/catalog-premium.css">
-    <!-- Nearby brick bhatta & eent finder -->
-    <link rel="stylesheet" href="src/styles/nearby-bhatta.css">
-    <link rel="stylesheet" href="src/styles/daily-prices.css">
+    <!-- Nearby / daily prices — deferred until after first paint (Phase 5) -->
+    <link rel="stylesheet" href="src/styles/nearby-bhatta.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="src/styles/daily-prices.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="src/styles/nearby-bhatta.css">
+        <link rel="stylesheet" href="src/styles/daily-prices.css">
+    </noscript>
     <!-- Final: dynamic full-page + every popup sized to live visual viewport -->
     <link rel="stylesheet" href="src/styles/viewport-adaptive.css">
     <!-- Mobile scroll master: canonical scroll/touch/PTR fixes — loads last -->
@@ -191,6 +196,10 @@
     <link rel="stylesheet" href="src/styles/shell-phase2.css">
     <!-- Phase 3: catalog rail/drawer, count dedupe, card grid, section polish -->
     <link rel="stylesheet" href="src/styles/pages-phase3.css">
+    <!-- Phase 4: popup/drawer closed-by-default + sheet chrome -->
+    <link rel="stylesheet" href="src/styles/popups-phase4.css">
+    <!-- Phase 6: focus, touch, Hindi wrap, reduced-motion -->
+    <link rel="stylesheet" href="src/styles/a11y-phase6.css">
 </head>
 
 <body>
@@ -4011,6 +4020,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/erp-notify.js" defer></script>
     <script src="src/js/erp-invoice.js" defer></script>
     <script src="src/js/ui.js" defer></script>
+    <script src="src/js/popup-manager.js" defer></script>
     <script src="src/js/interaction-guard.js" defer></script>
     <script src="src/js/dialogs.js" defer></script>
     <script src="src/js/pincodeChecker.js" defer></script>
@@ -4043,6 +4053,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/pull-to-refresh.js" defer></script>
     <script src="src/js/hero-admin.js" defer></script>
     <script src="src/js/main.js" defer></script>
+    <!-- Phase 5: idle warm after first paint (Save-Data aware) -->
+    <script src="src/js/idle-loader.js" defer></script>
 </body>
 
 </html>
