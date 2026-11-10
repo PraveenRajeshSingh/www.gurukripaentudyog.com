@@ -182,6 +182,8 @@
     <link rel="stylesheet" href="src/styles/viewport-adaptive.css">
     <!-- Mobile scroll master: canonical scroll/touch/PTR fixes — loads last -->
     <link rel="stylesheet" href="src/styles/mobile-scroll-master.css">
+    <!-- Premium header / hero / footer chrome -->
+    <link rel="stylesheet" href="src/styles/chrome-premium.css">
 </head>
 
 <body>
@@ -303,18 +305,14 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <!-- ━━━━━━━━━━━━━━━━━ ACCESSIBILITY SKIP LINK ━━━━━━━━━━━━━━━━━ -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- ━━━━━━━━━━━━━━━━━ GLOBAL WEB HEADER & NAVBAR ━━━━━━━━━━━━━━━━━ -->
-    <header class="nav" role="banner">
+    <!-- ━━━━━━━━━━━━━━━━━ PREMIUM GLOBAL HEADER ━━━━━━━━━━━━━━━━━ -->
+    <header class="nav nav-premium" role="banner">
         <div class="container">
             <div class="nav-inner">
-                <!-- Brand identity. The href alone does the work: html has
-                     scroll-behavior:smooth and every section carries a
-                     scroll-margin-top for the sticky bar, so no JS scroll is
-                     needed - and the hash still lands in history for back/forward. -->
-                <a href="#home" class="nav-brand" onclick="setActiveNav(this)" aria-label="Gurukripa Bricks Industry Home">
-                    <div class="nav-logo-mark">
-                        <!-- Inline SVG so the mark never depends on a failed img request -->
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40" role="img" aria-label="Gurukripa Bricks Logo" focusable="false">
+                <!-- Left: brand -->
+                <a href="#home" class="nav-brand" onclick="setActiveNav(this)" aria-label="Gurukripa Services Home">
+                    <div class="nav-logo-mark" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40" focusable="false">
                             <rect x="2" y="2" width="60" height="60" rx="14" fill="#A93226"/>
                             <text x="32" y="36" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#FFFFFF">GE</text>
                             <g fill="#F5D0A9">
@@ -325,57 +323,58 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                         </svg>
                     </div>
                     <div class="nav-brand-text">
-                        गुरुकृपा ईंट उद्योग
-                        <small>Gurukripa Bricks Industry</small>
+                        <span class="nav-brand-name" data-i18n="brand.name">Gurukripa Services</span>
+                        <small class="nav-brand-tag" data-i18n="brand.tagline">Quality Bricks · Trusted Supply</small>
                     </div>
                 </a>
 
-                <!-- Desktop Search + Voice Input -->
-                <div class="nav-search" role="search">
-                    <svg class="nav-search-icon" width="16" height="16" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="M21 21l-4.35-4.35" />
-                    </svg>
-                    <input type="search" class="nav-search-input" placeholder="Search bricks, prices... (Ctrl+K)" id="navSearch"
-                        autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices"
-                        aria-autocomplete="list" aria-controls="searchSuggestPanel">
-                    <!-- Voice search button -->
-                    <button id="voiceSearchBtn" type="button" class="nav-voice-btn"
-                        onclick="toggleVoiceSearch()"
-                        aria-label="Voice search"
-                        title="Voice search (Hindi / English)">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                            <line x1="12" y1="19" x2="12" y2="23"/>
-                            <line x1="8" y1="23" x2="16" y2="23"/>
-                        </svg>
-                    </button>
-                    <div id="searchSuggestPanel" class="search-suggest" role="listbox" hidden aria-label="Search suggestions"></div>
-                </div>
-
-                <!-- Primary Desktop Navigation -->
-                <nav class="nav-links" aria-label="Primary Navigation">
+                <!-- Center: primary nav -->
+                <nav class="nav-links nav-links-premium" aria-label="Primary Navigation">
                     <a href="#home" class="nav-link active" onclick="setActiveNav(this)" aria-current="true" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
-                    <a href="#nearby-bhatta" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.nearby">Nearby Bhatta</a>
-                    <a href="#price-list" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.prices">Price List</a>
-                    <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.categories">Categories</a>
-                    <button type="button" class="nav-link nav-link-btn" onclick="openBulkQuoteModal(); setActiveNav(this)" data-i18n="nav.bookings">Bookings</button>
-                    <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
-                    <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
-                    <button type="button" class="btn btn-primary btn-sm nav-quote-btn" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
+                    <a href="#nearby-bhatta" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.suppliers">Brick Suppliers</a>
+                    <button type="button" class="nav-link nav-link-btn" onclick="openBulkQuoteModal(); setActiveNav(this)" data-i18n="nav.bookBricks">Book Bricks</button>
+                    <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.aboutUs">About Us</a>
+                    <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contactUs">Contact Us</a>
                 </nav>
 
-                <!-- Actions: Language, Alerts, Cart, Wishlist, Auth / Account, Mobile Toggle -->
+                <!-- Right: tools -->
                 <div class="nav-actions">
-                    <!-- Compact language toggle (phones/tablets — topbar is easy to miss) -->
                     <div class="nav-lang" role="group" aria-label="Language">
                         <button type="button" class="nav-lang-btn active" id="navLangEn" onclick="setLang('en')" aria-pressed="true" aria-label="English">EN</button>
-                        <button type="button" class="nav-lang-btn" id="navLangHi" onclick="setLang('hi')" aria-pressed="false" aria-label="हिंदी">HI</button>
+                        <span class="nav-lang-sep" aria-hidden="true">|</span>
+                        <button type="button" class="nav-lang-btn" id="navLangHi" onclick="setLang('hi')" aria-pressed="false" aria-label="हिंदी">हिंदी</button>
                     </div>
-                    <!-- Order status & rate drop alerts -->
+
+                    <button type="button" class="nav-icon-btn nav-search-toggle" onclick="document.getElementById('navSearch')?.focus()" aria-label="Search products" title="Search">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="M21 21l-4.35-4.35" />
+                        </svg>
+                    </button>
+
+                    <div class="nav-search nav-search-premium" role="search">
+                        <svg class="nav-search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="M21 21l-4.35-4.35" />
+                        </svg>
+                        <input type="search" class="nav-search-input" placeholder="Search bricks, prices... (Ctrl+K)" id="navSearch"
+                            autocomplete="off" data-i18n="search.placeholder" aria-label="Search brick products, grades, and prices"
+                            aria-autocomplete="list" aria-controls="searchSuggestPanel">
+                        <button id="voiceSearchBtn" type="button" class="nav-voice-btn"
+                            onclick="toggleVoiceSearch()"
+                            aria-label="Voice search"
+                            title="Voice search (Hindi / English)">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                <line x1="12" y1="19" x2="12" y2="23"/>
+                                <line x1="8" y1="23" x2="16" y2="23"/>
+                            </svg>
+                        </button>
+                        <div id="searchSuggestPanel" class="search-suggest" role="listbox" hidden aria-label="Search suggestions"></div>
+                    </div>
+
                     <button type="button" class="nav-icon-btn nav-alert-btn" onclick="openNotificationCenter()" aria-label="Order and rate alerts" title="Order &amp; Rate Alerts">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -384,10 +383,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                         <span class="nav-badge alert-nav-badge" id="alertBadgeNav" hidden>0</span>
                     </button>
 
-                    <!-- Shopping Cart -->
                     <button type="button" class="nav-icon-btn" onclick="openCart()" aria-label="Shopping Cart" title="Shopping Cart">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24" aria-hidden="true">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                             <line x1="3" y1="6" x2="21" y2="6" />
                             <path d="M16 10a4 4 0 01-8 0" />
@@ -395,7 +392,6 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                         <span class="nav-badge cart-badge-off" id="cartBadgeNav">0</span>
                     </button>
 
-                    <!-- Wishlist -->
                     <button type="button" class="nav-icon-btn" onclick="openWishlistDrawer()" aria-label="Wishlist" title="My Wishlist">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -403,19 +399,16 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                         <span class="nav-badge" id="wishlistBadgeNav">0</span>
                     </button>
 
-                    <!-- Auth State: Logged Out -->
                     <div class="nav-auth" id="navAuthBtns">
                         <button type="button" class="btn btn-outline btn-sm" onclick="openAuth('login')" data-i18n="auth.signIn">Sign In</button>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="openAuth('register')" data-i18n="auth.signUp">Sign Up</button>
+                        <button type="button" class="btn btn-primary btn-sm nav-account-cta" onclick="openAuth('register')" data-i18n="auth.signUp">Sign Up</button>
                     </div>
 
-                    <!-- Auth State: Logged In User Dropdown -->
                     <div class="user-menu hidden" id="navUserMenu">
                         <button type="button" class="user-btn" onclick="toggleUserDropdown()" id="userMenuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="userDropdown" aria-label="Account Menu">
                             <div class="user-avatar-sm" id="navAvatar"><span id="navAvatarInitial">P</span></div>
                             <span class="user-btn-name" id="navUserName">User</span>
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24" aria-hidden="true">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M6 9l6 6 6-6" />
                             </svg>
                         </button>
@@ -589,7 +582,6 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
                     </div>
 
-                    <!-- Mobile Navigation Hamburger -->
                     <button type="button" class="nav-toggle" onclick="toggleDrawer()" id="navToggle" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobileDrawer">
                         <span></span><span></span><span></span>
                     </button>
@@ -600,7 +592,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
     <!-- ━━━━━━━━━━━━━━━━━ MOBILE DRAWER ━━━━━━━━━━━━━━━━━ -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()" aria-hidden="true"></div>
-    <aside class="drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
+    <aside class="drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu" aria-hidden="true">
         <div class="drawer-head">
             <div class="nav-brand">
                 <div class="nav-logo-mark">
@@ -645,10 +637,6 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                 </svg>
                 <span data-i18n="nav.home">Home</span>
             </a>
-            <a href="#nearby-bhatta" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-4.5 7-11a7 7 0 10-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                <span data-i18n="nav.nearby">Nearby Bhatta</span>
-            </a>
             <a href="#products" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
@@ -656,6 +644,29 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                     <path d="M16 10a4 4 0 01-8 0" />
                 </svg>
                 <span data-i18n="nav.products">Products</span>
+            </a>
+            <a href="#nearby-bhatta" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-4.5 7-11a7 7 0 10-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                <span data-i18n="nav.suppliers">Brick Suppliers</span>
+            </a>
+            <button type="button" class="drawer-link" onclick="toggleDrawer();openBulkQuoteModal()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span data-i18n="nav.bookBricks">Book Bricks</span>
+            </button>
+            <a href="#about" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+                </svg>
+                <span data-i18n="nav.aboutUs">About Us</span>
+            </a>
+            <a href="#contact" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+                <span data-i18n="nav.contactUs">Contact Us</span>
             </a>
             <a href="#calculator" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -666,22 +677,6 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                 </svg>
                 <span data-i18n="drawer.estimator">Brick Estimator</span>
             </a>
-            <a href="#categories" class="drawer-link" onclick="toggleDrawer();setActiveNav(this)">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
-                </svg>
-                <span data-i18n="nav.categories">Categories</span>
-            </a>
-            <button type="button" class="drawer-link" onclick="toggleDrawer();openBulkQuoteModal()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                </svg>
-                <span data-i18n="nav.getQuote">Get a Quote</span>
-            </button>
             <button type="button" class="drawer-link" onclick="toggleDrawer();openWishlistDrawer()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -784,50 +779,29 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
 
 <main id="main-content" role="main">
-    <!-- ━━━━━━━━━━━━━━━━━ HERO ━━━━━━━━━━━━━━━━━ -->
-    <section id="home" class="hero hero-compact">
-        <div class="hero-img">
-            <!-- CHANGE: responsive optimized hero (polish §6) — real photo, JPEG cascade; AVIF/WebP deferred (no encoder in CI) -->
-            <picture>
-                <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" sizes="(max-width:768px) 100vw, 60vw">
-                <img src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks at Gurukripa Bricks Industry kiln" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
-            </picture>
-            <div class="hero-img-overlay"></div>
-            <div class="hero-cert">
-                <div class="hero-cert-icon" aria-hidden="true"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg></div>
-                <div class="hero-cert-text">
-                    <strong data-i18n="hero.certTitle">Grade-A Double-Fired</strong>
-                    <span data-i18n="hero.certSub">Direct Bhatta Wholesale</span>
-                </div>
-            </div>
-            <div class="hero-img-badge">
-                <div class="year">1998</div>
-                <div class="since" data-i18n="hero.since">Est. Jaunpur</div>
-            </div>
-        </div>
-
-        <div class="hero-content">
-            <div class="hero-copy">
-                <p class="hero-brand" aria-label="Gurukripa Bricks Industry">Gurukripa Bricks Industry</p>
+    <!-- ━━━━━━━━━━━━━━━━━ PREMIUM HERO ━━━━━━━━━━━━━━━━━ -->
+    <section id="home" class="hero hero-premium" data-hero-managed="true">
+        <div class="hero-premium__grid">
+            <div class="hero-content hero-premium__copy">
+                <p class="hero-brand" data-i18n="brand.name">Gurukripa Services</p>
                 <div class="hero-eyebrow">
                     <span class="hero-eyebrow-dot" aria-hidden="true"></span>
                     <span data-i18n="hero.eyebrow">Jaunpur's Direct Kiln Manufacturer · Est. 1998</span>
                 </div>
 
-                <h1 class="hero-h1" data-i18n="hero.title">Quality Bricks.<br><em>Reliable Supply.</em></h1>
+                <h1 class="hero-h1" id="heroHeadline" data-i18n="hero.title">Quality Bricks. Trusted Suppliers. Reliable Service.</h1>
 
-                <p class="hero-lead" data-i18n="hero.subtitle">
-                    Wholesale Grade-A bricks for homes, commercial infrastructure &amp; contractor projects across Jaunpur, Varanasi &amp; Eastern UP.
+                <p class="hero-lead" id="heroDescription" data-i18n="hero.subtitle">
+                    Discover quality bricks and construction materials from trusted suppliers. Compare products, explore prices, and book your requirements easily with GURUKRIPA SERVICES.
                 </p>
 
-                <div class="hero-cta">
-                    <a href="#products" class="btn btn-primary btn-lg" data-i18n="hero.cta1">Explore Products</a>
-                    <a href="#nearby-bhatta" class="btn btn-outline btn-lg" data-i18n="hero.ctaNearby">Find Nearby Suppliers</a>
-                    <button type="button" class="btn btn-outline btn-lg" onclick="openBulkQuoteModal()" data-i18n="hero.ctaBook">Book Bricks</button>
-                    <a href="#contact" class="btn btn-ghost btn-lg" data-i18n="hero.ctaContact">Contact Us</a>
+                <div class="hero-cta" id="heroCtaGroup">
+                    <a href="#products" class="btn btn-primary btn-lg" id="heroCtaPrimary" data-i18n="hero.cta1">Explore Products</a>
+                    <a href="#nearby-bhatta" class="btn btn-outline btn-lg" id="heroCtaSecondary" data-i18n="hero.ctaNearby">Find Nearby Suppliers</a>
+                    <button type="button" class="btn btn-ghost btn-lg" id="heroCtaBook" onclick="openBulkQuoteModal()" data-i18n="hero.ctaBookNow">Book Bricks Now</button>
                 </div>
 
-                <div class="hero-chips">
+                <div class="hero-chips" aria-label="Service highlights">
                     <span class="hero-chip">
                         <span class="hero-chip-icon" aria-hidden="true">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
@@ -846,6 +820,25 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                         </span>
                         <span data-i18n="hero.chip2">Weather-Resistant</span>
                     </span>
+                </div>
+            </div>
+
+            <div class="hero-img hero-premium__media" id="heroMedia">
+                <picture>
+                    <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" sizes="(max-width:768px) 100vw, 48vw">
+                    <img id="heroBannerImg" src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks stacked at Gurukripa kiln yard" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
+                </picture>
+                <div class="hero-img-overlay" aria-hidden="true"></div>
+                <div class="hero-cert">
+                    <div class="hero-cert-icon" aria-hidden="true"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg></div>
+                    <div class="hero-cert-text">
+                        <strong data-i18n="hero.certTitle">Grade-A Double-Fired</strong>
+                        <span data-i18n="hero.certSub">Direct Bhatta Wholesale</span>
+                    </div>
+                </div>
+                <div class="hero-img-badge">
+                    <div class="year">1998</div>
+                    <div class="since" data-i18n="hero.since">Est. Jaunpur</div>
                 </div>
             </div>
         </div>
@@ -2045,23 +2038,21 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
 </main>
 
-    <!-- ━━━━━━━━━━━━━━━━━ FOOTER REDESIGN ━━━━━━━━━━━━━━━━━
-         Parts: footer grid · accordion · newsletter · payment chips · legal row -->
-    <footer class="footer footer-studio" id="siteFooter" role="contentinfo">
+    <!-- ━━━━━━━━━━━━━━━━━ PREMIUM FOOTER ━━━━━━━━━━━━━━━━━ -->
+    <footer class="footer footer-studio footer-premium" id="siteFooter" role="contentinfo">
         <div class="container footer-studio__container">
 
-            <!-- FOOTER GRID -->
-            <div class="footer-grid footer-studio__grid">
+            <div class="footer-grid footer-studio__grid footer-premium__grid">
 
-                <!-- Brand & contact -->
+                <!-- Column 1 — Company -->
                 <div class="footer-col footer-col-brand">
                     <div class="footer-brand-title">
-                        <span class="footer-logo-badge">GBI</span>
-                        <span data-i18n="footer.brandName">Gurukripa Bricks Industry</span>
+                        <span class="footer-logo-badge" aria-hidden="true">GE</span>
+                        <span data-i18n="brand.name">Gurukripa Services</span>
                     </div>
-                    <p class="footer-brand-hi" lang="hi">गुरुकृपा ईंट उद्योग</p>
+                    <p class="footer-brand-hi" lang="hi">गुरुकृपा सेवाएँ</p>
                     <p class="footer-brand-desc" data-i18n="footer.brandDesc">
-                        Jaunpur's premier brick manufacturer since 1998. 25+ years of double-fired Grade-A quality, compressive strength, and trust you can build your home on.
+                        Construction-material and brick supply from Jaunpur’s trusted kiln. Grade-A bricks, reliable delivery, and supplier discovery for homes and contractors.
                     </p>
                     <div class="footer-compliance-badges">
                         <span class="compliance-badge">
@@ -2072,58 +2063,6 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                         </span>
                         <span class="compliance-badge"><span data-i18n="footer.kilnLabel">Kiln</span>: GBI/JNP/1998/412</span>
                     </div>
-                    <div class="footer-contacts">
-                        <div class="footer-contact-row">
-                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></span>
-                            <a href="tel:+919198923230">+91 91989 23230</a>
-                        </div>
-                        <div class="footer-contact-row">
-                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-                            <a href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a>
-                        </div>
-                        <div class="footer-contact-row">
-                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-                            <a class="footer-map-link" id="footerAddressLink"
-                               href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf"
-                               target="_blank" rel="noopener noreferrer"
-                               data-i18n="footer.address">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
-                        </div>
-                        <div class="footer-contact-row">
-                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-                            <span data-i18n="footer.hours">Mon–Sat | 8:00 AM – 6:00 PM (Sunday Closed)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Links (accordion on mobile) -->
-                <div class="footer-col footer-accordion">
-                    <button type="button" class="footer-col-title footer-acc-btn" aria-expanded="false" aria-controls="footerQuickLinks" data-i18n="footer.quickLinks">Quick Links</button>
-                    <h4 class="footer-col-title footer-acc-heading" data-i18n="footer.quickLinks">Quick Links</h4>
-                    <ul class="footer-links" id="footerQuickLinks">
-                        <li><a href="#home" data-i18n="nav.home">Home</a></li>
-                        <li><a href="#products" data-i18n="nav.products">Products</a></li>
-                        <li><a href="#nearby-bhatta" data-i18n="nav.nearby">Nearby Bhatta</a></li>
-                        <li><a href="#calculator" data-i18n="nav.calculator">Estimator</a></li>
-                        <li><a href="#about" data-i18n="nav.about">About</a></li>
-                        <li><a href="#gallery" data-i18n="nav.gallery">Gallery</a></li>
-                        <li><button type="button" onclick="openLegalModal('quality')" data-i18n="footer.quality">Quality Standards</button></li>
-                        <li><button type="button" onclick="openTrackerModal()" data-i18n="nav.trackOrder">Track Delivery</button></li>
-                        <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
-                    </ul>
-                </div>
-
-                <!-- Our Products (filled from PRODUCTS; accordion on mobile) -->
-                <div class="footer-col footer-accordion">
-                    <button type="button" class="footer-col-title footer-acc-btn" aria-expanded="false" aria-controls="footerProductLinks" data-i18n="footer.ourProducts">Our Products</button>
-                    <h4 class="footer-col-title footer-acc-heading" data-i18n="footer.ourProducts">Our Products</h4>
-                    <ul class="footer-links" id="footerProductLinks">
-                        <!-- Populated by fab-stack.js / footer init from PRODUCTS -->
-                    </ul>
-                </div>
-
-                <!-- Connect + newsletter -->
-                <div class="footer-col">
-                    <h4 class="footer-col-title" data-i18n="footer.connect">Connect With Us</h4>
                     <div class="footer-social">
                         <a href="https://wa.me/919198923230" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="WhatsApp">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.10.55 4.05 1.6 5.78L2 22l4.42-1.66a9.9 9.9 0 0 0 5.62 1.72h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.36-.54.05-1.04.24-3.5-.72-2.95-1.16-4.82-4.2-4.97-4.39-.15-.19-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.58-.37.78-.37.2 0 .4 0 .57.006.18.006.43-.07.67.51.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
@@ -2138,30 +2077,68 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
                         </a>
                     </div>
+                </div>
 
-                    <!-- NEWSLETTER → WhatsApp rate updates (no backend) -->
-                    <div class="newsletter-wrap" id="footerNewsletter">
-                        <p class="newsletter-desc" data-i18n="footer.newsletterDesc">Get rate updates on WhatsApp</p>
-                        <form class="newsletter-form" id="footerRateForm" onsubmit="handleNewsletter(event)" novalidate>
-                            <label class="sr-only" for="footerWaPhone" data-i18n="footer.phoneLabel">Mobile number for WhatsApp updates</label>
-                            <div class="newsletter-row">
-                                <input type="tel" id="footerWaPhone" class="newsletter-input" name="phone"
-                                    placeholder="10-digit mobile" inputmode="tel" autocomplete="tel"
-                                    maxlength="14" aria-describedby="footerNewsStatus" data-i18n="footer.phonePh">
-                                <button type="submit" class="newsletter-submit" id="footerNewsBtn" data-i18n="footer.whatsappUpdates">Get updates</button>
-                            </div>
-                            <p class="newsletter-status" id="footerNewsStatus" role="status" aria-live="polite"></p>
-                        </form>
+                <!-- Column 2 — Quick Links -->
+                <div class="footer-col footer-accordion">
+                    <button type="button" class="footer-col-title footer-acc-btn" aria-expanded="false" aria-controls="footerQuickLinks" data-i18n="footer.quickLinks">Quick Links</button>
+                    <h4 class="footer-col-title footer-acc-heading" data-i18n="footer.quickLinks">Quick Links</h4>
+                    <ul class="footer-links" id="footerQuickLinks">
+                        <li><a href="#home" data-i18n="nav.home">Home</a></li>
+                        <li><a href="#about" data-i18n="nav.aboutUs">About Us</a></li>
+                        <li><a href="#products" data-i18n="nav.products">Products</a></li>
+                        <li><a href="#nearby-bhatta" data-i18n="nav.suppliers">Brick Suppliers</a></li>
+                        <li><button type="button" onclick="openBulkQuoteModal()" data-i18n="nav.bookBricks">Book Bricks</button></li>
+                        <li><a href="#contact" data-i18n="nav.contactUs">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3 — Customer Services -->
+                <div class="footer-col footer-accordion">
+                    <button type="button" class="footer-col-title footer-acc-btn" aria-expanded="false" aria-controls="footerServiceLinks" data-i18n="footer.customerServices">Customer Services</button>
+                    <h4 class="footer-col-title footer-acc-heading" data-i18n="footer.customerServices">Customer Services</h4>
+                    <ul class="footer-links" id="footerServiceLinks">
+                        <li><button type="button" onclick="typeof handleMobileProfile==='function'?handleMobileProfile():openAuth('login')" data-i18n="auth.myProfile">My Account</button></li>
+                        <li><button type="button" onclick="typeof RoleAccess!=='undefined'?RoleAccess.requireCustomer('My Orders',function(){openProfileTab('orders');}):openAuth('login')" data-i18n="footer.myOrders">My Orders</button></li>
+                        <li><button type="button" onclick="openBulkQuoteModal()" data-i18n="footer.myBookings">My Bookings</button></li>
+                        <li><button type="button" onclick="openLegalModal('shipping')" data-i18n="footer.shipping">Delivery Information</button></li>
+                        <li><a href="#faq" data-i18n="footer.faq">Frequently Asked Questions</a></li>
+                        <li><a href="#contact" data-i18n="footer.support">Customer Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4 — Contact -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title" data-i18n="footer.contactInfo">Contact Information</h4>
+                    <div class="footer-contacts">
+                        <div class="footer-contact-row">
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                            <a class="footer-map-link" id="footerAddressLink"
+                               href="https://www.google.com/maps/place/Guru+Kripa+Eant+Udyog,+Newada,+Jalalpur,+Jaunpur/@25.6041079,82.7913672,17z/data=!3m1!4b1!4m6!3m5!1s0x39902fb80ba0141f:0x8383316b344c0741!8m2!3d25.6041031!4d82.7939421!16s%2Fg%2F11j48jlhtf"
+                               target="_blank" rel="noopener noreferrer"
+                               data-i18n="footer.address">Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001</a>
+                        </div>
+                        <div class="footer-contact-row">
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></span>
+                            <a href="tel:+919198923230">+91 91989 23230</a>
+                        </div>
+                        <div class="footer-contact-row">
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                            <a href="mailto:info@gurukripaentudyog.com">info@gurukripaentudyog.com</a>
+                        </div>
+                        <div class="footer-contact-row">
+                            <span class="footer-contact-icon" aria-hidden="true"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                            <span data-i18n="footer.hours">Mon–Sat | 8:00 AM – 6:00 PM (Sunday Closed)</span>
+                        </div>
                     </div>
-
                     <p class="footer-delivery-note">
                         <strong data-i18n="footer.sameDay">Same-Day Delivery</strong>:
                         <span data-i18n="footer.sameDayCities">Jaunpur, Varanasi, Jalalpur, Trilochan, Shahganj, Mariahu &amp; surrounding sites.</span>
                     </p>
+                    <a href="#contact" class="btn btn-outline btn-sm footer-contact-cta" data-i18n="footer.contactForm">Contact Form</a>
                 </div>
             </div>
 
-            <!-- PAYMENT CHIPS (checkout-supported methods only) -->
             <div class="footer-payments" id="footerPayments" aria-label="Accepted payment methods">
                 <span class="pay-title" data-i18n="footer.weAccept">We Accept:</span>
                 <span class="pay-pill" data-pay="upi"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span data-i18n="footer.payUpi">UPI (manual)</span></span>
@@ -2171,19 +2148,17 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
             <hr class="footer-divider">
 
-            <!-- LEGAL ROW -->
             <div class="footer-bottom">
-                <p class="footer-copy" data-i18n="footer.rights">© 2026 Gurukripa Bricks Industry. All rights reserved.</p>
+                <p class="footer-copy" data-i18n="footer.rights">© 2026 Gurukripa Services. All rights reserved.</p>
                 <nav class="footer-bottom-links" aria-label="Legal">
                     <button type="button" class="footer-legal-link" onclick="openLegalModal('privacy')" data-i18n="footer.privacy">Privacy Policy</button>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')" data-i18n="footer.terms">Terms of Sale</button>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('shipping')" data-i18n="footer.shipping">Shipping &amp; Delivery</button>
-                    <button type="button" class="footer-legal-link" onclick="openLegalModal('quality')" data-i18n="footer.quality">Quality Standards</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')" data-i18n="footer.terms">Terms and Conditions</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')" data-i18n="footer.refund">Refund and Cancellation</button>
+                    <button type="button" class="footer-legal-link" onclick="openLegalModal('shipping')" data-i18n="footer.shipping">Shipping Policy</button>
                 </nav>
             </div>
         </div>
 
-        <!-- Bottom-nav spacer INSIDE footer (mobile only) — same bg, no cream strip -->
         <div class="footer-nav-spacer" aria-hidden="true"></div>
     </footer>
 
@@ -4057,6 +4032,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/platform.js" defer></script>
     <!-- Pull-to-refresh controller (mobile only; respects prefers-reduced-motion) -->
     <script src="src/js/pull-to-refresh.js" defer></script>
+    <script src="src/js/hero-admin.js" defer></script>
     <script src="src/js/main.js" defer></script>
 </body>
 

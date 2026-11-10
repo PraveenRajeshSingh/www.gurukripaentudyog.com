@@ -515,17 +515,63 @@ body.overlay-open {
    9. SCROLL LAG & PERFORMANCE FIXES
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* GPU compositing on elements that animate or transform */
+/*
+ * GPU compositing — DO NOT set a bare transform:translateZ(0) on drawers.
+ * That override wiped closed-state translateX(±100%) / translateY(100%) and
+ * left the mobile nav, cart, and wishlist visibly open on every page load.
+ * Promote layers with will-change / translate3d that preserves slide offsets.
+ */
 .modal-overlay,
 .modal-box,
-.cart-drawer,
-.wishlist-drawer,
-.drawer,
 .gb-ptr-indicator {
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+}
+
+/* Closed drawers stay off-canvas (desktop slide + mobile bottom sheet). */
+.cart-drawer:not(.open),
+.wishlist-drawer:not(.open) {
+    transform: translate3d(100%, 0, 0) !important;
+    -webkit-transform: translate3d(100%, 0, 0) !important;
+    visibility: hidden;
+    pointer-events: none !important;
+}
+.drawer:not(.open),
+#mobileDrawer.drawer:not(.open) {
+    transform: translate3d(-100%, 0, 0) !important;
+    -webkit-transform: translate3d(-100%, 0, 0) !important;
+    visibility: hidden;
+    pointer-events: none !important;
+}
+.cart-drawer.open,
+.wishlist-drawer.open {
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    visibility: visible;
+    pointer-events: auto !important;
+}
+.drawer.open,
+#mobileDrawer.drawer.open {
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    visibility: visible;
+    pointer-events: auto !important;
+}
+
+/* Mobile / short viewports: closed cart & wishlist slide down, not sideways */
+@media (max-width: 768px) {
+    .cart-drawer:not(.open),
+    .wishlist-drawer:not(.open) {
+        transform: translate3d(0, 110%, 0) !important;
+        -webkit-transform: translate3d(0, 110%, 0) !important;
+    }
+    .cart-drawer.open,
+    .wishlist-drawer.open {
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+    }
 }
 
 /* Prevent scroll-chaining at the topmost page level */

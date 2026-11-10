@@ -226,6 +226,69 @@ function toggleDrawer() {
     isOpen ? overlayLock() : overlayUnlock();
 }
 
+/**
+ * Force every drawer/modal closed on boot / route entry.
+ * Fixes persisted .open classes and CSS regressions that left panels visible.
+ * Does not clear cart/wishlist data — only UI open state.
+ */
+function ensureOverlaysClosedOnBoot() {
+    const forceClose = (id, closer) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (typeof closer === 'function') {
+            try { closer(); } catch (_e) { /* fall through */ }
+        }
+        el.classList.remove('open');
+        el.setAttribute('aria-hidden', 'true');
+    };
+
+    forceClose('mobileDrawer', function () {
+        const d = document.getElementById('mobileDrawer');
+        const o = document.getElementById('drawerOverlay');
+        const t = document.getElementById('navToggle');
+        if (d) { d.classList.remove('open'); d.setAttribute('aria-hidden', 'true'); }
+        if (o) o.classList.remove('open');
+        if (t) {
+            t.classList.remove('open');
+            t.setAttribute('aria-expanded', 'false');
+            t.setAttribute('aria-label', 'Open Navigation Menu');
+        }
+    });
+    forceClose('wishlistDrawer', typeof closeWishlistDrawer === 'function' ? closeWishlistDrawer : null);
+    document.getElementById('wishlistOverlay')?.classList.remove('open');
+    forceClose('cartDrawer', typeof closeCart === 'function' ? closeCart : null);
+    document.getElementById('cartOverlay')?.classList.remove('open');
+    forceClose('notificationCenterModal', typeof closeNotificationCenter === 'function' ? closeNotificationCenter : null);
+    forceClose('authModal', typeof closeAuth === 'function' ? closeAuth : null);
+    forceClose('productModal', typeof closeProductModal === 'function' ? closeProductModal : null);
+    forceClose('userDropdown', typeof closeUserDropdown === 'function' ? closeUserDropdown : null);
+    document.getElementById('accountPopupBackdrop')?.classList.remove('open', 'is-open');
+
+    // Catalog filter sheet: closed on mobile; desktop keeps in-flow sidebar without .open
+    const sb = document.getElementById('catalogSidebar');
+    const bd = document.getElementById('filterSheetBackdrop');
+    if (sb) {
+        sb.classList.remove('open');
+        if (window.matchMedia && window.matchMedia('(max-width: 1023.98px)').matches) {
+            sb.setAttribute('hidden', '');
+        }
+    }
+    if (bd) bd.classList.remove('open');
+    document.getElementById('catalogSortSheet')?.setAttribute('hidden', '');
+    document.getElementById('catalogSortSheet')?.classList.remove('open');
+
+    // Reset scroll lock if nothing should be open
+    document.body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
+    document.documentElement.classList.remove('overlay-open');
+    document.body.style.removeProperty('top');
+    document.body.style.removeProperty('left');
+    document.body.style.removeProperty('right');
+    document.body.style.removeProperty('width');
+    if (typeof __overlayCount !== 'undefined') {
+        try { __overlayCount = 0; } catch (_e) { /* ignore */ }
+    }
+}
+
 // ══════════════════════════════════════════
 // USER DROPDOWN (portaled fixed popup — avoids sticky-nav clipping)
 // ══════════════════════════════════════════

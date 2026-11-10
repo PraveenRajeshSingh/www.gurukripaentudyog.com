@@ -27,6 +27,7 @@ function safeRun(label, fn) {
 // Main Bootstrap & Initialization
 document.addEventListener('DOMContentLoaded', () => {
     const steps = {
+        'ensureOverlaysClosedOnBoot': () => { if (typeof ensureOverlaysClosedOnBoot === 'function') ensureOverlaysClosedOnBoot(); },
         'renderProducts': () => renderProducts('all'),
         'updateCartUI': () => updateCartUI(),
         'updateWishlistBadges': () => { if (typeof updateWishlistBadges === 'function') updateWishlistBadges(); },
@@ -43,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'initAlerts': () => { if (window.PushNotifications) PushNotifications.init(); },
         'checkOrderStatus': () => { if (window.PushNotifications) PushNotifications.checkOrderStatusChanges(); },
         'renderOfflineOutbox': () => { if (window.WhatsAppOrder) WhatsAppOrder.renderQueuedNotice(); },
-        'Platform.init': () => { if (window.Platform && typeof window.Platform.init === 'function') window.Platform.init(); }
+        'Platform.init': () => { if (window.Platform && typeof window.Platform.init === 'function') window.Platform.init(); },
+        'ensureOverlaysClosedAfterInit': () => { if (typeof ensureOverlaysClosedOnBoot === 'function') ensureOverlaysClosedOnBoot(); }
     };
     Object.keys(steps).forEach((k) => safeRun(k, steps[k]));
 });

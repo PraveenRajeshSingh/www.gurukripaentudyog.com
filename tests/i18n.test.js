@@ -48,7 +48,7 @@ describe('Localization & Language Completeness', () => {
     test('Critical storefront partials wire key i18n attributes', () => {
         const read = (rel) => fs.readFileSync(path.resolve(__dirname, '..', rel), 'utf8');
         const checks = [
-            ['src/pages/partials/navbar.html', 'nav.categories'],
+            ['src/pages/partials/navbar.html', 'nav.suppliers'],
             ['src/pages/partials/hero.html', 'hero.cta1'],
             ['src/pages/partials/contact.html', 'contact.title'],
             ['src/pages/partials/footer.html', 'footer.quickLinks'],
