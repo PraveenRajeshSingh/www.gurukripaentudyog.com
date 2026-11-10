@@ -775,7 +775,9 @@ html[data-theme="dark"] .catalog-premium {
 }
 .catalog-add:active { transform: scale(0.98); }
 .catalog-add:disabled,
-.catalog-add.is-busy { opacity: 0.7; pointer-events: none; }
+/* Busy = visual only. Never pointer-events:none — that made Add to Cart
+   untappable after the interaction-guard false-busy (ROOT_CAUSES RC-3). */
+.catalog-add.is-busy { opacity: 0.7; cursor: wait; }
 .catalog-add.is-out {
   background: var(--cat-muted);
 }

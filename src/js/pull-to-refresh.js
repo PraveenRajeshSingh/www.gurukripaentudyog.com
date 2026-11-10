@@ -185,6 +185,12 @@
         if (document.body.classList.contains('overlay-open') ||
             document.body.classList.contains('account-popup-open')) return;
 
+        // Never steal taps that begin on controls (Add to Cart, hearts, etc.)
+        var t = e.target;
+        if (t && t.closest && t.closest('button, a, input, select, textarea, [data-action], [role="button"], .catalog-add, .wishlist-btn, .fab-stack')) {
+            return;
+        }
+
         // Skip if started in a nested scroller
         if (isInsideNestedScroller(e.target)) return;
 

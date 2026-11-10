@@ -467,19 +467,29 @@ function handleProductModalClick(e) {
     if (e.target.id === 'productModal') closeProductModal();
 }
 
-// Wishlist hearts are event-delegated: cards are re-rendered on every
-// filter/sort, so binding per-button would leak handlers.
-document.addEventListener('click', (e) => {
-    const btn = e.target.closest && e.target.closest('.wishlist-btn[data-wish-id]');
-    if (!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    toggleWishlist(parseInt(btn.getAttribute('data-wish-id'), 10), btn);
-});
+// Wishlist hearts: ONLY via data-action="toggle-wishlist" in action-delegate.js.
+// A second document click listener here used to toggle twice (add then remove).
 
 function toggleWishlist(id, btn) {
-    const wasAdded = !isWishlisted(id);
-    setWishlistMembership(id, wasAdded);
+    let wasAdded;
+    if (window.GBI && GBI.Commerce && typeof GBI.Commerce.toggle === 'function') {
+        const res = GBI.Commerce.toggle(id);
+        if (!res.ok) {
+            if (typeof showToast === 'function') {
+                showToast(res.reason === 'storage-full' ? 'Could not save, storage is full' : 'Could not update wishlist', 'error');
+            }
+            return res;
+        }
+        wasAdded = !!res.on;
+        // Mirror into legacy wishlist array
+        if (Array.isArray(wishlist)) {
+            wishlist.length = 0;
+            GBI.Commerce.getWishlist().forEach((x) => wishlist.push(x));
+        }
+    } else {
+        wasAdded = !isWishlisted(id);
+        setWishlistMembership(id, wasAdded);
+    }
     // Repaint every control for this product (catalogue card, wishlist
     // drawer, profile hub) so state can never disagree between surfaces.
     syncWishlistUI();

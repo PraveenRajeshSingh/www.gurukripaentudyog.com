@@ -2,6 +2,11 @@
    Interaction guard — double-submit prevention, map resize on
    modal open, visualViewport keyboard/safe-area CSS vars.
    Load after ui.js + maps-service.js. Non-invasive: no redesign.
+
+   IMPORTANT: Do NOT capture-guard delegated commerce buttons
+   (add-to-cart / product-add-btn). Setting data-gb-busy in capture
+   made action-delegate treat the SAME click as a duplicate and
+   skip addToCart entirely (ROOT_CAUSES RC-1).
    ══════════════════════════════════════════════════════════════════ */
 (function () {
     'use strict';
@@ -19,19 +24,22 @@
         }
     }
 
-    // Capture-phase: block rapid re-clicks on submit/checkout only.
-    // Never guard plain links (map Directions / Open in Maps) or navigation.
+    // Capture-phase: block rapid re-clicks on form submit / checkout / auth only.
+    // Never guard plain links, navigation, or data-action commerce controls
+    // (those are owned by action-delegate.js + GBI.Commerce locks).
     document.addEventListener('click', function (e) {
-        // CHANGE: also guard Add to Cart / Place Order / RFQ / Save Estimate (polish §1)
         var btn = e.target && e.target.closest && e.target.closest(
             'form button[type="submit"], form input[type="submit"],' +
             '#checkoutModal button.btn-primary, #authModal button.btn-primary,' +
             '#contactForm button[type="submit"], #contactForm button.btn-primary,' +
-            'button[data-busy-guard], button.product-add-btn,' +
-            '#calcSaveBtn, #calcSaveEstimate, button[data-action="add-to-cart"],' +
+            '#calcSaveBtn, #calcSaveEstimate,' +
             '#bulkQuoteForm button.btn-primary, #placeOrderBtn, #checkoutPlaceBtn'
         );
         if (!btn || btn.tagName === 'A') return;
+        // Skip if this is also a delegated commerce action
+        var action = btn.getAttribute('data-action');
+        if (action && /add-to-cart|change-qty|remove-from-cart|toggle-wishlist/.test(action)) return;
+        if (btn.classList.contains('product-add-btn')) return;
         if (btn.disabled || btn.getAttribute('aria-disabled') === 'true') return;
         if (btn.dataset.gbBusy === '1') {
             e.preventDefault();
@@ -54,7 +62,6 @@
         window.setTimeout(function () { delete form.dataset.gbSubmitting; }, 4000);
     }, true);
 
-    // When a modal that hosts a map opens, reflow Google Maps / embed height.
     function refreshOpenMaps() {
         if (window.GurukripaMaps && typeof GurukripaMaps.invalidateMapIn === 'function') {
             GurukripaMaps.invalidateMapIn('trackerMapContainer');

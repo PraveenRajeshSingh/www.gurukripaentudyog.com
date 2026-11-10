@@ -1,3 +1,35 @@
+# CHANGELOG — Cart / Wishlist / Button fix pass
+
+Date: 2026-11-10  
+Branch: `design-responsive-pass-2026-11-10`  
+Scope: static PWA. No new runtime dependencies. Prices / trolley / GST formulas unchanged.
+
+## Root causes (see ROOT_CAUSES.md)
+
+| ID | Bug | Root cause | Fix | Test |
+|---|---|---|---|---|
+| RC-1 | Add to Cart did nothing; badge stayed 0 | `interaction-guard.js` capture set `data-gb-busy` before `action-delegate` bubble, which then skipped the handler | Stop guarding delegated commerce buttons in interaction-guard; per-action locks in action-delegate | Live: `handleAddToCart` → badge/mini-cart update; smoke 7/7 |
+| RC-2 | Wishlist heart appeared dead | Duplicate listeners (delegate + `products.js`) toggled twice | Removed duplicate wishlist click listener | Live: `aria-pressed` + badge 1 |
+| RC-3 | Buttons untappable after failed add | `.catalog-add.is-busy { pointer-events: none }` | Opacity/cursor only | pe=`auto` after busy |
+| RC-sync | Store could not see `let cart` | Top-level `let` is not `window.cart` | `var cart` / `var wishlist` in `state.js` | window.cart length matches |
+| RC-mem | `GBI.Commerce.get()` ignored session mem | get() always re-read storage | Prefer `memCart` / `memWish` | smoke persist |
+
+## Deliverables
+- `src/js/commerce-store.js` — `GBI.Commerce` (add/setQty/remove/clear/toggle/subscribe, `gbi.*.v2` + v1 mirror, BroadcastChannel, memory fallback notice)
+- `src/js/action-delegate.js` — rebuilt locks + keyboard path
+- `src/js/interaction-guard.js` — forms only
+- `src/js/cart.js` / `products.js` / `pull-to-refresh.js` / `reliability.js` diagnostics
+- `sw.js` → `CACHE_VER = v10-commerce`
+- `ROOT_CAUSES.md`, updated `BUTTON_MAP.md`, `scripts/qa-commerce-smoke.mjs`
+
+## Verification run
+- `npm test` → **164/164 pass**
+- `node scripts/qa-commerce-smoke.mjs` → **7/7 pass**
+- Browser CDP on `localhost:4173`: add + wishlist entry points update badges/UI
+- **Not run:** Playwright full BUTTON_MAP matrix, Slow 4G SW A/B on GitHub Pages, storage-full injection, multi-tab BroadcastChannel (code present; not instrumented live)
+
+---
+
 # CHANGELOG — Reliability, Performance & Visual Polish Pass
 
 Date: 2026-11-08  

@@ -6,6 +6,34 @@ const _tagSVG = `<svg width="14" height="14" fill="none" stroke="currentColor" s
 
 function addToCart(id, qty = 1) {
     if (window.GurukripaCatalogPricing) GurukripaCatalogPricing.applyToProducts();
+    // Prefer unified commerce store (persistence, locks, cross-tab)
+    if (window.GBI && GBI.Commerce && typeof GBI.Commerce.add === 'function') {
+        const res = GBI.Commerce.add(id, qty);
+        if (!res.ok) {
+            const msgs = {
+                'out-of-stock': 'Out of stock',
+                'invalid-qty': 'Enter a valid quantity',
+                'invalid-id': 'Product not found',
+                'missing-product': 'Product not found',
+                'storage-full': 'Could not save, storage is full',
+                busy: 'Please wait…'
+            };
+            if (typeof showToast === 'function') showToast(msgs[res.reason] || 'Could not add to cart', 'error');
+            return res;
+        }
+        // Keep legacy `cart` array identical for checkout/invoice
+        if (Array.isArray(cart)) {
+            cart.length = 0;
+            GBI.Commerce.get().forEach((item) => cart.push(item));
+        }
+        updateCartUI();
+        bounceCartBadges();
+        const p = PRODUCTS.find(x => x.id === id);
+        if (p && typeof showToast === 'function') {
+            showToast(t('toast.addedToCart', { name: sanitizeHTML(p.name) }), 'success');
+        }
+        return res;
+    }
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;
     const livePrice = window.GurukripaCatalogPricing
@@ -36,17 +64,38 @@ function bounceCartBadges() {
 }
 
 function removeFromCart(id) {
-    cart = cart.filter(i => i.id !== id);
-    saveCart();
+    const removed = cart.find(i => i.id === id);
+    if (window.GBI && GBI.Commerce) {
+        GBI.Commerce.remove(id);
+        if (Array.isArray(cart)) {
+            cart.length = 0;
+            GBI.Commerce.get().forEach((item) => cart.push(item));
+        }
+    } else {
+        cart = cart.filter(i => i.id !== id);
+        saveCart();
+    }
     updateCartUI();
     renderCartItems();
+    if (removed && typeof showToast === 'function') {
+        showToast('Removed from cart', '');
+    }
 }
 
 function changeQty(id, delta) {
     const item = cart.find(i => i.id === id);
     if (!item) return;
-    item.qty = Math.max(1, item.qty + delta);
-    saveCart();
+    const next = Math.max(1, item.qty + delta);
+    if (window.GBI && GBI.Commerce) {
+        GBI.Commerce.setQty(id, next);
+        if (Array.isArray(cart)) {
+            cart.length = 0;
+            GBI.Commerce.get().forEach((row) => cart.push(row));
+        }
+    } else {
+        item.qty = next;
+        saveCart();
+    }
     updateCartUI();
     renderCartItems();
 }

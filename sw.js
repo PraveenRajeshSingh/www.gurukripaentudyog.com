@@ -12,7 +12,7 @@
    Hash routes (#products, #calculator) stay on index.html offline.
    ═══════════════════════════════════════════════════════════════════ */
 
-const CACHE_VER = 'v9';
+const CACHE_VER = 'v10-commerce';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -48,6 +48,8 @@ const SHELL_ASSETS = [
     './src/js/data.js',
     './src/js/i18n.js',
     './src/js/state.js',
+    './src/js/commerce-store.js',
+    './src/js/interaction-guard.js',
     './src/js/offline-store.js',
     './src/js/offline-queue.js',
     './src/js/pwa.js',
