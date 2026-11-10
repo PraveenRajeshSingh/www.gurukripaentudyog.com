@@ -1,0 +1,157 @@
+/* Phase 2: cascade layer patches — shell overrides that must beat mobile-fixes */
+@layer patches {
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SHELL PHASE 2 — one lang control · bottom nav <768 · FAB clearance
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* D3: single language selector — keep header; hide topbar duplicate */
+.topbar-controls {
+    display: none !important;
+}
+
+/* D3: bottom navigation only below 768px */
+@media (min-width: 768px) {
+    .mobile-nav,
+    .fixed-bottom-nav {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+    :root {
+        --bottom-nav-h: 0px;
+    }
+    body {
+        padding-bottom: 0 !important;
+    }
+    .footer-studio .footer-nav-spacer {
+        display: none !important;
+        height: 0 !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mobile-nav {
+        display: block !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+    :root {
+        --bottom-nav-h: 64px;
+    }
+}
+
+/* D2: header brand never clipped by tools */
+.nav-premium .nav-inner {
+    min-width: 0 !important;
+}
+.nav-premium .nav-brand {
+    min-width: 0 !important;
+    overflow: hidden;
+}
+.nav-premium .nav-brand-name {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+@media (max-width: 360px) {
+    .nav-premium .nav-brand-name {
+        max-width: 10ch !important;
+        font-size: 0.88rem !important;
+    }
+    .nav-premium .nav-auth {
+        display: none !important;
+    }
+}
+
+/* Ensure hamburger <1024 and full nav ≥1024 even if older patches disagree */
+@media (min-width: 1024px) {
+    .nav-premium .nav-links-premium,
+    .nav-premium .nav-links {
+        display: flex !important;
+    }
+    .nav-premium .nav-toggle {
+        display: none !important;
+    }
+}
+@media (max-width: 1023.98px) {
+    .nav-premium .nav-links-premium,
+    .nav-premium .nav-links {
+        display: none !important;
+    }
+    .nav-premium .nav-toggle {
+        display: inline-flex !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+}
+
+/* D4: FAB — clear hero badges; suppress when any overlay/popup open */
+@media (max-width: 767.98px) {
+    .fab-stack {
+        right: calc(12px + env(safe-area-inset-right, 0px));
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--bottom-nav-h, 64px) + var(--fab-footer-lift, 0px));
+    }
+    .hero-premium .hero-cert,
+    .hero-premium .hero-img-badge {
+        max-width: calc(100% - 100px) !important;
+    }
+}
+
+body.overlay-open .fab-stack,
+body.account-popup-open .fab-stack,
+body.gb-chat-open .fab-stack,
+html.overlay-open .fab-stack,
+.fab-stack.is-suppressed {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Footer accordion mobile gate: expand below 768 (not only 640) */
+@media (max-width: 767.98px) {
+    .footer-studio__grid.footer-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .footer-studio .footer-acc-btn {
+        display: flex !important;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 48px;
+        padding: 0;
+        border: none;
+        background: none;
+        font-family: var(--display);
+        font-size: 1rem;
+        font-weight: 650;
+        color: var(--footer-fg, #F5EDE6);
+        cursor: pointer;
+        text-align: left;
+    }
+    .footer-studio .footer-acc-btn::after {
+        content: "+";
+        font-size: 1.2rem;
+        line-height: 1;
+        color: rgba(245, 237, 230, .72);
+    }
+    .footer-studio .footer-acc-btn[aria-expanded="true"]::after { content: "–"; }
+    .footer-studio .footer-acc-heading { display: none !important; }
+    .footer-studio .footer-accordion .footer-links { display: none; }
+    .footer-studio .footer-accordion.is-open .footer-links { display: flex; }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+    .footer-studio__grid.footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+    .footer-studio .footer-acc-btn { display: none !important; }
+    .footer-studio .footer-acc-heading { display: block !important; }
+    .footer-studio .footer-accordion .footer-links { display: flex !important; }
+}
+
+@media (min-width: 1024px) {
+    .footer-studio__grid.footer-grid {
+        grid-template-columns: 1.35fr 0.9fr 0.9fr 1.1fr !important;
+    }
+}
+}

@@ -1,3 +1,25 @@
+# CHANGELOG — Phase 2 Header / Nav / Hero / Footer Shell
+
+Date: 2026-11-10  
+Branch: `design-responsive-pass-2026-11-10`  
+Scope: application shell chrome only. Business prices / cart logic unchanged.
+
+## What changed
+- One visible language control (header); topbar lang hidden but IDs kept for `setLang` sync
+- Full nav ≥1024px; hamburger <1024; bottom nav only <768px
+- Header brand ellipsis / no clip at ~350px; sticky premium header
+- Hero two-column only ≥1024; single column below; wrapping chips; badge clearance from FAB
+- Footer 4 / 2 / 1 columns with accordion under 768px
+- Brand copy aligned to **Gurukripa Bricks Industry** (EN/HI)
+- FAB suppresses on account popup / overlay; hero badge clearance
+- `shell-phase2.css` + updated `chrome-premium.css`; SW `v12-shell`
+
+## Verification
+- Live CDP at 360 / 890 / 1024 / 1366 (run after commit)
+- `npm test`
+
+---
+
 # CHANGELOG — Phase 1 Centralized Design System
 
 Date: 2026-11-10  

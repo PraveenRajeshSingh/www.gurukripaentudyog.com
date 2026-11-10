@@ -49,7 +49,7 @@
          Set to your deployed API base, e.g. https://api.gurukripaentudyog.com/api/v1
          Leave empty to keep the app in local-only mode (no server calls). -->
     <meta name="gb-api-base" content="">
-    <meta name="gb-build" content="2026-11-10-design-system-v11">
+    <meta name="gb-build" content="2026-11-10-shell-v12">
     <!-- Kiln Assistant chat backend (optional). Paste a server endpoint that accepts
          { message, history, language } and returns { reply: "text" } to enable real AI.
          Keep provider credentials on THAT server — never in the client.
@@ -187,6 +187,8 @@
     <link rel="stylesheet" href="src/styles/mobile-scroll-master.css">
     <!-- Premium header / hero / footer chrome -->
     <link rel="stylesheet" href="src/styles/chrome-premium.css">
+    <!-- Phase 2 shell patches (bottom nav <768, one lang control, FAB) -->
+    <link rel="stylesheet" href="src/styles/shell-phase2.css">
 </head>
 
 <body>
@@ -296,9 +298,10 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                 </div>
                 <div class="topbar-right">
                     <span class="topbar-hours" data-i18n="topbar.hours">Mon–Sat | 8:00 AM – 6:00 PM</span>
-                    <div class="topbar-controls" role="group" aria-label="Language">
-                        <button type="button" class="lang-btn active" onclick="setLang('en')" id="langEn" aria-pressed="true" aria-label="Switch language to English">EN</button>
-                        <button type="button" class="lang-btn" onclick="setLang('hi')" id="langHi" aria-pressed="false" aria-label="हिंदी भाषा चुनें">HI</button>
+                    <!-- Language IDs kept for setLang sync; visible control is header .nav-lang only -->
+                    <div class="topbar-controls" role="group" aria-label="Language" hidden aria-hidden="true">
+                        <button type="button" class="lang-btn active" onclick="setLang('en')" id="langEn" aria-pressed="true" tabindex="-1" aria-label="Switch language to English">EN</button>
+                        <button type="button" class="lang-btn" onclick="setLang('hi')" id="langHi" aria-pressed="false" tabindex="-1" aria-label="हिंदी भाषा चुनें">HI</button>
                     </div>
                 </div>
             </div>
@@ -313,7 +316,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
         <div class="container">
             <div class="nav-inner">
                 <!-- Left: brand -->
-                <a href="#home" class="nav-brand" onclick="setActiveNav(this)" aria-label="Gurukripa Services Home">
+                <a href="#home" class="nav-brand" onclick="setActiveNav(this)" aria-label="Gurukripa Bricks Industry Home">
                     <div class="nav-logo-mark" aria-hidden="true">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40" focusable="false">
                             <rect x="2" y="2" width="60" height="60" rx="14" fill="#A93226"/>
@@ -326,7 +329,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                         </svg>
                     </div>
                     <div class="nav-brand-text">
-                        <span class="nav-brand-name" data-i18n="brand.name">Gurukripa Services</span>
+                        <span class="nav-brand-name" data-i18n="brand.name">Gurukripa Bricks Industry</span>
                         <small class="nav-brand-tag" data-i18n="brand.tagline">Quality Bricks · Trusted Supply</small>
                     </div>
                 </a>
@@ -786,7 +789,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <section id="home" class="hero hero-premium" data-hero-managed="true">
         <div class="hero-premium__grid">
             <div class="hero-content hero-premium__copy">
-                <p class="hero-brand" data-i18n="brand.name">Gurukripa Services</p>
+                <p class="hero-brand" data-i18n="brand.name">Gurukripa Bricks Industry</p>
                 <div class="hero-eyebrow">
                     <span class="hero-eyebrow-dot" aria-hidden="true"></span>
                     <span data-i18n="hero.eyebrow">Jaunpur's Direct Kiln Manufacturer · Est. 1998</span>
@@ -828,7 +831,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
             <div class="hero-img hero-premium__media" id="heroMedia">
                 <picture>
-                    <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" sizes="(max-width:768px) 100vw, 48vw">
+                    <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" sizes="(max-width:1023px) 100vw, 48vw">
                     <img id="heroBannerImg" src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks stacked at Gurukripa kiln yard" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
                 </picture>
                 <div class="hero-img-overlay" aria-hidden="true"></div>
@@ -2051,9 +2054,9 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                 <div class="footer-col footer-col-brand">
                     <div class="footer-brand-title">
                         <span class="footer-logo-badge" aria-hidden="true">GE</span>
-                        <span data-i18n="brand.name">Gurukripa Services</span>
+                        <span data-i18n="brand.name">Gurukripa Bricks Industry</span>
                     </div>
-                    <p class="footer-brand-hi" lang="hi">गुरुकृपा सेवाएँ</p>
+                    <p class="footer-brand-hi" lang="hi">गुरुकृपा ईंट उद्योग</p>
                     <p class="footer-brand-desc" data-i18n="footer.brandDesc">
                         Construction-material and brick supply from Jaunpur’s trusted kiln. Grade-A bricks, reliable delivery, and supplier discovery for homes and contractors.
                     </p>
@@ -2152,7 +2155,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
             <hr class="footer-divider">
 
             <div class="footer-bottom">
-                <p class="footer-copy" data-i18n="footer.rights">© 2026 Gurukripa Services. All rights reserved.</p>
+                <p class="footer-copy" data-i18n="footer.rights">© 2026 Gurukripa Bricks Industry. All rights reserved.</p>
                 <nav class="footer-bottom-links" aria-label="Legal">
                     <button type="button" class="footer-legal-link" onclick="openLegalModal('privacy')" data-i18n="footer.privacy">Privacy Policy</button>
                     <button type="button" class="footer-legal-link" onclick="openLegalModal('terms')" data-i18n="footer.terms">Terms and Conditions</button>

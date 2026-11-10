@@ -1380,8 +1380,8 @@
             }
         }
 
-        /* 鈹€鈹€ Bottom Mobile Nav: Equal 5 columns spanning 100% full width 鈹€鈹€ */
-        @media(max-width:1024px) {
+        /* Bottom Mobile Nav: only below 768px (Phase 2) */
+        @media(max-width:767.98px) {
             .mobile-nav {
                 display: block !important;
                 position: fixed !important;

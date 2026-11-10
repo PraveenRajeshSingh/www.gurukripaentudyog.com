@@ -87,6 +87,7 @@
         const mobile = window.matchMedia('(max-width: 767.98px)').matches;
         const keyboard = mobile && isField(document.activeElement);
         const modal = document.body.classList.contains('overlay-open')
+            || document.body.classList.contains('account-popup-open')
             || document.body.classList.contains('gb-chat-open')
             || document.body.getAttribute('data-modal-open') === 'true'
             || document.documentElement.classList.contains('overlay-open');

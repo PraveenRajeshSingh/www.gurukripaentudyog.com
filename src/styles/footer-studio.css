@@ -26,9 +26,23 @@
 /* ── FOOTER GRID ── */
 .footer-studio__grid.footer-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
-    gap: 32px;
+    grid-template-columns: 1fr;
+    gap: 24px;
     align-items: start;
+}
+
+@media (min-width: 768px) {
+    .footer-studio__grid.footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 24px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .footer-studio__grid.footer-grid {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+        gap: 32px;
+    }
 }
 
 .footer-studio .footer-col { min-width: 0; }
@@ -400,21 +414,12 @@
     background: var(--footer-bg, #1a1613);
 }
 
-@media (max-width: 1023.98px) {
-    .footer-studio__grid.footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 28px 24px;
-    }
-}
-
 /* Absorb legacy body bottom padding into the dark footer spacer */
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
     body {
         padding-bottom: 0 !important;
     }
-}
 
-@media (max-width: 639.98px) {
     .footer-studio__grid.footer-grid {
         grid-template-columns: 1fr;
         gap: 20px;
