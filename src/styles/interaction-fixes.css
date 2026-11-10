@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer patches — do not remove wrapper */
+@layer patches {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    INTERACTION FIXES — final cascade layer (after popup-polish)
    Scroll lock, maps, overflow, touch, breakpoints 320→1440+.
@@ -741,4 +743,5 @@ body.account-popup-open .user-dropdown.account-popup.open {
 #profileModal.open .profile-tab-panel:not(.active) {
     display: none !important;
     pointer-events: none !important;
+}
 }

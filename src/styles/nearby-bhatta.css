@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* Nearby Brick Bhatta & Eent Finder — responsive, token-driven */
 
 .nearby-sec {
@@ -582,4 +584,5 @@ html[data-theme="dark"] .nearby-smart-card {
 
 @media (min-width: 1441px) {
     .nearby-map { min-height: 420px; }
+}
 }

@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer patches — do not remove wrapper */
+@layer patches {
 /* ══════════════════════════════════════════════════════════════════
    POLISH PASS — skeletons, content-visibility, tap targets, busy
    CHANGE: new stylesheet for reliability/perf/visual polish (§3–§4)
@@ -116,4 +118,5 @@ button.is-load-error {
 .drawer.open {
   max-height: 100vh;
   max-height: 100dvh;
+}
 }

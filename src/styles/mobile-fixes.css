@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer patches — do not remove wrapper */
+@layer patches {
 /* ==========================================================================
    System dark mode + trolley / brick detail / skeleton / OTP / UPI / COD / iOS-safe-area / mobile layout fixes A-N
    File: mobile-fixes.css (part 6 of 7)
@@ -1945,7 +1947,7 @@ body { overscroll-behavior-y: contain; }
     .product-card-name { font-size: .76rem !important; }
     .product-card-desc { font-size: .7rem !important; -webkit-line-clamp: 2 !important; display: -webkit-box !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
     .product-price-current { font-size: 1rem !important; }
-    .product-add-btn { font-size: .7rem !important; padding: 7px 6px !important; min-height: 40px !important; }
+    .product-add-btn { font-size: .7rem !important; padding: 7px 6px !important; min-height: var(--touch-min, 44px) !important; }
     /* Filter chips WRAP rather than forming a sideways-scrolling rail, which
        hid the 4th+ filter completely on a phone. */
     .products-filters { gap: 5px !important; }
@@ -2883,4 +2885,4 @@ body.overlay-open .modal-close-btn {
         padding: 16px !important;
     }
 }
-
+}

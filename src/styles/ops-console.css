@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ACCOUNT HUB · CHECKOUT SLIDE-OVER · YARD OPS CONSOLE
    Used by: profile-modal.html, checkout-modal.html,
@@ -1016,3 +1018,4 @@
 .cart-gst-state--error { color: var(--danger); }
 
 .cart-gst-itc { color: var(--brand); font-weight: 600; margin-top: 2px; }
+}

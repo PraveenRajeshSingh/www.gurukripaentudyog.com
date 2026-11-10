@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    E-COMMERCE DESIGN LAYER — Gurukripa Bricks Industry
    Premium shopping UI on top of existing brand tokens.
@@ -633,4 +635,5 @@
     .cat-card:hover {
         transform: none;
     }
+}
 }

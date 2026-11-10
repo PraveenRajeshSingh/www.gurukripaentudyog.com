@@ -49,7 +49,7 @@
          Set to your deployed API base, e.g. https://api.gurukripaentudyog.com/api/v1
          Leave empty to keep the app in local-only mode (no server calls). -->
     <meta name="gb-api-base" content="">
-    <meta name="gb-build" content="2026-11-10-commerce-v10">
+    <meta name="gb-build" content="2026-11-10-design-system-v11">
     <!-- Kiln Assistant chat backend (optional). Paste a server endpoint that accepts
          { message, history, language } and returns { reply: "text" } to enable real AI.
          Keep provider credentials on THAT server — never in the client.
@@ -144,8 +144,10 @@
       })();
     </script>
 
-    <!-- Stylesheets (cascade order: tokens -> base -> sections -> overlays -> extras -> app -> mobile-fixes -> refinements -> ops-console -> ux-responsive) -->
+    <!-- Stylesheets: layers → tokens → design-system → base → pages → features → patches -->
+    <link rel="stylesheet" href="src/styles/layers.css">
     <link rel="stylesheet" href="src/styles/tokens.css">
+    <link rel="stylesheet" href="src/styles/design-system.css">
     <link rel="stylesheet" href="src/styles/base.css">
     <link rel="stylesheet" href="src/styles/sections.css">
     <link rel="stylesheet" href="src/styles/overlays.css">

@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer pages — do not remove wrapper */
+@layer pages {
 /* ==========================================================================
    APP-FIRST DESIGN SYSTEM v2.0 (sections 0-24: global shell, topbar, navbar, mobile bottom nav, FABs, hero, cards, categories, section typography, scroll progress, page loader, cart drawer, modal, contact, footer, CTA, FAQ, reviews, gallery, calculator, toast, drawer sidebar, TWA standalone overrides, quality-of-life)
    File: app.css (part 5 of 7)
@@ -1346,3 +1348,4 @@ section, .container, header, footer {
 }
 
 /* All interactive elements 鈥� comfortable touch target */
+}

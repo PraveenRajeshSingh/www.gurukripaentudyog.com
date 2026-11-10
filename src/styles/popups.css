@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer pages — do not remove wrapper */
+@layer pages {
 /* ==========================================================================
    Unified popup system — modals, drawers, confirm dialogs
    Loaded after overlays.css so shared chrome upgrades every surface without
@@ -573,4 +575,5 @@
     .modal-overlay.open .modal-box {
         transform: none;
     }
+}
 }

@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer patches — do not remove wrapper */
+@layer patches {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    UX RESPONSIVE FIXES — last in cascade
    Goals: no horizontal overflow, no button overlap, estimator/account
@@ -522,4 +524,5 @@ body:has(.fab-main-btn.open) .scroll-top {
     min-height: 44px;
     justify-content: center;
     gap: 8px;
+}
 }

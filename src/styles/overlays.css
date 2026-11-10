@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer pages — do not remove wrapper */
+@layer pages {
 /* ==========================================================================
    Overlays: footer, cart drawer, auth modal, checkout modal, chatbot
    File: overlays.css (part 3 of 7)
@@ -1465,3 +1467,4 @@
         }
 
         /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
+}

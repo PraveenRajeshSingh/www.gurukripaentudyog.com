@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer patches — do not remove wrapper */
+@layer patches {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    COMPACT PRODUCT GRID + MY ACCOUNT POPUP SCROLL / DESIGN
    Loaded last so these rules win over ecommerce / refinements /
@@ -490,24 +492,24 @@ html[data-theme="dark"] {
         position: sticky;
         top: calc(var(--nav-h, 56px) + 6px);
         z-index: 5;
-        min-height: 40px;
+        min-height: var(--touch-min, 44px);
         background: var(--bg-card);
     }
 }
 @media (max-width: 480px) {
     .compact-card .product-add-btn {
-        min-height: 40px;
-        height: 40px;
+        min-height: var(--touch-min, 44px);
+        height: var(--touch-min, 44px);
         font-size: 12px;
     }
     .compact-card .product-wa-btn,
     .compact-card .wishlist-btn {
-        min-width: 40px;
-        min-height: 40px;
-        width: 40px !important;
-        height: 40px !important;
+        min-width: var(--touch-min, 44px);
+        min-height: var(--touch-min, 44px);
+        width: var(--touch-min, 44px) !important;
+        height: var(--touch-min, 44px) !important;
     }
-    .compact-card .product-wa-btn { flex-basis: 40px; }
+    .compact-card .product-wa-btn { flex-basis: var(--touch-min, 44px); }
 }
 
 /* Floating WhatsApp — always reachable, never covering card CTAs */
@@ -807,4 +809,5 @@ html[data-theme="dark"] {
         animation: none !important;
         transform: none !important;
     }
+}
 }

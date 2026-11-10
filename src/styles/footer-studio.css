@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FOOTER STUDIO — grid · accordion · newsletter · payment · legal
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -508,4 +510,5 @@ html[lang="hi"] .footer-studio .newsletter-desc {
     clip: rect(0, 0, 0, 0) !important;
     white-space: nowrap !important;
     border: 0 !important;
+}
 }

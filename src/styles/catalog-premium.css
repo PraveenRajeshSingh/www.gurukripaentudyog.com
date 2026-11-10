@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ══════════════════════════════════════════════════════════════════
    CATALOG PREMIUM — #products only (mobile-first)
    CHANGE: sticky toolbar · chip scroller · filter/sort sheets ·
@@ -123,7 +125,7 @@ html[data-theme="dark"] .catalog-premium {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 40px;
+  min-height: var(--touch-min, 44px);
 }
 .catalog-live-count {
   margin: 2px 0 0;
@@ -753,13 +755,13 @@ html[data-theme="dark"] .catalog-premium {
 .catalog-actions {
   margin-top: auto;
   display: grid;
-  grid-template-columns: 1fr 40px;
+  grid-template-columns: 1fr var(--touch-min, 44px);
   gap: 8px;
   padding-top: 4px;
 }
 .catalog-add {
-  height: 40px;
-  min-height: 40px;
+  height: var(--touch-min, 44px);
+  min-height: var(--touch-min, 44px);
   border: 0;
   border-radius: 10px;
   background: var(--cat-brick);
@@ -782,7 +784,7 @@ html[data-theme="dark"] .catalog-premium {
   background: var(--cat-muted);
 }
 .catalog-wa {
-  width: 40px; height: 40px;
+  width: var(--touch-min, 44px); height: var(--touch-min, 44px);
   border-radius: 10px;
   border: 1px solid #25D366;
   background: #25D366;
@@ -793,9 +795,9 @@ html[data-theme="dark"] .catalog-premium {
 }
 .catalog-stepper {
   display: none;
-  grid-template-columns: 36px 1fr 36px;
+  grid-template-columns: var(--touch-min, 44px) 1fr var(--touch-min, 44px);
   align-items: center;
-  height: 40px;
+  height: var(--touch-min, 44px);
   border: 1px solid var(--line, #e5e1da);
   border-radius: 10px;
   overflow: hidden;
@@ -804,7 +806,7 @@ html[data-theme="dark"] .catalog-premium {
 .catalog-card.has-qty .catalog-add { display: none; }
 .catalog-card.has-qty .catalog-stepper { display: grid; }
 .catalog-stepper button {
-  height: 40px;
+  height: var(--touch-min, 44px);
   border: 0;
   background: transparent;
   font-size: 18px;
@@ -1002,4 +1004,5 @@ body.has-mini-cart #fabStack {
   .catalog-per1000 { display: none; }
   .catalog-trolley { font-size: 10px; }
   .catalog-add { font-size: 12px; }
+}
 }

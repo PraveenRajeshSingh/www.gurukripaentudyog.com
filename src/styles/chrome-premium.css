@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CHROME PREMIUM — Header · Hero · Footer
    Loaded late so it wins layout chrome without breaking catalog/ops.
@@ -286,4 +288,5 @@ html[lang="hi"] .hero-premium .hero-h1 {
     .hero-premium__media img {
         transition: none !important;
     }
+}
 }

@@ -1,3 +1,31 @@
+# CHANGELOG — Phase 1 Centralized Design System
+
+Date: 2026-11-10  
+Branch: `design-responsive-pass-2026-11-10`  
+Scope: CSS cascade only. No JS business-logic changes. No new runtime dependencies.
+
+## What changed
+- Added `src/styles/layers.css` — explicit `@layer` order: reset → tokens → base → layout → components → pages → utilities → features → patches
+- Reworked `tokens.css` into `@layer tokens` + `@layer reset`; added breakpoints, `--touch-min: 44px`, fluid grid tokens, Hindi line-height tokens
+- Added `design-system.css` — reusable layout grids, buttons, inputs, badges, cards, tabs, tables, notices; Hindi clip-safe utilities
+- Wrapped existing stylesheets into cascade layers (pages / features / patches) so patches win without extra `!important` escalation
+- Removed duplicate global reset from `base.css` (canonical reset now in tokens)
+- Wired `layers.css` + `design-system.css` in `index.html`, `head.html`, `404.html`, `500.html`
+- `sw.js` → `CACHE_VER = v11-design-system`; shell precaches new CSS
+
+## Verification
+- CSS brace balance: all style files balanced
+- `npm test` (run after commit prep)
+- Live smoke: home + products render; drawers stay closed on load
+
+## Deferred to later phases
+- Header/hero/footer redesign (Phase 2)
+- Product page filter rail / card alignment (Phase 3)
+- Popup manager (Phase 4)
+- Request-count / transfer budget (Phase 5)
+
+---
+
 # CHANGELOG — Cart / Wishlist / Button fix pass
 
 Date: 2026-11-10  

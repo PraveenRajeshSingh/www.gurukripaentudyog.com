@@ -1,3 +1,5 @@
+/* Phase 1: cascade layer features — do not remove wrapper */
+@layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FAB-STACK — single fixed container for WhatsApp / Help / Back-to-top
    Marks: fab-stack container · tooltip · footer-aware offset ·
@@ -234,4 +236,5 @@
 main#main-content {
     scroll-padding-bottom: calc(var(--fab-stack-h) + 24px);
     padding-bottom: calc(var(--fab-stack-h) + 16px);
+}
 }

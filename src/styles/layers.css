@@ -1,0 +1,9 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   GURUKRIPA — CSS CASCADE LAYERS (Phase 1)
+   Declares explicit cascade priority so later patch files
+   no longer need !important wars to override earlier rules.
+   Order (lowest → highest): reset → tokens → base → layout →
+   components → pages → utilities → features → patches
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@layer reset, tokens, base, layout, components, pages, utilities, features, patches;
