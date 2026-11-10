@@ -30,6 +30,10 @@ export class RegisterDto {
 
   @IsOptional() @IsIn(['en', 'hi', 'mr'])
   language?: 'en' | 'hi' | 'mr';
+
+  /** Google reCAPTCHA v3 token — verified when RECAPTCHA_SECRET_KEY is set. */
+  @IsOptional() @IsString() @Length(20, 4000)
+  captchaToken?: string;
 }
 
 export class LoginDto {
@@ -42,6 +46,10 @@ export class LoginDto {
   /** Optional business slug; defaults to primary Gurukripa tenant. Never trust client tenant IDs. */
   @IsOptional() @IsString() @Length(2, 64)
   tenantSlug?: string;
+
+  /** Google reCAPTCHA v3 token — verified when RECAPTCHA_SECRET_KEY is set. */
+  @IsOptional() @IsString() @Length(20, 4000)
+  captchaToken?: string;
 }
 
 export class DealerRegisterDto extends RegisterDto {
@@ -128,6 +136,10 @@ export class CreateEnquiryDto {
 
   @IsOptional() @IsString()
   addressId?: string;
+
+  /** Google reCAPTCHA v3 token — verified when RECAPTCHA_SECRET_KEY is set. */
+  @IsOptional() @IsString() @Length(20, 4000)
+  captchaToken?: string;
 }
 
 export class QuotationLineDto {

@@ -15,8 +15,10 @@ const pricing_service_1 = require("./pricing/pricing.service");
 const catalog_pricing_service_1 = require("./pricing/catalog-pricing.service");
 const pricing_controller_1 = require("./pricing/pricing.controller");
 const payment_idempotency_service_1 = require("./payments/payment-idempotency.service");
+const razorpay_service_1 = require("./payments/razorpay.service");
 const mock_db_service_1 = require("./database/mock-db.service");
 const tenant_guard_1 = require("./security/tenant.guard");
+const recaptcha_service_1 = require("./security/recaptcha.service");
 const store_service_1 = require("./platform/store.service");
 const auth_service_1 = require("./platform/auth.service");
 const notify_service_1 = require("./platform/notify.service");
@@ -48,14 +50,14 @@ exports.AppModule = AppModule = __decorate([
             staff_controller_1.StaffController, health_controller_1.HealthController, pricing_controller_1.PricingController,
         ],
         providers: [
-            pricing_service_1.PricingEngineService, catalog_pricing_service_1.CatalogPricingService, payment_idempotency_service_1.PaymentIdempotencyService,
-            mock_db_service_1.MockDatabaseService, tenant_guard_1.TenantIsolationGuard,
+            pricing_service_1.PricingEngineService, catalog_pricing_service_1.CatalogPricingService, payment_idempotency_service_1.PaymentIdempotencyService, razorpay_service_1.RazorpayService,
+            mock_db_service_1.MockDatabaseService, tenant_guard_1.TenantIsolationGuard, recaptcha_service_1.RecaptchaService,
             store_service_1.PlatformStoreService, auth_service_1.AuthService, notify_service_1.NotifyService, workflow_service_1.WorkflowService,
             guards_1.JwtAuthGuard, guards_1.RolesGuard, guards_1.RateLimitGuard,
         ],
         exports: [
-            pricing_service_1.PricingEngineService, catalog_pricing_service_1.CatalogPricingService, payment_idempotency_service_1.PaymentIdempotencyService,
-            mock_db_service_1.MockDatabaseService, store_service_1.PlatformStoreService, workflow_service_1.WorkflowService,
+            pricing_service_1.PricingEngineService, catalog_pricing_service_1.CatalogPricingService, payment_idempotency_service_1.PaymentIdempotencyService, razorpay_service_1.RazorpayService,
+            mock_db_service_1.MockDatabaseService, store_service_1.PlatformStoreService, workflow_service_1.WorkflowService, recaptcha_service_1.RecaptchaService,
         ],
     })
 ], AppModule);

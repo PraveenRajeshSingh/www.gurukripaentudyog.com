@@ -57,6 +57,8 @@
     <!-- Razorpay & Google Maps Integration Meta Tags -->
     <meta name="razorpay-key-id" content="">
     <meta name="google-maps-api-key" content="">
+    <!-- Google reCAPTCHA v3 site key (public). Leave empty to skip client CAPTCHA; backend still rate-limits. -->
+    <meta name="recaptcha-site-key" content="">
 
     <!-- Web Push (optional). Paste a VAPID public key + your subscribe endpoint to turn
          on server-sent order/rate alerts. Leave empty to keep alerts device-local. -->
@@ -178,6 +180,8 @@
     <link rel="stylesheet" href="src/styles/daily-prices.css">
     <!-- Final: dynamic full-page + every popup sized to live visual viewport -->
     <link rel="stylesheet" href="src/styles/viewport-adaptive.css">
+    <!-- Mobile scroll master: canonical scroll/touch/PTR fixes — loads last -->
+    <link rel="stylesheet" href="src/styles/mobile-scroll-master.css">
 </head>
 
 <body>
@@ -358,6 +362,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                     <a href="#nearby-bhatta" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.nearby">Nearby Bhatta</a>
                     <a href="#price-list" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.prices">Price List</a>
                     <a href="#categories" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.categories">Categories</a>
+                    <button type="button" class="nav-link nav-link-btn" onclick="openBulkQuoteModal(); setActiveNav(this)" data-i18n="nav.bookings">Bookings</button>
                     <a href="#about" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.about">About</a>
                     <a href="#contact" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.contact">Contact</a>
                     <button type="button" class="btn btn-primary btn-sm nav-quote-btn" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
@@ -817,8 +822,9 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
                 <div class="hero-cta">
                     <a href="#products" class="btn btn-primary btn-lg" data-i18n="hero.cta1">Explore Products</a>
-                    <a href="#nearby-bhatta" class="btn btn-outline btn-lg" data-i18n="hero.ctaNearby">Find Nearby Bhatta</a>
-                    <button type="button" class="btn btn-outline btn-lg" onclick="openBulkQuoteModal()" data-i18n="nav.getQuote">Get a Quote</button>
+                    <a href="#nearby-bhatta" class="btn btn-outline btn-lg" data-i18n="hero.ctaNearby">Find Nearby Suppliers</a>
+                    <button type="button" class="btn btn-outline btn-lg" onclick="openBulkQuoteModal()" data-i18n="hero.ctaBook">Book Bricks</button>
+                    <a href="#contact" class="btn btn-ghost btn-lg" data-i18n="hero.ctaContact">Contact Us</a>
                 </div>
 
                 <div class="hero-chips">
@@ -4003,6 +4009,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/services/catalog-pricing-service.js" defer></script>
     <script src="src/services/payment-service.js" defer></script>
     <script src="src/js/i18n.js" defer></script>
+    <script src="src/js/recaptcha.js" defer></script>
     <script src="src/js/state.js" defer></script>
     <script src="src/js/api-client.js" defer></script>
     <script src="src/js/offline-store.js" defer></script>
@@ -4048,6 +4055,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/nearby-bhatta.js" defer></script>
     <script src="src/js/invoice.js" defer></script>
     <script src="src/js/platform.js" defer></script>
+    <!-- Pull-to-refresh controller (mobile only; respects prefers-reduced-motion) -->
+    <script src="src/js/pull-to-refresh.js" defer></script>
     <script src="src/js/main.js" defer></script>
 </body>
 

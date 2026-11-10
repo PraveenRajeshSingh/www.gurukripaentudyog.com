@@ -12,7 +12,7 @@
    Hash routes (#products, #calculator) stay on index.html offline.
    ═══════════════════════════════════════════════════════════════════ */
 
-const CACHE_VER = 'v8';
+const CACHE_VER = 'v9';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -76,6 +76,8 @@ const RUNTIME_WARM = [
     './src/js/catalog-discovery.js',
     './src/js/calculator.js',
     './src/js/whatsapp-order.js',
+    './src/js/pull-to-refresh.js',
+    './src/styles/mobile-scroll-master.css',
     './src/assets/images/optimized/product-1-320.jpg',
     './src/assets/images/optimized/product-2-320.jpg',
     './src/assets/images/optimized/product-3-320.jpg'

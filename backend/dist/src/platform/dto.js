@@ -50,6 +50,12 @@ __decorate([
     (0, class_validator_1.IsIn)(['en', 'hi', 'mr']),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "language", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.Length)(20, 4000),
+    __metadata("design:type", String)
+], RegisterDto.prototype, "captchaToken", void 0);
 class LoginDto {
 }
 exports.LoginDto = LoginDto;
@@ -69,6 +75,12 @@ __decorate([
     (0, class_validator_1.Length)(2, 64),
     __metadata("design:type", String)
 ], LoginDto.prototype, "tenantSlug", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.Length)(20, 4000),
+    __metadata("design:type", String)
+], LoginDto.prototype, "captchaToken", void 0);
 class DealerRegisterDto extends RegisterDto {
 }
 exports.DealerRegisterDto = DealerRegisterDto;
@@ -221,6 +233,12 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateEnquiryDto.prototype, "addressId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.Length)(20, 4000),
+    __metadata("design:type", String)
+], CreateEnquiryDto.prototype, "captchaToken", void 0);
 class QuotationLineDto {
 }
 exports.QuotationLineDto = QuotationLineDto;

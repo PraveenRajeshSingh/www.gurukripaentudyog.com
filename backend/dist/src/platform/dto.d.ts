@@ -5,11 +5,13 @@ export declare class RegisterDto {
     password: string;
     tenantSlug?: string;
     language?: 'en' | 'hi' | 'mr';
+    captchaToken?: string;
 }
 export declare class LoginDto {
     phone: string;
     password: string;
     tenantSlug?: string;
+    captchaToken?: string;
 }
 export declare class DealerRegisterDto extends RegisterDto {
     firmName: string;
@@ -45,6 +47,7 @@ export declare class CreateEnquiryDto {
     contactName?: string;
     attachments?: string[];
     addressId?: string;
+    captchaToken?: string;
 }
 export declare class QuotationLineDto {
     productId?: string;

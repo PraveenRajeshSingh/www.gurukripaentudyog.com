@@ -1,5 +1,6 @@
 // Public authentication + public read endpoints.
-import { BadRequestException, Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import type { Request } from 'express';
 import { AuthService } from './auth.service';
 import { PlatformStoreService } from './store.service';
 import { WorkflowService } from './workflow.service';
@@ -7,29 +8,36 @@ import { Authenticated, RateLimitGuard, RateLimit } from './guards';
 import { CurrentUser } from '../security/tenant.guard';
 import { AuthenticatedUser } from '../types/domain';
 import { DealerRegisterDto, LoginDto, RegisterDto, CreateEnquiryDto } from './dto';
+import { RecaptchaService } from '../security/recaptcha.service';
 
 const TENANT = PlatformStoreService.GURUKRIPA_TENANT_ID;
 
 @Controller('api/v1/auth')
 @UseGuards(RateLimitGuard)
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly recaptcha: RecaptchaService,
+  ) {}
 
   @Post('register')
   @RateLimit(8, 60_000)
-  register(@Body() dto: RegisterDto) {
+  async register(@Body() dto: RegisterDto, @Req() req: Request) {
+    await this.recaptcha.verifyOrThrow(dto.captchaToken, 'register', req.ip);
     return this.auth.register(dto);
   }
 
   @Post('dealer-register')
   @RateLimit(5, 60_000)
-  registerDealer(@Body() dto: DealerRegisterDto) {
+  async registerDealer(@Body() dto: DealerRegisterDto, @Req() req: Request) {
+    await this.recaptcha.verifyOrThrow(dto.captchaToken, 'register', req.ip);
     return this.auth.registerDealer(dto);
   }
 
   @Post('login')
   @RateLimit(10, 60_000)
-  login(@Body() dto: LoginDto) {
+  async login(@Body() dto: LoginDto, @Req() req: Request) {
+    await this.recaptcha.verifyOrThrow(dto.captchaToken, 'login', req.ip);
     return this.auth.login(dto);
   }
 
@@ -50,6 +58,7 @@ export class PublicController {
   constructor(
     private readonly store: PlatformStoreService,
     private readonly workflow: WorkflowService,
+    private readonly recaptcha: RecaptchaService,
   ) {}
 
   @Get('products')
@@ -70,11 +79,12 @@ export class PublicController {
 
   @Post('enquiries')
   @RateLimit(6, 60_000)
-  async guestEnquiry(@Body() dto: CreateEnquiryDto) {
+  async guestEnquiry(@Body() dto: CreateEnquiryDto, @Req() req: Request) {
     if (!dto.contactPhone || !dto.contactName) {
       // Guest enquiries must carry contact details to be actionable.
       throw new BadRequestException('contactName and contactPhone are required for guest enquiries');
     }
+    await this.recaptcha.verifyOrThrow(dto.captchaToken, 'enquiry', req.ip);
     const enq = await this.store.createEnquiry({
       tenantId: TENANT, userId: undefined,
       contactName: dto.contactName, contactPhone: dto.contactPhone,

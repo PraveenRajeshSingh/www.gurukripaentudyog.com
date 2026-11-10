@@ -128,12 +128,20 @@ function handleContactSubmit(e) {
 
     // Server-first when Platform API is configured; always hand off to WhatsApp after.
     if (window.GBApi && GBApi.enabled()) {
-        GBApi.submitEnquiry(payload).then(() => {
-            showToast(t('contact.serverSaved') || 'Enquiry saved. Opening WhatsApp…', 'success');
-            openWhatsApp();
-        }).catch(() => {
-            openWhatsApp();
-        });
+        const send = (captchaToken) => {
+            const body = Object.assign({}, payload, captchaToken ? { captchaToken } : {});
+            return GBApi.submitEnquiry(body).then(() => {
+                showToast(t('contact.serverSaved') || 'Enquiry saved. Opening WhatsApp…', 'success');
+                openWhatsApp();
+            }).catch(() => {
+                openWhatsApp();
+            });
+        };
+        if (window.GBRecaptcha && GBRecaptcha.isEnabled()) {
+            GBRecaptcha.getToken('enquiry').then(send).catch(function () { send(''); });
+        } else {
+            send('');
+        }
         return;
     }
     openWhatsApp();
@@ -302,17 +310,25 @@ function handleBulkQuoteSubmit(e) {
     }
 
     if (window.GBApi && GBApi.enabled()) {
-        GBApi.submitEnquiry(enquiryBody).then(() => finishUi()).catch((err) => {
-            if (err && err.code === 'network' && window.OfflineQueue) {
-                OfflineQueue.enqueue('rfq', enquiryBody, {
-                    ref: quote ? quote.id : undefined,
-                    status: 'pending',
-                    label: 'Pending, not sent yet'
-                }).then(() => finishUi({ pending: true }));
-            } else {
-                finishUi();
-            }
-        });
+        const sendRfq = (captchaToken) => {
+            const body = Object.assign({}, enquiryBody, captchaToken ? { captchaToken } : {});
+            return GBApi.submitEnquiry(body).then(() => finishUi()).catch((err) => {
+                if (err && err.code === 'network' && window.OfflineQueue) {
+                    OfflineQueue.enqueue('rfq', body, {
+                        ref: quote ? quote.id : undefined,
+                        status: 'pending',
+                        label: 'Pending, not sent yet'
+                    }).then(() => finishUi({ pending: true }));
+                } else {
+                    finishUi();
+                }
+            });
+        };
+        if (window.GBRecaptcha && GBRecaptcha.isEnabled()) {
+            GBRecaptcha.getToken('booking').then(sendRfq).catch(function () { sendRfq(''); });
+        } else {
+            sendRfq('');
+        }
         return;
     }
     setTimeout(() => finishUi(), 600);
@@ -381,4 +397,79 @@ document.addEventListener('DOMContentLoaded', () => {
             else renderProducts(currentFilter || 'all');
         }
     });
+});
+
+
+// ══════════════════════════════════════════════════════════════════
+// PULL-TO-REFRESH DATA HANDLER
+// Listens for 'gb:page-refresh' dispatched by pull-to-refresh.js.
+// Reloads visible data without a full page reload.
+// Dispatches 'gb:page-refresh-done' when complete so the PTR
+// indicator can show success/error state.
+// ══════════════════════════════════════════════════════════════════
+document.addEventListener('gb:page-refresh', function handlePageRefresh() {
+    var refreshCount = 0;
+    var expectedCount = 0;
+    var hasError = false;
+
+    function done(success) {
+        if (!success) hasError = true;
+        refreshCount++;
+        if (refreshCount >= expectedCount) {
+            try {
+                document.dispatchEvent(new CustomEvent('gb:page-refresh-done', {
+                    bubbles: false,
+                    detail: { success: !hasError }
+                }));
+            } catch (_e) {}
+        }
+    }
+
+    // 1. Refresh daily prices / catalogue
+    if (window.GurukripaCatalogPricing && typeof GurukripaCatalogPricing.syncFromApi === 'function') {
+        expectedCount++;
+        try {
+            GurukripaCatalogPricing.syncFromApi();
+            if (typeof renderDailyPrices === 'function') renderDailyPrices();
+            if (typeof renderProducts === 'function') renderProducts(currentFilter || 'all');
+            done(true);
+        } catch (e) {
+            done(false);
+        }
+    }
+
+    // 2. Re-render cart UI with latest prices
+    if (typeof updateCartUI === 'function') {
+        expectedCount++;
+        try {
+            if (typeof syncCartWithLivePrices === 'function') syncCartWithLivePrices({ notify: false });
+            updateCartUI();
+            done(true);
+        } catch (e) {
+            done(false);
+        }
+    }
+
+    // 3. Validate server session (re-auth check)
+    if (typeof validateServerSession === 'function') {
+        expectedCount++;
+        try {
+            validateServerSession();
+            done(true);
+        } catch (e) {
+            done(false);
+        }
+    }
+
+    // 4. If nothing was refreshed (no data modules), signal success via page reload
+    if (expectedCount === 0) {
+        try {
+            document.dispatchEvent(new CustomEvent('gb:page-refresh-done', {
+                bubbles: false,
+                detail: { success: true }
+            }));
+        } catch (_e) {}
+        // Graceful reload fallback after a short delay
+        setTimeout(function () { window.location.reload(); }, 400);
+    }
 });

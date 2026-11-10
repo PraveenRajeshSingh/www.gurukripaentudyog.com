@@ -1,11 +1,14 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Query, Req } from '@nestjs/common';
+import type { Request } from 'express';
 import { CurrentUser } from '../security/tenant.guard';
 import { AuthenticatedUser } from '../types/domain';
-import { Authenticated } from '../platform/guards';
+import { Authenticated, RateLimit, RateLimitGuard } from '../platform/guards';
 import { ADMIN_ROLES, MANAGER_ROLES } from '../platform/types';
 import { MockDatabaseService } from '../database/mock-db.service';
 import { CatalogPricingService, CartLineInput, PriceUpdateInput } from './catalog-pricing.service';
 import { PaymentIdempotencyService } from '../payments/payment-idempotency.service';
+import { RazorpayService } from '../payments/razorpay.service';
+import { UseGuards } from '@nestjs/common';
 
 @Controller('api/v1')
 export class PricingController {
@@ -13,6 +16,7 @@ export class PricingController {
     private readonly catalog: CatalogPricingService,
     private readonly db: MockDatabaseService,
     private readonly idem: PaymentIdempotencyService,
+    private readonly razorpay: RazorpayService,
   ) {}
 
   /** Public daily catalogue for a tenant slug — single source for storefront sync. */
@@ -77,13 +81,12 @@ export class PricingController {
   }
 
   /**
-   * Idempotent payment initiation stub — creates a Razorpay-shaped order payload
-   * keyed by Idempotency-Key / body.idempotencyKey. Capture still requires webhook
-   * signature verification with RAZORPAY_KEY_SECRET on a live deployment.
+   * Idempotent payment initiation — live Razorpay Orders API when keys are set;
+   * otherwise returns a non-chargeable stub. Capture still requires verify/webhook.
    */
   @Post('payments/initiate')
   @Authenticated('CUSTOMER', 'DEALER', ...MANAGER_ROLES, ...ADMIN_ROLES, 'STAFF', 'SALES_MANAGER')
-  initiatePayment(
+  async initiatePayment(
     @CurrentUser() user: AuthenticatedUser,
     @Body() body: {
       idempotencyKey?: string;
@@ -107,7 +110,7 @@ export class PricingController {
       },
     });
     if (replay && record.status === 'SUCCEEDED') {
-      return { success: true, replay: true, data: record.responseJson };
+      return { success: true, replay: true, data: record.responseJson, live: this.razorpay.isLiveConfigured() };
     }
     if (replay && record.status === 'FAILED') {
       return { success: false, replay: true, message: record.errorMessage || 'Previous attempt failed' };
@@ -120,25 +123,31 @@ export class PricingController {
       return { success: false, message: 'amountInr must be at least ₹1' };
     }
 
-    const order = {
-      id: 'order_' + Buffer.from(key).toString('hex').slice(0, 14),
-      entity: 'order',
-      amount: amountPaise,
-      amount_due: amountPaise,
-      amount_paid: 0,
-      currency: body.currency || 'INR',
-      receipt: body.receipt || `RCPT-${Date.now().toString().slice(-8)}`,
-      status: 'created',
-      notes: { ...(body.notes || {}), tenantId: user.tenantId, userId: user.id },
-      idempotencyKey: key,
-    };
-    this.idem.succeed(key, {
-      resourceType: 'RAZORPAY_ORDER',
-      resourceId: order.id,
-      gatewayOrderId: order.id,
-      responseJson: order,
-    });
-    return { success: true, replay: false, data: order };
+    try {
+      const { order, live } = await this.razorpay.createOrder({
+        amountPaise,
+        currency: body.currency || 'INR',
+        receipt: body.receipt,
+        notes: { ...(body.notes || {}), tenantId: user.tenantId, userId: user.id },
+        idempotencyKey: key,
+      });
+      const response = {
+        ...order,
+        keyId: live ? this.razorpay.publicKeyId() : '',
+        live,
+      };
+      this.idem.succeed(key, {
+        resourceType: 'RAZORPAY_ORDER',
+        resourceId: order.id,
+        gatewayOrderId: order.id,
+        responseJson: response,
+      });
+      return { success: true, replay: false, data: response, live };
+    } catch (err) {
+      const msg = (err as Error)?.message || 'Payment initiation failed';
+      this.idem.fail(key, msg);
+      return { success: false, message: msg };
+    }
   }
 
   /** Idempotent capture / verify — rejects duplicate gateway payment ids. */
@@ -180,10 +189,7 @@ export class PricingController {
       return { success: true, replay: true, data: record.responseJson };
     }
 
-    // Live deployments must HMAC-verify razorpay_signature with RAZORPAY_KEY_SECRET.
-    // Without a secret we refuse to mark paid — never trust the browser alone.
-    const secret = process.env.RAZORPAY_KEY_SECRET || '';
-    if (!secret) {
+    if (!this.razorpay.isLiveConfigured()) {
       this.idem.fail(key, 'RAZORPAY_KEY_SECRET not configured');
       return {
         success: false,
@@ -191,12 +197,7 @@ export class PricingController {
       };
     }
 
-    const crypto = require('crypto') as typeof import('crypto');
-    const expected = crypto
-      .createHmac('sha256', secret)
-      .update(orderId + '|' + paymentId)
-      .digest('hex');
-    if (expected !== String(body.razorpay_signature || '')) {
+    if (!this.razorpay.verifyPaymentSignature(orderId, paymentId, String(body.razorpay_signature || ''))) {
       this.idem.fail(key, 'Invalid signature');
       return { success: false, message: 'Payment signature verification failed' };
     }
@@ -217,5 +218,61 @@ export class PricingController {
       responseJson: payload,
     });
     return { success: true, replay: false, data: payload };
+  }
+
+  /**
+   * Razorpay webhook — signature verified with RAZORPAY_WEBHOOK_SECRET.
+   * Idempotent on payment entity id.
+   */
+  @Post('webhooks/razorpay')
+  @UseGuards(RateLimitGuard)
+  @RateLimit(60, 60_000)
+  razorpayWebhook(
+    @Req() req: Request & { rawBody?: Buffer },
+    @Headers('x-razorpay-signature') signature: string | undefined,
+    @Body() body: any,
+  ) {
+    const secret = String(process.env.RAZORPAY_WEBHOOK_SECRET || '').trim();
+    if (!secret) {
+      return { success: false, message: 'Webhook secret not configured' };
+    }
+    const raw = req.rawBody || Buffer.from(JSON.stringify(body || {}));
+    if (!this.razorpay.verifyWebhookSignature(raw, signature)) {
+      return { success: false, message: 'Invalid webhook signature' };
+    }
+
+    const event = String(body?.event || '');
+    const paymentEntity = body?.payload?.payment?.entity;
+    const paymentId = String(paymentEntity?.id || '').trim();
+    const orderId = String(paymentEntity?.order_id || '').trim();
+
+    if (event === 'payment.captured' && paymentId) {
+      const dup = this.idem.assertUniqueCapture(paymentId);
+      if (dup.duplicate) {
+        return { success: true, replay: true };
+      }
+      const key = `webhook:${paymentId}`;
+      this.idem.begin({
+        idempotencyKey: key,
+        tenantId: String(paymentEntity?.notes?.tenantId || 'unknown'),
+        operation: 'PAYMENT_WEBHOOK',
+        request: { paymentId, orderId, event },
+      });
+      this.idem.succeed(key, {
+        resourceType: 'PAYMENT',
+        resourceId: paymentId,
+        gatewayOrderId: orderId,
+        gatewayPaymentId: paymentId,
+        responseJson: {
+          paid: true,
+          orderId,
+          paymentId,
+          source: 'webhook',
+          verifiedAt: new Date().toISOString(),
+        },
+      });
+    }
+
+    return { success: true };
   }
 }

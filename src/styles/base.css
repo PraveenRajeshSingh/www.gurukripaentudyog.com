@@ -498,17 +498,24 @@
             margin-left: auto
         }
 
-        .nav-link {
+        .nav-link,
+        button.nav-link-btn {
             padding: 7px 12px;
             border-radius: var(--r-sm);
             font-size: .88rem;
             font-weight: 500;
             color: var(--ink-2);
-            transition: all var(--t)
+            transition: all var(--t);
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            font-family: inherit;
         }
 
         .nav-link:hover,
-        .nav-link.active {
+        .nav-link.active,
+        button.nav-link-btn:hover,
+        button.nav-link-btn.active {
             color: var(--brand);
             background: var(--brand-glow)
         }

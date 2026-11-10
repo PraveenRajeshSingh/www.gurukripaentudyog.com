@@ -20,11 +20,14 @@ const types_1 = require("../platform/types");
 const mock_db_service_1 = require("../database/mock-db.service");
 const catalog_pricing_service_1 = require("./catalog-pricing.service");
 const payment_idempotency_service_1 = require("../payments/payment-idempotency.service");
+const razorpay_service_1 = require("../payments/razorpay.service");
+const common_2 = require("@nestjs/common");
 let PricingController = class PricingController {
-    constructor(catalog, db, idem) {
+    constructor(catalog, db, idem, razorpay) {
         this.catalog = catalog;
         this.db = db;
         this.idem = idem;
+        this.razorpay = razorpay;
     }
     catalogPrices(slug) {
         const tenant = this.db.getTenantBySlug(slug);
@@ -63,7 +66,7 @@ let PricingController = class PricingController {
         const data = await this.catalog.activateDueSchedules(user.tenantId);
         return { success: true, data };
     }
-    initiatePayment(user, body) {
+    async initiatePayment(user, body) {
         const key = body.idempotencyKey || '';
         const { record, replay } = this.idem.begin({
             idempotencyKey: key,
@@ -78,7 +81,7 @@ let PricingController = class PricingController {
             },
         });
         if (replay && record.status === 'SUCCEEDED') {
-            return { success: true, replay: true, data: record.responseJson };
+            return { success: true, replay: true, data: record.responseJson, live: this.razorpay.isLiveConfigured() };
         }
         if (replay && record.status === 'FAILED') {
             return { success: false, replay: true, message: record.errorMessage || 'Previous attempt failed' };
@@ -89,25 +92,32 @@ let PricingController = class PricingController {
             this.idem.fail(key, 'Invalid amount');
             return { success: false, message: 'amountInr must be at least ₹1' };
         }
-        const order = {
-            id: 'order_' + Buffer.from(key).toString('hex').slice(0, 14),
-            entity: 'order',
-            amount: amountPaise,
-            amount_due: amountPaise,
-            amount_paid: 0,
-            currency: body.currency || 'INR',
-            receipt: body.receipt || `RCPT-${Date.now().toString().slice(-8)}`,
-            status: 'created',
-            notes: { ...(body.notes || {}), tenantId: user.tenantId, userId: user.id },
-            idempotencyKey: key,
-        };
-        this.idem.succeed(key, {
-            resourceType: 'RAZORPAY_ORDER',
-            resourceId: order.id,
-            gatewayOrderId: order.id,
-            responseJson: order,
-        });
-        return { success: true, replay: false, data: order };
+        try {
+            const { order, live } = await this.razorpay.createOrder({
+                amountPaise,
+                currency: body.currency || 'INR',
+                receipt: body.receipt,
+                notes: { ...(body.notes || {}), tenantId: user.tenantId, userId: user.id },
+                idempotencyKey: key,
+            });
+            const response = {
+                ...order,
+                keyId: live ? this.razorpay.publicKeyId() : '',
+                live,
+            };
+            this.idem.succeed(key, {
+                resourceType: 'RAZORPAY_ORDER',
+                resourceId: order.id,
+                gatewayOrderId: order.id,
+                responseJson: response,
+            });
+            return { success: true, replay: false, data: response, live };
+        }
+        catch (err) {
+            const msg = err?.message || 'Payment initiation failed';
+            this.idem.fail(key, msg);
+            return { success: false, message: msg };
+        }
     }
     verifyPayment(user, body) {
         const paymentId = String(body.razorpay_payment_id || '').trim();
@@ -134,20 +144,14 @@ let PricingController = class PricingController {
         if (replay && record.status === 'SUCCEEDED') {
             return { success: true, replay: true, data: record.responseJson };
         }
-        const secret = process.env.RAZORPAY_KEY_SECRET || '';
-        if (!secret) {
+        if (!this.razorpay.isLiveConfigured()) {
             this.idem.fail(key, 'RAZORPAY_KEY_SECRET not configured');
             return {
                 success: false,
                 message: 'Payment verification is not configured on this server. Order stays unpaid until gateway secret is set.',
             };
         }
-        const crypto = require('crypto');
-        const expected = crypto
-            .createHmac('sha256', secret)
-            .update(orderId + '|' + paymentId)
-            .digest('hex');
-        if (expected !== String(body.razorpay_signature || '')) {
+        if (!this.razorpay.verifyPaymentSignature(orderId, paymentId, String(body.razorpay_signature || ''))) {
             this.idem.fail(key, 'Invalid signature');
             return { success: false, message: 'Payment signature verification failed' };
         }
@@ -167,6 +171,47 @@ let PricingController = class PricingController {
             responseJson: payload,
         });
         return { success: true, replay: false, data: payload };
+    }
+    razorpayWebhook(req, signature, body) {
+        const secret = String(process.env.RAZORPAY_WEBHOOK_SECRET || '').trim();
+        if (!secret) {
+            return { success: false, message: 'Webhook secret not configured' };
+        }
+        const raw = req.rawBody || Buffer.from(JSON.stringify(body || {}));
+        if (!this.razorpay.verifyWebhookSignature(raw, signature)) {
+            return { success: false, message: 'Invalid webhook signature' };
+        }
+        const event = String(body?.event || '');
+        const paymentEntity = body?.payload?.payment?.entity;
+        const paymentId = String(paymentEntity?.id || '').trim();
+        const orderId = String(paymentEntity?.order_id || '').trim();
+        if (event === 'payment.captured' && paymentId) {
+            const dup = this.idem.assertUniqueCapture(paymentId);
+            if (dup.duplicate) {
+                return { success: true, replay: true };
+            }
+            const key = `webhook:${paymentId}`;
+            this.idem.begin({
+                idempotencyKey: key,
+                tenantId: String(paymentEntity?.notes?.tenantId || 'unknown'),
+                operation: 'PAYMENT_WEBHOOK',
+                request: { paymentId, orderId, event },
+            });
+            this.idem.succeed(key, {
+                resourceType: 'PAYMENT',
+                resourceId: paymentId,
+                gatewayOrderId: orderId,
+                gatewayPaymentId: paymentId,
+                responseJson: {
+                    paid: true,
+                    orderId,
+                    paymentId,
+                    source: 'webhook',
+                    verifiedAt: new Date().toISOString(),
+                },
+            });
+        }
+        return { success: true };
     }
 };
 exports.PricingController = PricingController;
@@ -228,7 +273,7 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PricingController.prototype, "initiatePayment", null);
 __decorate([
     (0, common_1.Post)('payments/verify'),
@@ -239,10 +284,22 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], PricingController.prototype, "verifyPayment", null);
+__decorate([
+    (0, common_1.Post)('webhooks/razorpay'),
+    (0, common_2.UseGuards)(guards_1.RateLimitGuard),
+    (0, guards_1.RateLimit)(60, 60_000),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Headers)('x-razorpay-signature')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, Object]),
+    __metadata("design:returntype", void 0)
+], PricingController.prototype, "razorpayWebhook", null);
 exports.PricingController = PricingController = __decorate([
     (0, common_1.Controller)('api/v1'),
     __metadata("design:paramtypes", [catalog_pricing_service_1.CatalogPricingService,
         mock_db_service_1.MockDatabaseService,
-        payment_idempotency_service_1.PaymentIdempotencyService])
+        payment_idempotency_service_1.PaymentIdempotencyService,
+        razorpay_service_1.RazorpayService])
 ], PricingController);
 //# sourceMappingURL=pricing.controller.js.map

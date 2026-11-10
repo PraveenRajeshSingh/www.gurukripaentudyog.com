@@ -136,7 +136,7 @@ function handleLogin(e) {
     if (window.GBApi && GBApi.enabled()) {
         const phone = isPhone ? digits : resolveLoginPhone(email);
         if (phone && phone.length === 10) {
-            GBApi.login({ phone, password }).then(su => {
+            const runLogin = (captchaToken) => GBApi.login({ phone, password, captchaToken }).then(su => {
                 failedLoginAttempts = 0;
                 loginSuccess({
                     id: su.id,
@@ -154,6 +154,10 @@ function handleLogin(e) {
                     triggerFormShake('loginForm');
                     if (failedLoginAttempts >= 3) startLockoutTimer();
                     else showToast(t('auth.invalidLogin', { n: 3 - failedLoginAttempts }), 'error');
+                } else if (err.code === 400 && /CAPTCHA|captcha/i.test(String(err.message || ''))) {
+                    setButtonLoading('loginSubmitBtn', false, 'Sign In to Account');
+                    showToast(err.message || t('auth.captchaFailed') || 'CAPTCHA failed. Refresh and try again.', 'error');
+                    triggerFormShake('loginForm');
                 } else if (isEmail) {
                     // Network down: verify against the local credential verifier only.
                     finishLocalLogin(email, password);
@@ -163,6 +167,11 @@ function handleLogin(e) {
                     triggerFormShake('loginForm');
                 }
             });
+            if (window.GBRecaptcha && GBRecaptcha.isEnabled()) {
+                GBRecaptcha.getToken('login').then(runLogin).catch(function () { runLogin(''); });
+            } else {
+                runLogin('');
+            }
             return;
         }
         // API on but no phone on file — cannot call /auth/login; do not invent a session.
@@ -407,7 +416,10 @@ function handleRegister(e) {
 
     // Server-first registration: real account with hashed password + JWT session.
     if (window.GBApi && GBApi.enabled()) {
-        GBApi.register({ name, phone: mobile.replace(/\D/g, ''), password, email })
+        const phoneDigits = mobile.replace(/\D/g, '');
+        const runRegister = (captchaToken) => GBApi.register({
+            name, phone: phoneDigits, password, email, captchaToken,
+        })
             .then(() => {
                 const users = getSafeStorage('gb_users', []);
                 if (!users.some(u => String(u.email || '').toLowerCase() === String(email).toLowerCase())) {
@@ -436,6 +448,11 @@ function handleRegister(e) {
                 showToast('Server unreachable — account created offline on this device.', 'info');
                 finishLocalRegister(name, mobile, email, password);
             });
+        if (window.GBRecaptcha && GBRecaptcha.isEnabled()) {
+            GBRecaptcha.getToken('register').then(runRegister).catch(function () { runRegister(''); });
+        } else {
+            runRegister('');
+        }
         return;
     }
     finishLocalRegister(name, mobile, email, password);

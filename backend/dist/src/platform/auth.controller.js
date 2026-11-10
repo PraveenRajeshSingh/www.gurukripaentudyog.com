@@ -20,18 +20,23 @@ const workflow_service_1 = require("./workflow.service");
 const guards_1 = require("./guards");
 const tenant_guard_1 = require("../security/tenant.guard");
 const dto_1 = require("./dto");
+const recaptcha_service_1 = require("../security/recaptcha.service");
 const TENANT = store_service_1.PlatformStoreService.GURUKRIPA_TENANT_ID;
 let AuthController = class AuthController {
-    constructor(auth) {
+    constructor(auth, recaptcha) {
         this.auth = auth;
+        this.recaptcha = recaptcha;
     }
-    register(dto) {
+    async register(dto, req) {
+        await this.recaptcha.verifyOrThrow(dto.captchaToken, 'register', req.ip);
         return this.auth.register(dto);
     }
-    registerDealer(dto) {
+    async registerDealer(dto, req) {
+        await this.recaptcha.verifyOrThrow(dto.captchaToken, 'register', req.ip);
         return this.auth.registerDealer(dto);
     }
-    login(dto) {
+    async login(dto, req) {
+        await this.recaptcha.verifyOrThrow(dto.captchaToken, 'login', req.ip);
         return this.auth.login(dto);
     }
     me(user) {
@@ -43,25 +48,28 @@ __decorate([
     (0, common_1.Post)('register'),
     (0, guards_1.RateLimit)(8, 60_000),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.RegisterDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [dto_1.RegisterDto, Object]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 __decorate([
     (0, common_1.Post)('dealer-register'),
     (0, guards_1.RateLimit)(5, 60_000),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.DealerRegisterDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [dto_1.DealerRegisterDto, Object]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "registerDealer", null);
 __decorate([
     (0, common_1.Post)('login'),
     (0, guards_1.RateLimit)(10, 60_000),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.LoginDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [dto_1.LoginDto, Object]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
     (0, common_1.Get)('me'),
@@ -74,12 +82,14 @@ __decorate([
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('api/v1/auth'),
     (0, common_1.UseGuards)(guards_1.RateLimitGuard),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        recaptcha_service_1.RecaptchaService])
 ], AuthController);
 let PublicController = class PublicController {
-    constructor(store, workflow) {
+    constructor(store, workflow, recaptcha) {
         this.store = store;
         this.workflow = workflow;
+        this.recaptcha = recaptcha;
     }
     products() {
         return { success: true, count: this.store.productsOf(TENANT).length, data: this.store.productsOf(TENANT) };
@@ -91,10 +101,11 @@ let PublicController = class PublicController {
     announcements() {
         return { success: true, data: this.store.listAnnouncements(TENANT, true) };
     }
-    async guestEnquiry(dto) {
+    async guestEnquiry(dto, req) {
         if (!dto.contactPhone || !dto.contactName) {
             throw new common_1.BadRequestException('contactName and contactPhone are required for guest enquiries');
         }
+        await this.recaptcha.verifyOrThrow(dto.captchaToken, 'enquiry', req.ip);
         const enq = await this.store.createEnquiry({
             tenantId: TENANT, userId: undefined,
             contactName: dto.contactName, contactPhone: dto.contactPhone,
@@ -128,14 +139,16 @@ __decorate([
     (0, common_1.Post)('enquiries'),
     (0, guards_1.RateLimit)(6, 60_000),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.CreateEnquiryDto]),
+    __metadata("design:paramtypes", [dto_1.CreateEnquiryDto, Object]),
     __metadata("design:returntype", Promise)
 ], PublicController.prototype, "guestEnquiry", null);
 exports.PublicController = PublicController = __decorate([
     (0, common_1.Controller)('api/v1/public'),
     (0, common_1.UseGuards)(guards_1.RateLimitGuard),
     __metadata("design:paramtypes", [store_service_1.PlatformStoreService,
-        workflow_service_1.WorkflowService])
+        workflow_service_1.WorkflowService,
+        recaptcha_service_1.RecaptchaService])
 ], PublicController);
 //# sourceMappingURL=auth.controller.js.map

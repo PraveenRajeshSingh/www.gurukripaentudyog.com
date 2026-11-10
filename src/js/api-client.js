@@ -49,24 +49,45 @@ const GBApi = (() => {
     }
 
     // ---------- auth ----------
-    async function register({ name, phone, password, email, language }) {
-        const data = await request('/auth/register', { method: 'POST', body: { name, phone, password, email, language, tenantSlug: 'gurukripa' }, auth: false });
+    async function register({ name, phone, password, email, language, captchaToken }) {
+        const data = await request('/auth/register', {
+            method: 'POST',
+            body: { name, phone, password, email, language, captchaToken, tenantSlug: 'gurukripa' },
+            auth: false,
+        });
         rememberEmail(data.user.email || email, data.user.phone);
         setSession({ token: data.token, user: data.user });
         return data.user;
     }
 
-    async function login({ phone, password }) {
-        const data = await request('/auth/login', { method: 'POST', body: { phone, password }, auth: false });
+    async function login({ phone, password, captchaToken }) {
+        const data = await request('/auth/login', {
+            method: 'POST',
+            body: { phone, password, captchaToken },
+            auth: false,
+        });
         rememberEmail(data.user.email, data.user.phone);
         setSession({ token: data.token, user: data.user });
         return data.user;
     }
 
     async function registerDealer(dto) {
-        const data = await request('/auth/dealer-register', { method: 'POST', body: { ...dto, tenantSlug: 'gurukripa' }, auth: false });
+        const data = await request('/auth/dealer-register', {
+            method: 'POST',
+            body: { ...dto, tenantSlug: 'gurukripa' },
+            auth: false,
+        });
         setSession({ token: data.token, user: data.user });
         return { user: data.user, dealerStatus: data.dealerStatus };
+    }
+
+    /** Server-side cart price/stock revalidation before checkout confirm. */
+    async function validateCart(lines) {
+        return request('/tenants/gurukripa/cart/validate', {
+            method: 'POST',
+            body: { lines: lines || [] },
+            auth: false,
+        });
     }
 
     async function me() { return request('/auth/me'); }
@@ -159,7 +180,7 @@ const GBApi = (() => {
 
     return {
         enabled, request, session, token, logout, flushOutbox, pendingOutboxCount, phoneFor, rememberEmail,
-        register, login, registerDealer, me, submitEnquiry, endpoints, public: publicApi,
+        register, login, registerDealer, me, submitEnquiry, validateCart, endpoints, public: publicApi,
     };
 })();
 window.GBApi = GBApi;

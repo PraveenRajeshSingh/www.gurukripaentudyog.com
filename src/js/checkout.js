@@ -269,9 +269,17 @@ function syncCardVisual() {
     if (nameDisp) nameDisp.textContent = name.toUpperCase();
 }
 
+let _placeOrderInFlight = false;
+let _lastPlaceOrderKey = '';
+let _lastPlaceOrderAt = 0;
+
 function placeOrder() {
     const foot = document.getElementById('coFoot');
     if (foot && foot.classList.contains('is-busy')) return;
+    if (_placeOrderInFlight) {
+        showToast(t('checkout.duplicateBlocked') || 'This order is already being submitted. Please wait.', 'warning');
+        return;
+    }
 
     const btnsRow = document.getElementById('checkoutPayBtns');
     const procState = document.getElementById('paymentProcessingState');
@@ -296,6 +304,68 @@ function placeOrder() {
         return;
     }
 
+    const dupKey = (Array.isArray(cart) ? cart.map(function (i) { return i.id + ':' + i.qty; }).join('|') : '') + '|' + method + '|' + (couponDiscount || 0);
+    if (dupKey && dupKey === _lastPlaceOrderKey && (Date.now() - _lastPlaceOrderAt) < 8000) {
+        showToast(t('checkout.duplicateBlocked') || 'This order is already being submitted. Please wait.', 'warning');
+        return;
+    }
+
+    _placeOrderInFlight = true;
+    setCheckoutBusy(true);
+
+    const finishPlacement = function () {
+        _lastPlaceOrderKey = dupKey;
+        _lastPlaceOrderAt = Date.now();
+        _placeOrderInFlight = false;
+        proceedPlaceCodOrder(btnsRow, procState);
+    };
+
+    // Prefer server-recalculated totals when Platform API is online.
+    if (window.GBApi && GBApi.enabled && GBApi.enabled() && typeof GBApi.validateCart === 'function' && navigator.onLine) {
+        const lines = (cart || []).map(function (item) {
+            return {
+                productId: String(item.id || item.productId || ''),
+                quantity: Number(item.qty || item.quantity || 0),
+                unit: item.unit || 'bricks',
+                clientUnitPrice: Number(item.price),
+            };
+        });
+        if (procState) {
+            const title = procState.querySelector('.processing-title');
+            if (title) title.textContent = t('checkout.validating') || 'Validating prices with the yard…';
+            procState.style.display = 'block';
+        }
+        GBApi.validateCart(lines).then(function (res) {
+            const data = res && res.data;
+            if (data && (data.requiresCustomerConfirmation || data.ok === false)) {
+                showToast(t('checkout.priceChanged') || 'Some prices changed. Review your cart totals before confirming.', 'warning');
+                if (Array.isArray(data.lines) && typeof updateCartUI === 'function') {
+                    try {
+                        data.lines.forEach(function (line) {
+                            const hit = cart.find(function (c) { return String(c.id) === String(line.productId); });
+                            if (hit && typeof line.currentUnitPrice === 'number') hit.price = line.currentUnitPrice;
+                        });
+                        saveCart();
+                        updateCartUI();
+                    } catch (_e) { /* ignore */ }
+                }
+                _placeOrderInFlight = false;
+                setCheckoutBusy(false);
+                if (procState) procState.style.display = 'none';
+                return;
+            }
+            finishPlacement();
+        }).catch(function () {
+            // Network/API failure: continue with local totals (honest COD token).
+            finishPlacement();
+        });
+        return;
+    }
+
+    finishPlacement();
+}
+
+function proceedPlaceCodOrder(btnsRow, procState) {
     setCheckoutBusy(true);
     if (btnsRow) btnsRow.style.display = 'none';
     if (procState) {

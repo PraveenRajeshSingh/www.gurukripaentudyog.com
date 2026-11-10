@@ -96,7 +96,20 @@ let couponDiscount   = 0;
 let appliedCoupon    = '';
 let currentFilter    = 'all';
 let selectedPayMethod = 'cod';
-let currentLang      = localStorage.getItem('gb_lang') || 'hi'; // Hindi default; English fallback
+// Language: persist across refresh/login. First visit only — detect browser lang.
+let currentLang = (function resolveInitialLang() {
+    try {
+        const saved = localStorage.getItem('gb_lang');
+        if (saved === 'en' || saved === 'hi') return saved;
+        const nav = String((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+        let detected = 'hi';
+        if (nav.indexOf('hi') === 0) detected = 'hi';
+        else if (nav.indexOf('en') === 0) detected = 'en';
+        localStorage.setItem('gb_lang', detected);
+        return detected;
+    } catch (_e) { /* ignore */ }
+    return 'hi';
+})();
 /** Whether the current session should survive browser restarts (Remember me). */
 let rememberUserSession = !!getSafeStorage('gb_user', null);
 

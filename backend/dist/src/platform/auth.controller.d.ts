@@ -1,21 +1,24 @@
+import type { Request } from 'express';
 import { AuthService } from './auth.service';
 import { PlatformStoreService } from './store.service';
 import { WorkflowService } from './workflow.service';
 import { AuthenticatedUser } from '../types/domain';
 import { DealerRegisterDto, LoginDto, RegisterDto, CreateEnquiryDto } from './dto';
+import { RecaptchaService } from '../security/recaptcha.service';
 export declare class AuthController {
     private readonly auth;
-    constructor(auth: AuthService);
-    register(dto: RegisterDto): Promise<{
+    private readonly recaptcha;
+    constructor(auth: AuthService, recaptcha: RecaptchaService);
+    register(dto: RegisterDto, req: Request): Promise<{
         user: AuthenticatedUser;
         token: string;
     }>;
-    registerDealer(dto: DealerRegisterDto): Promise<{
+    registerDealer(dto: DealerRegisterDto, req: Request): Promise<{
         user: AuthenticatedUser;
         token: string;
         dealerStatus: string;
     }>;
-    login(dto: LoginDto): Promise<{
+    login(dto: LoginDto, req: Request): Promise<{
         user: AuthenticatedUser;
         token: string;
     }>;
@@ -49,7 +52,8 @@ export declare class AuthController {
 export declare class PublicController {
     private readonly store;
     private readonly workflow;
-    constructor(store: PlatformStoreService, workflow: WorkflowService);
+    private readonly recaptcha;
+    constructor(store: PlatformStoreService, workflow: WorkflowService, recaptcha: RecaptchaService);
     products(): {
         success: boolean;
         count: number;
@@ -63,7 +67,7 @@ export declare class PublicController {
         success: boolean;
         data: import("./types").Announcement[];
     };
-    guestEnquiry(dto: CreateEnquiryDto): Promise<{
+    guestEnquiry(dto: CreateEnquiryDto, req: Request): Promise<{
         success: boolean;
         data: import("./types").PlatformEnquiry;
     }>;

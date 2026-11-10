@@ -15,6 +15,13 @@ export interface TranslationKeys {
   heroSubheading: string;
   heroCtaQuote: string;
   heroCtaCatalog: string;
+  heroCtaNearby: string;
+  heroCtaBook: string;
+  heroCtaContact: string;
+  navSuppliers: string;
+  cartTitle: string;
+  checkoutCta: string;
+  profileTitle: string;
   estimatorTitle: string;
   estimatorSubtitle: string;
   tabWall: string;
@@ -58,6 +65,13 @@ export const translations: Record<'en' | 'hi', TranslationKeys> = {
     heroSubheading: 'Direct from our automated bhatta to your construction site. Premium Grade-A, Awwal & Laal Peti bricks with guaranteed 4,000-brick trolley loads and fast delivery.',
     heroCtaQuote: 'Calculate Estimate',
     heroCtaCatalog: 'Browse Products',
+    heroCtaNearby: 'Find Nearby Suppliers',
+    heroCtaBook: 'Book Bricks',
+    heroCtaContact: 'Contact Us',
+    navSuppliers: 'Suppliers',
+    cartTitle: 'Your Cart',
+    checkoutCta: 'Checkout',
+    profileTitle: 'My Account',
     estimatorTitle: '3-in-1 Construction Estimator Studio',
     estimatorSubtitle: 'Calculate exact brick, cement, sand requirements and estimated costs for walls, full houses, and boundary fencing.',
     tabWall: 'Wall Estimator',
@@ -99,6 +113,13 @@ export const translations: Record<'en' | 'hi', TranslationKeys> = {
     heroSubheading: 'सीधे हमारे भट्ठे से आपकी साइट तक। उच्च गुणवत्ता वाली शिव ईंट ग्रेड-ए, आव्वल और लाल पेटी ईंटें — 4,000 ईंट प्रति ट्रॉली की सुनिश्चित गिनती व तेज़ डिलीवरी।',
     heroCtaQuote: 'लागत का अनुमान लगाएं',
     heroCtaCatalog: 'ईंटें देखें',
+    heroCtaNearby: 'नजदीकी सप्लायर खोजें',
+    heroCtaBook: 'ईंट बुक करें',
+    heroCtaContact: 'संपर्क करें',
+    navSuppliers: 'सप्लायर',
+    cartTitle: 'आपकी कार्ट',
+    checkoutCta: 'चेकआउट',
+    profileTitle: 'मेरा खाता',
     estimatorTitle: '3-इन-1 निर्माण लागत एवं सामग्री कैलकुलेटर',
     estimatorSubtitle: 'दीवार, संपूर्ण मकान और बाउंड्री वाल के लिए आवश्यक ईंट, सीमेंट, रेत और ट्रॉली की सही संख्या ज्ञात करें।',
     tabWall: 'दीवार कैलकुलेटर',

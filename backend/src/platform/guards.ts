@@ -26,7 +26,8 @@ export class JwtAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<MultiTenantRequest>();
-    const header = request.headers?.authorization || (request as any).query?.__at;
+    // Authorization header only — never accept JWT from query strings (logs/referrers leak).
+    const header = request.headers?.authorization;
     if (!header || !header.startsWith('Bearer ')) {
       throw new UnauthorizedException('Missing bearer token');
     }

@@ -26,7 +26,7 @@ let JwtAuthGuard = class JwtAuthGuard {
     }
     async canActivate(context) {
         const request = context.switchToHttp().getRequest();
-        const header = request.headers?.authorization || request.query?.__at;
+        const header = request.headers?.authorization;
         if (!header || !header.startsWith('Bearer ')) {
             throw new common_1.UnauthorizedException('Missing bearer token');
         }

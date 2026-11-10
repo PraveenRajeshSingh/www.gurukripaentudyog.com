@@ -110,6 +110,17 @@ function erpExport(kind) {
     else showToast('Export unavailable in this environment', 'warning');
 }
 
+/** Debounced table filter for admin ops tables (client-side, no fake data). */
+function filterAdminTable(inputEl, tableSelector) {
+    const q = String((inputEl && inputEl.value) || '').trim().toLowerCase();
+    const table = document.querySelector(tableSelector || '#adminStage .ops-table');
+    if (!table) return;
+    table.querySelectorAll('tbody tr').forEach(function (row) {
+        const text = (row.textContent || '').toLowerCase();
+        row.hidden = !!(q && text.indexOf(q) === -1);
+    });
+}
+
 function renderAdminTab(tab) {
     const stage = document.getElementById('adminStage');
     if (!stage) return;
@@ -173,7 +184,10 @@ function renderAdminTab(tab) {
             <div class="ops-board">
                 <div class="ops-board__hd">
                     <span class="ops-board__title">Recent B2B Bulk RFQ Quotation Requests</span>
-                    <button class="btn btn-outline btn-sm" onclick="switchAdminTab('quotations')">View All</button>
+                    <div class="ops-head__actions">
+                        <input type="search" class="ops-filter-input" placeholder="Filter RFQs…" aria-label="Filter RFQ table" oninput="filterAdminTable(this, '#adminStage .ops-table')" />
+                        <button type="button" class="btn btn-outline btn-sm" onclick="switchAdminTab('quotations')">View All</button>
+                    </div>
                 </div>
                 <div class="ops-scroll">
                     <table class="ops-table">

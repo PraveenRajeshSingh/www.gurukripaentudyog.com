@@ -6,8 +6,10 @@ import { PricingEngineService } from './pricing/pricing.service';
 import { CatalogPricingService } from './pricing/catalog-pricing.service';
 import { PricingController } from './pricing/pricing.controller';
 import { PaymentIdempotencyService } from './payments/payment-idempotency.service';
+import { RazorpayService } from './payments/razorpay.service';
 import { MockDatabaseService } from './database/mock-db.service';
 import { TenantIsolationGuard } from './security/tenant.guard';
+import { RecaptchaService } from './security/recaptcha.service';
 import { PlatformStoreService } from './platform/store.service';
 import { AuthService } from './platform/auth.service';
 import { NotifyService } from './platform/notify.service';
@@ -42,14 +44,14 @@ const jwtSecret =
     StaffController, HealthController, PricingController,
   ],
   providers: [
-    PricingEngineService, CatalogPricingService, PaymentIdempotencyService,
-    MockDatabaseService, TenantIsolationGuard,
+    PricingEngineService, CatalogPricingService, PaymentIdempotencyService, RazorpayService,
+    MockDatabaseService, TenantIsolationGuard, RecaptchaService,
     PlatformStoreService, AuthService, NotifyService, WorkflowService,
     JwtAuthGuard, RolesGuard, RateLimitGuard,
   ],
   exports: [
-    PricingEngineService, CatalogPricingService, PaymentIdempotencyService,
-    MockDatabaseService, PlatformStoreService, WorkflowService,
+    PricingEngineService, CatalogPricingService, PaymentIdempotencyService, RazorpayService,
+    MockDatabaseService, PlatformStoreService, WorkflowService, RecaptchaService,
   ],
 })
 export class AppModule {}

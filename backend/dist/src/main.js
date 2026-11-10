@@ -17,8 +17,27 @@ async function bootstrap() {
         bodyParser: false,
     });
     const express = require('express');
-    app.use(express.json({ limit: '5mb' }));
+    app.use(express.json({
+        limit: '5mb',
+        verify: (req, _res, buf) => {
+            if (req.originalUrl && String(req.originalUrl).includes('/webhooks/razorpay')) {
+                req.rawBody = Buffer.from(buf);
+            }
+        },
+    }));
     app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+    app.use((_req, res, next) => {
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        res.setHeader('X-Frame-Options', 'DENY');
+        res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+        res.setHeader('X-XSS-Protection', '0');
+        res.setHeader('Permissions-Policy', 'geolocation=(self), microphone=(), camera=()');
+        res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+        if (process.env.NODE_ENV === 'production') {
+            res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+        }
+        next();
+    });
     app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: false, transform: true }));
     const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:8080,https://www.gurukripaentudyog.com,https://gurukripaentudyog.com')
         .split(',')

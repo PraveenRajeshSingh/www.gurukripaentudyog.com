@@ -8,6 +8,23 @@
    bottom-sheet rules in mobile-fixes.css.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
+.ops-filter-input {
+    min-width: 140px;
+    max-width: 220px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--bg-card);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.85rem;
+}
+.ops-filter-input:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-color: var(--line-strong);
+}
+
 /* ── 1. Saved construction sites (address book) ─────────────── */
 .site-grid {
     display: grid;

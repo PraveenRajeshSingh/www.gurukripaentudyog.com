@@ -1,12 +1,15 @@
+import type { Request } from 'express';
 import { AuthenticatedUser } from '../types/domain';
 import { MockDatabaseService } from '../database/mock-db.service';
 import { CatalogPricingService, CartLineInput, PriceUpdateInput } from './catalog-pricing.service';
 import { PaymentIdempotencyService } from '../payments/payment-idempotency.service';
+import { RazorpayService } from '../payments/razorpay.service';
 export declare class PricingController {
     private readonly catalog;
     private readonly db;
     private readonly idem;
-    constructor(catalog: CatalogPricingService, db: MockDatabaseService, idem: PaymentIdempotencyService);
+    private readonly razorpay;
+    constructor(catalog: CatalogPricingService, db: MockDatabaseService, idem: PaymentIdempotencyService, razorpay: RazorpayService);
     catalogPrices(slug: string): {
         success: boolean;
         message: string;
@@ -221,22 +224,25 @@ export declare class PricingController {
         currency?: string;
         receipt?: string;
         notes?: Record<string, string>;
-    }): {
+    }): Promise<{
         success: boolean;
         replay: boolean;
         data: any;
+        live: boolean;
         message?: undefined;
     } | {
         success: boolean;
         replay: boolean;
         message: string;
         data?: undefined;
+        live?: undefined;
     } | {
         success: boolean;
         message: string;
         replay?: undefined;
         data?: undefined;
-    };
+        live?: undefined;
+    }>;
     verifyPayment(user: AuthenticatedUser, body: {
         idempotencyKey?: string;
         razorpay_order_id?: string;
@@ -257,5 +263,20 @@ export declare class PricingController {
         replay: boolean;
         data: any;
         message?: undefined;
+    };
+    razorpayWebhook(req: Request & {
+        rawBody?: Buffer;
+    }, signature: string | undefined, body: any): {
+        success: boolean;
+        message: string;
+        replay?: undefined;
+    } | {
+        success: boolean;
+        replay: boolean;
+        message?: undefined;
+    } | {
+        success: boolean;
+        message?: undefined;
+        replay?: undefined;
     };
 }

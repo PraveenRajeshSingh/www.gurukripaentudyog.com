@@ -1,0 +1,583 @@
+/* ==========================================================================
+   MOBILE SCROLL MASTER — Gurukripa Bricks Industry
+   Canonical scroll, touch-action, overscroll, and pull-to-refresh styles.
+   Loaded LAST in the cascade (after viewport-adaptive.css).
+
+   This file:
+   1. Prevents horizontal overflow at every level.
+   2. Ensures smooth vertical scrolling on all sections and dashboards.
+   3. Provides pull-to-refresh indicator styles.
+   4. Fixes nested scroll containers (modals, drawers, carts, maps).
+   5. Handles sticky headers without covering content.
+   6. Responsive from 320px to 1920px, portrait and landscape.
+   7. Never disables native browser scroll — only contains where needed.
+   ========================================================================== */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. GLOBAL PAGE SCROLL FOUNDATION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+html {
+    /* Use dynamic viewport height where supported (avoids iOS toolbar gap) */
+    height: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    /* Smooth anchored scrolling — offset accounts for sticky navbar (~64px) */
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px));
+    /* Accelerated scroll on WebKit */
+    -webkit-overflow-scrolling: auto;
+}
+
+body {
+    /* Prevent horizontal scroll at root */
+    max-width: 100%;
+    overflow-x: clip;
+    /* Contain vertical overscroll but allow normal page scroll */
+    overscroll-behavior-x: none;
+    /* Allow native vertical scroll — do NOT set overscroll-behavior-y here
+       or pull-to-refresh.js's preventDefault() won't reach Chrome's gesture */
+    /* Allow touch panning on the page; individual containers set their own */
+    touch-action: pan-y;
+    /* GPU-composite scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+}
+
+/* When overlay is open: body is position:fixed; restore width/sides precisely */
+body.overlay-open,
+body.account-popup-open {
+    /* Prevent flash of unstyled layout when top is set by JS */
+    left: 0;
+    right: 0;
+    width: 100%;
+    overflow: hidden !important;
+    /* Keep touch manipulation so buttons inside overlays respond */
+    touch-action: manipulation !important;
+}
+
+/* Main content area */
+#main-content,
+main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    /* Page-level content can scroll vertically */
+    overflow-y: visible;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. STICKY HEADER — DOES NOT COVER CONTENT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-topbar, 900);
+    /* Prevent topbar from catching touch events that belong to scroll */
+    touch-action: manipulation;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav, 800);
+    touch-action: manipulation;
+}
+
+/* Ensure the sticky navbars do not create a double-stack gap */
+.topbar + .navbar {
+    top: 0;
+}
+
+/* Account for safe area on notched devices */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .topbar:first-child,
+    .navbar:first-child {
+        padding-top: max(0px, env(safe-area-inset-top));
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. PULL-TO-REFRESH INDICATOR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.gb-ptr-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9998;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--bg-card, #fff);
+    border-bottom: 1px solid var(--line, rgba(0,0,0,.08));
+    box-shadow: 0 2px 12px rgba(28,16,9,.1);
+    transform: translateY(-56px);
+    /* Smooth pull feedback */
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.2s ease;
+    pointer-events: none;
+    will-change: transform;
+    /* Safe area for notched phones */
+    padding-top: env(safe-area-inset-top, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gb-ptr-indicator {
+        transition: none;
+    }
+}
+
+/* Spinner */
+.gb-ptr-spinner {
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid var(--line-mid, rgba(200,70,10,.2));
+    border-top-color: var(--brand, #A83226);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: gbiPtrSpin 0.7s linear infinite;
+    /* Only show animation when actively refreshing */
+    animation-play-state: paused;
+}
+
+.gb-ptr-indicator.gb-ptr--ready .gb-ptr-spinner {
+    border-top-color: var(--brand, #A83226);
+    transform: rotate(180deg);
+    transition: transform 0.2s ease;
+}
+
+.gb-ptr-indicator.gb-ptr--refreshing .gb-ptr-spinner {
+    animation-play-state: running;
+}
+
+.gb-ptr-indicator.gb-ptr--success .gb-ptr-spinner {
+    border-color: var(--success, #16a34a);
+    border-top-color: var(--success, #16a34a);
+    animation: none;
+}
+
+.gb-ptr-indicator.gb-ptr--error .gb-ptr-spinner {
+    border-color: var(--danger, #dc2626);
+    border-top-color: var(--danger, #dc2626);
+    animation: none;
+}
+
+@keyframes gbiPtrSpin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gb-ptr-spinner {
+        animation: none !important;
+        border-top-color: var(--brand, #A83226);
+    }
+}
+
+/* Label */
+.gb-ptr-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink-2, #5a4a40);
+    letter-spacing: 0.01em;
+}
+
+.gb-ptr-indicator.gb-ptr--success .gb-ptr-label { color: var(--success, #16a34a); }
+.gb-ptr-indicator.gb-ptr--error .gb-ptr-label   { color: var(--danger, #dc2626); }
+
+/* Only show on mobile / touch devices — hide on desktop where PTR isn't needed */
+@media (hover: hover) and (pointer: fine) {
+    .gb-ptr-indicator {
+        display: none;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. SECTION-LEVEL SCROLL SAFETY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Every page section must never overflow horizontally */
+.sec,
+section,
+.container {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: clip;
+}
+
+/* Product/catalog grids — allow internal horizontal scroll only on wrappers */
+.product-grid,
+.catalog-grid,
+.daily-prices-grid {
+    max-width: 100%;
+    overflow-x: visible; /* grid handles its own wrapping */
+}
+
+/* Explicitly scrollable horizontal chips / tab bars */
+.filter-chips,
+.studio-tabs,
+.hub-tiles,
+.profile-tabs {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+}
+.filter-chips::-webkit-scrollbar,
+.studio-tabs::-webkit-scrollbar,
+.hub-tiles::-webkit-scrollbar,
+.profile-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+/* Table scrollers */
+.table-wrap,
+.compare-table-wrap,
+.invoice-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    max-width: 100%;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. MODAL / DRAWER / POPUP SCROLL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Overlay backdrops — full visual viewport, independent from page scroll */
+.modal-overlay,
+.cart-overlay,
+.wishlist-overlay,
+.lb-overlay {
+    position: fixed !important;
+    inset: 0;
+    overflow: hidden; /* the .modal-box owns the scroll, not the overlay */
+    /* Prevent swipe-dismiss gesture on the backdrop itself */
+    touch-action: none;
+}
+
+/* Modal box shell: flex column so header/footer stick and body scrolls */
+.modal-box {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* only .modal-body scrolls */
+    max-height: var(--popup-max-h, min(92dvh, 92vh));
+    /* Enable GPU compositing for the transform animation */
+    will-change: transform;
+    touch-action: pan-y;
+}
+
+/* Modal body — the independent scroll container */
+.modal-body,
+.co-sheet__body,
+.profile-modal-body,
+.admin-workspace,
+.cart-body,
+.wishlist-body,
+#nearbyDetailBody,
+#nearbyCompareBody,
+#compareModalBody,
+#pdContent {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+}
+
+/* Prevent body from scrolling through the modal */
+body.overlay-open {
+    /* JS also sets position:fixed + top: -scrollY; this is the CSS companion */
+    overflow: hidden !important;
+}
+
+/* Headers & footers must not scroll */
+.modal-head,
+.modal-foot,
+.cart-head,
+.cart-foot,
+.co-sheet__head,
+.profile-header,
+.admin-header,
+.gb-dialog-foot {
+    flex-shrink: 0;
+    /* Ensure sticky footer is always above scrolled content */
+    position: relative;
+    z-index: 2;
+}
+
+/* Sticky footer inside modals */
+.modal-foot,
+.gb-dialog-foot,
+.cart-foot,
+.checkout-nav-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-card, #fff);
+    /* iOS safe area for home indicator */
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+}
+
+/* Drawer scroll */
+.drawer,
+.cart-drawer,
+.wishlist-drawer {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+}
+
+/* Map inside modal — must handle its own touch */
+.modal-overlay .gm-style,
+.modal-overlay [id$="MapContainer"],
+.modal-overlay .contact-map-wrap,
+.modal-overlay .cities-map {
+    touch-action: pan-x pan-y pinch-zoom !important;
+    overscroll-behavior: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. DASHBOARD SECTIONS — CONTENT ALWAYS ACCESSIBLE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Profile modal scroll container (My Account) */
+.profile-modal-scroll,
+#profileModal .modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    /* dvh for keyboard-safe height */
+    max-height: calc(var(--vv-height, 100dvh) - 140px);
+}
+
+/* Order history list */
+#pTabOrders,
+#orderHistoryList,
+.order-list-wrap {
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+/* Admin workspace */
+.admin-workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Catalog sidebar on mobile */
+.catalog-sidebar {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+}
+
+/* Invoice/PDF preview */
+#invoicePdfModal .modal-body,
+.invoice-preview-wrap {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Cart items list */
+.cart-items {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    max-width: 100%;
+}
+
+/* Bottom padding so FAB / bottom nav doesn't cover last content on mobile */
+@media (max-width: 767px) {
+    #main-content {
+        padding-bottom: calc(var(--bottom-chrome, 80px) + 24px);
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. BOTTOM NAVIGATION — DOES NOT COVER CONTENT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-mobile-nav, 700);
+    touch-action: manipulation;
+    /* Safe area for home-indicator notch */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Define the CSS variable so other elements can clear the nav */
+:root {
+    --bottom-nav-h: 64px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8. RESPONSIVE BREAKPOINT FIXES (320px → 1920px)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 320px — absolute minimum; everything must reflow to 1 column */
+@media (max-width: 359px) {
+    .container {
+        padding-inline: 10px;
+    }
+    .modal-body,
+    .co-sheet__body {
+        padding-inline: 12px !important;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* 360px – 374px */
+@media (min-width: 360px) and (max-width: 374px) {
+    .container { padding-inline: 12px; }
+}
+
+/* 375px – 389px (iPhone SE/8/X) */
+@media (min-width: 375px) and (max-width: 389px) {
+    .container { padding-inline: 14px; }
+}
+
+/* 390px – 413px (iPhone 14 Pro) */
+@media (min-width: 390px) and (max-width: 413px) {
+    .container { padding-inline: 16px; }
+}
+
+/* 414px – 479px */
+@media (min-width: 414px) and (max-width: 479px) {
+    .container { padding-inline: 18px; }
+}
+
+/* 480px – 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+    .container { padding-inline: 20px; }
+}
+
+/* 768px (tablet portrait) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .container { padding-inline: clamp(20px, 4vw, 32px); }
+}
+
+/* 1024px (tablet landscape / small laptop) */
+@media (min-width: 1024px) and (max-width: 1365px) {
+    .container { padding-inline: clamp(24px, 3vw, 48px); }
+}
+
+/* 1366px+ */
+@media (min-width: 1366px) {
+    .container { padding-inline: clamp(32px, 4vw, 64px); }
+}
+
+/* Landscape orientation — reduce modal max-height so it fits screen */
+@media (orientation: landscape) and (max-height: 500px) {
+    .modal-box {
+        max-height: calc(var(--vv-height, 95dvh) - 20px) !important;
+    }
+    .gb-ptr-indicator {
+        height: 44px;
+        transform: translateY(-44px);
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9. SCROLL LAG & PERFORMANCE FIXES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* GPU compositing on elements that animate or transform */
+.modal-overlay,
+.modal-box,
+.cart-drawer,
+.wishlist-drawer,
+.drawer,
+.gb-ptr-indicator {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Prevent scroll-chaining at the topmost page level */
+html {
+    overscroll-behavior: none;
+}
+
+/* Allow scroll-chaining on the page body for normal scroll */
+body {
+    overscroll-behavior: auto;
+}
+
+/* Prevent double-tap zoom on interactive elements (improves tap latency) */
+button,
+a,
+.btn,
+.nav-link,
+.drawer-link,
+.mn-item,
+.modal-close-btn,
+.cart-close,
+input[type="submit"],
+input[type="button"] {
+    touch-action: manipulation;
+}
+
+/* Images never cause overflow */
+img,
+video,
+iframe,
+svg,
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   10. REDUCED MOTION — RESPECT SYSTEM PREFERENCE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    .modal-box,
+    .cart-drawer,
+    .wishlist-drawer,
+    .drawer,
+    .gb-ptr-indicator,
+    .modal-overlay {
+        transition: none !important;
+        animation: none !important;
+    }
+}

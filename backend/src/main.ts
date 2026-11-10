@@ -20,8 +20,32 @@ async function bootstrap() {
     bodyParser: false,
   });
   const express = require('express');
-  app.use(express.json({ limit: '5mb' }));
+  // Capture raw body for Razorpay webhook HMAC (route-scoped).
+  app.use(
+    express.json({
+      limit: '5mb',
+      verify: (req: any, _res, buf) => {
+        if (req.originalUrl && String(req.originalUrl).includes('/webhooks/razorpay')) {
+          req.rawBody = Buffer.from(buf);
+        }
+      },
+    }),
+  );
   app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+
+  // Baseline security headers (Helmet-equivalent without new dependency).
+  app.use((_req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('X-XSS-Protection', '0');
+    res.setHeader('Permissions-Policy', 'geolocation=(self), microphone=(), camera=()');
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    if (process.env.NODE_ENV === 'production') {
+      res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    }
+    next();
+  });
 
   // Requirement F: strict input validation + CORS restricted to known origins.
   app.useGlobalPipes(

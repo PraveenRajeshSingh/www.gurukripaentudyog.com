@@ -54,6 +54,8 @@
     <!-- Razorpay & Google Maps Integration Meta Tags -->
     <meta name="razorpay-key-id" content="">
     <meta name="google-maps-api-key" content="">
+    <!-- Google reCAPTCHA v3 site key (public). Leave empty to skip client CAPTCHA; backend still rate-limits. -->
+    <meta name="recaptcha-site-key" content="">
 
     <!-- Web Push (optional). Paste a VAPID public key + your subscribe endpoint to turn
          on server-sent order/rate alerts. Leave empty to keep alerts device-local. -->
@@ -175,4 +177,6 @@
     <link rel="stylesheet" href="src/styles/daily-prices.css">
     <!-- Final: dynamic full-page + every popup sized to live visual viewport -->
     <link rel="stylesheet" href="src/styles/viewport-adaptive.css">
+    <!-- Mobile scroll master: canonical scroll/touch/PTR fixes — loads last -->
+    <link rel="stylesheet" href="src/styles/mobile-scroll-master.css">
 </head>
