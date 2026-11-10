@@ -12,7 +12,7 @@
    Hash routes (#products, #calculator) stay on index.html offline.
    ═══════════════════════════════════════════════════════════════════ */
 
-const CACHE_VER = 'v13-pages';
+const CACHE_VER = 'v14-perf';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -21,7 +21,10 @@ const ALL_CACHES = [SHELL, PAGES, IMGS, DATA];
 const IMG_MAX = 60;
 const NAV_TIMEOUT_MS = 3000;
 
-/** App shell — CHANGE: critical shell only during install (polish §3); rest idle after load. */
+/**
+ * Phase 5 — install precache = offline shell ONLY.
+ * Heavy CSS/JS/images warm after load (or skip on Save-Data).
+ */
 const SHELL_ASSETS = [
     './',
     './index.html',
@@ -30,42 +33,40 @@ const SHELL_ASSETS = [
     './sw.js',
     './src/assets/fonts/offline-fonts.css',
     './src/assets/images/logo.svg',
-    './src/assets/images/logo-new.svg',
     './src/assets/images/favicon.svg',
-    './src/assets/images/favicon.ico',
     './src/assets/images/optimized/hero-480.jpg',
     './src/styles/layers.css',
     './src/styles/tokens.css',
     './src/styles/design-system.css',
-    './src/styles/chrome-premium.css',
-    './src/styles/shell-phase2.css',
-    './src/styles/pages-phase3.css',
     './src/styles/base.css',
-    './src/styles/sections.css',
-    './src/styles/overlays.css',
     './src/styles/app.css',
-    './src/styles/polish-pass.css',
-    './src/styles/catalog-premium.css',
     './src/styles/pwa-offline.css',
     './src/js/reliability.js',
-    './src/js/action-delegate.js',
     './src/js/utils.js',
     './src/js/data.js',
     './src/js/i18n.js',
     './src/js/state.js',
     './src/js/commerce-store.js',
-    './src/js/interaction-guard.js',
     './src/js/offline-store.js',
-    './src/js/offline-queue.js',
     './src/js/pwa.js',
     './src/js/ui.js',
+    './src/js/popup-manager.js',
     './src/js/products.js',
     './src/js/cart.js',
     './src/js/main.js'
 ];
 
-/** Runtime warm cache after window load (posted from pwa.js) */
+/** Runtime warm cache after window load (posted from pwa.js / idle-loader) */
 const RUNTIME_WARM = [
+    './src/styles/chrome-premium.css',
+    './src/styles/shell-phase2.css',
+    './src/styles/pages-phase3.css',
+    './src/styles/popups-phase4.css',
+    './src/styles/a11y-phase6.css',
+    './src/styles/sections.css',
+    './src/styles/overlays.css',
+    './src/styles/polish-pass.css',
+    './src/styles/catalog-premium.css',
     './src/styles/popups.css',
     './src/styles/extras.css',
     './src/styles/mobile-fixes.css',
@@ -80,11 +81,17 @@ const RUNTIME_WARM = [
     './src/styles/calculator-studio.css',
     './src/styles/fab-stack.css',
     './src/styles/footer-studio.css',
+    './src/styles/mobile-scroll-master.css',
+    './src/js/action-delegate.js',
+    './src/js/interaction-guard.js',
+    './src/js/offline-queue.js',
     './src/js/catalog-discovery.js',
     './src/js/calculator.js',
     './src/js/whatsapp-order.js',
     './src/js/pull-to-refresh.js',
-    './src/styles/mobile-scroll-master.css',
+    './src/js/idle-loader.js',
+    './src/assets/images/logo-new.svg',
+    './src/assets/images/favicon.ico',
     './src/assets/images/optimized/product-1-320.jpg',
     './src/assets/images/optimized/product-2-320.jpg',
     './src/assets/images/optimized/product-3-320.jpg'
