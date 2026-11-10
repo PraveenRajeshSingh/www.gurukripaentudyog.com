@@ -1,0 +1,106 @@
+/* Phase 4: cascade layer patches — popup/drawer system */
+@layer patches {
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   POPUPS PHASE 4 — closed-by-default hardening + sheet chrome
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Closed drawers must stay off-canvas (never paint open from CSS alone) */
+.cart-drawer:not(.open),
+.wishlist-drawer:not(.open),
+#mobileDrawer.drawer:not(.open),
+.drawer:not(.open) {
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
+.cart-overlay:not(.open),
+.wishlist-overlay:not(.open),
+#drawerOverlay:not(.open),
+.filter-sheet-backdrop:not(.open),
+.modal-overlay:not(.open),
+#lb:not(.open) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Desktop: centered modal; cart stays right drawer */
+@media (min-width: 1024px) {
+    .modal-overlay.open {
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    .modal-overlay.open > .modal-box {
+        max-height: min(86dvh, 900px) !important;
+        border-radius: var(--popup-radius, 16px) !important;
+        width: min(560px, 92vw);
+    }
+    .modal-overlay.open > .modal-box.modal-box--lg,
+    .modal-overlay.open > .modal-box.modal-box--xl {
+        width: min(920px, 94vw);
+    }
+    .cart-drawer.open {
+        max-width: min(420px, 100vw);
+    }
+}
+
+/* Mobile: bottom sheets ≤92dvh + safe areas */
+@media (max-width: 1023.98px) {
+    .modal-overlay.open {
+        align-items: flex-end !important;
+        justify-content: stretch !important;
+        padding: 0 !important;
+    }
+    .modal-overlay.open > .modal-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 92dvh !important;
+        border-radius: 18px 18px 0 0 !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .cart-drawer.open,
+    .wishlist-drawer.open {
+        max-height: 92dvh !important;
+        border-radius: 18px 18px 0 0 !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+}
+
+/* Sticky head / foot inside sheets */
+.modal-overlay .modal-head,
+.cart-drawer .cart-head,
+.wishlist-drawer .cart-head {
+    position: sticky;
+    top: 0;
+    background: var(--bg-card, #fff);
+}
+
+.modal-overlay .modal-foot,
+.cart-drawer .cart-footer,
+.wishlist-drawer .cart-footer,
+.co-sheet__foot {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-card, #fff);
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+}
+
+/* Hide FAB / PTR chrome while any managed popup is open */
+body.gb-popup-open #fabStack,
+body.overlay-open #fabStack,
+body.gb-popup-open .ptr-indicator {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modal-overlay,
+    .cart-drawer,
+    .wishlist-drawer,
+    .drawer,
+    .modal-box {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+}

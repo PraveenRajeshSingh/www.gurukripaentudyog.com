@@ -261,8 +261,26 @@ function ensureOverlaysClosedOnBoot() {
     forceClose('notificationCenterModal', typeof closeNotificationCenter === 'function' ? closeNotificationCenter : null);
     forceClose('authModal', typeof closeAuth === 'function' ? closeAuth : null);
     forceClose('productModal', typeof closeProductModal === 'function' ? closeProductModal : null);
+    forceClose('profileModal', typeof closeProfile === 'function' ? closeProfile : null);
+    forceClose('checkoutModal', typeof closeCheckout === 'function' ? closeCheckout : null);
+    forceClose('compareModal', function () {
+        if (window.CatalogDiscovery && typeof CatalogDiscovery.closeCompareModal === 'function') {
+            CatalogDiscovery.closeCompareModal();
+        }
+    });
+    forceClose('legalModal', typeof closeLegalModal === 'function' ? closeLegalModal : null);
+    forceClose('bulkQuoteModal', typeof closeBulkQuoteModal === 'function' ? closeBulkQuoteModal : null);
+    forceClose('adminPortalModal', typeof closeAdminPortal === 'function' ? closeAdminPortal : null);
+    forceClose('trackerModal', typeof closeTrackerModal === 'function' ? closeTrackerModal : null);
+    forceClose('pincodeModal', typeof closePincodeModal === 'function' ? closePincodeModal : null);
+    forceClose('orderDetailsModal', typeof closeOrderDetailsModal === 'function' ? closeOrderDetailsModal : null);
+    forceClose('gstInvoiceModal', typeof closeGstInvoice === 'function' ? closeGstInvoice : null);
+    forceClose('invoicePdfModal', typeof closeInvoicePdf === 'function' ? closeInvoicePdf : null);
+    forceClose('companyProfileModal', typeof closeCompanyProfile === 'function' ? closeCompanyProfile : null);
     forceClose('userDropdown', typeof closeUserDropdown === 'function' ? closeUserDropdown : null);
     document.getElementById('accountPopupBackdrop')?.classList.remove('open', 'is-open');
+    document.getElementById('chatbotBox')?.classList.remove('open');
+    document.getElementById('lb')?.classList.remove('open');
 
     // Catalog filter sheet: closed on mobile; desktop keeps in-flow sidebar without .open
     const sb = document.getElementById('catalogSidebar');

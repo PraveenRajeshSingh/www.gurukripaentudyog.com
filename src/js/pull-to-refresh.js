@@ -183,6 +183,7 @@
 
         // Don't interfere if any overlay is open
         if (document.body.classList.contains('overlay-open') ||
+            document.body.classList.contains('gb-popup-open') ||
             document.body.classList.contains('account-popup-open')) return;
 
         // Never steal taps that begin on controls (Add to Cart, hearts, etc.)
@@ -209,6 +210,7 @@
 
         // Skip nested scrollers (re-check on move since target is captured)
         if (document.body.classList.contains('overlay-open') ||
+            document.body.classList.contains('gb-popup-open') ||
             document.body.classList.contains('account-popup-open')) {
             _startY = 0;
             return;
