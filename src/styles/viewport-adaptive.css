@@ -64,6 +64,25 @@ table {
     max-width: 100%;
 }
 
+/* Intrinsic fluid card grids */
+.products-grid,
+#productsGrid:not(.is-list),
+.cat-grid,
+.features-grid,
+.reviews-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min-col, 260px)), 1fr)) !important;
+    gap: var(--space-gap, clamp(12px, 2vw, 24px)) !important;
+    align-items: stretch !important;
+}
+.products-grid > *,
+#productsGrid > *,
+.cat-grid > *,
+.features-grid > *,
+.reviews-grid > * {
+    min-width: 0 !important;
+}
+
 /* Soft bottom clearance so FABs / bottom nav never cover content */
 @media (max-width: 767px) {
     #main-content {

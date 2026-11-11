@@ -1,0 +1,17 @@
+{
+  "logs": [
+    {
+      "source": "log",
+      "level": "warning",
+      "text": "Manifest: property 'url' ignored, should be within scope of the manifest.",
+      "url": "http://127.0.0.1:4192/www.gurukripaentudyog.com/manifest.json"
+    },
+    {
+      "source": "log",
+      "level": "warning",
+      "text": "Manifest: property 'url' of 'shortcut' not present.",
+      "url": "http://127.0.0.1:4192/www.gurukripaentudyog.com/manifest.json"
+    }
+  ],
+  "networkEvents": []
+}

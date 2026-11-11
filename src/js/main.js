@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'validateServerSession': () => { if (typeof validateServerSession === 'function') validateServerSession(); },
         'initScrollProgress': () => initScrollProgress(),
         'initCounters': () => initCounters(),
+        'initHeaderNavFit': () => { if (typeof initHeaderNavFit === 'function') initHeaderNavFit(); },
         'initNavHighlight': () => initNavHighlight(),
         'initScrollReveal': () => initScrollReveal(),
         'initTouchSwipe': () => initTouchSwipe(),

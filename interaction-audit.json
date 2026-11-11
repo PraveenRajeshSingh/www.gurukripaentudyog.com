@@ -1,0 +1,185 @@
+[
+  {
+    "cat": "log",
+    "level": "warning",
+    "text": "Manifest: property 'url' ignored, should be within scope of the manifest.",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/manifest.json"
+  },
+  {
+    "cat": "log",
+    "level": "warning",
+    "text": "Manifest: property 'url' of 'shortcut' not present.",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/manifest.json"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/native-camera.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/chatbot.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/fab-stack.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/nearby-bhatta.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/invoice.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/data.js"
+  },
+  {
+    "cat": "console",
+    "type": "log",
+    "args": [
+      "offline fetch caught:",
+      "Failed to fetch"
+    ],
+    "stack": {
+      "functionName": "",
+      "scriptId": "57",
+      "url": "",
+      "lineNumber": 0,
+      "columnNumber": 43
+    }
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/platform.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/pull-to-refresh.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/hero-admin.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/main.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/js/idle-loader.js"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/brick_product_3.png"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/brick_product_2.png"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/redbrick1.jpg"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/brick_product_1.png"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/optimized/product-3-480.jpg"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/styles/ops-console.css"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/styles/nearby-bhatta.css"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/styles/daily-prices.css"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/favicon.svg"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/favicon.ico"
+  },
+  {
+    "cat": "log",
+    "level": "warning",
+    "text": "Error while trying to use the following icon from the Manifest: http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/favicon.svg (Download error or resource isn't a valid image)",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/index.html"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "https://fonts.gstatic.com/s/fraunces/v38/6NUs8FyLNQOQZAnv9ZwNjucMHVn85Ni7emAe9lKqZTnbB-gzTK0K1ChJdt9hFwpX9W37ll9_mv0iQg.woff2"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/favicon.svg"
+  },
+  {
+    "cat": "log",
+    "level": "error",
+    "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "url": "http://127.0.0.1:4193/www.gurukripaentudyog.com/src/assets/images/favicon.ico"
+  }
+]

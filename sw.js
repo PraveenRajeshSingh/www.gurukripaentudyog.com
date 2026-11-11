@@ -1,8 +1,8 @@
-/* ═══════════════════════════════════════════════════════════════════
+/* ===========================================================================
    Gurukripa Bricks Industry — Service Worker (hand-written, no Workbox)
    ───────────────────────────────────────────────────────────────────
    HOW TO BUMP THE CACHE VERSION ON EVERY RELEASE
-   1. Increment CACHE_VER below (e.g. v5 → v6).
+   1. Increment CACHE_VER below (e.g. v15 → v16).
    2. Redeploy index.html + sw.js + offline.html + assets.
    3. Clients see “New version available. Refresh”; only then we
       skipWaiting() and reload (never during checkout / dirty forms).
@@ -10,10 +10,10 @@
 
    Scope: relative "./" so GitHub Pages subpath installs work.
    Hash routes (#products, #calculator) stay on index.html offline.
-   ═══════════════════════════════════════════════════════════════════ */
+   =========================================================================== */
 
-// [FIX] Layout and spacing pass v15
-const CACHE_VER = 'v15-layout';
+// [FIX] Fluid Layout & Console Cleanup pass v16
+const CACHE_VER = 'v16-fluid';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -36,12 +36,25 @@ const SHELL_ASSETS = [
     './src/assets/images/logo.svg',
     './src/assets/images/favicon.svg',
     './src/assets/images/optimized/hero-480.jpg',
+    './src/assets/images/optimized/hero-768.jpg',
+    './src/assets/images/optimized/hero-1200.jpg',
+    './src/assets/images/optimized/hero-1600.jpg',
     './src/styles/layers.css',
     './src/styles/tokens.css',
     './src/styles/design-system.css',
     './src/styles/base.css',
+    './src/styles/sections.css',
     './src/styles/app.css',
+    './src/styles/chrome-premium.css',
+    './src/styles/viewport-adaptive.css',
+    './src/styles/daily-prices.css',
+    './src/styles/nearby-bhatta.css',
     './src/styles/pwa-offline.css',
+    './src/services/index.js',
+    './src/services/catalog-pricing-service.js',
+    './src/services/nearby-suppliers-service.js',
+    './src/services/maps-service.js',
+    './src/services/payment-service.js',
     './src/js/reliability.js',
     './src/js/utils.js',
     './src/js/data.js',
@@ -53,18 +66,17 @@ const SHELL_ASSETS = [
     './src/js/ui.js',
     './src/js/popup-manager.js',
     './src/js/products.js',
+    './src/js/daily-prices.js',
     './src/js/cart.js',
     './src/js/main.js'
 ];
 
 /** Runtime warm cache after window load (posted from pwa.js / idle-loader) */
 const RUNTIME_WARM = [
-    './src/styles/chrome-premium.css',
     './src/styles/shell-phase2.css',
     './src/styles/pages-phase3.css',
     './src/styles/popups-phase4.css',
     './src/styles/a11y-phase6.css',
-    './src/styles/sections.css',
     './src/styles/overlays.css',
     './src/styles/polish-pass.css',
     './src/styles/catalog-premium.css',
@@ -91,6 +103,40 @@ const RUNTIME_WARM = [
     './src/js/whatsapp-order.js',
     './src/js/pull-to-refresh.js',
     './src/js/idle-loader.js',
+    './src/js/recaptcha.js',
+    './src/js/api-client.js',
+    './src/js/saved-sites.js',
+    './src/js/erp-core.js',
+    './src/js/erp-inventory.js',
+    './src/js/erp-documents.js',
+    './src/js/erp-crm.js',
+    './src/js/erp-analytics.js',
+    './src/js/erp-calculators.js',
+    './src/js/erp-logistics.js',
+    './src/js/erp-notify.js',
+    './src/js/erp-invoice.js',
+    './src/js/dialogs.js',
+    './src/js/pincodeChecker.js',
+    './src/js/voice-search.js',
+    './src/js/wishlist-drawer.js',
+    './src/js/auth-modal.js',
+    './src/js/role-access.js',
+    './src/js/account-popup.js',
+    './src/js/profile-modal.js',
+    './src/js/google-auth.js',
+    './src/js/checkout.js',
+    './src/js/admin-portal.js',
+    './src/js/dispatch-ops.js',
+    './src/js/estimatorPreview.js',
+    './src/js/tracker.js',
+    './src/js/push-notifications.js',
+    './src/js/native-camera.js',
+    './src/js/chatbot.js',
+    './src/js/fab-stack.js',
+    './src/js/nearby-bhatta.js',
+    './src/js/invoice.js',
+    './src/js/platform.js',
+    './src/js/hero-admin.js',
     './src/assets/images/logo-new.svg',
     './src/assets/images/favicon.ico',
     './src/assets/images/optimized/product-1-320.jpg',
@@ -269,7 +315,7 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Rate card / catalogue JS|JSON: stale-while-revalidate
+    // Rate card / catalogue JS|JSON: stale-while-revalidate with clean JSON fallback
     if (isDataPath(url)) {
         event.respondWith((async () => {
             const cache = await caches.open(DATA);
@@ -278,12 +324,15 @@ self.addEventListener('fetch', (event) => {
                 if (resp && resp.ok) cache.put(req, resp.clone());
                 return resp;
             }).catch(() => null);
-            return cached || (await network) || new Response('{}', { status: 503 });
+            return cached || (await network) || new Response('{}', {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            });
         })());
         return;
     }
 
-    // App shell CSS/JS/fonts/icons: cache-first
+    // App shell CSS/JS/fonts/icons: cache-first with safe valid syntax fallbacks
     if (isShellPath(url) || isSameOrigin(req.url)) {
         event.respondWith((async () => {
             const cached = await caches.match(req);
@@ -296,7 +345,19 @@ self.addEventListener('fetch', (event) => {
                 }
                 return resp;
             } catch (_e) {
-                return new Response('Offline', { status: 503 });
+                if (/\.js$/i.test(url.pathname)) {
+                    return new Response('/* offline fallback */', {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/javascript' }
+                    });
+                }
+                if (/\.css$/i.test(url.pathname)) {
+                    return new Response('/* offline fallback */', {
+                        status: 200,
+                        headers: { 'Content-Type': 'text/css' }
+                    });
+                }
+                return new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain' } });
             }
         })());
     }
@@ -363,7 +424,7 @@ self.addEventListener('message', (event) => {
         self.skipWaiting();
         return;
     }
-    // CHANGE: runtime warm cache after first paint (polish §3) — skip on Save-Data
+    // Runtime warm cache after first paint — skip on Save-Data
     if (message.type === 'WARM_CACHE') {
         const list = Array.isArray(message.assets) && message.assets.length ? message.assets : RUNTIME_WARM;
         event.waitUntil(precacheList(SHELL, list));
