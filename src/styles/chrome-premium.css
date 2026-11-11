@@ -1,11 +1,11 @@
-﻿/* Phase 1: cascade layer features — do not remove wrapper */
+/* Phase 1: cascade layer features - do not remove wrapper */
 @layer features {
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CHROME PREMIUM — Header · Hero · Footer (Phase 2 shell)
-   Loaded late so it wins layout chrome without breaking catalog/ops.
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ═══════════════════════════════════════════════════════════════
+   CHROME PREMIUM - Header • Hero • Footer (Phase 2 shell)
+   Fluid container queries + dynamic viewport-adaptive layout.
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ── Sticky header ── */
+/* ── Sticky header with container query support ── */
 .nav-premium {
     position: sticky;
     top: 0;
@@ -15,19 +15,24 @@
     border-bottom: 1px solid var(--line);
     box-shadow: 0 1px 0 rgba(37, 37, 37, 0.04), 0 8px 24px rgba(37, 37, 37, 0.04);
     z-index: var(--z-header, 900);
+    container-type: inline-size;
+    container-name: nav;
 }
 .nav-premium .nav-inner {
     display: flex;
     min-height: 64px;
-    gap: 10px;
+    gap: clamp(8px, 1.5vw, 14px);
     align-items: center;
     min-width: 0;
 }
 .nav-premium .nav-brand {
-    flex: 1 1 auto;
+    display: flex;
+    flex: 0 1 auto;
     min-width: 0;
     gap: 10px;
     align-items: center;
+    text-decoration: none;
+    color: inherit;
 }
 .nav-premium .nav-logo-mark {
     flex-shrink: 0;
@@ -72,22 +77,24 @@
     margin-left: auto;
 }
 
-/* Full primary nav ≥1024; hamburger below */
+/* Primary nav: fluid container query layout */
 .nav-links-premium {
     display: none;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: clamp(2px, 0.5vw, 6px);
     flex: 1 1 auto;
     min-width: 0;
 }
-@media (min-width: 1024px) {
+
+@container nav (min-width: 820px) {
     .nav-links-premium { display: flex; }
     .nav-premium .nav-search-premium { display: flex; }
     .nav-premium .nav-search-toggle { display: none; }
     .nav-premium .nav-toggle { display: none; }
 }
-@media (max-width: 1023.98px) {
+
+@container nav (max-width: 819.98px) {
     .nav-links-premium { display: none; }
     .nav-premium .nav-toggle {
         display: inline-flex;
@@ -97,12 +104,43 @@
     .nav-premium .nav-search-premium { display: none; }
     .nav-premium .nav-search-toggle { display: inline-flex; }
 }
-/* [FIX #4] Nav: inline-flex + align-items:center ensures Book Bricks button (a <button>) aligns to same baseline as <a> links */
+
+@supports not (container-type: inline-size) {
+    @media (min-width: 840px) {
+        .nav-links-premium { display: flex; }
+        .nav-premium .nav-search-premium { display: flex; }
+        .nav-premium .nav-search-toggle { display: none; }
+        .nav-premium .nav-toggle { display: none; }
+    }
+    @media (max-width: 839.98px) {
+        .nav-links-premium { display: none; }
+        .nav-premium .nav-toggle {
+            display: inline-flex;
+            min-width: var(--touch-min, 44px);
+            min-height: var(--touch-min, 44px);
+        }
+        .nav-premium .nav-search-premium { display: none; }
+        .nav-premium .nav-search-toggle { display: inline-flex; }
+    }
+}
+
+/* Dynamic JS fit override classes */
+.nav-premium.nav-force-compact .nav-links-premium { display: none !important; }
+.nav-premium.nav-force-compact .nav-toggle { display: inline-flex !important; }
+.nav-premium.nav-force-compact .nav-search-premium { display: none !important; }
+.nav-premium.nav-force-compact .nav-search-toggle { display: inline-flex !important; }
+
+.nav-premium.nav-force-expanded .nav-links-premium { display: flex !important; }
+.nav-premium.nav-force-expanded .nav-toggle { display: none !important; }
+.nav-premium.nav-force-expanded .nav-search-premium { display: flex !important; }
+.nav-premium.nav-force-expanded .nav-search-toggle { display: none !important; }
+
+/* Nav items */
 .nav-links-premium .nav-link,
 .nav-links-premium .nav-link-btn {
     display: inline-flex;
     align-items: center;
-    padding: 10px 12px;
+    padding: 8px clamp(8px, 1vw, 12px);
     min-height: var(--touch-min, 44px);
     border-radius: 999px;
     font-size: 0.86rem;
@@ -173,8 +211,8 @@
 .nav-premium .nav-search-premium {
     display: none;
     align-items: center;
-    min-width: 180px;
-    max-width: 240px;
+    min-width: 160px;
+    max-width: 220px;
 }
 .nav-premium .nav-search-toggle { display: inline-flex; }
 @media (max-width: 1099.98px) {
@@ -194,66 +232,95 @@
     }
 }
 
-/* Single language control: header only (topbar duplicate hidden in shell-phase2) */
-
-/* ── Premium hero ── */
+/* ── Premium Hero (Fluid Container Query System) ── */
 .hero-premium {
-    display: block;
+    display: block !important;
+    container-type: inline-size;
+    container-name: hero;
     background:
         radial-gradient(1200px 420px at 10% -10%, rgba(169, 50, 38, 0.10), transparent 60%),
         linear-gradient(180deg, #FFFCF9 0%, var(--bg) 100%);
     border-bottom: 1px solid var(--line);
-    min-height: unset;
+    min-height: unset !important;
 }
-/* [FIX #1] Hero grid uses same container system as .container to align edges */
+
+/* Single Unified Container */
 .hero-premium__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0;
+    gap: clamp(16px, 3vw, 28px);
     width: min(100% - 2 * var(--gutter, clamp(16px, 4vw, 32px)), var(--layout-max, 1240px));
     max-width: var(--layout-max, 1240px);
     margin: 0 auto;
     padding-inline: 0;
     box-sizing: border-box;
+    align-items: center;
 }
-/* Two-column only at desktop ≥1024 — avoids blank/skinny columns at 770–890 */
-@media (min-width: 1024px) {
+
+/* Two-column triggers as soon as hero container has room (~640px+) */
+@container hero (min-width: 640px) {
     .hero-premium__grid {
-        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-        align-items: stretch;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        align-items: center;
         min-height: clamp(420px, 58vh, 620px);
-        gap: 28px;
+        gap: clamp(20px, 3vw, 36px);
     }
-}
-.hero-premium__copy {
-    order: 1;
-    padding: clamp(24px, 4vw, 56px) 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0;
-    min-width: 0;
-}
-.hero-premium__media {
-    order: 2;
-    position: relative;
-    min-height: 220px;
-    overflow: hidden;
-    border-radius: 18px;
-    margin-bottom: 20px;
-}
-@media (min-width: 1024px) {
-    .hero-premium__copy { order: 0; padding: clamp(28px, 4vw, 56px) 0; }
-    /* [FIX #2] Uniform border-radius all 4 corners (was: 0 0 0 28px = clipped top-right) */
+    .hero-premium__copy {
+        order: 1;
+        padding: clamp(28px, 4vw, 56px) 0;
+    }
     .hero-premium__media {
-        order: 0;
-        border-radius: 18px;
+        order: 2;
         margin: 16px 0;
         min-height: 100%;
         align-self: stretch;
-        box-shadow: var(--sh-card);
     }
 }
+
+@supports not (container-type: inline-size) {
+    @media (min-width: 700px) {
+        .hero-premium__grid {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            align-items: center;
+            min-height: clamp(420px, 58vh, 620px);
+            gap: clamp(20px, 3vw, 36px);
+        }
+        .hero-premium__copy {
+            order: 1;
+            padding: clamp(28px, 4vw, 56px) 0;
+        }
+        .hero-premium__media {
+            order: 2;
+            margin: 16px 0;
+            min-height: 100%;
+            align-self: stretch;
+        }
+    }
+}
+
+.hero-premium__copy {
+    order: 1;
+    padding: clamp(20px, 3.5vw, 44px) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.hero-premium__media {
+    order: 2;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 18px;
+    box-shadow: var(--sh-card);
+    margin: 8px 0 20px;
+}
+
 .hero-premium .hero-brand {
     font-family: var(--display);
     font-size: clamp(1.35rem, 2.4vw, 1.85rem);
@@ -264,6 +331,7 @@
     line-height: 1.25;
     overflow-wrap: anywhere;
 }
+
 .hero-premium .hero-eyebrow {
     display: inline-flex;
     flex-wrap: wrap;
@@ -273,50 +341,69 @@
     line-height: 1.35;
     margin-bottom: 14px;
 }
+
 .hero-premium .hero-h1 {
     font-family: var(--display);
-    font-size: clamp(1.75rem, 4vw, 3.15rem);
-    line-height: 1.18;
+    font-size: clamp(1.75rem, 1.2rem + 2.6vw, 3.25rem);
+    line-height: 1.15;
     font-weight: 700;
     color: var(--ink);
     margin: 0 0 14px;
-    max-width: 20ch;
+    width: 100%;
+    max-width: 100%;
+    text-wrap: balance;
     overflow-wrap: anywhere;
 }
+
 html[lang="hi"] .hero-premium .hero-h1 {
     font-family: var(--font-devanagari);
-    max-width: 24ch;
-    line-height: 1.28;
+    line-height: 1.25;
 }
+
 .hero-premium .hero-lead {
-    font-size: clamp(0.98rem, 1.5vw, 1.08rem);
+    font-size: clamp(0.95rem, 1.2vw, 1.08rem);
     line-height: 1.65;
     color: var(--ink-2);
-    max-width: 42rem;
-    margin: 0 0 22px;
+    width: 100%;
+    max-width: 60ch;
+    margin: 0 0 clamp(16px, 2.5vw, 24px);
 }
+
 .hero-premium .hero-cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 18px;
-    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: center;
+    width: 100%;
 }
+
 .hero-premium .hero-cta .btn {
-    min-height: 48px;
+    min-height: 44px;
+    padding: 10px 18px;
     flex: 0 1 auto;
+    font-size: 0.92rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
-@media (max-width: 560px) {
+
+@media (max-width: 440px) {
     .hero-premium .hero-cta .btn {
         width: 100%;
-        justify-content: center;
+        flex: 1 1 100%;
     }
 }
+
 .hero-premium .hero-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    width: 100%;
 }
+
 .hero-premium .hero-chip {
     display: inline-flex;
     align-items: center;
@@ -332,49 +419,46 @@ html[lang="hi"] .hero-premium .hero-h1 {
     white-space: normal;
     max-width: 100%;
 }
+
 .hero-premium .hero-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    min-height: 240px;
 }
-@media (min-width: 1024px) {
-    .hero-premium .hero-img img { min-height: 100%; }
-}
+
 .hero-premium .hero-img-overlay {
     background: linear-gradient(180deg, transparent 45%, rgba(37, 37, 37, 0.35) 100%);
 }
-/* Badges: rounded rect, never stretched oval; clear FAB on mobile */
+
+/* Badges: rounded rect fully inside image with 16px inset */
 .hero-premium .hero-cert,
 .hero-premium .hero-img-badge {
+    position: absolute;
     border-radius: 12px;
-    max-width: min(280px, calc(100% - 24px));
+    max-width: min(280px, calc(100% - 32px));
     line-height: 1.3;
+    z-index: 2;
 }
+
+.hero-premium .hero-cert {
+    top: 16px;
+    left: 16px;
+}
+
+.hero-premium .hero-img-badge {
+    bottom: 16px;
+    left: 16px;
+}
+
 .hero-premium .hero-img-badge .year {
     line-height: 1.1;
 }
+
 .hero-premium .hero-img-badge .since {
     white-space: normal;
     overflow: visible;
-}
-@media (max-width: 767.98px) {
-    .hero-premium .hero-cert,
-    .hero-premium .hero-img-badge {
-        max-width: calc(100% - 96px);
-    }
-    .hero-premium .hero-cert {
-        top: 14px;
-        left: 14px;
-        padding: 8px 10px;
-    }
-    .hero-premium .hero-img-badge {
-        bottom: 14px;
-        left: 14px;
-        padding: 10px 12px;
-    }
 }
 
 /* ── Premium footer grid alignment ── */

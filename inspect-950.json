@@ -1,0 +1,132 @@
+{
+  "viewportWidth": 950,
+  "ancestors": [
+    {
+      "tag": "h1#heroHeadline.hero-h1",
+      "width": "483.859px",
+      "maxWidth": "483.863px",
+      "display": "block",
+      "gridCols": "none",
+      "flexBasis": "auto",
+      "padding": "0px",
+      "margin": "0px 0px 14px",
+      "rect": {
+        "left": 64,
+        "right": 548,
+        "width": 484
+      }
+    },
+    {
+      "tag": "div.hero-content",
+      "width": "807px",
+      "maxWidth": "none",
+      "display": "flex",
+      "gridCols": "none",
+      "flexBasis": "auto",
+      "padding": "37.4px 0px",
+      "margin": "0px",
+      "rect": {
+        "left": 64,
+        "right": 871,
+        "width": 807
+      }
+    },
+    {
+      "tag": "div.hero-premium__grid",
+      "width": "871px",
+      "maxWidth": "100%",
+      "display": "grid",
+      "gridCols": "807px",
+      "flexBasis": "auto",
+      "padding": "0px 32px",
+      "margin": "0px 32px",
+      "rect": {
+        "left": 32,
+        "right": 903,
+        "width": 871
+      }
+    },
+    {
+      "tag": "section#home.hero",
+      "width": "935px",
+      "maxWidth": "100%",
+      "display": "block",
+      "gridCols": "1fr",
+      "flexBasis": "auto",
+      "padding": "0px",
+      "margin": "0px",
+      "rect": {
+        "left": 0,
+        "right": 935,
+        "width": 935
+      }
+    },
+    {
+      "tag": "main#main-content",
+      "width": "935px",
+      "maxWidth": "100%",
+      "display": "block",
+      "gridCols": "none",
+      "flexBasis": "auto",
+      "padding": "0px",
+      "margin": "0px",
+      "rect": {
+        "left": 0,
+        "right": 935,
+        "width": 935
+      }
+    },
+    {
+      "tag": "body",
+      "width": "935px",
+      "maxWidth": "100%",
+      "display": "block",
+      "gridCols": "none",
+      "flexBasis": "auto",
+      "padding": "0px",
+      "margin": "0px",
+      "rect": {
+        "left": 0,
+        "right": 935,
+        "width": 935
+      }
+    }
+  ],
+  "homeRect": {},
+  "gridCols": "807px",
+  "gridRect": {},
+  "copyRect": {},
+  "h1Rect": {},
+  "leadRect": {},
+  "leadMaxWidth": "100%",
+  "ctasDisplay": "flex",
+  "ctasFlexDir": "row",
+  "ctaBtns": [
+    {
+      "text": "Explore Products",
+      "rect": {},
+      "display": "flex",
+      "width": "151.828px",
+      "flex": "0 1 auto"
+    },
+    {
+      "text": "Find Nearby Suppliers",
+      "rect": {},
+      "display": "flex",
+      "width": "184.531px",
+      "flex": "0 1 auto"
+    },
+    {
+      "text": "Book Bricks Now",
+      "rect": {},
+      "display": "flex",
+      "width": "151.609px",
+      "flex": "0 1 auto"
+    }
+  ],
+  "mediaRect": {},
+  "imgRect": {},
+  "navDisplay": "block",
+  "navLinksDisplay": "none",
+  "hamburgerDisplay": "flex"
+}

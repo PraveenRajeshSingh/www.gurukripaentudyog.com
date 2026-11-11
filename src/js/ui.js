@@ -115,6 +115,40 @@ function initScrollProgress() {
     _requestScrollTick();
 }
 
+function initHeaderNavFit() {
+    const nav = document.querySelector(".nav-premium");
+    const inner = nav ? nav.querySelector(".nav-inner") : null;
+    const brand = nav ? nav.querySelector(".nav-brand") : null;
+    const actions = nav ? nav.querySelector(".nav-actions") : null;
+    const links = nav ? nav.querySelector(".nav-links-premium") : null;
+    if (!nav || !inner || !brand || !actions || !links) return;
+
+    function checkFit() {
+        const brandW = brand.offsetWidth || 0;
+        const actionsW = actions.offsetWidth || 0;
+        const innerW = inner.clientWidth || 0;
+        const available = innerW - brandW - actionsW;
+
+        // On tablet/laptop (w >= 768px), allow links to display whenever there is >= 280px of center space
+        if (available >= 280 && innerW >= 720) {
+            nav.classList.add("nav-force-expanded");
+            nav.classList.remove("nav-force-compact");
+        } else {
+            nav.classList.add("nav-force-compact");
+            nav.classList.remove("nav-force-expanded");
+        }
+    }
+
+    if (window.ResizeObserver) {
+        const ro = new ResizeObserver(checkFit);
+        ro.observe(inner);
+    } else {
+        window.addEventListener("resize", checkFit, { passive: true });
+    }
+    checkFit();
+}
+window.initHeaderNavFit = initHeaderNavFit;
+
 function initNavHighlight() {
     _updateCachedOffsets();
     _requestScrollTick();

@@ -8,11 +8,18 @@
   "lang": "hi",
   "dir": "ltr",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "browser"
+  ],
   "background_color": "#FAF6F2",
   "theme_color": "#A93226",
   "orientation": "any",
-  "categories": ["business", "shopping"],
+  "categories": [
+    "business",
+    "shopping"
+  ],
   "icons": [
     {
       "src": "./src/assets/images/favicon.svg",
@@ -67,28 +74,48 @@
       "short_name": "Products",
       "description": "View our range of premium bricks",
       "url": "./#products",
-      "icons": [{ "src": "./src/assets/images/optimized/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./src/assets/images/optimized/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "3-in-1 Estimator",
       "short_name": "Estimator",
       "description": "Calculate bricks, cement & budget instantly",
       "url": "./#calculator",
-      "icons": [{ "src": "./src/assets/images/optimized/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./src/assets/images/optimized/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "WhatsApp Order",
       "short_name": "Order Now",
       "description": "Place your brick order via WhatsApp",
-      "url": "https://wa.me/919198923230",
-      "icons": [{ "src": "./src/assets/images/optimized/icons/icon-192.png", "sizes": "192x192" }]
+      "url": "./?action=whatsapp",
+      "icons": [
+        {
+          "src": "./src/assets/images/optimized/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Contact Us",
       "short_name": "Contact",
       "description": "Get in touch with us",
       "url": "./#contact",
-      "icons": [{ "src": "./src/assets/images/optimized/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./src/assets/images/optimized/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
   "related_applications": [
