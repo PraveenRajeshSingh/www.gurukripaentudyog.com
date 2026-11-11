@@ -327,19 +327,27 @@
    鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
         .trust-strip {
             background: var(--ink);
-            padding: 12px 0;
-            overflow: hidden
+            height: 44px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            /* [FIX #3] Edge fade masks so items fade smoothly instead of cutting off */
+            mask-image: linear-gradient(to right, transparent 0%, black 48px, black calc(100% - 48px), transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 48px, black calc(100% - 48px), transparent 100%);
         }
 
         .trust-track {
             display: flex;
+            align-items: center;
             gap: 48px;
             animation: marquee 22s linear infinite;
-            width: max-content
+            width: max-content;
         }
 
-        .trust-track:hover {
-            animation-play-state: paused
+        .trust-track:hover,
+        .trust-track:focus-within {
+            animation-play-state: paused;
         }
 
         @keyframes marquee {
@@ -357,18 +365,36 @@
             align-items: center;
             gap: 8px;
             white-space: nowrap;
-            color: rgba(255, 255, 255, .75);
-            font-size: .78rem;
-            font-weight: 500
+            color: rgba(255, 255, 255, .85);
+            font-size: .82rem;
+            font-weight: 500;
         }
 
         .trust-item strong {
-            color: var(--brand-amber)
+            color: var(--brand-amber);
+            font-weight: 700;
         }
 
         .trust-sep {
-            color: rgba(255, 255, 255, .25);
-            font-size: 1.2rem
+            color: rgba(255, 255, 255, .3);
+            font-size: 1.2rem;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .trust-strip {
+                height: auto;
+                min-height: 44px;
+                padding: 10px 16px;
+                mask-image: none;
+                -webkit-mask-image: none;
+            }
+            .trust-track {
+                animation: none;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px 32px;
+                width: 100%;
+            }
         }
 
         /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
@@ -1145,9 +1171,10 @@
         /* 鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹�
    FAQ
    鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹佲攣鈹� */
+        /* [FIX #1 & #8] FAQ column centered at max 800px */
         .faq-list {
-            max-width: 700px;
-            margin: 40px auto 0;
+            max-width: 800px;
+            margin: var(--space-block, 28px) auto 0;
             display: flex;
             flex-direction: column;
             gap: 10px
@@ -1318,6 +1345,15 @@
             display: flex;
             flex-direction: column;
             gap: 16px
+        }
+
+        /* [FIX #6] Remove persistent pink glow under left contact card; active on hover/focus only */
+        .contact-info .btn-primary {
+            box-shadow: none;
+        }
+        .contact-info .btn-primary:hover,
+        .contact-info .btn-primary:focus-visible {
+            box-shadow: 0 4px 16px rgba(168, 50, 38, 0.25);
         }
 
         .contact-item {

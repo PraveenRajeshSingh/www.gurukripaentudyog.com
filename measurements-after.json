@@ -1,0 +1,1086 @@
+{
+  "360": {
+    "_overflows": [
+      {
+        "tag": "button",
+        "id": "",
+        "class": "catalog-chip",
+        "right": 361,
+        "overflow": 1
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "class": "catalog-chip",
+        "right": 494,
+        "overflow": 134
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "class": "catalog-chip",
+        "right": 607,
+        "overflow": 247
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "class": "catalog-chip",
+        "right": 735,
+        "overflow": 375
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "class": "catalog-chip",
+        "right": 854,
+        "overflow": 494
+      }
+    ],
+    "_emptyBlocks": {
+      "blocks": [
+        {
+          "selector": "section#reviews",
+          "height": 440,
+          "width": 360
+        },
+        {
+          "selector": "div.container",
+          "height": 956,
+          "width": 360
+        },
+        {
+          "selector": "div.cta-banner",
+          "height": 192,
+          "width": 360
+        },
+        {
+          "selector": "div.container",
+          "height": 239,
+          "width": 360
+        },
+        {
+          "selector": "section#faq",
+          "height": 424,
+          "width": 360
+        },
+        {
+          "selector": "div.container",
+          "height": 589,
+          "width": 360
+        }
+      ],
+      "mainPaddingBottom": "88px",
+      "bodyPaddingBottom": "0px"
+    },
+    "header": {
+      "height": 65,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 39
+    },
+    "home": {
+      "height": 837,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 62,
+      "hGap": 12,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 471
+    },
+    "ticker": {
+      "height": 0,
+      "missing": true
+    },
+    "categories": {
+      "height": 640,
+      "paddingTop": "40px",
+      "paddingBottom": "40px",
+      "hHeight": 131,
+      "hGap": 48,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 290
+    },
+    "price-list": {
+      "height": 1360,
+      "paddingTop": "40px",
+      "paddingBottom": "40px",
+      "hHeight": 131,
+      "hGap": 48,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 536
+    },
+    "products": {
+      "height": 1452,
+      "paddingTop": "32px",
+      "paddingBottom": "32px",
+      "hHeight": 44,
+      "hGap": -2778,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 0
+    },
+    "calculator": {
+      "height": 4062,
+      "paddingTop": "32px",
+      "paddingBottom": "32px",
+      "hHeight": 45,
+      "hGap": 6,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 1854
+    },
+    "about": {
+      "height": 424,
+      "paddingTop": "32px",
+      "paddingBottom": "32px",
+      "hHeight": 72,
+      "hGap": 16,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 0
+    },
+    "gallery": {
+      "height": 624,
+      "paddingTop": "56px",
+      "paddingBottom": "56px",
+      "hHeight": 130,
+      "hGap": 48,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 348
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 311,
+      "paddingTop": "36px",
+      "paddingBottom": "36px",
+      "hHeight": 65,
+      "hGap": 10,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 132
+    },
+    "cities": {
+      "height": 926,
+      "paddingTop": "32px",
+      "paddingBottom": "32px",
+      "hHeight": 130,
+      "hGap": 48,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 524
+    },
+    "nearby-bhatta": {
+      "height": 2532,
+      "paddingTop": "32px",
+      "paddingBottom": "32px",
+      "hHeight": 159,
+      "hGap": 48,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 2438
+    },
+    "faq": {
+      "height": 424,
+      "paddingTop": "32px",
+      "paddingBottom": "32px",
+      "hHeight": 111,
+      "hGap": 48,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 0
+    },
+    "contact": {
+      "height": 1911,
+      "paddingTop": "32px",
+      "paddingBottom": "32px",
+      "hHeight": 111,
+      "hGap": 48,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 572
+    },
+    "footer": {
+      "height": 1493,
+      "paddingTop": "40px",
+      "paddingBottom": "0px",
+      "hHeight": 36,
+      "hGap": 4,
+      "cLeft": 0,
+      "cRight": 360,
+      "cWidth": 360,
+      "textLen": 765
+    }
+  },
+  "768": {
+    "_overflows": [
+      {
+        "tag": "button",
+        "id": "",
+        "class": "catalog-chip",
+        "right": 780,
+        "overflow": 12
+      },
+      {
+        "tag": "button",
+        "id": "",
+        "class": "catalog-chip",
+        "right": 899,
+        "overflow": 131
+      }
+    ],
+    "_emptyBlocks": {
+      "blocks": [
+        {
+          "selector": "section#reviews",
+          "height": 452,
+          "width": 768
+        },
+        {
+          "selector": "div.container",
+          "height": 832,
+          "width": 707
+        },
+        {
+          "selector": "div.cta-banner",
+          "height": 243,
+          "width": 768
+        },
+        {
+          "selector": "div.container",
+          "height": 205,
+          "width": 707
+        },
+        {
+          "selector": "section#faq",
+          "height": 452,
+          "width": 768
+        },
+        {
+          "selector": "div.container",
+          "height": 598,
+          "width": 707
+        }
+      ],
+      "mainPaddingBottom": "0px",
+      "bodyPaddingBottom": "0px"
+    },
+    "header": {
+      "height": 65,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 39
+    },
+    "home": {
+      "height": 950,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 79,
+      "hGap": 14,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 471
+    },
+    "ticker": {
+      "height": 44,
+      "paddingTop": "12px",
+      "paddingBottom": "12px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": null,
+      "cRight": null,
+      "cWidth": null,
+      "textLen": 481
+    },
+    "categories": {
+      "height": 1129,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 134,
+      "hGap": 48,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 290
+    },
+    "price-list": {
+      "height": 748,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 134,
+      "hGap": 48,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 536
+    },
+    "products": {
+      "height": 1968,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 50,
+      "hGap": 4,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 2445
+    },
+    "calculator": {
+      "height": 3188,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 24,
+      "hGap": 6,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 1960
+    },
+    "about": {
+      "height": 452,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 100,
+      "hGap": 16,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 0
+    },
+    "gallery": {
+      "height": 1116,
+      "paddingTop": "61.44px",
+      "paddingBottom": "61.44px",
+      "hHeight": 134,
+      "hGap": 48,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 348
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 326,
+      "paddingTop": "61.44px",
+      "paddingBottom": "61.44px",
+      "hHeight": 89,
+      "hGap": 10,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 132
+    },
+    "cities": {
+      "height": 721,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 159,
+      "hGap": 48,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 524
+    },
+    "nearby-bhatta": {
+      "height": 2121,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 134,
+      "hGap": 48,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 2438
+    },
+    "faq": {
+      "height": 690,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 134,
+      "hGap": 48,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 1121
+    },
+    "contact": {
+      "height": 2022,
+      "paddingTop": "46.08px",
+      "paddingBottom": "46.08px",
+      "hHeight": 134,
+      "hGap": 48,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 572
+    },
+    "footer": {
+      "height": 1049,
+      "paddingTop": "48px",
+      "paddingBottom": "0px",
+      "hHeight": 36,
+      "hGap": 4,
+      "cLeft": 31,
+      "cRight": 737,
+      "cWidth": 707,
+      "textLen": 920
+    }
+  },
+  "1024": {
+    "_overflows": [],
+    "_emptyBlocks": {
+      "blocks": [
+        {
+          "selector": "section#reviews",
+          "height": 481,
+          "width": 1009
+        },
+        {
+          "selector": "div.container",
+          "height": 563,
+          "width": 945
+        },
+        {
+          "selector": "div.cta-banner",
+          "height": 280,
+          "width": 1009
+        },
+        {
+          "selector": "div.container",
+          "height": 231,
+          "width": 945
+        },
+        {
+          "selector": "section#faq",
+          "height": 481,
+          "width": 1009
+        },
+        {
+          "selector": "div.container",
+          "height": 603,
+          "width": 945
+        }
+      ],
+      "mainPaddingBottom": "0px",
+      "bodyPaddingBottom": "0px"
+    },
+    "header": {
+      "height": 65,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 132
+    },
+    "home": {
+      "height": 553,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 95,
+      "hGap": 14,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 471
+    },
+    "ticker": {
+      "height": 44,
+      "paddingTop": "12px",
+      "paddingBottom": "12px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": null,
+      "cRight": null,
+      "cWidth": null,
+      "textLen": 481
+    },
+    "categories": {
+      "height": 576,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 130,
+      "hGap": 48,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 290
+    },
+    "price-list": {
+      "height": 709,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 130,
+      "hGap": 48,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 536
+    },
+    "products": {
+      "height": 1500,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 50,
+      "hGap": 4,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 0
+    },
+    "calculator": {
+      "height": 1591,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 28,
+      "hGap": 6,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 1960
+    },
+    "about": {
+      "height": 481,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 94,
+      "hGap": 16,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 0
+    },
+    "gallery": {
+      "height": 862,
+      "paddingTop": "80.72px",
+      "paddingBottom": "80.72px",
+      "hHeight": 130,
+      "hGap": 48,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 348
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 280,
+      "paddingTop": "80px",
+      "paddingBottom": "80px",
+      "hHeight": 117,
+      "hGap": 10,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 0
+    },
+    "cities": {
+      "height": 608,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 155,
+      "hGap": 48,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 524
+    },
+    "nearby-bhatta": {
+      "height": 1884,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 130,
+      "hGap": 48,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 2438
+    },
+    "faq": {
+      "height": 481,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 130,
+      "hGap": 48,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 0
+    },
+    "contact": {
+      "height": 481,
+      "paddingTop": "60.54px",
+      "paddingBottom": "60.54px",
+      "hHeight": 130,
+      "hGap": 48,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 0
+    },
+    "footer": {
+      "height": 777,
+      "paddingTop": "48px",
+      "paddingBottom": "0px",
+      "hHeight": 50,
+      "hGap": 4,
+      "cLeft": 32,
+      "cRight": 977,
+      "cWidth": 945,
+      "textLen": 920
+    }
+  },
+  "1366": {
+    "_overflows": [],
+    "_emptyBlocks": {
+      "blocks": [
+        {
+          "selector": "section#reviews",
+          "height": 504,
+          "width": 1351
+        },
+        {
+          "selector": "div.container",
+          "height": 539,
+          "width": 1240
+        },
+        {
+          "selector": "div.cta-banner",
+          "height": 280,
+          "width": 1351
+        },
+        {
+          "selector": "div.container",
+          "height": 258,
+          "width": 1240
+        },
+        {
+          "selector": "section#faq",
+          "height": 504,
+          "width": 1351
+        },
+        {
+          "selector": "div.container",
+          "height": 625,
+          "width": 1240
+        }
+      ],
+      "mainPaddingBottom": "0px",
+      "bodyPaddingBottom": "0px"
+    },
+    "header": {
+      "height": 65,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 140
+    },
+    "home": {
+      "height": 573,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 129,
+      "hGap": 14,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 464
+    },
+    "ticker": {
+      "height": 44,
+      "paddingTop": "12px",
+      "paddingBottom": "12px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": null,
+      "cRight": null,
+      "cWidth": null,
+      "textLen": 481
+    },
+    "categories": {
+      "height": 702,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 151,
+      "hGap": 48,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 290
+    },
+    "price-list": {
+      "height": 647,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 168,
+      "hGap": 48,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 536
+    },
+    "products": {
+      "height": 1472,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 50,
+      "hGap": 4,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 0
+    },
+    "calculator": {
+      "height": 1576,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 32,
+      "hGap": 6,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 1960
+    },
+    "about": {
+      "height": 814,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 112,
+      "hGap": 16,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 670
+    },
+    "gallery": {
+      "height": 911,
+      "paddingTop": "100px",
+      "paddingBottom": "100px",
+      "hHeight": 141,
+      "hGap": 48,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 348
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 407,
+      "paddingTop": "80px",
+      "paddingBottom": "80px",
+      "hHeight": 132,
+      "hGap": 10,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 132
+    },
+    "cities": {
+      "height": 599,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 168,
+      "hGap": 48,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 524
+    },
+    "nearby-bhatta": {
+      "height": 1918,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 141,
+      "hGap": 48,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 2438
+    },
+    "faq": {
+      "height": 504,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 141,
+      "hGap": 48,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 0
+    },
+    "contact": {
+      "height": 1352,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 141,
+      "hGap": 48,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 572
+    },
+    "footer": {
+      "height": 648,
+      "paddingTop": "48px",
+      "paddingBottom": "0px",
+      "hHeight": 36,
+      "hGap": 4,
+      "cLeft": 56,
+      "cRight": 1296,
+      "cWidth": 1240,
+      "textLen": 920
+    }
+  },
+  "1920": {
+    "_overflows": [],
+    "_emptyBlocks": {
+      "blocks": [
+        {
+          "selector": "section#reviews",
+          "height": 504,
+          "width": 1905
+        },
+        {
+          "selector": "div.container",
+          "height": 540,
+          "width": 1240
+        },
+        {
+          "selector": "div.cta-banner",
+          "height": 280,
+          "width": 1905
+        },
+        {
+          "selector": "div.container",
+          "height": 258,
+          "width": 1240
+        },
+        {
+          "selector": "section#faq",
+          "height": 504,
+          "width": 1905
+        },
+        {
+          "selector": "div.container",
+          "height": 626,
+          "width": 1240
+        }
+      ],
+      "mainPaddingBottom": "0px",
+      "bodyPaddingBottom": "0px"
+    },
+    "header": {
+      "height": 65,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 140
+    },
+    "home": {
+      "height": 621,
+      "paddingTop": "0px",
+      "paddingBottom": "0px",
+      "hHeight": 129,
+      "hGap": 14,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 464
+    },
+    "ticker": {
+      "height": 44,
+      "paddingTop": "12px",
+      "paddingBottom": "12px",
+      "hHeight": 0,
+      "hGap": 0,
+      "cLeft": null,
+      "cRight": null,
+      "cWidth": null,
+      "textLen": 481
+    },
+    "categories": {
+      "height": 696,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 152,
+      "hGap": 48,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 290
+    },
+    "price-list": {
+      "height": 1308,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 152,
+      "hGap": 48,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 536
+    },
+    "products": {
+      "height": 1523,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 54,
+      "hGap": 4,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 0
+    },
+    "calculator": {
+      "height": 1444,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 64,
+      "hGap": 6,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 1245
+    },
+    "about": {
+      "height": 504,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 124,
+      "hGap": 16,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 0
+    },
+    "gallery": {
+      "height": 922,
+      "paddingTop": "100px",
+      "paddingBottom": "100px",
+      "hHeight": 152,
+      "hGap": 48,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 331
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 280,
+      "paddingTop": "80px",
+      "paddingBottom": "80px",
+      "hHeight": 140,
+      "hGap": 10,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 0
+    },
+    "cities": {
+      "height": 616,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 181,
+      "hGap": 48,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 539
+    },
+    "nearby-bhatta": {
+      "height": 869,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 152,
+      "hGap": 48,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 850
+    },
+    "faq": {
+      "height": 504,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 152,
+      "hGap": 48,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 0
+    },
+    "contact": {
+      "height": 504,
+      "paddingTop": "72px",
+      "paddingBottom": "72px",
+      "hHeight": 152,
+      "hGap": 48,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 0
+    },
+    "footer": {
+      "height": 651,
+      "paddingTop": "48px",
+      "paddingBottom": "0px",
+      "hHeight": 36,
+      "hGap": 4,
+      "cLeft": 333,
+      "cRight": 1573,
+      "cWidth": 1240,
+      "textLen": 925
+    }
+  }
+}

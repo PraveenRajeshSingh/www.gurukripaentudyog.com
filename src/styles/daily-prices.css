@@ -87,6 +87,35 @@ html[data-theme="dark"] .daily-price-card {
     background: var(--bg-elevated);
 }
 
+/* [FIX #5] Compact inline notice if rates fail to load (replaces tall 470px empty block) */
+.daily-prices-error {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    text-align: center;
+}
+
+.daily-prices-error p {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.daily-prices-error__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 @media (max-width: 480px) {
     .daily-price-card { grid-template-columns: 56px 1fr; }
     .daily-price-card__img { width: 56px; height: 56px; }

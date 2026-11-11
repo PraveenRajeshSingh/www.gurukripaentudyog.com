@@ -1,6 +1,6 @@
     <!-- ━━━━━━━━━━━━━━━━━ PREMIUM HERO ━━━━━━━━━━━━━━━━━ -->
     <section id="home" class="hero hero-premium" data-hero-managed="true">
-        <div class="hero-premium__grid">
+        <div class="hero-premium__grid container">
             <div class="hero-content hero-premium__copy">
                 <p class="hero-brand" data-i18n="brand.name">Gurukripa Bricks Industry</p>
                 <div class="hero-eyebrow">
@@ -8,7 +8,8 @@
                     <span data-i18n="hero.eyebrow">Jaunpur's Direct Kiln Manufacturer · Est. 1998</span>
                 </div>
 
-                <h1 class="hero-h1" id="heroHeadline" data-i18n="hero.title">Quality Bricks. Trusted Suppliers. Reliable Service.</h1>
+                <!-- [FIX #2] text-wrap: balance for balanced editorial heading -->
+                <h1 class="hero-h1" id="heroHeadline" data-i18n="hero.title" style="text-wrap:balance">Quality Bricks. Trusted Suppliers. Reliable Service.</h1>
 
                 <p class="hero-lead" id="heroDescription" data-i18n="hero.subtitle">
                     Discover quality bricks and construction materials from trusted suppliers. Compare products, explore prices, and book your requirements easily with GURUKRIPA SERVICES.
@@ -42,10 +43,11 @@
                 </div>
             </div>
 
+            <!-- [FIX #2] Uniform border-radius on all 4 corners, full column fill, 1600w desktop srcset -->
             <div class="hero-img hero-premium__media" id="heroMedia">
                 <picture>
-                    <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" sizes="(max-width:1023px) 100vw, 48vw">
-                    <img id="heroBannerImg" src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks stacked at Gurukripa kiln yard" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
+                    <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w, src/assets/images/optimized/hero-1600.jpg 1600w" sizes="(max-width:1023px) 100vw, (max-width:1366px) 48vw, 44vw">
+                    <img id="heroBannerImg" src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks stacked at Gurukripa kiln yard" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
                 </picture>
                 <div class="hero-img-overlay" aria-hidden="true"></div>
                 <div class="hero-cert">
@@ -55,6 +57,7 @@
                         <span data-i18n="hero.certSub">Direct Bhatta Wholesale</span>
                     </div>
                 </div>
+                <!-- [FIX #2] Badge has 16px inset and will not truncate -->
                 <div class="hero-img-badge">
                     <div class="year">1998</div>
                     <div class="since" data-i18n="hero.since">Est. Jaunpur</div>

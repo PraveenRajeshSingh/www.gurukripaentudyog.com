@@ -280,7 +280,15 @@
         }
 
         .cart-drawer.open {
-            transform: translateX(0)
+            transform: translateX(0);
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .cart-drawer:not(.open),
+        .wishlist-drawer:not(.open) {
+            visibility: hidden;
+            pointer-events: none;
         }
 
         .cart-head {

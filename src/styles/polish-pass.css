@@ -7,15 +7,18 @@
 
 /* Below-the-fold sections: skip layout/paint until near viewport */
 #about,
-#factory,
-#reviews,
+/* [FIX #9] Realistic intrinsic sizes eliminate phantom empty spacer gaps */
 #faq,
 #contact,
-.cities-sec,
-.cta-banner,
-.trust-marquee {
+#factory,
+#reviews,
+.cities-sec {
   content-visibility: auto;
-  contain-intrinsic-size: 1px 720px;
+  contain-intrinsic-size: 1px 360px;
+}
+.cta-banner {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 120px;
 }
 
 /* Product card soft contact shadow (CSS only — no fake renders) */

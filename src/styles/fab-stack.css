@@ -1,4 +1,4 @@
-/* Phase 1: cascade layer features — do not remove wrapper */
+﻿/* Phase 1: cascade layer features — do not remove wrapper */
 @layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FAB-STACK — single fixed container for WhatsApp / Help / Back-to-top
@@ -232,9 +232,13 @@
     }
 }
 
-/* Clear page content of the stack */
-main#main-content {
-    scroll-padding-bottom: calc(var(--fab-stack-h) + 24px);
-    padding-bottom: calc(var(--fab-stack-h) + 16px);
+/* [FIX #6] Clear page content of FAB stack on mobile ONLY.
+   Desktop: FAB is fixed bottom-right in the gutter, no main padding needed.
+   Root cause of ~180px empty space between Contact and footer at desktop. */
+@media (max-width: 767.98px) {
+    main#main-content {
+        scroll-padding-bottom: calc(var(--fab-stack-h) + 24px);
+        padding-bottom: calc(var(--fab-stack-h) + 16px);
+    }
 }
 }

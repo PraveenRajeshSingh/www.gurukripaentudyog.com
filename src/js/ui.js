@@ -22,19 +22,58 @@ function showToast(msg, type = '') {
 // ══════════════════════════════════════════
 // SCROLL PROGRESS & 60FPS RAF DISPATCHER
 // ══════════════════════════════════════════
+// [FIX #4] Scroll-Spy mapping: maps every section to its canonical nav item
+const SECTION_NAV_MAP = {
+    'home': '#home',
+    'price-list': '#products',
+    'categories': '#products',
+    'products': '#products',
+    'calculator': '#products',
+    'nearby-bhatta': '#nearby-bhatta',
+    'about': '#about',
+    'gallery': '#about',
+    'testimonials': '#about',
+    'reviews': '#about',
+    'cities': '#about',
+    'faq': '#contact',
+    'contact': '#contact'
+};
+
 let _scrollTicking = false;
 let _cachedSectionOffsets = null;
 
 function _updateCachedOffsets() {
-    const sections = document.querySelectorAll('section[id], header[id]');
-    _cachedSectionOffsets = Array.from(sections).map(s => ({
-        id: s.id,
-        offsetTop: s.offsetTop
-    }));
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    _cachedSectionOffsets = Object.keys(SECTION_NAV_MAP).map(id => {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const rect = el.getBoundingClientRect();
+        return { id: id, offsetTop: rect.top + scrollY };
+    }).filter(Boolean).sort((a, b) => a.offsetTop - b.offsetTop);
+}
+
+function _applyActiveNav(targetHref) {
+    if (!targetHref) return;
+    const allLinks = document.querySelectorAll('.nav-links-premium .nav-link, .nav-links-premium .nav-link-btn, .drawer-link');
+    allLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const isMatch = href === targetHref || (targetHref === '#book-bricks' && link.classList.contains('nav-link-btn'));
+        link.classList.toggle('active', isMatch);
+        if (isMatch) {
+            link.setAttribute('aria-current', 'true');
+        } else {
+            link.removeAttribute('aria-current');
+        }
+    });
+    if (window.history && window.history.replaceState && targetHref.startsWith('#')) {
+        if (window.location.hash !== targetHref) {
+            window.history.replaceState(null, '', targetHref);
+        }
+    }
 }
 
 function _onScrollFrame() {
-    const scrollY = window.scrollY;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
     const bar = document.getElementById('spbar');
     const scrollTopBtn = document.getElementById('scrollTopBtn');
     if (bar) {
@@ -46,19 +85,17 @@ function _onScrollFrame() {
     }
 
     if (!_cachedSectionOffsets) _updateCachedOffsets();
-    let current = '';
-    if (_cachedSectionOffsets) {
+    let activeNavHref = '#home';
+    if (_cachedSectionOffsets && _cachedSectionOffsets.length) {
+        const scrollCheck = scrollY + 140;
         for (let i = 0; i < _cachedSectionOffsets.length; i++) {
-            if (scrollY >= _cachedSectionOffsets[i].offsetTop - 120) {
-                current = _cachedSectionOffsets[i].id;
+            if (scrollCheck >= _cachedSectionOffsets[i].offsetTop) {
+                const secId = _cachedSectionOffsets[i].id;
+                activeNavHref = SECTION_NAV_MAP[secId] || '#home';
             }
         }
     }
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(l => {
-        l.classList.toggle('active', l.getAttribute('href') === '#' + current);
-    });
-
+    _applyActiveNav(activeNavHref);
     _scrollTicking = false;
 }
 
@@ -81,19 +118,34 @@ function initScrollProgress() {
 function initNavHighlight() {
     _updateCachedOffsets();
     _requestScrollTick();
+    if ('IntersectionObserver' in window) {
+        const spyObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const targetHref = SECTION_NAV_MAP[e.target.id];
+                    if (targetHref) _applyActiveNav(targetHref);
+                }
+            });
+        }, { root: null, rootMargin: '-15% 0px -65% 0px', threshold: 0 });
+        Object.keys(SECTION_NAV_MAP).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) spyObs.observe(el);
+        });
+    }
 }
 
 function setActiveNav(el) {
+    if (!el) return;
     document.querySelectorAll('.nav-link, .drawer-link').forEach(l => {
         l.classList.remove('active');
         l.removeAttribute('aria-current');
     });
-    if (!el) return;
     el.classList.add('active');
-    // Tell assistive tech which control is the current location, not just which
-    // one happens to be painted in brand colour. This is a one-page site, so the
-    // value is "true" (current item in a set) rather than "page".
     el.setAttribute('aria-current', 'true');
+    const href = el.getAttribute('href');
+    if (href && window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', href);
+    }
 }
 
 function initCounters() {

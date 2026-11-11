@@ -101,8 +101,13 @@
         --space-6: 32px;
         --space-7: 48px;
         --space-8: 72px;
-        --container-max: 1200px;
-        --container-wide: 1280px;
+        --gutter: clamp(16px, 4vw, 32px);
+        --layout-max: 1240px;
+        --container-max: 1240px;
+        --container-wide: 1240px;
+        --space-section: clamp(40px, 6vw, 72px);
+        --space-block: clamp(20px, 3vw, 32px);
+        --space-gap: clamp(16px, 2vw, 24px);
         --filter-rail: 240px;
 
         /* ─── 12. Breakpoints (reference; media queries use raw px) ─── */
