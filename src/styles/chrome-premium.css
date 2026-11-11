@@ -1,4 +1,4 @@
-/* Phase 1: cascade layer features — do not remove wrapper */
+﻿/* Phase 1: cascade layer features — do not remove wrapper */
 @layer features {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CHROME PREMIUM — Header · Hero · Footer (Phase 2 shell)
@@ -97,8 +97,11 @@
     .nav-premium .nav-search-premium { display: none; }
     .nav-premium .nav-search-toggle { display: inline-flex; }
 }
+/* [FIX #4] Nav: inline-flex + align-items:center ensures Book Bricks button (a <button>) aligns to same baseline as <a> links */
 .nav-links-premium .nav-link,
 .nav-links-premium .nav-link-btn {
+    display: inline-flex;
+    align-items: center;
     padding: 10px 12px;
     min-height: var(--touch-min, 44px);
     border-radius: 999px;
@@ -106,6 +109,11 @@
     font-weight: 600;
     color: var(--ink-2);
     white-space: nowrap;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    text-decoration: none;
 }
 .nav-links-premium .nav-link:hover,
 .nav-links-premium .nav-link-btn:hover,
@@ -197,18 +205,21 @@
     border-bottom: 1px solid var(--line);
     min-height: unset;
 }
+/* [FIX #1] Hero grid uses same container system as .container to align edges */
 .hero-premium__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0;
-    max-width: var(--container-max, 1200px);
+    width: min(100% - 2 * var(--gutter, clamp(16px, 4vw, 32px)), var(--layout-max, 1240px));
+    max-width: var(--layout-max, 1240px);
     margin: 0 auto;
-    padding: 0 clamp(16px, 3vw, 24px);
+    padding-inline: 0;
+    box-sizing: border-box;
 }
 /* Two-column only at desktop ≥1024 — avoids blank/skinny columns at 770–890 */
 @media (min-width: 1024px) {
     .hero-premium__grid {
-        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
         align-items: stretch;
         min-height: clamp(420px, 58vh, 620px);
         gap: 28px;
@@ -233,11 +244,13 @@
 }
 @media (min-width: 1024px) {
     .hero-premium__copy { order: 0; padding: clamp(28px, 4vw, 56px) 0; }
+    /* [FIX #2] Uniform border-radius all 4 corners (was: 0 0 0 28px = clipped top-right) */
     .hero-premium__media {
         order: 0;
-        border-radius: 0 0 0 28px;
-        margin: 18px 0;
+        border-radius: 18px;
+        margin: 16px 0;
         min-height: 100%;
+        align-self: stretch;
         box-shadow: var(--sh-card);
     }
 }
@@ -386,7 +399,7 @@ html[lang="hi"] .hero-premium .hero-h1 {
 @media (min-width: 1024px) {
     .footer-premium__grid,
     .footer-studio__grid.footer-grid {
-        grid-template-columns: 1.35fr 0.9fr 0.9fr 1.1fr;
+        grid-template-columns: 1.3fr 1fr 1fr 1.2fr;
         gap: 32px;
     }
 }

@@ -12,7 +12,8 @@
    Hash routes (#products, #calculator) stay on index.html offline.
    ═══════════════════════════════════════════════════════════════════ */
 
-const CACHE_VER = 'v14-perf';
+// [FIX] Layout and spacing pass v15
+const CACHE_VER = 'v15-layout';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;

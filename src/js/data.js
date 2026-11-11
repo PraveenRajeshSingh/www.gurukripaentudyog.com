@@ -11,6 +11,10 @@ const PRODUCTS = [
     { id: 5,  name: 'First Class Red Bricks',             category: 'premium',     price: 10,   oldPrice: null, unit: 'per piece', desc: 'First-class quality bricks that pass all IS standards for residential and commercial use.',                                                                                  rating: 4.7, reviews: 55,  badge: null,         badgeClass: '',      stock: 'in-stock',  stockText: 'In Stock',        img: 'src/assets/images/optimized/product-3-480.jpg', features: ['IS standard compliant', 'Heavy-duty strength', 'Consistent color', 'Large project ready'] },
     { id: 6,  name: 'Standard Hollow Bricks',             category: 'standard',    price: 9,    oldPrice: null, unit: 'per piece', desc: 'Lightweight hollow bricks for partition walls, offering better thermal and sound insulation.',                                                                               rating: 4.4, reviews: 38,  badge: null,         badgeClass: '',      stock: 'in-stock',  stockText: 'In Stock',        img: 'src/assets/images/optimized/product-2-480.jpg', features: ['Lightweight design', 'Better insulation', 'Easy to handle', 'Faster construction'] },
 ];
+// [FIX #5] Expose PRODUCTS on window for global cross-script access (daily-prices.js, catalog-pricing-service.js)
+if (typeof window !== 'undefined') {
+    window.PRODUCTS = PRODUCTS;
+}
 
 // ══════════════════════════════════════════
 // COUPONS
@@ -98,6 +102,7 @@ const VENDORS = [
         icon: '\ud83c\udfe0'
     }
 ];
+
 
 // ══════════════════════════════════════════
 // CHAT RESPONSES

@@ -34,12 +34,18 @@ main {
     max-width: 100%;
     overflow-x: clip;
 }
+/* [FIX #1] Phase 1 Single Layout Container System */
 .container {
-    width: 100%;
-    max-width: min(var(--container-max, 1200px), 100%);
+    width: min(100% - 2 * var(--gutter, clamp(16px, 4vw, 32px)), var(--layout-max, 1240px));
+    max-width: var(--layout-max, 1240px);
     margin-inline: auto;
-    padding-inline: var(--page-gutter);
+    padding-inline: 0;
     box-sizing: border-box;
+}
+
+/* [FIX #4] Scroll anchor clearance */
+#home, #price-list, #categories, #products, #calculator, #about, #gallery, #testimonials, #reviews, #cities, #nearby-bhatta, #faq, #contact {
+    scroll-margin-top: var(--nav-h, 72px);
 }
 .sec {
     width: 100%;

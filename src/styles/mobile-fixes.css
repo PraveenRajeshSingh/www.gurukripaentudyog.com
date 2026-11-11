@@ -1460,7 +1460,7 @@
 
         /* 鈹€鈹€ Hero Section Tablet & Mobile Dynamic Optimization 鈹€鈹€ */
         @media(min-width:768px) and (max-width:1199px) {
-            .hero {
+            .hero:not(.hero-premium) {
                 display: grid !important;
                 grid-template-columns: 40% 1fr !important;
                 min-height: 520px !important;
@@ -1486,7 +1486,7 @@
         }
 
         @media(max-width:767px) {
-            .hero {
+            .hero:not(.hero-premium) {
                 display: flex !important;
                 flex-direction: column !important;
                 min-height: auto !important;

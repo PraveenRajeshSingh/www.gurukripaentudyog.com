@@ -26,7 +26,8 @@
 
                 <!-- Center: primary nav -->
                 <nav class="nav-links nav-links-premium" aria-label="Primary Navigation">
-                    <a href="#home" class="nav-link active" onclick="setActiveNav(this)" aria-current="true" data-i18n="nav.home">Home</a>
+                    <!-- [FIX #4] Active state dynamically managed by IntersectionObserver scroll-spy -->
+                    <a href="#home" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
                     <a href="#nearby-bhatta" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.suppliers">Brick Suppliers</a>
                     <button type="button" class="nav-link nav-link-btn" onclick="openBulkQuoteModal(); setActiveNav(this)" data-i18n="nav.bookBricks">Book Bricks</button>

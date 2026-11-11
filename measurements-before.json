@@ -1,0 +1,337 @@
+{
+  "360": {
+    "_overflows": [],
+    "header": {
+      "height": 0,
+      "missing": true
+    },
+    "home": {
+      "height": 0,
+      "missing": true
+    },
+    "ticker": {
+      "height": 0,
+      "missing": true
+    },
+    "categories": {
+      "height": 0,
+      "missing": true
+    },
+    "price-list": {
+      "height": 0,
+      "missing": true
+    },
+    "products": {
+      "height": 0,
+      "missing": true
+    },
+    "calculator": {
+      "height": 0,
+      "missing": true
+    },
+    "about": {
+      "height": 0,
+      "missing": true
+    },
+    "gallery": {
+      "height": 0,
+      "missing": true
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 0,
+      "missing": true
+    },
+    "cities": {
+      "height": 0,
+      "missing": true
+    },
+    "nearby-bhatta": {
+      "height": 0,
+      "missing": true
+    },
+    "faq": {
+      "height": 0,
+      "missing": true
+    },
+    "contact": {
+      "height": 0,
+      "missing": true
+    },
+    "footer": {
+      "height": 0,
+      "missing": true
+    }
+  },
+  "768": {
+    "_overflows": [],
+    "header": {
+      "height": 0,
+      "missing": true
+    },
+    "home": {
+      "height": 0,
+      "missing": true
+    },
+    "ticker": {
+      "height": 0,
+      "missing": true
+    },
+    "categories": {
+      "height": 0,
+      "missing": true
+    },
+    "price-list": {
+      "height": 0,
+      "missing": true
+    },
+    "products": {
+      "height": 0,
+      "missing": true
+    },
+    "calculator": {
+      "height": 0,
+      "missing": true
+    },
+    "about": {
+      "height": 0,
+      "missing": true
+    },
+    "gallery": {
+      "height": 0,
+      "missing": true
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 0,
+      "missing": true
+    },
+    "cities": {
+      "height": 0,
+      "missing": true
+    },
+    "nearby-bhatta": {
+      "height": 0,
+      "missing": true
+    },
+    "faq": {
+      "height": 0,
+      "missing": true
+    },
+    "contact": {
+      "height": 0,
+      "missing": true
+    },
+    "footer": {
+      "height": 0,
+      "missing": true
+    }
+  },
+  "1024": {
+    "_overflows": [],
+    "header": {
+      "height": 0,
+      "missing": true
+    },
+    "home": {
+      "height": 0,
+      "missing": true
+    },
+    "ticker": {
+      "height": 0,
+      "missing": true
+    },
+    "categories": {
+      "height": 0,
+      "missing": true
+    },
+    "price-list": {
+      "height": 0,
+      "missing": true
+    },
+    "products": {
+      "height": 0,
+      "missing": true
+    },
+    "calculator": {
+      "height": 0,
+      "missing": true
+    },
+    "about": {
+      "height": 0,
+      "missing": true
+    },
+    "gallery": {
+      "height": 0,
+      "missing": true
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 0,
+      "missing": true
+    },
+    "cities": {
+      "height": 0,
+      "missing": true
+    },
+    "nearby-bhatta": {
+      "height": 0,
+      "missing": true
+    },
+    "faq": {
+      "height": 0,
+      "missing": true
+    },
+    "contact": {
+      "height": 0,
+      "missing": true
+    },
+    "footer": {
+      "height": 0,
+      "missing": true
+    }
+  },
+  "1366": {
+    "_overflows": [],
+    "header": {
+      "height": 0,
+      "missing": true
+    },
+    "home": {
+      "height": 0,
+      "missing": true
+    },
+    "ticker": {
+      "height": 0,
+      "missing": true
+    },
+    "categories": {
+      "height": 0,
+      "missing": true
+    },
+    "price-list": {
+      "height": 0,
+      "missing": true
+    },
+    "products": {
+      "height": 0,
+      "missing": true
+    },
+    "calculator": {
+      "height": 0,
+      "missing": true
+    },
+    "about": {
+      "height": 0,
+      "missing": true
+    },
+    "gallery": {
+      "height": 0,
+      "missing": true
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 0,
+      "missing": true
+    },
+    "cities": {
+      "height": 0,
+      "missing": true
+    },
+    "nearby-bhatta": {
+      "height": 0,
+      "missing": true
+    },
+    "faq": {
+      "height": 0,
+      "missing": true
+    },
+    "contact": {
+      "height": 0,
+      "missing": true
+    },
+    "footer": {
+      "height": 0,
+      "missing": true
+    }
+  },
+  "1920": {
+    "_overflows": [],
+    "header": {
+      "height": 0,
+      "missing": true
+    },
+    "home": {
+      "height": 0,
+      "missing": true
+    },
+    "ticker": {
+      "height": 0,
+      "missing": true
+    },
+    "categories": {
+      "height": 0,
+      "missing": true
+    },
+    "price-list": {
+      "height": 0,
+      "missing": true
+    },
+    "products": {
+      "height": 0,
+      "missing": true
+    },
+    "calculator": {
+      "height": 0,
+      "missing": true
+    },
+    "about": {
+      "height": 0,
+      "missing": true
+    },
+    "gallery": {
+      "height": 0,
+      "missing": true
+    },
+    "testimonials": {
+      "height": 0,
+      "missing": true
+    },
+    "cta-banner": {
+      "height": 0,
+      "missing": true
+    },
+    "cities": {
+      "height": 0,
+      "missing": true
+    },
+    "nearby-bhatta": {
+      "height": 0,
+      "missing": true
+    },
+    "faq": {
+      "height": 0,
+      "missing": true
+    },
+    "contact": {
+      "height": 0,
+      "missing": true
+    },
+    "footer": {
+      "height": 0,
+      "missing": true
+    }
+  }
+}

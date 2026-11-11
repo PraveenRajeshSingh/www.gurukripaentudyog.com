@@ -347,7 +347,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
                 <!-- Center: primary nav -->
                 <nav class="nav-links nav-links-premium" aria-label="Primary Navigation">
-                    <a href="#home" class="nav-link active" onclick="setActiveNav(this)" aria-current="true" data-i18n="nav.home">Home</a>
+                    <!-- [FIX #4] Active state dynamically managed by IntersectionObserver scroll-spy -->
+                    <a href="#home" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
                     <a href="#nearby-bhatta" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.suppliers">Brick Suppliers</a>
                     <button type="button" class="nav-link nav-link-btn" onclick="openBulkQuoteModal(); setActiveNav(this)" data-i18n="nav.bookBricks">Book Bricks</button>
@@ -798,7 +799,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 <main id="main-content" role="main">
     <!-- ━━━━━━━━━━━━━━━━━ PREMIUM HERO ━━━━━━━━━━━━━━━━━ -->
     <section id="home" class="hero hero-premium" data-hero-managed="true">
-        <div class="hero-premium__grid">
+        <div class="hero-premium__grid container">
             <div class="hero-content hero-premium__copy">
                 <p class="hero-brand" data-i18n="brand.name">Gurukripa Bricks Industry</p>
                 <div class="hero-eyebrow">
@@ -806,7 +807,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                     <span data-i18n="hero.eyebrow">Jaunpur's Direct Kiln Manufacturer · Est. 1998</span>
                 </div>
 
-                <h1 class="hero-h1" id="heroHeadline" data-i18n="hero.title">Quality Bricks. Trusted Suppliers. Reliable Service.</h1>
+                <!-- [FIX #2] text-wrap: balance for balanced editorial heading -->
+                <h1 class="hero-h1" id="heroHeadline" data-i18n="hero.title" style="text-wrap:balance">Quality Bricks. Trusted Suppliers. Reliable Service.</h1>
 
                 <p class="hero-lead" id="heroDescription" data-i18n="hero.subtitle">
                     Discover quality bricks and construction materials from trusted suppliers. Compare products, explore prices, and book your requirements easily with GURUKRIPA SERVICES.
@@ -840,10 +842,11 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                 </div>
             </div>
 
+            <!-- [FIX #2] Uniform border-radius on all 4 corners, full column fill, 1600w desktop srcset -->
             <div class="hero-img hero-premium__media" id="heroMedia">
                 <picture>
-                    <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w" sizes="(max-width:1023px) 100vw, 48vw">
-                    <img id="heroBannerImg" src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks stacked at Gurukripa kiln yard" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
+                    <source type="image/jpeg" srcset="src/assets/images/optimized/hero-480.jpg 480w, src/assets/images/optimized/hero-768.jpg 768w, src/assets/images/optimized/hero-1200.jpg 1200w, src/assets/images/optimized/hero-1600.jpg 1600w" sizes="(max-width:1023px) 100vw, (max-width:1366px) 48vw, 44vw">
+                    <img id="heroBannerImg" src="src/assets/images/optimized/hero-1200.jpg" alt="Premium red clay bricks stacked at Gurukripa kiln yard" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;background:#7B241C" onerror="this.onerror=null;this.src='src/assets/images/hero-banner.png';">
                 </picture>
                 <div class="hero-img-overlay" aria-hidden="true"></div>
                 <div class="hero-cert">
@@ -853,6 +856,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                         <span data-i18n="hero.certSub">Direct Bhatta Wholesale</span>
                     </div>
                 </div>
+                <!-- [FIX #2] Badge has 16px inset and will not truncate -->
                 <div class="hero-img-badge">
                     <div class="year">1998</div>
                     <div class="since" data-i18n="hero.since">Est. Jaunpur</div>
@@ -862,37 +866,39 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     </section>
 
     <!-- ━━━━━━━━━━━━━━━━━ TRUST MARQUEE ━━━━━━━━━━━━━━━━━ -->
-    <div class="trust-strip">
+    <!-- [FIX #3] Fixed height band with edge fade masks and aria-hidden duplicates -->
+    <div class="trust-strip" role="region" aria-label="Trust highlights">
         <div class="trust-track" id="trustTrack">
             <span class="trust-item">🏆 <strong>Grade-A Certified</strong> Bricks</span>
-            <span class="trust-sep">·</span>
-            <span class="trust-item" style="color:var(--brand);font-weight:700">🔥 <strong>Kiln Chamber #3 Live</strong> — Dispatch in 4 hrs</span>
-            <span class="trust-sep">·</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
+            <!-- [FIX #3] Removed inline brand-color override for consistent text color -->
+            <span class="trust-item">🔥 <strong>Kiln Chamber #3 Live</strong> — Dispatch in 4 hrs</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
             <span class="trust-item">🚛 <strong>Same-Day</strong> Delivery Available</span>
-            <span class="trust-sep">·</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
             <span class="trust-item">💳 UPI · GPay · PhonePe · COD Accepted</span>
-            <span class="trust-sep">·</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
             <span class="trust-item">📍 Serving <strong>Jaunpur, Varanasi &amp; UP</strong></span>
-            <span class="trust-sep">·</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
             <span class="trust-item">⭐ <strong>4.8/5</strong> Customer Rating</span>
-            <span class="trust-sep">·</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
             <span class="trust-item">🔥 <strong>25+ Years</strong> of Excellence</span>
-            <span class="trust-sep">·</span>
-            <!-- Duplicate for seamless loop -->
-            <span class="trust-item">🏆 <strong>Grade-A Certified</strong> Bricks</span>
-            <span class="trust-sep">·</span>
-            <span class="trust-item" style="color:var(--brand);font-weight:700">🔥 <strong>Kiln Chamber #3 Live</strong> — Dispatch in 4 hrs</span>
-            <span class="trust-sep">·</span>
-            <span class="trust-item">🚛 <strong>Same-Day</strong> Delivery Available</span>
-            <span class="trust-sep">·</span>
-            <span class="trust-item">💳 UPI · GPay · PhonePe · COD Accepted</span>
-            <span class="trust-sep">·</span>
-            <span class="trust-item">📍 Serving <strong>Jaunpur, Varanasi &amp; UP</strong></span>
-            <span class="trust-sep">·</span>
-            <span class="trust-item">⭐ <strong>4.8/5</strong> Customer Rating</span>
-            <span class="trust-sep">·</span>
-            <span class="trust-item">🔥 <strong>25+ Years</strong> of Excellence</span>
-            <span class="trust-sep">·</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
+            <!-- [FIX #3] Duplicate for seamless loop marked aria-hidden to prevent duplicate screen reader announcements -->
+            <span class="trust-item" aria-hidden="true">🏆 <strong>Grade-A Certified</strong> Bricks</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
+            <span class="trust-item" aria-hidden="true">🔥 <strong>Kiln Chamber #3 Live</strong> — Dispatch in 4 hrs</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
+            <span class="trust-item" aria-hidden="true">🚛 <strong>Same-Day</strong> Delivery Available</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
+            <span class="trust-item" aria-hidden="true">💳 UPI · GPay · PhonePe · COD Accepted</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
+            <span class="trust-item" aria-hidden="true">📍 Serving <strong>Jaunpur, Varanasi &amp; UP</strong></span>
+            <span class="trust-sep" aria-hidden="true">·</span>
+            <span class="trust-item" aria-hidden="true">⭐ <strong>4.8/5</strong> Customer Rating</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
+            <span class="trust-item" aria-hidden="true">🔥 <strong>25+ Years</strong> of Excellence</span>
+            <span class="trust-sep" aria-hidden="true">·</span>
         </div>
     </div>
 
@@ -960,10 +966,12 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
             <div class="text-center" style="margin-bottom:var(--space-5)">
                 <span class="sec-tag">Live Catalogue</span>
                 <h2 class="sec-title" id="dailyPricesTitle">Today’s Brick Prices</h2>
-                <p class="sec-sub">Rates below come from the centralized catalogue. Cart and checkout always revalidate against these figures.</p>
+                <!-- [FIX #5] Customer-friendly wording instead of developer-facing internal details -->
+                <p class="sec-sub">Today's rates from the kiln yard. <span id="dailyPricesUpdatedLabel" hidden>Last updated <time id="dailyPricesUpdatedTime"></time>. </span>Final price and freight are confirmed by the yard.</p>
             </div>
             <div class="daily-prices-grid" id="dailyPricesGrid" aria-live="polite"></div>
-            <p class="daily-prices-note" id="dailyPricesNote">Prices are GST-inclusive catalogue rates. Confirm stock and freight before dispatch.</p>
+            <!-- [FIX #5] Customer-oriented note matching checkout logic -->
+            <p class="daily-prices-note" id="dailyPricesNote">Prices are GST-inclusive kiln rates. Confirm stock and freight before dispatch.</p>
         </div>
     </section>
 
@@ -1880,55 +1888,57 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
             <div class="faq-list">
                 <div class="faq-item">
                     <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-                        <span>ईंट की कीमत क्या है? / What is the price of bricks?</span>
+                        <!-- [FIX #8] Question text driven by active language toggle via data-i18n -->
+                        <span data-i18n="faq.q1">What is the price of bricks?</span>
                         <div class="faq-icon">+</div>
                     </button>
                     <div class="faq-a">
-                        <div class="faq-a-inner">Standard bricks start from ₹8/piece. Premium bricks ₹10/piece. Shiv
-                            Eent Grade-A ₹12/piece. Bulk orders get special discounts. Call us for the latest pricing
-                            and deals.</div>
+                        <!-- [FIX #8] Answer text driven by active language toggle via data-i18n -->
+                        <div class="faq-a-inner" data-i18n="faq.a1">Standard bricks start from ₹8/piece. Premium bricks ₹10/piece. Shiv Eent Grade-A ₹12/piece. Bulk orders get special discounts. Call us for the latest pricing and deals.</div>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-                        <span>डिलीवरी कहां-कहां उपलब्ध है? / Where do you deliver?</span>
+                        <!-- [FIX #8] Question text driven by active language toggle via data-i18n -->
+                        <span data-i18n="faq.q2">Where do you deliver?</span>
                         <div class="faq-icon">+</div>
                     </button>
                     <div class="faq-a">
-                        <div class="faq-a-inner">We deliver across Jaunpur, Varanasi, Jalalpur, Trilochan, Kerakat and
-                            surrounding areas. Same-day delivery available within Jaunpur district for orders placed
-                            before noon.</div>
+                        <!-- [FIX #8] Answer text driven by active language toggle via data-i18n -->
+                        <div class="faq-a-inner" data-i18n="faq.a2">We deliver across Jaunpur, Varanasi, Jalalpur, Trilochan, Kerakat and surrounding areas. Same-day delivery available within Jaunpur district for orders placed before noon.</div>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-                        <span>क्या आप छोटे ऑर्डर भी लेते हैं? / Do you accept small orders?</span>
+                        <!-- [FIX #8] Question text driven by active language toggle via data-i18n -->
+                        <span data-i18n="faq.q3">Do you accept small orders?</span>
                         <div class="faq-icon">+</div>
                     </button>
                     <div class="faq-a">
-                        <div class="faq-a-inner">Yes, we accept both small and bulk orders. Minimum order of 1,000
-                            bricks. For smaller quantities, please contact us — we'll find a solution for you.</div>
+                        <!-- [FIX #8] Answer text driven by active language toggle via data-i18n -->
+                        <div class="faq-a-inner" data-i18n="faq.a3">Yes, we accept both small and bulk orders. Minimum order of 1,000 bricks. For smaller quantities, please contact us — we'll find a solution for you.</div>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-                        <span>पेमेंट के क्या तरीके हैं? / What payment methods do you accept?</span>
+                        <!-- [FIX #8] Question text driven by active language toggle via data-i18n -->
+                        <span data-i18n="faq.q4">What payment methods do you accept?</span>
                         <div class="faq-icon">+</div>
                     </button>
                     <div class="faq-a">
-                        <div class="faq-a-inner">We accept Cash, UPI (PhonePe, Google Pay, Paytm), Online Transfer
-                            (NEFT/RTGS), and Cheque. Cash on Delivery available for local orders.</div>
+                        <!-- [FIX #8] Answer text driven by active language toggle via data-i18n -->
+                        <div class="faq-a-inner" data-i18n="faq.a4">We accept Cash, UPI (PhonePe, Google Pay, Paytm), Online Transfer (NEFT/RTGS), and Cheque. Cash on Delivery available for local orders.</div>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button type="button" class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-                        <span>ईंट की गुणवत्ता की क्या गारंटी है? / What quality guarantee do you offer?</span>
+                        <!-- [FIX #8] Question text driven by active language toggle via data-i18n -->
+                        <span data-i18n="faq.q5">What quality guarantee do you offer?</span>
                         <div class="faq-icon">+</div>
                     </button>
                     <div class="faq-a">
-                        <div class="faq-a-inner">All our bricks are well-burnt, uniform in size, and tested for
-                            strength. We offer 100% replacement for damaged or substandard bricks. Our Grade-A bricks
-                            carry ISI quality standards.</div>
+                        <!-- [FIX #8] Answer text driven by active language toggle via data-i18n -->
+                        <div class="faq-a-inner" data-i18n="faq.a5">All our bricks are well-burnt, uniform in size, and tested for strength. We offer 100% replacement for damaged or substandard bricks. Our Grade-A bricks carry ISI quality standards.</div>
                     </div>
                 </div>
             </div>

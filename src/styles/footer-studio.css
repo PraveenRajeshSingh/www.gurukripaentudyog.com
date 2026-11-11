@@ -17,10 +17,12 @@
     border-top: none;
 }
 
+/* [FIX #1 & #7] Unified layout container alignment */
 .footer-studio__container {
-    max-width: 1280px;
+    width: min(100% - 2 * var(--gutter, clamp(16px, 4vw, 32px)), var(--layout-max, 1240px));
     margin-inline: auto;
-    padding-inline: clamp(16px, 4vw, 32px);
+    padding-inline: 0;
+    box-sizing: border-box;
 }
 
 /* ── FOOTER GRID ── */
@@ -40,12 +42,15 @@
 
 @media (min-width: 1024px) {
     .footer-studio__grid.footer-grid {
-        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+        /* [FIX #7] 4-column balanced layout */
+        grid-template-columns: 1.3fr 1fr 1fr 1.2fr;
         gap: 32px;
     }
 }
 
 .footer-studio .footer-col { min-width: 0; }
+/* [FIX #7] First column restrained to ~360px */
+.footer-studio .footer-col-brand { max-width: 360px; }
 
 .footer-studio .footer-brand-title {
     display: flex;
@@ -164,20 +169,21 @@
     line-height: 1.4;
 }
 
+/* [FIX #7] Link rows spaced 36-40px apart with 44px hit area */
 .footer-studio .footer-links {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0;
 }
 
 .footer-studio .footer-links a,
 .footer-studio .footer-links button {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
+    min-height: 38px;
     padding: 6px 0;
     border: none;
     background: none;
@@ -354,7 +360,7 @@
     justify-content: space-between;
     gap: 16px;
     padding: 16px 0 20px;
-    padding-inline-end: 72px; /* clear fab-stack on desktop */
+    padding-inline-end: 80px; /* [FIX #7] clear fab-stack on desktop so legal links and hours are uncrowded */
 }
 
 .footer-studio .footer-copy {
