@@ -13,7 +13,7 @@
    =========================================================================== */
 
 // [FIX] v21 — never serve text/plain "Offline" as CSS/JS; network-first shell assets
-const CACHE_VER = 'v22-i18n-json';
+const CACHE_VER = 'v23-loader-unstick';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -248,8 +248,10 @@ async function precacheList(cacheName, list) {
     }));
 }
 
-// ── Install: precache shell (do NOT skipWaiting — wait for user) ──
+// ── Install: precache shell ──
+// CHANGE v23: skipWaiting so loader/unstick HTML reaches clients without waiting for a Refresh toast.
 self.addEventListener('install', (event) => {
+    self.skipWaiting();
     event.waitUntil(
         precacheList(SHELL, SHELL_ASSETS)
             .then(() => precacheList(DATA, DATA_ASSETS))
