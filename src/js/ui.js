@@ -76,10 +76,14 @@ function _onScrollFrame() {
     const scrollY = window.scrollY || window.pageYOffset || 0;
     const bar = document.getElementById('spbar');
     const scrollTopBtn = document.getElementById('scrollTopBtn');
+    const dh = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = dh > 0 ? Math.min(1, Math.max(0, scrollY / dh)) : 0;
     if (bar) {
-        const dh = document.documentElement.scrollHeight - window.innerHeight;
-        bar.style.width = (dh > 0 ? (scrollY / dh) * 100 : 0) + '%';
+        bar.style.width = (progress * 100) + '%';
     }
+    try {
+        document.documentElement.style.setProperty('--nav-progress', String(progress));
+    } catch (_e) { /* ignore */ }
     if (scrollTopBtn) {
         scrollTopBtn.classList.toggle('visible', scrollY > 300);
     }
@@ -96,6 +100,9 @@ function _onScrollFrame() {
         }
     }
     _applyActiveNav(activeNavHref);
+    if (window.GBStickyHeader && typeof GBStickyHeader.refreshPill === 'function') {
+        try { GBStickyHeader.refreshPill(); } catch (_e) { /* ignore */ }
+    }
     _scrollTicking = false;
 }
 

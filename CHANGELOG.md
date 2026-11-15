@@ -1,5 +1,24 @@
 # GURUKRIPA BRICKS INDUSTRY — CHANGELOG
 
+## Batch 3 Phase 1 — Sticky / floating header (2026-11-15)
+
+**Branch:** `ui-premium-batch3-header`  
+**Status:** Complete (presentation only; nav/cart/lang logic unchanged)
+
+| Component | Where applied | What changed |
+|-----------|---------------|--------------|
+| Sticky / floating header | `.nav-premium` sitewide (`navbar.html`) | Full-width at top → floating pill after ~24px; hide on scroll-down past ~200px; reveal on up / focus / menus / typing |
+| Scroll progress | Header `.nav-progress` + `#spbar` | `scaleX(--nav-progress)` from shared scroll RAF; legacy bar kept |
+| Active nav pill | `.nav-active-pill` in primary nav | Sliding pill tracks scroll-spy `.active` |
+| `--header-h` | `ResizeObserver` → `:root` | Anchors / sticky offsets use `scroll-margin-top` / `scroll-padding-top` |
+| Tokens / chrome | `tokens.css`, `chrome-premium.css` | `--nav-glass` for light/dark bar; no hardcoded white |
+| Module | `sticky-header.css` / `sticky-header.js` | One source of truth; SW `v19-sticky-header` |
+| UI kit | `/ui-kit.html` | Forced states: default / floating / hidden / pinned / progress / badge bounce |
+
+**Open:** Batch 3 Phases 2–8 (alerts, hero, cart/flip, split/profile/pricing, kanban/2FA, footer, testing).
+
+---
+
 ## Batch 2 Phase 1 — OTP Autofill UI (2026-11-15)
 
 **Branch:** `ui-premium-batch2-otp`  

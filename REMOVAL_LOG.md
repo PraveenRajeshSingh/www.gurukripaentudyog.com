@@ -4,6 +4,23 @@ This document logs all elements, CSS rules, inline styles, and spacers modified 
 
 ---
 
+## Batch 3 Phase 1 — Sticky / floating header (2026-11-15)
+
+### A. Hardcoded header glass color
+- **Removed / replaced:** `background: rgba(255, 255, 255, 0.96)` on `.nav-premium` in `chrome-premium.css`
+- **Replacement:** `background: var(--nav-glass, …)` (light + dark tokens)
+- **Reason:** Floating pill and dark theme need the same token; hardcoded white broke dark and mixed poorly with the translucent floating state.
+
+### B. Hardcoded scroll-margin
+- **Removed / replaced:** `scroll-margin-top: 78px` in `refinements.css`; `scroll-margin-top: var(--nav-h, 72px)` alone in `viewport-adaptive.css`
+- **Replacement:** `calc(var(--header-h, …) + 16px)` so anchors clear the measured / floating header
+- **Kept:** Legacy `#spbar` width updates in `ui.js` (progress also mirrored to `--nav-progress`)
+
+### C. Nothing deleted from public nav markup
+- Sentinel, progress line, and active pill were **added**; no nav links, cart, wishlist, lang, or search controls removed.
+
+---
+
 ## Batch 2 Phase 1 — OTP Autofill (2026-11-15)
 
 ### A. Legacy unused OTP digit styles

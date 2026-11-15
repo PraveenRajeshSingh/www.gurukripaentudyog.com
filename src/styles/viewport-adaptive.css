@@ -45,7 +45,7 @@ main {
 
 /* [FIX #4] Scroll anchor clearance */
 #home, #price-list, #categories, #products, #calculator, #about, #gallery, #testimonials, #reviews, #cities, #nearby-bhatta, #faq, #contact {
-    scroll-margin-top: var(--nav-h, 72px);
+    scroll-margin-top: calc(var(--header-h, var(--nav-h, 72px)) + 16px);
 }
 .sec {
     width: 100%;

@@ -193,6 +193,8 @@
     <link rel="stylesheet" href="src/styles/mobile-scroll-master.css">
     <!-- Premium header / hero / footer chrome -->
     <link rel="stylesheet" href="src/styles/chrome-premium.css">
+    <!-- Batch 3: sticky / floating header pill + progress + active pill -->
+    <link rel="stylesheet" href="src/styles/sticky-header.css">
     <!-- Phase 2 shell patches (bottom nav <768, one lang control, FAB) -->
     <link rel="stylesheet" href="src/styles/shell-phase2.css">
     <!-- Phase 3: catalog rail/drawer, count dedupe, card grid, section polish -->
@@ -356,8 +358,13 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <!-- ━━━━━━━━━━━━━━━━━ ACCESSIBILITY SKIP LINK ━━━━━━━━━━━━━━━━━ -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- ━━━━━━━━━━━━━━━━━ PREMIUM GLOBAL HEADER ━━━━━━━━━━━━━━━━━ -->
-    <header class="nav nav-premium" role="banner">
+    <!-- ━━━━━━━━━━━━━━━━━ COMPONENT: Sticky / floating header ━━━━━━━━━━━━━━━━━
+         Full-width at top → floating pill after scroll (sticky-header.js/css).
+         Progress line + sliding active pill; hide-on-scroll-down (reduced-motion safe).
+         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <div id="navSentinel" class="nav-sentinel" aria-hidden="true"></div>
+    <header class="nav nav-premium" role="banner" id="siteHeader">
+        <div class="nav-progress" aria-hidden="true"><span class="nav-progress__fill"></span></div>
         <div class="container">
             <div class="nav-inner">
                 <!-- Left: brand -->
@@ -381,7 +388,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
                 <!-- Center: primary nav -->
                 <nav class="nav-links nav-links-premium" aria-label="Primary Navigation">
-                    <!-- [FIX #4] Active state dynamically managed by IntersectionObserver scroll-spy -->
+                    <span class="nav-active-pill" aria-hidden="true"></span>
+                    <!-- Active state: IntersectionObserver scroll-spy + sliding pill -->
                     <a href="#home" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
                     <a href="#nearby-bhatta" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.suppliers">Brick Suppliers</a>
@@ -4218,6 +4226,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/erp-notify.js" defer></script>
     <script src="src/js/erp-invoice.js" defer></script>
     <script src="src/js/ui.js" defer></script>
+    <script src="src/js/sticky-header.js" defer></script>
     <script src="src/js/popup-manager.js" defer></script>
     <script src="src/js/interaction-guard.js" defer></script>
     <script src="src/js/dialogs.js" defer></script>

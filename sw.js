@@ -13,7 +13,7 @@
    =========================================================================== */
 
 // [FIX] Fluid Layout & Console Cleanup pass v16
-const CACHE_VER = 'v18-otp-ui';
+const CACHE_VER = 'v19-sticky-header';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -48,6 +48,7 @@ const SHELL_ASSETS = [
     './src/styles/sections.css',
     './src/styles/app.css',
     './src/styles/chrome-premium.css',
+    './src/styles/sticky-header.css',
     './src/styles/viewport-adaptive.css',
     './src/styles/daily-prices.css',
     './src/styles/nearby-bhatta.css',
@@ -66,6 +67,7 @@ const SHELL_ASSETS = [
     './src/js/offline-store.js',
     './src/js/pwa.js',
     './src/js/ui.js',
+    './src/js/sticky-header.js',
     './src/js/popup-manager.js',
     './src/js/products.js',
     './src/js/daily-prices.js',
