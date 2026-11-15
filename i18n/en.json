@@ -463,5 +463,11 @@
   "dialog.discardMsg": "You have information that has not been submitted. Close anyway?",
   "dialog.discard": "Discard",
   "dialog.keepEditing": "Keep editing",
-  "products.filters": "Filters"
+  "products.filters": "Filters",
+  "theme.light": "Light",
+  "theme.dark": "Dark",
+  "theme.system": "System",
+  "theme.change": "Change theme",
+  "search.hint": "Type a brick grade, size, or price",
+  "search.noResults": "No products match that search."
 }

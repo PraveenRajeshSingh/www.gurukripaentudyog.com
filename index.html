@@ -148,15 +148,27 @@
         } catch (e) {}
       })();
     </script>
-    <!-- Theme: single consistent LIGHT theme (pinned before paint to avoid any flash)
-         Phase 2 will restore Light/Dark/System; keep pin until then. -->
+    <!-- Theme before paint (Phase 2): Light / Dark / System — no flash -->
     <script>
-      (function() {
+      (function () {
         try {
-          // The app intentionally ships one light theme; any legacy dark
-          // preference stored by older versions is ignored and cleared.
-          document.documentElement.setAttribute('data-theme', 'light');
-          try { localStorage.removeItem('gb_theme'); } catch (e) {}
+          var mode = null;
+          try { mode = localStorage.getItem('gb_theme_mode'); } catch (e) { mode = null; }
+          if (mode !== 'light' && mode !== 'dark' && mode !== 'system') {
+            try {
+              var legacy = localStorage.getItem('gb_theme');
+              mode = (legacy === 'light' || legacy === 'dark') ? legacy : 'system';
+            } catch (e2) { mode = 'system'; }
+          }
+          var resolved = mode;
+          if (mode === 'system') {
+            try {
+              resolved = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            } catch (e3) { resolved = 'light'; }
+          }
+          document.documentElement.setAttribute('data-theme', resolved);
+          document.documentElement.setAttribute('data-theme-mode', mode);
+          document.documentElement.style.colorScheme = resolved === 'dark' ? 'dark' : 'light';
         } catch (e) {}
       })();
     </script>
@@ -260,6 +272,8 @@
     <!-- Batch 3: sticky / floating header pill + progress + active pill -->
     <link rel="stylesheet" href="src/styles/sticky-header.css">
     <link rel="stylesheet" href="src/styles/i18n-layout.css">
+    <link rel="stylesheet" href="src/styles/theme-toggle.css">
+    <link rel="stylesheet" href="src/styles/mobile-search.css">
     <!-- Phase 2 shell patches (bottom nav <768, one lang control, FAB) -->
     <link rel="stylesheet" href="src/styles/shell-phase2.css">
     <!-- Phase 3: catalog rail/drawer, count dedupe, card grid, section polish -->
@@ -474,13 +488,26 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 
                 <!-- Right: tools -->
                 <div class="nav-actions">
+                    <!-- Phase 2: language toggle — always visible -->
                     <div class="nav-lang" role="group" aria-label="Language">
-                        <button type="button" class="nav-lang-btn active" id="navLangEn" onclick="setLang('en')" aria-pressed="true" aria-label="English">EN</button>
+                        <button type="button" class="nav-lang-btn active" id="navLangEn" data-lang="en" data-action="set-lang" data-lang-value="en" onclick="setLang('en')" aria-pressed="true" aria-label="English">EN</button>
                         <span class="nav-lang-sep" aria-hidden="true">|</span>
-                        <button type="button" class="nav-lang-btn" id="navLangHi" onclick="setLang('hi')" aria-pressed="false" aria-label="हिंदी">हिंदी</button>
+                        <button type="button" class="nav-lang-btn" id="navLangHi" data-lang="hi" lang="hi" data-action="set-lang" data-lang-value="hi" onclick="setLang('hi')" aria-pressed="false" aria-label="हिंदी">हिं</button>
                     </div>
 
-                    <button type="button" class="nav-icon-btn nav-search-toggle" onclick="document.getElementById('navSearch')?.focus()" aria-label="Search products" title="Search">
+                    <!-- Phase 2: theme toggle Light / Dark / System -->
+                    <div class="theme-toggle" id="navThemeToggle">
+                        <button type="button" class="theme-toggle-btn" data-action="toggle-theme-menu" aria-haspopup="menu" aria-expanded="false" aria-label="Change theme" title="Theme">
+                            <svg class="theme-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                        </button>
+                        <div class="theme-toggle-menu" role="menu">
+                            <button type="button" role="menuitem" data-theme-option="light" aria-checked="false">Light</button>
+                            <button type="button" role="menuitem" data-theme-option="dark" aria-checked="false">Dark</button>
+                            <button type="button" role="menuitem" data-theme-option="system" aria-checked="false">System</button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="nav-icon-btn nav-search-toggle" data-action="open-search" onclick="typeof openSiteSearch==='function'?openSiteSearch(this):document.getElementById('navSearch')?.focus()" aria-label="Search products" title="Search">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <circle cx="11" cy="11" r="8" />
                             <path d="M21 21l-4.35-4.35" />
@@ -750,12 +777,17 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
             </button>
         </div>
 
-        <!-- Quick Preference: Language (single light theme — no dark toggle) -->
+        <!-- Phase 2: Language + Theme in drawer (mobile) -->
         <div class="drawer-settings">
-            <button type="button" class="btn btn-outline btn-sm drawer-lang-btn" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch language to Hindi or English">
+            <button type="button" class="btn btn-outline btn-sm drawer-lang-btn" data-action="toggle-lang" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch language to Hindi or English">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
                 <span id="drawerLangLabel">हिंदी / EN</span>
             </button>
+            <div class="drawer-theme-row" role="group" aria-label="Theme">
+                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="light" aria-checked="false">Light</button>
+                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="dark" aria-checked="false">Dark</button>
+                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="system" aria-checked="false">System</button>
+            </div>
         </div>
 
         <!-- Navigation Links.
@@ -2979,6 +3011,12 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                                 <span>Account Settings — GSTIN &amp; Business Info</span>
                                 <span class="hub-nav__aside" id="hubNavGst">Not on file</span>
                             </button>
+                            <!-- Phase 2: theme copy inside account (header may be covered) -->
+                            <div class="hub-nav__row drawer-theme-row" role="group" aria-label="Theme" style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px">
+                                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="light" aria-checked="false">Light</button>
+                                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="dark" aria-checked="false">Dark</button>
+                                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="system" aria-checked="false">System</button>
+                            </div>
                             <!-- CHANGE: Diagnostics copy for support (polish §2) — hidden until Settings tab focus; always in DOM for a11y -->
                             <button type="button" class="hub-nav__row hub-nav__row--diagnostics" data-action="copy-diagnostics" aria-label="Copy diagnostics for support">
                                 <span>Diagnostics (copy for support)</span>
@@ -4269,6 +4307,33 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
         </div>
     </nav>
 
+<!-- Phase 4: full-screen mobile search — replaces header + bottom nav while open -->
+<div id="mobileSearchOverlay" class="msearch-overlay" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="msearch-bar">
+    <button type="button" class="msearch-back" data-action="close-search" aria-label="Close search">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <input type="search" id="mobileSearchInput" class="msearch-input" enterkeyhint="search"
+      autocomplete="off" inputmode="search" data-i18n-placeholder="search.placeholder"
+      placeholder="Search bricks, prices..." aria-label="Search brick products" aria-autocomplete="list" aria-controls="mobileSearchSuggest">
+    <button type="button" class="msearch-clear" id="mobileSearchClear" hidden data-action="clear-search" aria-label="Clear search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <button type="button" class="msearch-mic" data-action="voice-search" aria-label="Voice search" title="Voice search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+      </svg>
+    </button>
+  </div>
+  <div class="msearch-body" id="mobileSearchBody">
+    <p class="msearch-hint" data-i18n="search.hint">Type a brick grade, size, or price</p>
+    <div id="mobileSearchSuggest" class="msearch-suggest" role="listbox" aria-label="Search suggestions"></div>
+    <div id="mobileSearchEmpty" class="msearch-empty" hidden data-i18n="search.noResults">No products match that search.</div>
+  </div>
+</div>
+
     <!-- ━━━━━━━━━━━━━━━━━ JAVASCRIPT MODULES ━━━━━━━━━━━━━━━━━ -->
     <!-- CHANGE: reliability + action-delegate load first (polish §1–§2) -->
     <script src="src/js/reliability.js" defer></script>
@@ -4340,6 +4405,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/main.js" defer></script>
     <!-- Phase 5: idle warm after first paint (Save-Data aware) -->
     <script src="src/js/idle-loader.js" defer></script>
+    <script src="src/js/mobile-search.js" defer></script>
 </body>
 
 </html>

@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'renderOfflineOutbox': () => { if (window.WhatsAppOrder) WhatsAppOrder.renderQueuedNotice(); },
         'Platform.init': () => { if (window.Platform && typeof window.Platform.init === 'function') window.Platform.init(); },
         'ensureOverlaysClosedAfterInit': () => { if (typeof ensureOverlaysClosedOnBoot === 'function') ensureOverlaysClosedOnBoot(); },
+        'forceUnlockPage': () => { if (typeof forceUnlockPage === 'function') forceUnlockPage(); },
         'kitOpenAuth': () => {
             try {
                 const step = sessionStorage.getItem('gb_kit_open_auth');

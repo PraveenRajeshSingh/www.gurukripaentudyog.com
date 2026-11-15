@@ -135,13 +135,98 @@
             if (e && e.preventDefault) e.preventDefault();
             call('reorderOrder', [el.getAttribute('data-order-id')]);
         },
-        'copy-diagnostics': function () { /* handled in reliability.js */ }
+        'copy-diagnostics': function () { /* handled in reliability.js */ },
+        /* Phase 3: chrome / commerce / search registry */
+        'open-cart': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('openCart'); },
+        'close-cart': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('closeCart'); },
+        'open-wishlist': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('openWishlistDrawer'); },
+        'close-wishlist': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('closeWishlistDrawer'); },
+        'open-auth': function (el, e) {
+            if (e && e.preventDefault) e.preventDefault();
+            call('openAuth', [el.getAttribute('data-auth-tab') || 'login']);
+        },
+        'close-auth': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('closeAuth'); },
+        'open-checkout': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('openCheckout'); },
+        'open-profile': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('openProfile'); },
+        'toggle-drawer': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('toggleDrawer'); },
+        'set-lang': function (el, e) {
+            if (e && e.preventDefault) e.preventDefault();
+            var lang = el.getAttribute('data-lang-value') || el.getAttribute('data-lang') || 'en';
+            call('setLang', [lang]);
+        },
+        'toggle-lang': function (el, e) {
+            if (e && e.preventDefault) e.preventDefault();
+            var cur = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+            call('setLang', [cur === 'hi' ? 'en' : 'hi']);
+        },
+        'toggle-theme': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('toggleTheme'); },
+        'toggle-theme-menu': function () { /* Platform.bindThemeMenus handles click */ },
+        'set-theme': function (el, e) {
+            if (e && e.preventDefault) e.preventDefault();
+            var mode = el.getAttribute('data-theme-option') || 'system';
+            if (window.Platform) Platform.setTheme(mode);
+        },
+        'open-search': function (el, e) {
+            if (e && e.preventDefault) e.preventDefault();
+            if (typeof openSiteSearch === 'function') openSiteSearch(el);
+            else {
+                var nav = document.getElementById('navSearch');
+                if (nav) nav.focus();
+            }
+        },
+        'close-search': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('closeSiteSearch'); },
+        'clear-search': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('clearSiteSearch'); },
+        'voice-search': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('toggleVoiceSearch'); },
+        'open-alerts': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('openNotificationCenter'); },
+        'back-to-top': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('scrollDocumentTop'); },
+        'open-tracker': function (el, e) { if (e && e.preventDefault) e.preventDefault(); call('openTrackerModal'); },
+        'wa-cart': function (el, e) {
+            if (e && e.preventDefault) e.preventDefault();
+            if (window.WhatsAppOrder) WhatsAppOrder.orderFromCart();
+        }
     };
+
+    window.GBI = window.GBI || {};
+    window.GBI.Actions = ACTIONS;
+
+    function selfCheckActions() {
+        try {
+            var missing = [];
+            document.querySelectorAll('[data-action]').forEach(function (el) {
+                var a = el.getAttribute('data-action');
+                if (a && !ACTIONS[a] && a !== 'wa') missing.push(a);
+            });
+            var uniq = missing.filter(function (v, i, arr) { return arr.indexOf(v) === i; });
+            if (uniq.length) {
+                console.warn('[GBI] Unmapped data-action:', uniq.join(', '));
+                if (/\baction-debug=1\b/.test(String(location.search || ''))) {
+                    var b = document.createElement('div');
+                    b.setAttribute('role', 'status');
+                    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#7B241C;color:#fff;padding:8px;font:12px/1.4 sans-serif';
+                    b.textContent = 'Unmapped actions: ' + uniq.join(', ');
+                    document.body.appendChild(b);
+                }
+            }
+            return uniq;
+        } catch (err) {
+            console.warn('[GBI] action self-check failed', err);
+            return [];
+        }
+    }
+    window.GBI.selfCheckActions = selfCheckActions;
 
     function runAction(el, e) {
         var action = el.getAttribute('data-action');
         var handler = ACTIONS[action];
-        if (!handler) return false;
+        if (!handler) {
+            if (action) {
+                console.warn('[GBI] No handler for data-action="' + action + '"');
+                if (/\baction-debug=1\b/.test(String(location.search || '')) && typeof showToast === 'function') {
+                    showToast('Unmapped action: ' + action, 'warning');
+                }
+            }
+            return false;
+        }
         var mutating = /add-to-cart|remove-from-cart|reorder|toggle-wishlist|change-qty/.test(action);
         var key = lockKey(action, el);
         if (mutating && inflight[key]) {
@@ -192,10 +277,14 @@
         runAction(el, e);
     });
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', installAliases);
-    } else {
+    function boot() {
         installAliases();
+        setTimeout(selfCheckActions, 800);
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
     }
     setTimeout(installAliases, 0);
     setTimeout(installAliases, 500);

@@ -145,15 +145,27 @@
         } catch (e) {}
       })();
     </script>
-    <!-- Theme: single consistent LIGHT theme (pinned before paint to avoid any flash)
-         Phase 2 will restore Light/Dark/System; keep pin until then. -->
+    <!-- Theme before paint (Phase 2): Light / Dark / System — no flash -->
     <script>
-      (function() {
+      (function () {
         try {
-          // The app intentionally ships one light theme; any legacy dark
-          // preference stored by older versions is ignored and cleared.
-          document.documentElement.setAttribute('data-theme', 'light');
-          try { localStorage.removeItem('gb_theme'); } catch (e) {}
+          var mode = null;
+          try { mode = localStorage.getItem('gb_theme_mode'); } catch (e) { mode = null; }
+          if (mode !== 'light' && mode !== 'dark' && mode !== 'system') {
+            try {
+              var legacy = localStorage.getItem('gb_theme');
+              mode = (legacy === 'light' || legacy === 'dark') ? legacy : 'system';
+            } catch (e2) { mode = 'system'; }
+          }
+          var resolved = mode;
+          if (mode === 'system') {
+            try {
+              resolved = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            } catch (e3) { resolved = 'light'; }
+          }
+          document.documentElement.setAttribute('data-theme', resolved);
+          document.documentElement.setAttribute('data-theme-mode', mode);
+          document.documentElement.style.colorScheme = resolved === 'dark' ? 'dark' : 'light';
         } catch (e) {}
       })();
     </script>
@@ -257,6 +269,8 @@
     <!-- Batch 3: sticky / floating header pill + progress + active pill -->
     <link rel="stylesheet" href="src/styles/sticky-header.css">
     <link rel="stylesheet" href="src/styles/i18n-layout.css">
+    <link rel="stylesheet" href="src/styles/theme-toggle.css">
+    <link rel="stylesheet" href="src/styles/mobile-search.css">
     <!-- Phase 2 shell patches (bottom nav <768, one lang control, FAB) -->
     <link rel="stylesheet" href="src/styles/shell-phase2.css">
     <!-- Phase 3: catalog rail/drawer, count dedupe, card grid, section polish -->

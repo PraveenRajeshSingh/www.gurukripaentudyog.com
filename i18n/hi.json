@@ -463,5 +463,11 @@
   "dialog.discardMsg": "आपके कुछ बदलाव सबमिट नहीं हुए हैं। फिर भी बंद करें?",
   "dialog.discard": "रद्द करें",
   "dialog.keepEditing": "संपादन जारी रखें",
-  "products.filters": "फ़िल्टर"
+  "products.filters": "फ़िल्टर",
+  "theme.light": "लाइट",
+  "theme.dark": "डार्क",
+  "theme.system": "सिस्टम",
+  "theme.change": "थीम बदलें",
+  "search.hint": "ईंट ग्रेड, साइज़ या कीमत लिखें",
+  "search.noResults": "इस खोज से कोई उत्पाद नहीं मिला।"
 }
