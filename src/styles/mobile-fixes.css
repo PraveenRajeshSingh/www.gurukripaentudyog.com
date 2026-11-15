@@ -2550,13 +2550,20 @@ body {
 .mobile-nav,
 .wa-float,
 .whatsapp-fab,
-.modal-overlay,
-.drawer-overlay,
-.cart-overlay,
 #spbar,
 .scroll-top,
 .mn-cart-fab,
 #ptrIndicator {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+/* CHANGE: do not GPU-promote closed full-screen overlays — they block page scroll/taps */
+.modal-overlay.open,
+.drawer-overlay.open,
+.cart-overlay.open {
     will-change: transform, opacity;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);

@@ -256,12 +256,14 @@
             z-index: 1100;
             opacity: 0;
             visibility: hidden;
+            pointer-events: none; /* CHANGE: closed overlay must not block page */
             transition: all var(--t)
         }
 
         .cart-overlay.open {
             opacity: 1;
-            visibility: visible
+            visibility: visible;
+            pointer-events: auto
         }
 
         .cart-drawer {

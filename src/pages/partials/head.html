@@ -271,6 +271,38 @@
     <link rel="stylesheet" href="src/styles/i18n-layout.css">
     <link rel="stylesheet" href="src/styles/theme-toggle.css">
     <link rel="stylesheet" href="src/styles/mobile-search.css">
+    <link rel="stylesheet" href="src/styles/page-unlock.css">
+    <!-- Immediate unlock: closed overlays with touch-action:none were freezing the page -->
+    <script>
+      (function () {
+        function unlock() {
+          try {
+            var html = document.documentElement;
+            var body = document.body;
+            if (!body) return;
+            html.classList.remove('msearch-open', 'popup-open', 'kb-up', 'overlay-open');
+            body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
+            body.style.removeProperty('top');
+            body.style.removeProperty('left');
+            body.style.removeProperty('right');
+            body.style.removeProperty('width');
+            body.style.removeProperty('position');
+            body.style.removeProperty('overflow');
+            document.querySelectorAll('.modal-overlay.open, .cart-overlay.open, .drawer-overlay.open, .lb-overlay.open, #lb.open, .cart-drawer.open, .wishlist-drawer.open, .drawer.open').forEach(function (el) {
+              el.classList.remove('open');
+            });
+            var ms = document.getElementById('mobileSearchOverlay');
+            if (ms) ms.hidden = true;
+          } catch (e) {}
+        }
+        unlock();
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', unlock);
+        window.addEventListener('load', unlock);
+        setTimeout(unlock, 0);
+        setTimeout(unlock, 400);
+        setTimeout(unlock, 1200);
+      })();
+    </script>
     <!-- Phase 2 shell patches (bottom nav <768, one lang control, FAB) -->
     <link rel="stylesheet" href="src/styles/shell-phase2.css">
     <!-- Phase 3: catalog rail/drawer, count dedupe, card grid, section polish -->
