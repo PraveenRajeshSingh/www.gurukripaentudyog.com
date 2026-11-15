@@ -132,7 +132,24 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap">
     </noscript>
 
-    <!-- Theme: single consistent LIGHT theme (pinned before paint to avoid any flash) -->
+    <!-- Language before paint (Phase 1) — no flash of wrong language -->
+    <script>
+      (function () {
+        try {
+          var l = null;
+          try { l = localStorage.getItem('gb_lang'); } catch (e) { l = null; }
+          if (l !== 'en' && l !== 'hi') {
+            var nav = String((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+            l = nav.indexOf('hi') === 0 ? 'hi' : 'en';
+          }
+          document.documentElement.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+          document.documentElement.setAttribute('data-lang', l);
+          document.documentElement.setAttribute('dir', 'ltr');
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Theme: single consistent LIGHT theme (pinned before paint to avoid any flash)
+         Phase 2 will restore Light/Dark/System; keep pin until then. -->
     <script>
       (function() {
         try {
@@ -242,6 +259,7 @@
     <link rel="stylesheet" href="src/styles/chrome-premium.css">
     <!-- Batch 3: sticky / floating header pill + progress + active pill -->
     <link rel="stylesheet" href="src/styles/sticky-header.css">
+    <link rel="stylesheet" href="src/styles/i18n-layout.css">
     <!-- Phase 2 shell patches (bottom nav <768, one lang control, FAB) -->
     <link rel="stylesheet" href="src/styles/shell-phase2.css">
     <!-- Phase 3: catalog rail/drawer, count dedupe, card grid, section polish -->
@@ -4253,6 +4271,8 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/services/nearby-suppliers-service.js" defer></script>
     <script src="src/services/catalog-pricing-service.js" defer></script>
     <script src="src/services/payment-service.js" defer></script>
+    <!-- Phase 1: sync i18n bundle (JSON source of truth) then runtime -->
+    <script src="src/js/i18n-data.js" defer></script>
     <script src="src/js/i18n.js" defer></script>
     <script src="src/js/recaptcha.js" defer></script>
     <script src="src/js/state.js" defer></script>

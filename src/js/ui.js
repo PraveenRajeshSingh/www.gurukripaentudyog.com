@@ -624,58 +624,19 @@ function toggleFab() {
 }
 
 // ══════════════════════════════════════════
-// LANGUAGE TRANSLATION SYSTEM (Comprehensive)
+// LANGUAGE SWITCH (Phase 1)
+// t() + applyTranslations() live in src/js/i18n.js (JSON source of truth).
+// setLang kept as the public API; setLanguage is an alias.
 // ══════════════════════════════════════════
-// Translation helper — use for all dynamic strings (toasts, buttons, errors).
-// Falls back to English when a key is missing in the active language.
-function t(key, vars) {
-    let val = ((typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang]) || {})[key];
-    if (val === undefined) val = ((typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS.en) || {})[key];
-    if (val === undefined) return key;
-    if (vars) {
-        Object.keys(vars).forEach(k => {
-            val = val.split('{' + k + '}').join(vars[k]);
-        });
-    }
-    return val;
-}
-
-/**
- * Translate every [data-i18n] node inside `root` (defaults to the document).
- * Scoped so dynamically built surfaces - the profile hub, cart drawer, product
- * modal - can re-localise themselves after they are re-rendered without paying
- * for a full-document pass.
- */
-function applyTranslations(root) {
-    const scope = root && root.querySelectorAll ? root : document;
-    const dict = TRANSLATIONS[currentLang] || {};
-    scope.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        const val = dict[key];
-        if (!val) return;
-
-        const tag = el.tagName.toUpperCase();
-        if (tag === 'INPUT' || tag === 'TEXTAREA') {
-            if (el.type !== 'submit' && el.type !== 'button') {
-                el.placeholder = val;
-            }
-        } else if (tag === 'OPTION') {
-            el.textContent = val;
-        } else if (tag === 'BUTTON' && el.type === 'submit') {
-            el.innerHTML = val;
-        } else {
-            el.innerHTML = val;
-        }
-    });
-}
-
 function setLang(lang) {
     // Guard: only 'en' or 'hi'
     if (lang !== 'en' && lang !== 'hi') lang = 'en';
     currentLang = lang;
-    localStorage.setItem('gb_lang', lang);
+    try {
+        localStorage.setItem('gb_lang', lang);
+    } catch (_e) { /* storage blocked — in-memory only */ }
 
-    // Sync every language control: topbar, nav compact, drawer
+    // Sync every language control: topbar, nav compact, drawer, auth
     const syncPair = (enId, hiId) => {
         const en = document.getElementById(enId);
         const hi = document.getElementById(hiId);
@@ -686,6 +647,11 @@ function setLang(lang) {
     };
     syncPair('langEn', 'langHi');
     syncPair('navLangEn', 'navLangHi');
+    document.querySelectorAll('.nav-lang-btn[data-lang], .lang-btn[data-lang]').forEach((btn) => {
+        const on = btn.getAttribute('data-lang') === lang;
+        btn.classList.toggle('active', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
 
     // Mobile drawer language label stays in sync with desktop
     const drawerLang = document.getElementById('drawerLangLabel');
@@ -693,15 +659,22 @@ function setLang(lang) {
         drawerLang.textContent = lang === 'hi' ? 'English / हिंदी' : 'हिंदी / EN';
     }
 
-    // Update html lang attribute for accessibility
+    // Update html lang (+ data-lang) without losing form/scroll/popup state
     document.documentElement.setAttribute('lang', lang === 'hi' ? 'hi' : 'en');
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('dir', 'ltr');
 
-    // Localize document title (used by browser tab, Android TWA & iOS home-screen context)
-    const docTitle = (TRANSLATIONS[lang] || {})['doc.title'] || (TRANSLATIONS.en || {})['doc.title'];
-    if (docTitle) document.title = docTitle;
+    // Localize document title (browser tab / TWA / home-screen)
+    const docTitle = (typeof t === 'function')
+        ? t('doc.title')
+        : ((TRANSLATIONS[lang] || {})['doc.title'] || (TRANSLATIONS.en || {})['doc.title']);
+    if (docTitle && docTitle !== 'doc.title') document.title = docTitle;
 
-    // Apply translations to all [data-i18n] elements
-    applyTranslations(document);
+    // Meta description when marked
+    try {
+        document.querySelectorAll('[data-i18n-content]').forEach(() => {});
+        if (typeof applyTranslations === 'function') applyTranslations(document);
+    } catch (_e) { /* ignore */ }
 
     // Re-render dynamic vendors section if present
     if (typeof renderVendors === 'function') renderVendors();
@@ -719,10 +692,27 @@ function setLang(lang) {
     if (typeof renderAccountHub === 'function' && document.getElementById('profileModal')?.classList.contains('open')) {
         try { renderAccountHub(); } catch (_e) { /* ignore */ }
     }
+    if (typeof renderWishlistDrawer === 'function' && document.getElementById('wishlistDrawer')?.classList.contains('open')) {
+        try { renderWishlistDrawer(); } catch (_e) { /* ignore */ }
+    }
+
+    // Re-measure width-dependent UI after label length changes
+    try {
+        window.dispatchEvent(new CustomEvent('gbi:langchange', { detail: { lang } }));
+        if (typeof window.StickyHeader !== 'undefined' && StickyHeader.measure) StickyHeader.measure();
+    } catch (_e) { /* ignore */ }
 
     // Toast language notification
-    showToast(lang === 'hi' ? t('toast.langChangedHi') : t('toast.langChanged'));
+    if (typeof showToast === 'function') {
+        showToast(lang === 'hi' ? t('toast.langChangedHi') : t('toast.langChanged'));
+    }
 }
+
+/** Spec alias — same as setLang; do not rename callers. */
+function setLanguage(lang) {
+    return setLang(lang);
+}
+window.setLanguage = setLanguage;
 
 // ══════════════════════════════════════════
 // OVERLAY MANAGER — ref-counted scroll lock +

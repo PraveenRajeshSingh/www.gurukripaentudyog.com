@@ -1,797 +1,233 @@
 // ══════════════════════════════════════════
-// TRANSLATIONS  (EN + HI — full coverage)
-// Extracted from data.js so the TRANSLATIONS global loads after PRODUCTS/COUPONS/VENDORS.
+// i18n RUNTIME (Phase 1)
+// Source of truth: /i18n/en.json + /i18n/hi.json
+// Sync bundle: src/js/i18n-data.js → window.__GBI_I18N__ (no network wait)
+// Regenerate bundle: node scripts/extract-i18n-json.js
 // ══════════════════════════════════════════
-const TRANSLATIONS = {
-    en: {
-        // Topbar
-        'topbar.hours': 'Mon\u2013Sat | 8AM\u20136PM',
-        'topbar.status': 'Kiln Active \u00b7 Same-Day Dispatch',
-        'topbar.ops': 'Operations Portal',
-        // Nav
-        'nav.home': 'Home', 'nav.products': 'Products', 'nav.pricing': 'Pricing',
-        'nav.qualitySpec': 'Quality Spec', 'nav.calculator': 'Estimator',
-        'nav.gallery': 'Gallery', 'nav.about': 'About', 'nav.contact': 'Contact',
-        'nav.categories': 'Categories', 'nav.delivery': 'Delivery', 'nav.getQuote': 'Get a Quote',
-        'nav.trackOrder': 'Track Delivery', 'nav.vendors': 'Vendors',         'nav.nearby': 'Nearby Bhatta',
-        'nav.prices': 'Price List',
-        'nearby.tag': 'Smart Local Discovery',
-        'nearby.title': 'Brick Bhatta & Eent Suppliers Near You',
-        'nearby.lead': 'Find trusted brick manufacturers and eent suppliers near your current location.',
-        'nearby.locPending': 'Location not set',
-        'nearby.useGps': 'Use My Location',
-        'nearby.changeLoc': 'Change Location',
-        'nearby.manualLabel': 'Enter locality, city, or PIN code',
-        'nearby.searchLoc': 'Search',
-        'nearby.privacy': 'Your precise coordinates stay on this device for this session only and are not stored on our servers.',
-        'nearby.smartTitle': 'Location-based recommendations',
-        'nearby.recTitle': 'Smart Eent Recommendation',
-        'nearby.recLead': 'Choose a brick category to see typical uses and nearby suppliers. Structural suitability always depends on tested specs and your project engineer.',
-        'nearby.mapTitle': 'Nearby Bhatta Map',
-        // Auth
-        'auth.signIn': 'Sign In', 'auth.signUp': 'Sign Up', 'auth.signOut': 'Sign Out',
-        'auth.myProfile': 'My Profile', 'auth.myCart': 'My Cart',
-        'auth.orContinue': 'or continue with',
-        'auth.remember': 'Remember me', 'auth.forgot': 'Forgot password?',
-        'auth.submitLogin': 'Sign In to Account', 'auth.submitRegister': 'Create Account',
-        'auth.needPhone': 'No mobile linked to this email on this device. Sign up once, or call the yard.',
-        'auth.profileSavedOffline': 'Saved on this device. Server sync will retry when online.',
-        'contact.serverSaved': 'Enquiry saved. Opening WhatsApp…',
-        'auth.emailLabel': 'Email Address',
-        'auth.passwordLabel': 'Password',
-        'auth.nameLabel': 'Full Name',
-        'auth.mobileLabel': 'Mobile',
-        'auth.confirmLabel': 'Confirm Password',
-        // Hero
-        'hero.eyebrow': "Jaunpur\u2019s Direct Kiln Manufacturer \u00b7 Est. 1998",
-        'hero.titleHi': '',
-        'brand.name': 'Gurukripa Bricks Industry',
-        'brand.tagline': 'Quality Bricks · Trusted Supply',
-        'hero.title': 'Quality Bricks. Trusted Suppliers. Reliable Service.',
-        'hero.subtitle': 'Discover quality bricks and construction materials from trusted suppliers. Compare products, explore prices, and book your requirements easily with Gurukripa Bricks Industry.',
-        'hero.cta1': 'Explore Products',
-        'hero.ctaNearby': 'Find Nearby Suppliers',
-        'hero.ctaBook': 'Book Bricks',
-        'hero.ctaBookNow': 'Book Bricks Now',
-        'hero.ctaContact': 'Contact Us',
-        'hero.since': 'Est. Jaunpur',
-        'auth.captchaFailed': 'CAPTCHA verification failed. Refresh the page and try again.',
-        'checkout.validating': 'Validating prices with the yard…',
-        'checkout.priceChanged': 'Some prices changed. Review your cart totals before confirming.',
-        'checkout.duplicateBlocked': 'This order is already being submitted. Please wait.',
-        'nav.bookings': 'Bookings',
-        'nav.suppliers': 'Brick Suppliers',
-        'nav.bookBricks': 'Book Bricks',
-        'nav.aboutUs': 'About Us',
-        'nav.contactUs': 'Contact Us',
-        'footer.customerServices': 'Customer Services',
-        'footer.contactInfo': 'Contact Information',
-        'footer.myOrders': 'My Orders',
-        'footer.myBookings': 'My Bookings',
-        'footer.faq': 'Frequently Asked Questions',
-        'footer.support': 'Customer Support',
-        'footer.contactForm': 'Contact Form',
-        'footer.refund': 'Refund and Cancellation',
-        'footer.brandDesc': 'Construction-material and brick supply from Jaunpur\u2019s trusted kiln. Grade-A bricks, reliable delivery, and supplier discovery for homes and contractors.',
-        'footer.rights': '\u00a9 2026 Gurukripa Bricks Industry. All rights reserved.',
-        'hero.callNow': 'Call Now', 'hero.viewProducts': 'View Products',
-        'hero.chip1': 'Same-Day Delivery', 'hero.chip2': 'Weather-Resistant', 'hero.chip3': 'ISI Certified',
-        'hero.stat1': 'Bricks Delivered', 'hero.stat2': 'Projects Done',
-        'hero.stat3': 'Cities Served', 'hero.stat4': 'Satisfaction',
-        'hero.certTitle': 'Grade-A Double-Fired', 'hero.certSub': 'Direct Bhatta Wholesale',
-        // Categories
-        'categories.tag': 'Premium Categories', 'categories.title': 'Explore Our Range',
-        'categories.desc': 'Choose from our wide range of premium quality bricks engineered for strength',
-        'categories.shivSub': 'Ultra-Premium Quality', 'categories.premiumSub': 'Double-Fired Durability',
-        'categories.standardSub': 'Best Value Choice', 'categories.machineSub': 'Precision Shape & Size',
-        // Products
-        'products.tag': 'Verified Quality', 'products.title': 'Our Products',
-        'products.desc': 'Grade-A bricks tested for strength, uniformity and weather resistance',
-        'products.filterAll': 'All Products', 'products.addToCart': 'Add to Cart',
-        'products.empty': 'No products found in this category.',
-        'products.orderNow': 'Order Now', 'products.inStock': 'In Stock', 'products.lowStock': 'Limited Stock',
-        'products.viewDetails': 'View Details',
-        'products.getPrice': 'Get Price',
-        'products.requestQuote': 'Request Quotation',
-        'wishlist.add': 'Add to Wishlist',
-        'auth.sessionExpired': 'Your session expired. Please sign in again.',
-        'auth.accessDenied': 'You do not have permission for that action.',
-        'auth.requireLogin': 'Sign in to continue.',
-        // Pricing
-        'pricing.tag': 'Transparent Pricing', 'pricing.title': 'Compare Our Products',
-        'pricing.desc': 'No hidden costs \u2014 honest pricing at every budget level',
-        'pricing.colProduct': 'Product', 'pricing.colPrice': 'Price / Brick',
-        'pricing.colStrength': 'Strength', 'pricing.colBestFor': 'Best For',
-        'pricing.colISI': 'ISI Grade', 'pricing.colBulk': 'Bulk Discount', 'pricing.colOrder': 'Order',
-        'pricing.orderNow': 'Order Now',
-        // Search
-        'search.placeholder': 'Search bricks, prices...',
-        // Quality Spec
-        'qualitySpec.tag': 'Quality Verification',
-        'qualitySpec.title': 'Brick Quality Spec & Metallic Ringing Sound Test',
-        'qualitySpec.sub': 'Compare technical specifications & test the authentic metallic ringing sound of Grade-A bricks before buying',
-        'qualitySpec.soundBtn1': '\ud83d\udd14 Test Grade-A Metallic Sound',
-        'qualitySpec.soundBtn2': '\ud83d\udd08 Test Low-Grade Brick Sound',
-        'qualitySpec.cardTitle': '\ud83d\udd0a Real-Life Quality Test: Metallic Ringing Sound (Khanak)',
-        'qualitySpec.cardDesc': 'In real brick testing, striking two well-burnt Grade-A bricks together produces a clear metallic ringing sound. Poorly baked bricks make a dull thud. Tap below to simulate!',
-        // Brick Details
-        'brickDetails.tag': 'Know Your Bricks', 'brickDetails.title': 'Laal Peti & Awwal \u2014 Compared',
-        'brickDetails.desc': 'Understand which brick suits your project best before you buy',
-        // BRL / Bhatta
-        'brl.tag': 'Direct from Bhatta',
-        'brl.headline': 'No Middlemen.<br>No Markup.<br><em>Just Honest Prices.</em>',
-        'brl.lead': "Jaunpur\u2019s only direct-to-customer brand offering all brick material at the bhatta rate. No aggressive selling \u2014 you buy exactly what you need, at factory price.",
-        // Buying Guide
-        'brickGuide.tag': 'Buying Guide',
-        'brickGuide.title': 'Where to Use Which Brick?',
-        'brickGuide.desc': 'Expert guidance for every project type',
-        'brickGuide.callout': '\ud83d\udcde Confused? Call our expert for free advice',
-        // About
-        'about.tag': 'Our Story',
-        'about.title': "Jaunpur\u2019s Most<br><em>Trusted</em> Brick Maker",
-        'about.lead': 'Since 1998, Gurukripa Bricks Industry has been the backbone of construction across Jaunpur, Varanasi and all of UP.',
-        'about.desc': 'Since 1998, Gurukripa Bricks Industry has been the backbone of construction across Jaunpur, Varanasi and all of UP. Founded by Prem Narayan Singh, we\'ve grown from a small kiln to a full-scale premium brick manufacturer supplying customers across Eastern UP.',
-        'about.talkToUs': 'Talk to Us Today',
-        'about.yearsLabel': 'Years of Excellence',
-        'about.feat1Title': 'Double-Fired Process',
-        'about.feat1Desc': 'Every brick kiln-fired twice for maximum density and weather resistance',
-        'about.feat2Title': 'Uniform Dimensions',
-        'about.feat2Desc': 'Machine-calibrated for perfect 230\u00d7110\u00d770mm standard sizing',
-        'about.feat3Title': 'Same-Day Delivery',
-        'about.feat3Desc': 'Fleet of trucks ensuring morning order = afternoon delivery',
-        'about.feat4Title': 'Quality Guaranteed',
-        'about.feat4Desc': 'Replacement guarantee on damaged or substandard bricks',
-        // Gallery
-        'about.gallery.tag': 'Our Factory',
-        'about.gallery.title': 'Inside Gurukripa Bricks',
-        'about.gallery.desc': 'A look inside our state-of-the-art manufacturing facility in Jaunpur, UP',
-        // Quality Process
-        'quality.tag': 'Our Process', 'quality.title': 'Built on Quality. Fired by Passion.',
-        'quality.desc': 'Every brick passes through a rigorous 3-stage process before leaving our kiln',
-        // Reviews
-        'reviews.tag': 'Customer Love', 'reviews.title': 'What Our Customers Say',
-        'reviews.desc': '10,000+ happy builders across Jaunpur, Varanasi & UP',
-        // Vendors Section
-        'vendors.tag': 'Business Partners',
-        'vendors.title': 'Our Vendors & Partners',
-        'vendors.desc': "A trusted network of authorized dealers, energy suppliers, logistics partners & institutional clients powering Gurukripa\u2019s excellence",
-        'vendors.badge.dealer': 'Authorized Dealer',
-        'vendors.badge.energy': 'Kiln Energy Partner',
-        'vendors.badge.logistics': 'Logistics Fleet',
-        'vendors.badge.govt': 'Govt Supply Partner',
-        'vendors.since': 'Partner since',
-        'vendors.inquiryTitle': 'Become a Vendor or Partner',
-        'vendors.inquiryDesc': 'Are you a dealer, logistics provider, or institution looking to partner with Gurukripa Bricks? We welcome reliable partners across UP.',
-        'vendors.inquiryBtn': '\ud83d\udce9 Apply to Partner with Us',
-        'vendors.stat1': 'Active Dealers', 'vendors.stat2': 'Fleet Trucks',
-        'vendors.stat3': 'Govt Projects', 'vendors.stat4': 'Districts Covered',
-        // Calculator
-        'calculator.tag': 'Smart Construction Studio',
-        'calculator.title': '3-in-1 Building Material & Cost Estimator',
-        'calculator.desc': 'Calculate bricks, cement bags, sand volume & total budget estimate',
-        'calculator.tab1': 'Wall / Brick Estimate',
-        'calculator.tab2': 'Full Building Materials',
-        'calculator.tab3': 'Boundary Wall',
-        'calculator.sub': 'Plan your construction, estimate building materials and understand project costs with one simple tool.',
-        'calculator.fn1t': 'Brick quantity', 'calculator.fn1s': 'Pieces & trolley loads',
-        'calculator.fn2t': 'Material needs', 'calculator.fn2s': 'Cement, sand & bricks',
-        'calculator.fn3t': 'Cost estimate', 'calculator.fn3s': 'Budget at live rates',
-        'calculator.unit': 'Measure in',
-        'calculator.wallGroup': 'Wall dimensions',
-        'calculator.length': 'Wall length', 'calculator.height': 'Wall height', 'calculator.thickness': 'Wall thickness',
-        'calculator.th45': '4.5 inch — single partition wall', 'calculator.th9': '9 inch — main load-bearing wall', 'calculator.th135': '13.5 inch — foundation / triple wall',
-        'calculator.openingsGroup': 'Openings (optional)', 'calculator.openings': 'Door & window area to deduct',
-        'calculator.openingsHint': 'Total area of doors/windows in the wall. Deducted before calculating bricks.',
-        'calculator.rateGroup': 'Brick grade & rate', 'calculator.grade': 'Brick grade', 'calculator.rate': 'Brick rate',
-        'calculator.rateHint': 'Editable. Sets the cost below — it does not change quantities.',
-        'calculator.houseGroup': 'Building scope', 'calculator.area': 'Built-up area per floor', 'calculator.floors': 'Floors',
-        'calculator.fg': 'Ground floor only (G)', 'calculator.fg1': 'Ground + 1st (G+1)', 'calculator.fg2': 'Ground + 2 (G+2)',
-        'calculator.boundGroup': 'Boundary perimeter', 'calculator.perimeter': 'Perimeter length',
-        'calculator.boundHint': 'Boundary walls are estimated at the standard Awwal rate of ₹7.05/pc with 9″ brickwork.',
-        'calculator.calculate': 'Calculate Estimate', 'calculator.reset': 'Reset',
-        'calculator.resultTitle': 'Estimate summary', 'calculator.preview': 'Live wall preview',
-        'calculator.pinTitle': 'Delivery pincode check', 'calculator.pinBtn': 'Check',
-        'calculator.savedHead': 'Saved estimates (this device)', 'calculator.savedClear': 'Clear',
-        'calculator.savedEmpty': 'No saved estimates yet — every calculation is stored here for site visits.',
-        'calculator.reorder': 'Quick re-order', 'calculator.sitesTitle': 'Saved construction sites',
-        'calculator.saveSite': 'Save current estimate', 'calculator.saveSiteBtn': 'Save site',
-        'calculator.dims': 'Dimensions',
-        'studio.bricks': 'Bricks', 'studio.trolleys': 'Trolleys', 'studio.cement': 'Cement', 'studio.sand': 'Sand',
-        'studio.bags': 'bags', 'studio.yardRate': 'rate set by yard',
-        'studio.costTitle': 'Material-wise cost', 'studio.totalLabel': 'Estimated total', 'studio.totalSub': 'Brick cost at the rate entered — indicative only',
-        'studio.assumptionsTitle': 'Assumptions & details', 'studio.thickness': 'Thickness', 'studio.netArea': 'Net wall area',
-        'studio.grossArea': 'Gross area', 'studio.deducted': 'deducted', 'studio.disclaimer': 'This is an indicative estimate, not a firm quotation. Confirm rates and availability before ordering.',
-        'studio.whatsapp': 'Send enquiry', 'studio.addCart': 'Add to cart', 'studio.print': 'Print', 'studio.share': 'Share',
-        'studio.emptyTitle': 'No estimate yet', 'studio.emptySub': 'Enter your measurements and tap Calculate Estimate.',
-        'studio.resetDone': 'Estimator reset to defaults.', 'studio.resetConfirmTitle': 'Reset estimator?', 'studio.resetConfirmMsg': 'This clears the current inputs and result and restores default values.',
-        'studio.needCalc': 'Calculate an estimate first.', 'studio.printFail': 'Could not open the print view.', 'studio.copied': 'Estimate copied to clipboard.',
-        'studio.errPositive': 'Enter a valid positive number for {x}.', 'studio.errOpenings': 'Openings cannot be larger than the wall area.',
-        // Cities
-        'cities.tag': 'Delivery Coverage', 'cities.title': 'Cities We Serve',
-        'cities.desc': 'Delivering premium bricks across Jaunpur, Varanasi & UP \u2014 same-day within Jaunpur district',
-        // FAQ
-        'faq.tag': 'FAQ', 'faq.title': 'Frequently Asked Questions',
-        'faq.desc': 'Everything you need to know about Gurukripa Bricks',
-        'faq.q1': 'What is the price of bricks?',
-        'faq.a1': 'Standard bricks start from ₹8/piece. Premium bricks ₹10/piece. Shiv Eent Grade-A ₹12/piece. Bulk orders get special discounts. Call us for the latest pricing and deals.',
-        'faq.q2': 'Where do you deliver?',
-        'faq.a2': 'We deliver across Jaunpur, Varanasi, Jalalpur, Trilochan, Kerakat and surrounding areas. Same-day delivery available within Jaunpur district for orders placed before noon.',
-        'faq.q3': 'Do you accept small orders?',
-        'faq.a3': 'Yes, we accept both small and bulk orders. Minimum order of 1,000 bricks. For smaller quantities, please contact us — we’ll find a solution for you.',
-        'faq.q4': 'What payment methods do you accept?',
-        'faq.a4': 'We accept Cash, UPI (PhonePe, Google Pay, Paytm), Online Transfer (NEFT/RTGS), and Cheque. Cash on Delivery available for local orders.',
-        'faq.q5': 'What quality guarantee do you offer?',
-        'faq.a5': 'All our bricks are well-burnt, uniform in size, and tested for strength. We offer 100% replacement for damaged or substandard bricks. Our Grade-A bricks carry ISI quality standards.',
-        // Blog
-        'blog.tag': 'Knowledge Hub', 'blog.title': 'Blog & Tips',
-        'blog.desc': 'Expert advice on bricks, construction, and quality building practices',
-        // Contact
-        'contact.tag': 'Get In Touch', 'contact.title': 'Contact Us',
-        'contact.desc': 'We respond within the hour \u2014 or just call us directly',
-        'contact.labelPhone': 'Phone', 'contact.labelEmail': 'Email',
-        'contact.labelAddress': 'Address', 'contact.labelHours': 'Working Hours',
-        'contact.whatsapp': 'Chat on WhatsApp',
-        'contact.formName': 'Full Name *', 'contact.formEmail': 'Email *',
-        'contact.formPhone': 'Phone *', 'contact.formSubject': 'Subject *',
-        'contact.formMessage': 'Message *', 'contact.sendBtn': 'Send Message',
-        'contact.phName': 'Your full name', 'contact.phEmail': 'your@email.com',
-        'contact.phPhone': '+91 98765 43210', 'contact.phMessage': 'Describe your inquiry in detail...',
-        'contact.subjectSelect': 'Select subject',
-        'contact.subjectGeneral': 'General Inquiry',
-        'contact.subjectProducts': 'Product Information',
-        'contact.subjectOrders': 'Order & Delivery',
-        'contact.subjectQuote': 'Get a Quote',
-        'contact.subjectComplaint': 'Complaint',
-        'contact.sending': 'Sending...',
-        'contact.opening': 'Opening WhatsApp\u2026',
-        'contact.handedOff': 'Opening WhatsApp so the kiln team receives your message \u2014 tap Send there to deliver it.',
-        'contact.handoffFailed': 'Could not open WhatsApp. Please call +91 91989 23230 or use the WhatsApp button.',
-        'contact.directions': 'Get Directions — Open in Google Maps',
-        'contact.openMaps': 'Open in Google Maps',
-        'contact.provideFields': 'Please provide {fields}.',
-        'checkout.onlinePayUnavailable': 'Online card/UPI checkout is not connected yet. Use Cash on Delivery or confirm on WhatsApp.',
-        'checkout.codPlaced': 'COD order token saved. Confirm with the yard on WhatsApp or phone.',
-        'tracker.refreshed': 'Status refreshed from this device.',
-        'toast.newsletterHandoff': 'Opening your email app to send the signup request.',
-        // Dynamic messages & document title
-        'toast.addedToCart': '✅ {name} added to cart!',
-        'toast.msgSent': '✅ Message sent! We\'ll call you back soon.',
-        'toast.invalidEmail': '❌ Enter a valid email',
-        'toast.subscribed': '🎉 Subscribed! Welcome to our updates.',
-        'toast.searchFound': '🔍 Found: {name} — ₹{price}/{unit}',
-        'toast.langChanged': 'Language switched to English',
-        'toast.langChangedHi': '\u092d\u093e\u0937\u093e \u0939\u093f\u0902\u0926\u0940 \u092e\u0947\u0902 \u092c\u0926\u0932\u0940 \u0917\u0908',
-        'doc.title': 'Gurukripa Bricks Industry | Premium Red Clay Bricks — Jaunpur, UP',
-        'auth.locked': '🔒 Account locked due to repeated failed attempts.',
-                'auth.orContinue': 'or continue with',
-                        'auth.termsRequired': 'Please accept the Terms & Privacy Policy to continue.',
-                        'auth.iAgree': 'I agree to the',
-                        'auth.terms': 'Terms',
-                        'auth.privacy': 'Privacy Policy',
-        'cart.title': 'My Cart',
-        'cart.itemSingular': 'item',
-        'cart.itemPlural': 'items',
-        'cart.freeThreshold': 'Free delivery threshold:',
-        'cart.addMore': 'Add ₹{amt} more',
-        'cart.freeUnlocked': 'Free delivery unlocked',
-        'cart.trolleyTitle': 'Trolley Load (4,000 pcs)',
-        'cart.trolleyHintEmpty': 'Add 4,000 bricks to complete 1 full trolley load &amp; unlock 5% bulk discount.',
-        'cart.trolleyHintNeed': 'Add <strong>{n} more bricks</strong> to unlock <strong>5% bulk trolley discount</strong>!',
-        'cart.trolleyHintFull': 'Full Trolley Load ({t} Trolleys) · 5% Bulk Discount Unlocked!',
-        'cart.unlocked': '🎉 You unlocked FREE Delivery!',
-        'cart.emptyTitle': 'Your Cart is Empty',
-        'cart.emptyText': 'Add Grade-A bricks to calculate project cost and delivery.',
-        'cart.browse': 'Browse Products →',
-        'cart.couponPh': 'Enter coupon code (e.g. GURU10)',
-        'cart.apply': 'Apply',
-        'cart.couponInvalid': '❌ Invalid coupon code. Try GURU10',
-        'cart.billSummary': 'Bill Summary',
-        'cart.subtotal': 'Item Subtotal',
-        'cart.delivery': 'Delivery Charge',
-        'cart.savings': 'Coupon Savings',
-        'cart.grandTotal': 'Grand Total',
-        'cart.checkout': 'Proceed to Checkout',
-        'cart.secure': '100% Encrypted & Safe Checkout',
-        'cart.remove': 'Remove',
-        'auth.invalidLogin': '❌ Invalid login. {n} attempt(s) remaining.',
-        'auth.welcome': '👋 Welcome back, {name}!',
-        'auth.created': '🎉 Account created successfully!',
-        'auth.signInTitle': 'Welcome Back',
-        'auth.signInSub': 'Sign in to your account',
-        'auth.signUpTitle': 'Create Account',
-        'auth.signUpSub': 'Join Gurukripa Bricks today',
-        'auth.signedOut': '👋 Signed out successfully.',
-        'auth.nameInvalid': 'Please enter a valid name',
-        'auth.emailInvalid': 'Please enter a valid email',
-        'auth.profileSaved': '✅ Profile updated successfully!',
-        'auth.deviceNote': 'Passwords are verified by the yard server when connected. This browser never stores your password in plain text — only a device verifier when you sign up offline.',
-        'auth.deviceSession': 'Signed in on this device. Server password is not stored in the browser.',
-        'auth.recoverTitle': 'Recover your account',
-        'auth.recoverSub': 'Yard office resets access by hand',
-        'auth.resetTitle': 'Reset password',
-        'auth.resetSub': 'Coming soon — no reset API yet',
-        'auth.resetUnavailable': 'Self-service reset is not available yet. Please call the yard.',
-        'auth.forgot': 'Forgot password?',
-                'auth.googleSuccess': '👋 Signed in with Google as {name}!',
-                'auth.googleNotConfigured': '⚙️ Google Sign-In is not configured yet. Add your Google OAuth Client ID to activate it.',
-                'auth.googleUnavailable': '❌ Google service unavailable. Please try again.',
-        'checkout.emptyCart': '🛒 Your cart is empty!',
-        'checkout.fillFields': '❌ Please fill all required delivery fields.',
-        'checkout.upiCopied': '📋 UPI ID "gurukripa@upi" copied!',
-        'checkout.orderPlaced': '🎉 Order placed successfully!',
-        'wishlist.added': '❤️ Added to wishlist!',
-        'wishlist.removed': 'Removed from wishlist.',
-        'wishlist.empty': 'No saved wishlist items.',
-        'wishlist.title': 'My Wishlist',
-        'wishlist.emptyTitle': 'Your Wishlist is Empty',
-        'wishlist.emptyText': 'Save bricks you love by tapping the heart on any product card.',
-        'wishlist.browse': 'Browse Products',
-        'wishlist.addAll': 'Add All to Cart',
-        'wishlist.addAllToast': 'All wishlist items added to cart!',
-        'checkout.title': 'Checkout & Order Summary',
-        'checkout.sub': 'The yard confirms the loading slot after the order reaches it.',
-        'checkout.stepDetails': 'Details',
-        'checkout.stepPayment': 'Payment',
-        'checkout.stepConfirm': 'Confirm',
-        'dialog.fieldRequired': 'This field is required.',
-        'dialog.genericError': 'Something went wrong. Please try again.',
-        'profile.enquiries.empty': 'No enquiries or quotation requests raised from this device yet.',
-        'product.add': 'Add',
-        'tracker.demoLoaded': '🚚 Loaded live demo order tracking!',
-        'tracker.enterId': 'Please enter an Order ID or Mobile',
-        'invoice.trolleyAdded': '🔄 Trolley re-order added to cart!',
-'calc.addedToCart': '🛒 Added {qty} {name} to cart!',
-'calc.soundGradeA': '🔔 Grade-A Metallic Ringing Sound (खनक)',
-'calc.soundClear': '🔉 Clear Brick Ring',
-'calc.soundDull': 'Dull Low-Grade Sound (Unbaked)',
-'calc.soundPlayed': '🔔 Brick sound test played!',
-        // Footer
-        'footer.quickLinks': 'Quick Links', 'footer.ourProducts': 'Our Products',
-        'footer.connect': 'Connect With Us', 'footer.newsletter': 'Newsletter',
-        'footer.newsletterDesc': 'Get rate updates on WhatsApp', 'footer.subscribe': 'Subscribe',
-        'footer.emailPh': 'Your email address',
-        'footer.phoneLabel': 'Mobile number for WhatsApp updates',
-        'footer.phonePh': '10-digit mobile',
-        'footer.whatsappUpdates': 'Get updates',
-        'footer.phoneInvalid': 'Enter a valid 10-digit Indian mobile number.',
-        'footer.phoneOpening': 'Opening WhatsApp…',
-        'footer.phoneSuccess': 'WhatsApp opened — send the message to get rate updates.',
-        'footer.phoneError': 'Could not open WhatsApp. Call +91 91989 23230.',
-        'footer.brandName': 'Gurukripa Bricks Industry',
-        'footer.brandDesc': 'Construction-material and brick supply from Jaunpur\u2019s trusted kiln. Grade-A bricks, reliable delivery, and supplier discovery for homes and contractors.',
-        'footer.quality': 'Quality Standards',
-        'footer.privacy': 'Privacy Policy',
-        'footer.terms': 'Terms and Conditions',
-        'footer.shipping': 'Shipping Policy',
-        'footer.weAccept': 'We Accept:',
-        'footer.payUpi': 'UPI (manual)',
-        'footer.payNeft': 'NEFT / RTGS',
-        'footer.payCod': 'Cash on Delivery / Cash at Site',
-        'footer.gstinLabel': 'GSTIN',
-        'footer.kilnLabel': 'Kiln',
-        'footer.gstinCopied': 'GSTIN copied',
-        'footer.address': 'Newada, Jalalpur-Chavri Road, Jalalpur, Jaunpur (UP) — 222001',
-        'footer.hours': 'Mon–Sat | 8:00 AM – 6:00 PM (Sunday Closed)',
-        'footer.sameDay': 'Same-Day Delivery',
-        'footer.sameDayCities': 'Jaunpur, Varanasi, Jalalpur, Trilochan, Shahganj, Mariahu & surrounding sites.',
-        'footer.rights': '\u00a9 2026 Gurukripa Bricks Industry. All rights reserved.',
-        'fab.chat': 'Chat', 'fab.call': 'Call', 'fab.whatsapp': 'WhatsApp',
-        // Drawer / Mobile Nav
-        'drawer.callUs': 'Call Us', 'drawer.whatsapp': 'WhatsApp',
-        'drawer.signUp': 'Sign Up \u2014 Free', 'drawer.signIn': 'Sign In',
-        'drawer.trackDelivery': 'Track Delivery',
-        'drawer.qualitySpec': 'Quality Specs & Tester',
-        'drawer.estimator': 'Brick Estimator',
-        'drawer.aboutUs': 'About Us',
-        // Mobile bottom nav
-        'mobile.home': 'Home', 'mobile.products': 'Products',
-        'mobile.cart': 'Cart', 'mobile.calc': 'Estimator', 'mobile.profile': 'Account',
-        // CTA Banner
-        'cta.title': 'Order Premium Bricks Today \u2014<br>Fast Delivery in Jaunpur!',
-        'cta.subtitle': 'Order today and build with confidence',
-        'cta.call': 'Call Now: +91 91989 23230',
-        'cta.wa': 'WhatsApp Us',
-        // Dialogs
-        'dialog.cancel': 'Cancel', 'dialog.confirm': 'Confirm', 'dialog.save': 'Save',
-        'dialog.ok': 'OK', 'dialog.working': 'Working\u2026', 'dialog.tryAgain': 'Try again',
-        'dialog.discardTitle': 'Discard changes?',
-        'dialog.discardMsg': 'You have information that has not been submitted. Close anyway?',
-        'dialog.discard': 'Discard', 'dialog.keepEditing': 'Keep editing',
-    },
-    hi: {
-        // Topbar
-        'topbar.hours': '\u0938\u094b\u092e\u2013\u0936\u0928\u093f | \u0938\u0941\u092c\u0939 8\u2013\u0936\u093e\u092e 6',
-        'topbar.status': '\u092d\u091f\u094d\u091f\u093e \u0938\u0915\u094d\u0930\u093f\u092f \u00b7 \u0909\u0938\u0940 \u0926\u093f\u0928 \u0921\u093f\u0938\u094d\u092a\u0948\u091a',
-        'topbar.ops': '\u0911\u092a\u0930\u0947\u0936\u0928\u094d\u0938 \u092a\u094b\u0930\u094d\u091f\u0932',
-        // Nav
-        'nav.home': '\u0939\u094b\u092e', 'nav.products': '\u0909\u0924\u094d\u092a\u093e\u0926', 'nav.pricing': '\u092e\u0942\u0932\u094d\u092f',
-        'nav.qualitySpec': '\u0917\u0941\u0923 \u0935\u093f\u0936\u0947\u0937', 'nav.calculator': '\u0905\u0928\u0941\u092e\u093e\u0928\u0915',
-        'nav.gallery': '\u0917\u0948\u0932\u0930\u0940', 'nav.about': '\u0939\u092e\u093e\u0930\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902', 'nav.contact': '\u0938\u0902\u092a\u0930\u094d\u0915',
-        'nav.categories': '\u0936\u094d\u0930\u0947\u0923\u093f\u092f\u093e\u0901', 'nav.delivery': '\u0921\u093f\u0932\u0940\u0935\u0930\u0940', 'nav.getQuote': '\u0915\u094d\u0935\u094b\u091f \u0932\u0947\u0902',
-        'nav.trackOrder': '\u0921\u093f\u0932\u0940\u0935\u0930\u0940 \u091f\u094d\u0930\u0948\u0915 \u0915\u0930\u0947\u0902', 'nav.vendors': '\u0935\u093f\u0915\u094d\u0930\u0947\u0924\u093e',
-        'nav.nearby': '\u0928\u091c\u0926\u0940\u0915\u0940 \u092d\u091f\u094d\u091f\u093e',
-        'nav.prices': '\u092e\u0942\u0932\u094d\u092f \u0938\u0942\u091a\u0940',
-        'nearby.tag': '\u0938\u094d\u092e\u093e\u0930\u094d\u091f \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0916\u094b\u091c',
-        'nearby.title': '\u0906\u092a\u0915\u0947 \u0928\u091c\u0926\u0940\u0915 \u0908\u0902\u091f \u092d\u091f\u094d\u091f\u093e \u0914\u0930 \u0908\u0902\u091f \u0938\u092a\u094d\u0932\u093e\u092f\u0930',
-        'nearby.lead': '\u0905\u092a\u0928\u0947 \u0935\u0930\u094d\u0924\u092e\u093e\u0928 \u0938\u094d\u0925\u093e\u0928 \u0915\u0947 \u0928\u091c\u0926\u0940\u0915 \u0935\u093f\u0936\u094d\u0935\u0938\u0928\u0940\u092f \u0908\u0902\u091f \u0928\u093f\u0930\u094d\u092e\u093e\u0924\u093e \u0914\u0930 \u0908\u0902\u091f \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0916\u094b\u091c\u0947\u0902\u0964',
-        'nearby.locPending': '\u0938\u094d\u0925\u093e\u0928 \u0938\u0947\u091f \u0928\u0939\u0940\u0902 \u0939\u0948',
-        'nearby.useGps': '\u092e\u0947\u0930\u093e \u0938\u094d\u0925\u093e\u0928 \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0947\u0902',
-        'nearby.changeLoc': '\u0938\u094d\u0925\u093e\u0928 \u092c\u0926\u0932\u0947\u0902',
-        'nearby.manualLabel': '\u0907\u0932\u093e\u0915\u093e, \u0936\u0939\u0930 \u092f\u093e PIN \u0915\u094b\u0921 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902',
-        'nearby.searchLoc': '\u0916\u094b\u091c\u0947\u0902',
-        'nearby.privacy': '\u0906\u092a\u0915\u0947 \u0938\u0920\u0940\u0915 \u0928\u093f\u0930\u094d\u0926\u0947\u0936\u093e\u0902\u0915 \u0915\u0947\u0935\u0932 \u0915\u0947\u0935\u0932 \u0907\u0938 \u0921\u093f\u0935\u093e\u0907\u0938 \u092a\u0930 \u0930\u0939\u0924\u0947 \u0939\u0948\u0902 \u0914\u0930 \u0939\u092e\u093e\u0930\u0947 \u0938\u0930\u094d\u0935\u0930 \u092a\u0930 \u0938\u0902\u0917\u094d\u0930\u0939\u093f\u0924 \u0928\u0939\u0940\u0902 \u0915\u093f\u090f \u091c\u093e\u0924\u0947\u0964',
-        'nearby.smartTitle': '\u0938\u094d\u0925\u093e\u0928-\u0906\u0927\u093e\u0930\u093f\u0924 \u0938\u0941\u091d\u093e\u0935',
-        'nearby.recTitle': '\u0938\u094d\u092e\u093e\u0930\u094d\u091f \u0908\u0902\u091f \u0938\u0941\u091d\u093e\u0935',
-        'nearby.recLead': '\u0908\u0902\u091f \u0936\u094d\u0930\u0947\u0923\u0940 \u091a\u0941\u0928\u0947\u0902 \u0914\u0930 \u0928\u091c\u0926\u0940\u0915 \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0926\u0947\u0916\u0947\u0902\u0964 \u0938\u0902\u0930\u091a\u0928\u093e\u0924\u094d\u092e\u0915 \u0909\u092a\u092f\u0941\u0915\u094d\u0924\u0924\u093e \u0939\u092e\u0947\u0936\u093e \u092a\u0930\u0940\u0915\u094d\u0937\u093f\u0924 \u0935\u093f\u0936\u0947\u0937\u094b\u0902 \u0914\u0930 \u092a\u0930\u093f\u092f\u094b\u091c\u0928\u093e \u0905\u092d\u093f\u092f\u0902\u0924\u093e \u092a\u0930 \u0928\u093f\u0930\u094d\u092d\u0930 \u0915\u0930\u0924\u0940 \u0939\u0948\u0964',
-        'nearby.mapTitle': '\u0928\u091c\u0926\u0940\u0915\u0940 \u092d\u091f\u094d\u091f\u093e \u092e\u0948\u092a',
-        // Auth
-        'auth.signIn': '\u0938\u093e\u0907\u0928 \u0907\u0928', 'auth.signUp': '\u0938\u093e\u0907\u0928 \u0905\u092a', 'auth.signOut': '\u0938\u093e\u0907\u0928 \u0906\u0909\u091f',
-        'auth.myProfile': '\u092e\u0947\u0930\u0940 \u092a\u094d\u0930\u094b\u092b\u093e\u0907\u0932', 'auth.myCart': '\u092e\u0947\u0930\u0940 \u0915\u093e\u0930\u094d\u091f',
-        'auth.orContinue': '\u092f\u093e \u0907\u0938\u0915\u0947 \u0938\u093e\u0925 \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902',
-        'auth.remember': '\u092e\u0941\u091d\u0947 \u0930\u0916\u0947\u0902', 'auth.forgot': '\u092a\u093e\u0938\u0935\u0930\u094d\u0921 \u092d\u0942\u0932 \u0917\u090f?',
-        'auth.submitLogin': '\u0916\u093e\u0924\u0947 \u092e\u0947\u0902 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902', 'auth.submitRegister': '\u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902',
-        'auth.needPhone': '\u0907\u0938 \u0921\u093f\u0935\u093e\u0907\u0938 \u092a\u0930 \u0907\u0938 \u0908\u092e\u0947\u0932 \u0938\u0947 \u091c\u0941\u0921\u093c\u093e \u092e\u094b\u092c\u093e\u0907\u0932 \u0932\u093f\u0902\u0915 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u090f\u0915 \u092c\u093e\u0930 \u0938\u093e\u0907\u0928 \u0905\u092a \u0915\u0930\u0947\u0902, \u092f\u093e \u092f\u093e\u0930\u094d\u0921 \u0915\u094b \u0915\u0949\u0932 \u0915\u0930\u0947\u0902\u0964',
-        'auth.profileSavedOffline': '\u0907\u0938 \u0921\u093f\u0935\u093e\u0907\u0938 \u092a\u0930 \u0938\u0947\u0935 \u0939\u094b \u0917\u092f\u093e\u0964 \u0911\u0928\u0932\u093e\u0907\u0928 \u0939\u094b\u0928\u0947 \u092a\u0930 \u0938\u0930\u094d\u0935\u0930 \u0938\u093f\u0902\u0915 \u092b\u093f\u0930 \u0938\u0947 \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0917\u093e\u0964',
-        'contact.serverSaved': '\u092a\u0942\u091b\u0924\u093e\u0935 \u0938\u0947\u0935 \u0939\u094b \u0917\u092f\u093e\u0964 WhatsApp \u0916\u0941\u0932 \u0930\u0939\u093e \u0939\u0948\u2026',
-        'auth.emailLabel': '\u0908\u092e\u0947\u0932 \u092a\u0924\u093e',
-        'auth.passwordLabel': '\u092a\u093e\u0938\u0935\u0930\u094d\u0921',
-        'auth.nameLabel': '\u092a\u0942\u0930\u093e \u0928\u093e\u092e',
-        'auth.mobileLabel': '\u092e\u094b\u092c\u093e\u0907\u0932',
-        'auth.confirmLabel': '\u092a\u093e\u0938\u0935\u0930\u094d\u0921 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902',
-        // Hero
-        'hero.eyebrow': '\u091c\u094c\u0928\u092a\u0941\u0930 \u0915\u093e \u092a\u094d\u0930\u0924\u094d\u092f\u0915\u094d\u0937 \u092d\u091f\u094d\u091f\u093e \u0928\u093f\u0930\u094d\u092e\u093e\u0924\u093e \u00b7 1998 \u0938\u0947',
-        'hero.titleHi': '',
-        'brand.name': '\u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0909\u0926\u094d\u092f\u094b\u0917',
-        'brand.tagline': '\u092c\u0947\u0939\u0924\u0930\u0940\u0928 \u0908\u0902\u091f\u0947\u0902 \u00b7 \u092d\u0930\u094b\u0938\u0947\u092e\u0902\u0926 \u0938\u092a\u094d\u0932\u093e\u0908',
-        'hero.title': '\u092c\u0947\u0939\u0924\u0930\u0940\u0928 \u0908\u0902\u091f\u0947\u0902, \u092d\u0930\u094b\u0938\u0947\u092e\u0902\u0926 \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0914\u0930 \u0935\u093f\u0936\u094d\u0935\u0938\u0928\u0940\u092f \u0938\u0947\u0935\u093e\u0964',
-        'hero.subtitle': '\u0935\u093f\u0936\u094d\u0935\u0938\u0928\u0940\u092f \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0938\u0947 \u0905\u091a\u094d\u091b\u0940 \u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u0915\u0940 \u0908\u0902\u091f\u0947\u0902 \u0914\u0930 \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0938\u093e\u092e\u0917\u094d\u0930\u0940 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0947\u0902\u0964 \u0909\u0924\u094d\u092a\u093e\u0926 \u0926\u0947\u0916\u0947\u0902, \u0915\u0940\u092e\u0924\u094b\u0902 \u0915\u0940 \u0924\u0941\u0932\u0928\u093e \u0915\u0930\u0947\u0902 \u0914\u0930 \u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0909\u0926\u094d\u092f\u094b\u0917 \u0915\u0947 \u0938\u093e\u0925 \u0906\u0938\u093e\u0928\u0940 \u0938\u0947 \u092c\u0941\u0915\u093f\u0902\u0917 \u0915\u0930\u0947\u0902\u0964',
-        'hero.cta1': '\u0909\u0924\u094d\u092a\u093e\u0926 \u0926\u0947\u0916\u0947\u0902',
-        'hero.ctaNearby': '\u0928\u091c\u0926\u0940\u0915\u0940 \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0916\u094b\u091c\u0947\u0902',
-        'hero.ctaBook': '\u0908\u0902\u091f \u092c\u0941\u0915 \u0915\u0930\u0947\u0902',
-        'hero.ctaBookNow': '\u0905\u092d\u0940 \u0908\u0902\u091f\u0947\u0902 \u092c\u0941\u0915 \u0915\u0930\u0947\u0902',
-        'hero.ctaContact': '\u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u0947\u0902',
-        'hero.since': '\u091c\u094c\u0928\u092a\u0941\u0930 \u0938\u0947',
-        'auth.captchaFailed': 'CAPTCHA \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0905\u0938\u092b\u0932 \u0930\u0939\u093e\u0964 \u092a\u0947\u091c \u0930\u093f\u092b\u094d\u0930\u0947\u0936 \u0915\u0930\u0915\u0947 \u092b\u093f\u0930 \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964',
-        'checkout.validating': '\u092f\u093e\u0930\u094d\u0921 \u0938\u0947 \u0915\u0940\u092e\u0924\u0947\u0902 \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0940 \u091c\u093e \u0930\u0939\u0940 \u0939\u0948\u2026',
-        'checkout.priceChanged': '\u0915\u0941\u091b \u0915\u0940\u092e\u0924\u0947\u0902 \u092c\u0926\u0932 \u0917\u0908\u0902\u0964 \u092a\u0941\u0937\u094d\u091f\u093f \u0938\u0947 \u092a\u0939\u0932\u0947 \u0915\u093e\u0930\u094d\u091f \u0915\u0941\u0932 \u0926\u0947\u0916\u0947\u0902\u0964',
-        'checkout.duplicateBlocked': '\u092f\u0939 \u0911\u0930\u094d\u0921\u0930 \u092a\u0939\u0932\u0947 \u0938\u0947 \u091c\u092e\u093e \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902\u0964',
-        'nav.bookings': '\u092c\u0941\u0915\u093f\u0902\u0917',
-        'nav.suppliers': '\u0908\u0902\u091f \u0938\u092a\u094d\u0932\u093e\u092f\u0930',
-        'nav.bookBricks': '\u0908\u0902\u091f \u092c\u0941\u0915 \u0915\u0930\u0947\u0902',
-        'nav.aboutUs': '\u0939\u092e\u093e\u0930\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902',
-        'nav.contactUs': '\u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u0947\u0902',
-        'footer.customerServices': '\u0917\u094d\u0930\u093e\u0939\u0915 \u0938\u0947\u0935\u093e\u090f\u0901',
-        'footer.contactInfo': '\u0938\u0902\u092a\u0930\u094d\u0915 \u091c\u093e\u0928\u0915\u093e\u0930\u0940',
-        'footer.myOrders': '\u092e\u0947\u0930\u0947 \u0911\u0930\u094d\u0921\u0930',
-        'footer.myBookings': '\u092e\u0947\u0930\u0940 \u092c\u0941\u0915\u093f\u0902\u0917',
-        'footer.faq': '\u0905\u0915\u094d\u0938\u0930-\u0905\u0915\u094d\u0938\u0930 \u092a\u0942\u091b\u0947 \u091c\u093e\u0928\u0947 \u0935\u093e\u0932\u0947 \u0938\u0935\u093e\u0932',
-        'footer.support': '\u0917\u094d\u0930\u093e\u0939\u0915 \u0938\u0939\u093e\u092f\u0924\u093e',
-        'footer.contactForm': '\u0938\u0902\u092a\u0930\u094d\u0915 \u092b\u0949\u0930\u094d\u092e',
-        'footer.refund': '\u0930\u093f\u092b\u0902\u0921 \u0914\u0930 \u0930\u0926\u094d\u0926\u0940\u0915\u0930\u0923',
-        'hero.callNow': '\u0905\u092d\u0940 \u0915\u0949\u0932 \u0915\u0930\u0947\u0902', 'hero.viewProducts': '\u0909\u0924\u094d\u092a\u093e\u0926 \u0926\u0947\u0916\u0947\u0902',
-        'hero.chip1': '\u0909\u0938\u0940 \u0926\u093f\u0928 \u0921\u093f\u0932\u0940\u0935\u0930\u0940', 'hero.chip2': '\u092e\u094c\u0938\u092e \u092a\u094d\u0930\u0924\u093f\u0930\u094b\u0927\u0940', 'hero.chip3': 'ISI \u092a\u094d\u0930\u092e\u093e\u0923\u093f\u0924',
-        'hero.stat1': '\u0908\u0902\u091f\u0947\u0902 \u0921\u093f\u0932\u0940\u0935\u0930', 'hero.stat2': '\u092a\u094d\u0930\u094b\u091c\u0947\u0915\u094d\u091f \u092a\u0942\u0930\u094d\u0923',
-        'hero.stat3': '\u0936\u0939\u0930\u094b\u0902 \u092e\u0947\u0902 \u0938\u0947\u0935\u093e', 'hero.stat4': '\u0938\u0902\u0924\u0941\u0937\u094d\u091f\u093f',
-        'hero.certTitle': '\u0917\u094d\u0930\u0947\u0921-A \u092a\u094d\u0930\u092e\u093e\u0923\u093f\u0924', 'hero.certSub': '\u0921\u092c\u0932-\u092b\u093e\u092f\u0930\u094d\u0921 \u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e',
-        // Categories
-        'categories.tag': '\u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0936\u094d\u0930\u0947\u0923\u093f\u092f\u093e\u0901', 'categories.title': '\u0939\u092e\u093e\u0930\u0940 \u0936\u094d\u0930\u0947\u0923\u0940 \u0926\u0947\u0916\u0947\u0902',
-        'categories.desc': '\u092e\u091c\u092c\u0942\u0924\u0940 \u0915\u0947 \u0932\u093f\u090f \u0924\u0948\u092f\u093e\u0930 \u0915\u0940 \u0917\u0908 \u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0908\u0902\u091f\u094b\u0902 \u0915\u0940 \u0935\u093f\u0936\u093e\u0932 \u0936\u094d\u0930\u0947\u0923\u0940 \u092e\u0947\u0902 \u0938\u0947 \u091a\u0941\u0928\u0947\u0902',
-        'categories.shivSub': '\u0905\u0932\u094d\u091f\u094d\u0930\u093e-\u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e', 'categories.premiumSub': '\u0921\u092c\u0932-\u092b\u093e\u092f\u0930\u094d\u0921 \u092e\u091c\u092c\u0942\u0924\u0940',
-        'categories.standardSub': '\u0938\u0930\u094d\u0935\u0936\u094d\u0930\u0947\u0937\u094d\u0920 \u0915\u093f\u092b\u093e\u092f\u0924\u0940 \u0935\u093f\u0915\u0932\u094d\u092a', 'categories.machineSub': '\u092a\u0930\u093f\u0936\u0941\u0926\u094d\u0927 \u0906\u0915\u093e\u0930 \u0914\u0930 \u0938\u093e\u0907\u091c\u093c',
-        // Products
-        'products.tag': '\u092a\u094d\u0930\u092e\u093e\u0923\u093f\u0924 \u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e', 'products.title': '\u0939\u092e\u093e\u0930\u0947 \u0909\u0924\u094d\u092a\u093e\u0926',
-        'products.desc': '\u0939\u0930 \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0906\u0935\u0936\u094d\u092f\u0915\u0924\u093e \u0915\u0947 \u0932\u093f\u090f \u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0908\u0902\u091f\u094b\u0902 \u0915\u0940 \u091a\u092f\u0928\u093f\u0924 \u0936\u094d\u0930\u0947\u0923\u0940',
-        'products.filterAll': '\u0938\u092d\u0940 \u0909\u0924\u094d\u092a\u093e\u0926', 'products.addToCart': '\u0915\u093e\u0930\u094d\u091f \u092e\u0947\u0902 \u091c\u094b\u0921\u093c\u0947\u0902',
-        'products.viewDetails': '\u0935\u093f\u0935\u0930\u0923 \u0926\u0947\u0916\u0947\u0902',
-        'products.getPrice': '\u0915\u0940\u092e\u0924 \u092a\u0942\u091b\u0947\u0902',
-        'products.requestQuote': '\u0915\u094d\u0935\u094b\u091f\u0947\u0936\u0928 \u092e\u093e\u0901\u0917\u0947\u0902',
-        'wishlist.add': '\u0935\u093f\u0936\u0932\u093f\u0938\u094d\u091f \u092e\u0947\u0902 \u091c\u094b\u0921\u093c\u0947\u0902',
-        'auth.sessionExpired': '\u0906\u092a\u0915\u093e \u0938\u0947\u0936\u0928 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u0917\u092f\u093e\u0964 \u0915\u0943\u092a\u092f\u093e \u092b\u093f\u0930 \u0938\u0947 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902\u0964',
-        'auth.accessDenied': '\u0907\u0938 \u0915\u093e\u0930\u094d\u092f\u0935\u093e\u0939\u0940 \u0915\u0947 \u0932\u093f\u090f \u0906\u092a\u0915\u0947 \u092a\u093e\u0938 \u0905\u0928\u0941\u092e\u0924\u093f \u0928\u0939\u0940\u0902 \u0939\u0948\u0964',
-        'auth.requireLogin': '\u091c\u093e\u0930\u0940 \u0930\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902\u0964',
-        'products.empty': '\u0907\u0938 \u0936\u094d\u0930\u0947\u0923\u0940 \u092e\u0947\u0902 \u0915\u094b\u0908 \u0909\u0924\u094d\u092a\u093e\u0926 \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u093e\u0964',
-        'products.orderNow': '\u0905\u092d\u0940 \u0911\u0930\u094d\u0921\u0930 \u0915\u0930\u0947\u0902', 'products.inStock': '\u0938\u094d\u091f\u0949\u0915 \u092e\u0947\u0902', 'products.lowStock': '\u0938\u0940\u092e\u093f\u0924 \u0938\u094d\u091f\u0949\u0915',
-        // Pricing
-        'pricing.tag': '\u092a\u093e\u0930\u0926\u0930\u094d\u0936\u0940 \u092e\u0942\u0932\u094d\u092f \u0928\u093f\u0930\u094d\u0927\u093e\u0930\u0923', 'pricing.title': '\u0939\u092e\u093e\u0930\u0947 \u0909\u0924\u094d\u092a\u093e\u0926\u094b\u0902 \u0915\u0940 \u0924\u0941\u0932\u0928\u093e \u0915\u0930\u0947\u0902',
-        'pricing.desc': '\u0915\u094b\u0908 \u091b\u093f\u092a\u0940 \u0939\u0941\u0908 \u0932\u093e\u0917\u0924 \u0928\u0939\u0940\u0902 \u2014 \u0939\u0930 \u092c\u091c\u091f \u0938\u094d\u0924\u0930 \u092a\u0930 \u0908\u092e\u093e\u0928\u0926\u093e\u0930 \u092e\u0942\u0932\u094d\u092f',
-        'pricing.colProduct': '\u0909\u0924\u094d\u092a\u093e\u0926', 'pricing.colPrice': '\u092e\u0942\u0932\u094d\u092f / \u0908\u0902\u091f',
-        'pricing.colStrength': '\u092e\u091c\u092c\u0942\u0924\u0940', 'pricing.colBestFor': '\u0938\u092c\u0938\u0947 \u0905\u091a\u094d\u091b\u093e',
-        'pricing.colISI': 'ISI \u0917\u094d\u0930\u0947\u0921', 'pricing.colBulk': '\u0925\u094b\u0915 \u091b\u0942\u091f', 'pricing.colOrder': '\u0911\u0930\u094d\u0921\u0930',
-        'pricing.orderNow': '\u0905\u092d\u0940 \u0911\u0930\u094d\u0921\u0930 \u0915\u0930\u0947\u0902',
-        // Search
-        'search.placeholder': '\u0908\u0902\u091f\u0947\u0902, \u0915\u0940\u092e\u0924\u0947\u0902 \u0916\u094b\u091c\u0947\u0902...',
-        // Quality Spec
-        'qualitySpec.tag': '\u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u092a\u094d\u0930\u092e\u093e\u0923\u0940\u0915\u0930\u0923',
-        'qualitySpec.title': '\u0908\u0902\u091f \u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u0935\u093f\u0936\u0947\u0937 \u0914\u0930 \u0916\u0928\u0915 \u091f\u0947\u0938\u094d\u091f',
-        'qualitySpec.sub': '\u0916\u0930\u0940\u0926\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u0924\u0915\u0928\u0940\u0915\u0940 \u0935\u093f\u0936\u0947\u0937\u0924\u093e\u0913\u0902 \u0915\u0940 \u0924\u0941\u0932\u0928\u093e \u0915\u0930\u0947\u0902 \u0914\u0930 \u0917\u094d\u0930\u0947\u0921-A \u0908\u0902\u091f\u094b\u0902 \u0915\u0940 \u0905\u0938\u0932\u0940 \u0916\u0928\u0915 \u091f\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902',
-        'qualitySpec.soundBtn1': '\ud83d\udd14 \u0917\u094d\u0930\u0947\u0921-A \u0916\u0928\u0915 \u091f\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902',
-        'qualitySpec.soundBtn2': '\ud83d\udd08 \u0928\u093f\u092e\u094d\u0928 \u0917\u094d\u0930\u0947\u0921 \u0908\u0902\u091f \u0915\u0940 \u0906\u0935\u093e\u091c\u093c \u091f\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902',
-        'qualitySpec.cardTitle': '\ud83d\udd0a \u0905\u0938\u0932\u0940 \u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u091f\u0947\u0938\u094d\u091f: \u0916\u0928\u0915 \u0915\u0940 \u0906\u0935\u093e\u091c\u093c \u0938\u0941\u0928\u0947\u0902',
-        'qualitySpec.cardDesc': '\u092d\u093e\u0930\u0924 \u092e\u0947\u0902 \u0908\u0902\u091f \u092a\u0930\u0940\u0915\u094d\u0937\u0923 \u092e\u0947\u0902, \u0926\u094b \u0905\u091a\u094d\u091b\u0940 \u0924\u0930\u0939 \u091c\u0932\u0940 \u0917\u094d\u0930\u0947\u0921-A \u0908\u0902\u091f\u094b\u0902 \u0915\u094b \u0906\u092a\u0938 \u092e\u0947\u0902 \u0920\u094b\u0915\u0928\u0947 \u092a\u0930 \u0938\u094d\u092a\u0937\u094d\u091f \u0916\u0928\u0915 \u0915\u0940 \u0906\u0935\u093e\u091c\u093c \u0906\u0924\u0940 \u0939\u0948\u0964',
-        // Brick Details
-        'brickDetails.tag': '\u0908\u0902\u091f \u0915\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940', 'brickDetails.title': '\u0932\u093e\u0932 \u092a\u0947\u091f\u0940 \u0914\u0930 \u0906\u0935\u094d\u0935\u0932 \u2014 \u0924\u0941\u0932\u0928\u093e',
-        'brickDetails.desc': '\u0916\u0930\u0940\u0926\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u091c\u093e\u0928\u0947\u0902 \u0915\u093f \u0906\u092a\u0915\u0947 \u092a\u094d\u0930\u094b\u091c\u0947\u0915\u094d\u091f \u0915\u0947 \u0932\u093f\u090f \u0915\u094c\u0928 \u0938\u0940 \u0908\u0902\u091f \u0938\u092c\u0938\u0947 \u0909\u092a\u092f\u0941\u0915\u094d\u0924 \u0939\u0948',
-        // BRL
-        'brl.tag': '\u0938\u0940\u0927\u0947 \u092d\u091f\u094d\u091f\u0947 \u0938\u0947',
-        'brl.headline': '\u0915\u094b\u0908 \u092c\u093f\u091a\u094c\u0932\u093f\u092f\u093e \u0928\u0939\u0940\u0902\u0964<br>\u0915\u094b\u0908 \u092e\u093e\u0930\u094d\u0915\u0905\u092a \u0928\u0939\u0940\u0902\u0964<br><em>\u092c\u0938 \u0908\u092e\u093e\u0928\u0926\u093e\u0930 \u0915\u0940\u092e\u0924\u0947\u0902\u0964</em>',
-        'brl.lead': '\u091c\u094c\u0928\u092a\u0941\u0930 \u092e\u0947\u0902 \u090f\u0915\u092e\u093e\u0924\u094d\u0930 \u0910\u0938\u093e \u092c\u094d\u0930\u093e\u0902\u0921 \u091c\u094b \u092d\u091f\u094d\u091f\u0947 \u0915\u0940 \u0926\u0930 \u092a\u0930 \u0938\u092d\u0940 \u0908\u0902\u091f \u0938\u093e\u092e\u0917\u094d\u0930\u0940 \u0926\u0947\u0924\u093e \u0939\u0948\u0964',
-        // Buying Guide
-        'brickGuide.tag': '\u0916\u0930\u0940\u0926 \u0917\u093e\u0907\u0921',
-        'brickGuide.title': '\u0915\u0939\u093e\u0901 \u0915\u094c\u0928 \u0938\u0940 \u0908\u0902\u091f \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0947\u0902?',
-        'brickGuide.desc': '\u0939\u0930 \u092a\u094d\u0930\u094b\u091c\u0947\u0915\u094d\u091f \u0915\u0947 \u0932\u093f\u090f \u0935\u093f\u0936\u0947\u0937\u091c\u094d\u091e \u092e\u093e\u0930\u094d\u0917\u0926\u0930\u094d\u0936\u0928',
-        'brickGuide.callout': '\ud83d\udcde \u0909\u0932\u091d\u0928 \u092e\u0947\u0902 \u0939\u0948\u0902? \u0939\u092e\u093e\u0930\u0947 \u0935\u093f\u0936\u0947\u0937\u091c\u094d\u091e \u0915\u094b \u0928\u093f\u0903\u0936\u0941\u0932\u094d\u0915 \u0915\u0949\u0932 \u0915\u0930\u0947\u0902',
-        // About
-        'about.tag': '\u0939\u092e\u093e\u0930\u0940 \u0915\u0939\u093e\u0928\u0940',
-        'about.title': '\u091c\u094c\u0928\u092a\u0941\u0930 \u0915\u093e \u0938\u092c\u0938\u0947<br><em>\u0935\u093f\u0936\u094d\u0935\u0938\u0928\u0940\u092f</em> \u0908\u0902\u091f \u0928\u093f\u0930\u094d\u092e\u093e\u0924\u093e',
-        'about.lead': '1998 \u0938\u0947, \u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0909\u0926\u094d\u092f\u094b\u0917 \u091c\u094c\u0928\u092a\u0941\u0930, \u0935\u093e\u0930\u093e\u0923\u0938\u0940 \u0914\u0930 UP \u092e\u0947\u0902 \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0915\u0940 \u0930\u0940\u0922\u093c \u0930\u0939\u093e \u0939\u0948\u0964',
-        'about.desc': '1998 \u0938\u0947, \u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0909\u0926\u094d\u092f\u094b\u0917 \u091c\u094c\u0928\u092a\u0941\u0930, \u0935\u093e\u0930\u093e\u0923\u0938\u0940 \u0914\u0930 \u0938\u092e\u0917\u094d\u0930 UP \u092e\u0947\u0902 \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0915\u0940 \u0930\u0940\u0922\u093c \u0930\u0939\u093e \u0939\u0948\u0964 \u092a\u094d\u0930\u0947\u092e \u0928\u093e\u0930\u093e\u092f\u0923 \u0938\u093f\u0902\u0939 \u0926\u094d\u0935\u093e\u0930\u093e \u0938\u094d\u0925\u093e\u092a\u093f\u0924, \u0939\u092e \u091b\u094b\u091f\u0947 \u092d\u091f\u094d\u091f\u0947 \u0938\u0947 \u092a\u0942\u0930\u094d\u0935\u0940 UP \u0915\u0947 \u0917\u094d\u0930\u093e\u0939\u0915\u094b\u0902 \u0915\u094b \u0938\u092a\u094d\u0932\u093e\u0908 \u0915\u0930\u0928\u0947 \u0935\u093e\u0932\u0947 \u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0928\u093f\u0930\u094d\u092e\u093e\u0924\u093e \u092c\u0928 \u0917\u090f \u0939\u0948\u0902\u0964',
-        'about.talkToUs': '\u0906\u091c \u0939\u0940 \u0939\u092e\u0938\u0947 \u092c\u093e\u0924 \u0915\u0930\u0947\u0902',
-        'about.yearsLabel': '\u0935\u0930\u094d\u0937\u094b\u0902 \u0915\u0940 \u0909\u0924\u094d\u0915\u0943\u0937\u094d\u091f\u0924\u093e',
-        'about.feat1Title': '\u0921\u092c\u0932-\u092b\u093e\u092f\u0930\u094d\u0921 \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e',
-        'about.feat1Desc': '\u0939\u0930 \u0908\u0902\u091f \u0915\u094b \u0918\u0928\u0924\u094d\u0935 \u0914\u0930 \u092e\u094c\u0938\u092e \u092a\u094d\u0930\u0924\u093f\u0930\u094b\u0927 \u0915\u0947 \u0932\u093f\u090f \u0926\u094b \u092c\u093e\u0930 \u092d\u091f\u094d\u091f\u0947 \u092e\u0947\u0902 \u092a\u0915\u093e\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948',
-        'about.feat2Title': '\u090f\u0915\u0938\u092e\u093e\u0928 \u0906\u0915\u093e\u0930',
-        'about.feat2Desc': '230\u00d7110\u00d770\u092e\u093f\u092e\u0940 \u092e\u093e\u0928\u0915 \u0906\u0915\u093e\u0930 \u0915\u0947 \u0932\u093f\u090f \u092e\u0936\u0940\u0928-\u0915\u0948\u0932\u093f\u092c\u094d\u0930\u0947\u091f\u0947\u0921',
-        'about.feat3Title': '\u0909\u0938\u0940 \u0926\u093f\u0928 \u0921\u093f\u0932\u0940\u0935\u0930\u0940',
-        'about.feat3Desc': '\u0938\u0941\u092c\u0939 \u0915\u093e \u0911\u0930\u094d\u0921\u0930 \u2014 \u0926\u094b\u092a\u0939\u0930 \u0921\u093f\u0932\u0940\u0935\u0930\u0940 \u0915\u0947 \u0932\u093f\u090f \u091f\u094d\u0930\u0915 \u092c\u0947\u0921\u093e',
-        'about.feat4Title': '\u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u0917\u093e\u0930\u0902\u091f\u0940',
-        'about.feat4Desc': '\u0915\u094d\u0937\u0924\u093f\u0917\u094d\u0930\u0938\u094d\u0924 \u092f\u093e \u092e\u093e\u0928\u0915 \u0938\u0947 \u0915\u092e \u0908\u0902\u091f\u094b\u0902 \u092a\u0930 \u092c\u0926\u0932\u0940 \u0917\u093e\u0930\u0902\u091f\u0940',
-        // Gallery
-        'about.gallery.tag': '\u0939\u092e\u093e\u0930\u093e \u0915\u093e\u0930\u0916\u093e\u0928\u093e',
-        'about.gallery.title': '\u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0909\u0926\u094d\u092f\u094b\u0917 \u0915\u0947 \u0905\u0902\u0926\u0930',
-        'about.gallery.desc': '\u091c\u094c\u0928\u092a\u0941\u0930, UP \u092e\u0947\u0902 \u0939\u092e\u093e\u0930\u0940 \u0905\u0924\u094d\u092f\u093e\u0927\u0941\u0928\u093f\u0915 \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0938\u0941\u0935\u093f\u0927\u093e \u0915\u0940 \u090f\u0915 \u091d\u0932\u0915',
-        // Quality Process
-        'quality.tag': '\u0939\u092e\u093e\u0930\u0940 \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e', 'quality.title': '\u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u092a\u0930 \u0928\u093f\u0930\u094d\u092e\u093f\u0924\u0964 \u091c\u0941\u0928\u0942\u0928 \u0938\u0947 \u0924\u092a\u093e\u092f\u093e\u0964',
-        'quality.desc': '\u0939\u0930 \u0908\u0902\u091f \u0915\u093f\u0932\u094d\u0928 \u091b\u094b\u0921\u093c\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u0915\u0920\u094b\u0930 3-\u091a\u0930\u0923 \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e \u0938\u0947 \u0917\u0941\u091c\u0930\u0924\u0940 \u0939\u0948',
-        // Reviews
-        'reviews.tag': '\u0917\u094d\u0930\u093e\u0939\u0915 \u092a\u094d\u092f\u093e\u0930', 'reviews.title': '\u0939\u092e\u093e\u0930\u0947 \u0917\u094d\u0930\u093e\u0939\u0915 \u0915\u094d\u092f\u093e \u0915\u0939\u0924\u0947 \u0939\u0948\u0902',
-        'reviews.desc': '\u091c\u094c\u0928\u092a\u0941\u0930, \u0935\u093e\u0930\u093e\u0923\u0938\u0940 \u0914\u0930 UP \u092e\u0947\u0902 10,000+ \u0916\u0941\u0936 \u0928\u093f\u0930\u094d\u092e\u093e\u0924\u093e',
-        // Vendors
-        'vendors.tag': '\u0935\u094d\u092f\u093e\u092a\u093e\u0930\u093f\u0915 \u0938\u093e\u091d\u0947\u0926\u093e\u0930',
-        'vendors.title': '\u0939\u092e\u093e\u0930\u0947 \u0935\u093f\u0915\u094d\u0930\u0947\u0924\u093e \u0914\u0930 \u0938\u093e\u091d\u0947\u0926\u093e\u0930',
-        'vendors.desc': '\u0905\u0927\u093f\u0915\u0943\u0924 \u0921\u0940\u0932\u0930\u094b\u0902, \u090a\u0930\u094d\u091c\u093e \u0906\u092a\u0942\u0930\u094d\u0924\u093f\u0915\u0930\u094d\u0924\u093e\u0913\u0902, \u0932\u0949\u091c\u093f\u0938\u094d\u091f\u093f\u0915\u094d\u0938 \u092d\u093e\u0917\u0940\u0926\u093e\u0930\u094b\u0902 \u0914\u0930 \u0938\u0902\u0938\u094d\u0925\u093e\u0917\u0924 \u0917\u094d\u0930\u093e\u0939\u0915\u094b\u0902 \u0915\u093e \u090f\u0915 \u0935\u093f\u0936\u094d\u0935\u0938\u0928\u0940\u092f \u0928\u0947\u091f\u0935\u0930\u094d\u0915',
-        'vendors.badge.dealer': '\u0905\u0927\u093f\u0915\u0943\u0924 \u0921\u0940\u0932\u0930',
-        'vendors.badge.energy': '\u092d\u091f\u094d\u091f\u093e \u090a\u0930\u094d\u091c\u093e \u0938\u093e\u091d\u0947\u0926\u093e\u0930',
-        'vendors.badge.logistics': '\u0932\u0949\u091c\u093f\u0938\u094d\u091f\u093f\u0915\u094d\u0938 \u092b\u094d\u0932\u0940\u091f',
-        'vendors.badge.govt': '\u0938\u0930\u0915\u093e\u0930\u0940 \u0906\u092a\u0942\u0930\u094d\u0924\u093f \u0938\u093e\u091d\u0947\u0926\u093e\u0930',
-        'vendors.since': '\u0938\u093e\u091d\u0947\u0926\u093e\u0930\u0940 \u0936\u0941\u0930\u0942',
-        'vendors.inquiryTitle': '\u0935\u093f\u0915\u094d\u0930\u0947\u0924\u093e \u092f\u093e \u0938\u093e\u091d\u0947\u0926\u093e\u0930 \u092c\u0928\u0947\u0902',
-        'vendors.inquiryDesc': '\u0915\u094d\u092f\u093e \u0906\u092a \u0921\u0940\u0932\u0930, \u0932\u0949\u091c\u093f\u0938\u094d\u091f\u093f\u0915\u094d\u0938 \u092a\u094d\u0930\u0926\u093e\u0924\u093e \u092f\u093e \u0938\u0902\u0938\u094d\u0925\u093e \u0939\u0948\u0902 \u091c\u094b \u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0915\u0947 \u0938\u093e\u0925 \u0938\u093e\u091d\u0947\u0926\u093e\u0930\u0940 \u0915\u0930\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?',
-        'vendors.inquiryBtn': '\ud83d\udce9 \u0938\u093e\u091d\u0947\u0926\u093e\u0930\u0940 \u0915\u0947 \u0932\u093f\u090f \u0906\u0935\u0947\u0926\u0928 \u0915\u0930\u0947\u0902',
-        'vendors.stat1': '\u0938\u0915\u094d\u0930\u093f\u092f \u0921\u0940\u0932\u0930', 'vendors.stat2': '\u091f\u094d\u0930\u0915 \u092b\u094d\u0932\u0940\u091f',
-        'vendors.stat3': '\u0938\u0930\u0915\u093e\u0930\u0940 \u092a\u094d\u0930\u094b\u091c\u0947\u0915\u094d\u091f', 'vendors.stat4': '\u091c\u093f\u0932\u0947 \u0915\u0935\u0930',
-        // Calculator
-        'calculator.tag': '\u0938\u094d\u092e\u093e\u0930\u094d\u091f \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0938\u094d\u091f\u0942\u0921\u093f\u092f\u094b',
-        'calculator.title': '3-\u0907\u0928-1 \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0938\u093e\u092e\u0917\u094d\u0930\u0940 \u0914\u0930 \u0932\u093e\u0917\u0924 \u0905\u0928\u0941\u092e\u093e\u0928\u0915',
-        'calculator.desc': '\u0908\u0902\u091f\u0947\u0902, \u0938\u0940\u092e\u0947\u0902\u091f \u092c\u0948\u0917, \u0930\u0947\u0924 \u0915\u0940 \u092e\u093e\u0924\u094d\u0930\u093e \u0914\u0930 \u0915\u0941\u0932 \u092c\u091c\u091f \u0905\u0928\u0941\u092e\u093e\u0928 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902',
-        'calculator.tab1': 'दीवार / ईंट अनुमान',
-        'calculator.tab2': 'संपूर्ण भवन सामग्री',
-        'calculator.tab3': 'घेरावर दीवार',
-        'calculator.sub': 'एक ही सरल टूल से अपनी निर्माण योजना बनाएँ, निर्माण सामग्री का अनुमान लगाएँ और परियोजना लागत समझें।',
-        'calculator.fn1t': 'ईंट की मात्रा', 'calculator.fn1s': 'संख्या और ट्रॉली लोड',
-        'calculator.fn2t': 'सामग्री की ज़रूरत', 'calculator.fn2s': 'सीमेंट, रेत और ईंटें',
-        'calculator.fn3t': 'लागत अनुमान', 'calculator.fn3s': 'वर्तमान दर पर बजट',
-        'calculator.unit': 'माप की इकाई',
-        'calculator.wallGroup': 'दीवार के विमाएँ',
-        'calculator.length': 'दीवार की लंबाई', 'calculator.height': 'दीवार की ऊँचाई', 'calculator.thickness': 'दीवार की मोटाई',
-        'calculator.th45': '4.5 इंच — आंतरिक partition दीवार', 'calculator.th9': '9 इंच — मुख्य भार-वाही दीवार', 'calculator.th135': '13.5 इंच — नींव / तीनहरी दीवार',
-        'calculator.openingsGroup': 'दरवाज़े/खिड़कियाँ (वैकल्पिक)', 'calculator.openings': 'दरवाज़े व खिड़कियों का घटाया जाने वाला क्षेत्रफल',
-        'calculator.openingsHint': 'दीवार में दरवाज़ों/खिड़कियों का कुल क्षेत्रफल। ईंट गणना से पहले घटाया जाता है।',
-        'calculator.rateGroup': 'ईंट ग्रेड और दर', 'calculator.grade': 'ईंट ग्रेड', 'calculator.rate': 'ईंट दर',
-        'calculator.rateHint': 'संपादन योग्य। केवल नीचे की लागत बदलता है — मात्रा नहीं।',
-        'calculator.houseGroup': 'भवन का दायरा', 'calculator.area': 'प्रति मंज़िल निर्मित क्षेत्रफल', 'calculator.floors': 'मंज़िलें',
-        'calculator.fg': 'केवल भूतल (G)', 'calculator.fg1': 'भूतल + पहली (G+1)', 'calculator.fg2': 'भूतल + दो (G+2)',
-        'calculator.boundGroup': 'घेरावर परिधि', 'calculator.perimeter': 'परिधि की लंबाई',
-        'calculator.boundHint': 'घेरावर दीवार का अनुमान मानक आव्वल दर ₹7.05/ईंट और 9″ ईंटकार्य से लगाया जाता है।',
-        'calculator.calculate': 'अनुमान गणना करें', 'calculator.reset': 'रीसेट',
-        'calculator.resultTitle': 'अनुमान सारांश', 'calculator.preview': 'लाइव दीवार पूर्वावलोकन',
-        'calculator.pinTitle': 'पिनकोड डिलीवरी जाँच', 'calculator.pinBtn': 'जाँचें',
-        'calculator.savedHead': 'सहेजे गए अनुमान (इस डिवाइस पर)', 'calculator.savedClear': 'हटाएँ',
-        'calculator.savedEmpty': 'अभी कोई सहेजा गया अनुमान नहीं — हर गणना साइट विज़िट के लिए यहाँ सहेजी जाती है।',
-        'calculator.reorder': 'त्वरित पुनः-ऑर्डर', 'calculator.sitesTitle': 'सहेजे गए निर्माण स्थल',
-        'calculator.saveSite': 'वर्तमान अनुमान सहेजें', 'calculator.saveSiteBtn': 'स्थल सहेजें',
-        'calculator.dims': 'विमाएँ',
-        'studio.bricks': 'ईंटें', 'studio.trolleys': 'ट्रॉली', 'studio.cement': 'सीमेंट', 'studio.sand': 'रेत',
-        'studio.bags': 'बोरी', 'studio.yardRate': 'दर यार्ड तय करेगा',
-        'studio.costTitle': 'सामग्री-वार लागत', 'studio.totalLabel': 'अनुमानित कुल', 'studio.totalSub': 'दर्ज की गई दर पर ईंट की लागत — केवल सूचनात्मक',
-        'studio.assumptionsTitle': 'मान्यताएँ एवं विवरण', 'studio.thickness': 'मोटाई', 'studio.netArea': 'शुद्ध दीवार क्षेत्रफल',
-        'studio.grossArea': 'कुल क्षेत्रफल', 'studio.deducted': 'घटाया गया', 'studio.disclaimer': 'यह एक सूचनात्मक अनुमान है, पक्का कोटेशन नहीं। ऑर्डर से पहले दर एवं उपलब्धता की पुष्टि करें।',
-        'studio.whatsapp': 'पूछताछ भेजें', 'studio.addCart': 'कार्ट में जोड़ें', 'studio.print': 'प्रिंट', 'studio.share': 'शेयर',
-        'studio.emptyTitle': 'अभी कोई अनुमान नहीं', 'studio.emptySub': 'अपने विमाएँ दर्ज करें और “अनुमान गणना करें” दबाएँ।',
-        'studio.resetDone': 'अनुमानक डिफ़ॉल्ट पर रीसेट हुआ।', 'studio.resetConfirmTitle': 'अनुमानक रीसेट करें?', 'studio.resetConfirmMsg': 'इससे वर्तमान इनपुट और परिणाम हटकर डिफ़ॉल्ट मान बहाल हो जाएँगे।',
-        'studio.needCalc': 'पहले एक अनुमान की गणना करें।', 'studio.printFail': 'प्रिंट विवरण नहीं खुल सका।', 'studio.copied': 'अनुमान क्लिपबोर्ड पर कॉपी हुआ।',
-        'studio.errPositive': '{x} के लिए एक मान्य धनात्मक संख्या दर्ज करें।', 'studio.errOpenings': 'दरवाज़े/खिड़कियाँ दीवार के क्षेत्रफल से बड़ी नहीं हो सकतीं।',
-        // Cities
-        'cities.tag': '\u0921\u093f\u0932\u0940\u0935\u0930\u0940 \u0915\u094d\u0937\u0947\u0924\u094d\u0930', 'cities.title': '\u0939\u092e \u091c\u0939\u093e\u0901 \u0938\u0947\u0935\u093e \u0926\u0947\u0924\u0947 \u0939\u0948\u0902',
-        'cities.desc': '\u091c\u094c\u0928\u092a\u0941\u0930, \u0935\u093e\u0930\u093e\u0923\u0938\u0940 \u0914\u0930 UP \u092e\u0947\u0902 \u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0908\u0902\u091f\u0947\u0902 \u0921\u093f\u0932\u0940\u0935\u0930 \u2014 \u091c\u094c\u0928\u092a\u0941\u0930 \u091c\u093f\u0932\u0947 \u092e\u0947\u0902 \u0909\u0938\u0940 \u0926\u093f\u0928',
-        // FAQ
-        'faq.tag': '\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u092a\u094d\u0930\u0936\u094d\u0928', 'faq.title': '\u0905\u0915\u094d\u0938\u0930 \u092a\u0942\u091b\u0947 \u091c\u093e\u0928\u0947 \u0935\u093e\u0932\u0947 \u092a\u094d\u0930\u0936\u094d\u0928',
-        'faq.desc': '\u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0915\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902 \u0938\u092c \u0915\u0941\u091b \u091c\u093e\u0928\u0947\u0902',
-        'faq.q1': '\u0908\u0902\u091f \u0915\u0940 \u0915\u0940\u092e\u0924 \u0915\u094d\u092f\u093e \u0939\u0948?',
-        'faq.a1': '\u0938\u094d\u091f\u0948\u0902\u0921\u0930\u094d\u0921 \u0908\u0902\u091f\u0947\u0902 ₹8/\u0928\u0917 \u0938\u0947 \u0936\u0941\u0930\u0942\u0964 \u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0908\u0902\u091f\u0947\u0902 ₹10/\u0928\u0917\u0964 \u0936\u093f\u0935 \u0908\u0902\u091f \u0917\u094d\u0930\u0947\u0921-A ₹12/\u0928\u0917\u0964 \u092c\u0921\u093c\u0947 \u0911\u0930\u094d\u0921\u0930 \u092a\u0930 \u0935\u093f\u0936\u0947\u0937 \u091b\u0942\u091f\u0964 \u0928\u0935\u0940\u0928\u0924\u092e \u0926\u0930\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0939\u092e\u0947\u0902 \u0915\u0949\u0932 \u0915\u0930\u0947\u0902\u0964',
-        'faq.q2': '\u0906\u092a \u0915\u0939\u093e\u0901-\u0915\u0939\u093e\u0901 \u0921\u093f\u0932\u0940\u0935\u0930 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902?',
-        'faq.a2': '\u0939\u092e \u091c\u094c\u0928\u092a\u0941\u0930, \u0935\u093e\u0930\u093e\u0923\u0938\u0940, \u091c\u093e\u0932\u093e\u0932\u092a\u0941\u0930, \u0924\u094d\u0930\u093f\u0932\u094b\u091a\u0928, \u0915\u0947\u0930\u093e\u0915\u0924 \u0914\u0930 \u0906\u0938\u092a\u093e\u0938 \u0915\u0947 \u0915\u094d\u0937\u0947\u0924\u094d\u0930\u094b\u0902 \u092e\u0947\u0902 \u0921\u093f\u0932\u0940\u0935\u0930 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964 \u0926\u094b\u092a\u0939\u0930 \u0938\u0947 \u092a\u0939\u0932\u0947 \u0926\u093f\u090f \u0917\u090f \u0911\u0930\u094d\u0921\u0930 \u092a\u0930 \u091c\u094c\u0928\u092a\u0941\u0930 \u091c\u093f\u0932\u0947 \u092e\u0947\u0902 \u0909\u0938\u0940 \u0926\u093f\u0928 \u0921\u093f\u0932\u0940\u0935\u0930\u0940\u0964',
-        'faq.q3': '\u0915\u094d\u092f\u093e \u0906\u092a \u091b\u094b\u091f\u0947 \u0911\u0930\u094d\u0921\u0930 \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902?',
-        'faq.a3': '\u0939\u093e\u0902, \u0939\u092e \u091b\u094b\u091f\u0947 \u0914\u0930 \u092c\u0921\u093c\u0947 \u0926\u094b\u0928\u094b\u0902 \u0924\u0930\u0939 \u0915\u0947 \u0911\u0930\u094d\u0921\u0930 \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964 \u0928\u094d\u092f\u0942\u0928\u0924\u092e 1,000 \u0908\u0902\u091f\u0947\u0902\u0964 \u0915\u092e \u092e\u093e\u0924\u094d\u0930\u093e \u0915\u0947 \u0932\u093f\u090f \u0939\u092e\u0938\u0947 \u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u0947\u0902\u0964',
-        'faq.q4': '\u092d\u0941\u0917\u0924\u093e\u0928 \u0915\u0947 \u0915\u094c\u0928-\u0938\u0947 \u0924\u0930\u0940\u0915\u0947 \u0909\u092a\u0932\u092c\u094d\u0927 \u0939\u0948\u0902?',
-        'faq.a4': '\u0939\u092e \u0928\u0915\u0926, UPI (PhonePe, Google Pay, Paytm), \u0911\u0928\u0932\u093e\u0907\u0928 \u091f\u094d\u0930\u093e\u0902\u0938\u092b\u0930 (NEFT/RTGS) \u0914\u0930 \u091a\u0947\u0915 \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964 \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0911\u0930\u094d\u0921\u0930 \u092a\u0930 COD \u0909\u092a\u0932\u092c\u094d\u0927 \u0939\u0948\u0964',
-        'faq.q5': '\u0906\u092a \u0915\u093f\u0938 \u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u0917\u093e\u0930\u0902\u091f\u0940 \u0926\u0947\u0924\u0947 \u0939\u0948\u0902?',
-        'faq.a5': '\u0939\u092e\u093e\u0930\u0940 \u0938\u092d\u0940 \u0908\u0902\u091f\u0947\u0902 \u0905\u091a\u094d\u091b\u0940 \u0924\u0930\u0939 \u091c\u0932\u093e\u0908 \u0939\u0941\u0908, \u0906\u0915\u093e\u0930 \u092e\u0947\u0902 \u090f\u0915\u0938\u092e\u093e\u0928 \u0914\u0930 \u092e\u091c\u093c\u092c\u0942\u0924\u0940 \u0915\u0947 \u0932\u093f\u090f \u092a\u0930\u0940\u0915\u094d\u0937\u093f\u0924 \u0939\u0948\u0902\u0964 \u0916\u0930\u093e\u092c \u0908\u0902\u091f\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f 100% \u092c\u0926\u0932\u093e\u0935 \u0926\u0947\u0924\u0947 \u0939\u0948\u0902\u0964',
-        // Blog
-        'blog.tag': '\u091c\u094d\u091e\u093e\u0928 \u0915\u0947\u0902\u0926\u094d\u0930', 'blog.title': '\u092c\u094d\u0932\u0949\u0917 \u0914\u0930 \u091f\u093f\u092a\u094d\u0938',
-        'blog.desc': '\u0908\u0902\u091f\u094b\u0902, \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0914\u0930 \u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u092a\u094d\u0930\u0925\u093e\u0913\u0902 \u092a\u0930 \u0935\u093f\u0936\u0947\u0937\u091c\u094d\u091e \u0938\u0932\u093e\u0939',
-        // Contact
-        'contact.tag': '\u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u0947\u0902', 'contact.title': '\u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u0947\u0902',
-        'contact.desc': '\u0939\u092e \u090f\u0915 \u0918\u0902\u091f\u0947 \u0915\u0947 \u092d\u0940\u0924\u0930 \u091c\u0935\u093e\u092c \u0926\u0947\u0924\u0947 \u0939\u0948\u0902 \u2014 \u092f\u093e \u0938\u0940\u0927\u0947 \u0915\u0949\u0932 \u0915\u0930\u0947\u0902',
-        'contact.labelPhone': '\u092b\u094b\u0928', 'contact.labelEmail': '\u0908\u092e\u0947\u0932',
-        'contact.labelAddress': '\u092a\u0924\u093e', 'contact.labelHours': '\u0915\u093e\u092e \u0915\u0947 \u0918\u0902\u091f\u0947',
-        'contact.whatsapp': 'WhatsApp पर चैट करें',
-        'contact.formName': '\u092a\u0942\u0930\u093e \u0928\u093e\u092e *', 'contact.formEmail': '\u0908\u092e\u0947\u0932 *',
-        'contact.formPhone': '\u092b\u094b\u0928 *', 'contact.formSubject': '\u0935\u093f\u0937\u092f *',
-        'contact.formMessage': '\u0938\u0902\u0926\u0947\u0936 *', 'contact.sendBtn': '\u0938\u0902\u0926\u0947\u0936 \u092d\u0947\u091c\u0947\u0902',
-        'contact.phName': '\u0906\u092a\u0915\u093e \u092a\u0942\u0930\u093e \u0928\u093e\u092e', 'contact.phEmail': 'your@email.com',
-        'contact.phPhone': '+91 98765 43210', 'contact.phMessage': '\u0905\u092a\u0928\u0940 \u092a\u0942\u091b\u0924\u093e\u091b \u0935\u093f\u0938\u094d\u0924\u093e\u0930 \u0938\u0947 \u0932\u093f\u0916\u0947\u0902...',
-        'contact.subjectSelect': '\u0935\u093f\u0937\u092f \u091a\u0941\u0928\u0947\u0902',
-        'contact.subjectGeneral': '\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u092a\u0942\u091b\u0924\u093e\u091b',
-        'contact.subjectProducts': '\u0909\u0924\u094d\u092a\u093e\u0926 \u091c\u093e\u0928\u0915\u093e\u0930\u0940',
-        'contact.subjectOrders': '\u0911\u0930\u094d\u0921\u0930 \u0914\u0930 \u0921\u093f\u0932\u0940\u0935\u0930\u0940',
-        'contact.subjectQuote': '\u0915\u094d\u0935\u094b\u091f \u0932\u0947\u0902',
-        'contact.subjectComplaint': '\u0936\u093f\u0915\u093e\u092f\u0924',
-        'contact.sending': '\u092d\u0947\u091c \u0930\u0939\u0947 \u0939\u0948\u0902\u2026',
-        'contact.opening': 'WhatsApp \u0916\u094b\u0932 \u0930\u0939\u0947 \u0939\u0948\u0902\u2026',
-        'contact.handedOff': 'WhatsApp \u0916\u0941\u0932 \u0930\u0939\u093e \u0939\u0948 \u0924\u093e\u0915\u093f \u092d\u091f\u094d\u091f\u0947 \u0915\u0940 \u091f\u0940\u092e \u0906\u092a\u0915\u093e \u0938\u0902\u0926\u0947\u0936 \u092a\u093e \u0938\u0915\u0947 \u2014 \u0935\u0939\u093e\u0902 Send \u0926\u092c\u093e\u0915\u0930 \u092d\u0947\u091c\u0947\u0902\u0964',
-        'contact.handoffFailed': 'WhatsApp \u0928\u0939\u0940\u0902 \u0916\u0941\u0932 \u0938\u0915\u093e\u0964 \u0915\u0943\u092a\u092f\u093e +91 91989 23230 \u092a\u0930 \u0915\u0949\u0932 \u0915\u0930\u0947\u0902 \u092f\u093e WhatsApp \u092c\u091f\u0928 \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902\u0964',
-        'contact.directions': '\u0926\u093f\u0936\u093e \u0928\u093f\u0930\u094d\u0926\u0947\u0936 \u2014 Google Maps \u092e\u0947\u0902 \u0916\u094b\u0932\u0947\u0902',
-        'contact.openMaps': 'Google Maps \u092e\u0947\u0902 \u0916\u094b\u0932\u0947\u0902',
-        'contact.provideFields': '\u0915\u0943\u092a\u092f\u093e {fields} \u0926\u0947\u0902\u0964',
-        'checkout.onlinePayUnavailable': '\u0911\u0928\u0932\u093e\u0907\u0928 \u0915\u093e\u0930\u094d\u0921/UPI \u091a\u0947\u0915\u0906\u0909\u091f \u0905\u092d\u0940 \u091c\u0941\u0921\u093c\u093e \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 COD \u092f\u093e WhatsApp \u0938\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964',
-        'checkout.codPlaced': 'COD \u0911\u0930\u094d\u0921\u0930 \u091f\u094b\u0915\u0928 \u0938\u0947\u0935 \u0939\u094b \u0917\u092f\u093e\u0964 WhatsApp \u092f\u093e \u0915\u0949\u0932 \u0938\u0947 \u092f\u093e\u0930\u094d\u0921 \u0938\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964',
-        'tracker.refreshed': '\u0907\u0938 \u0921\u093f\u0935\u093e\u0907\u0938 \u0938\u0947 \u0938\u094d\u0925\u093f\u0924\u093f \u0924\u093e\u091c\u093e \u0915\u0940 \u0917\u0908\u0964',
-        'toast.newsletterHandoff': '\u0938\u093e\u0907\u0928-\u0905\u092a \u0905\u0928\u0941\u0930\u094b\u0927 \u092d\u0947\u091c\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0906\u092a\u0915\u093e \u0908\u092e\u0947\u0932 \u090f\u092a \u0916\u0941\u0932 \u0930\u0939\u093e \u0939\u0948\u0964',
-        // Dynamic messages & document title
-        'toast.addedToCart': '\u2705 {name} \u0915\u093e\u0930\u094d\u091f \u092e\u0947\u0902 \u091c\u094b\u0921\u093c\u093e \u0917\u092f\u093e!',
-        'toast.msgSent': '\u2705 \u0938\u0902\u0926\u0947\u0936 \u092d\u0947\u091c\u093e \u0917\u092f\u093e! \u0939\u092e \u091c\u0932\u094d\u0926 \u0939\u0940 \u0906\u092a\u0915\u094b \u0915\u0949\u0932 \u0915\u0930\u0947\u0902\u0917\u0947\u0964',
-        'toast.invalidEmail': '\u274c \u092e\u093e\u0928\u094d\u092f \u0908\u092e\u0947\u0932 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902',
-        'toast.subscribed': '\ud83c\udf89 \u0938\u092c\u094d\u0938\u0915\u094d\u0930\u093e\u0907\u092c \u0939\u094b \u0917\u092f\u093e!',
-        'toast.searchFound': '\ud83d\udd0d \u092e\u093f\u0932\u093e: {name} \u2014 \u20b9{price}/{unit}',
-        'toast.langChanged': 'Language switched to English',
-        'toast.langChangedHi': '\u092d\u093e\u0937\u093e \u0939\u093f\u0902\u0926\u0940 \u092e\u0947\u0902 \u092c\u0926\u0932\u0940 \u0917\u0908',
-        'doc.title': '\u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u092c\u094d\u0930\u093f\u0915\u094d\u0938 \u0907\u0902\u0921\u0938\u094d\u091f\u094d\u0930\u0940 | \u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0932\u093e\u0932 \u092e\u093f\u091f\u094d\u091f\u0940 \u0915\u0940 \u0908\u0902\u091f\u0947\u0902 \u2014 \u091c\u094c\u0928\u092a\u0941\u0930, \u092f\u0942\u092a\u0940',
-        'auth.locked': '\ud83d\udd12 \u092c\u093e\u0930-\u092c\u093e\u0930 \u0935\u093f\u092b\u0932 \u092a\u094d\u0930\u092f\u093e\u0938\u094b\u0902 \u0915\u0947 \u0915\u093e\u0930\u0923 \u0905\u0915\u093e\u0909\u0902\u091f \u0932\u0949\u0915 \u0915\u0930 \u0926\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948\u0964',
-        'auth.invalidLogin': '\u274c \u0917\u0932\u0924 \u0932\u0949\u0917\u093f\u0928\u0964 {n} \u092a\u094d\u0930\u092f\u093e\u0938 \u092c\u091a\u0947 \u0939\u0948\u0902\u0964',
-        'auth.welcome': '\ud83d\udc4b \u0935\u093e\u092a\u0938\u0940 \u092a\u0930 \u0938\u094d\u0935\u093e\u0917\u0924 \u0939\u0948, {name}!',
-        'auth.created': '\ud83c\udf89 \u0905\u0915\u093e\u0909\u0902\u091f \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092c\u0928 \u0917\u092f\u093e!',
-        'auth.signInTitle': '\u0935\u093e\u092a\u0938\u0940 \u092a\u0930 \u0938\u094d\u0935\u093e\u0917\u0924 \u0939\u0948',
-        'auth.signInSub': '\u0905\u092a\u0928\u0947 \u0905\u0915\u093e\u0909\u0902\u091f \u092e\u0947\u0902 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902',
-        'auth.signUpTitle': '\u0905\u0915\u093e\u0909\u0902\u091f \u092c\u0928\u093e\u090f\u0902',
-        'auth.signUpSub': '\u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u092c\u094d\u0930\u093f\u0915\u094d\u0938 \u0938\u0947 \u091c\u0941\u0921\u093c\u0947\u0902',
-        'auth.signedOut': '\ud83d\udc4b \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0938\u093e\u0907\u0928 \u0906\u0909\u091f \u0915\u093f\u092f\u093e \u0917\u092f\u093e\u0964',
-        'auth.nameInvalid': '\u0915\u0943\u092a\u092f\u093e \u092e\u093e\u0928\u094d\u092f \u0928\u093e\u092e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902',
-        'auth.emailInvalid': '\u0915\u0943\u092a\u092f\u093e \u092e\u093e\u0928\u094d\u092f \u0908\u092e\u0947\u0932 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902',
-        'auth.profileSaved': '\u2705 \u092a\u094d\u0930\u094b\u092b\u093e\u0907\u0932 \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0905\u092a\u0921\u0947\u091f \u0939\u0941\u0908!',
-        'auth.deviceNote': '\u091c\u092c \u0938\u0930\u094d\u0935\u0930 \u091c\u0941\u0921\u093c\u093e \u0939\u094b \u0924\u092c \u092a\u093e\u0938\u0935\u0930\u094d\u0921 \u092f\u093e\u0930\u094d\u0921 \u0938\u0930\u094d\u0935\u0930 \u092a\u0930 \u091c\u093e\u0901\u091a\u0924\u093e \u0939\u0948\u0964 \u092f\u0939 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u0938\u093e\u0926\u093e \u092a\u093e\u0938\u0935\u0930\u094d\u0921 \u0938\u092d\u0940 \u0928\u0939\u0940\u0902 \u0930\u0916\u0924\u093e\u0964',
-        'auth.deviceSession': '\u0907\u0938 \u0921\u093f\u0935\u093e\u0907\u0938 \u092a\u0930 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0939\u0941\u0906\u0964 \u0938\u0930\u094d\u0935\u0930 \u092a\u093e\u0938\u0935\u0930\u094d\u0921 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u0938\u0902\u0917\u094d\u0930\u0939\u093f\u0924 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964',
-        'auth.recoverTitle': '\u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u092a\u0941\u0928\u0903\u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0947\u0902',
-        'auth.recoverSub': '\u092f\u093e\u0930\u094d\u0921 \u0915\u093e\u0930\u094d\u092f\u093e\u0932\u092f \u0939\u093e\u0925 \u0938\u0947 \u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0924\u093e \u0939\u0948',
-        'auth.resetTitle': '\u092a\u093e\u0938\u0935\u0930\u094d\u0921 \u0930\u0940\u0938\u0947\u091f',
-        'auth.resetSub': '\u091c\u0932\u094d\u0926 \u0906 \u0930\u0939\u093e \u0939\u0948 \u2014 \u0905\u092d\u0940 \u0930\u0940\u0938\u0947\u091f API \u0928\u0939\u0940\u0902 \u0939\u0948',
-        'auth.resetUnavailable': '\u0938\u094d\u0935\u092f\u0902-\u0938\u0930\u094d\u0935\u093f\u0938 \u0930\u0940\u0938\u0947\u091f \u0905\u092d\u0940 \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u092f\u093e\u0930\u094d\u0921 \u0915\u094b \u0915\u0949\u0932 \u0915\u0930\u0947\u0902\u0964',
-        'auth.forgot': '\u092a\u093e\u0938\u0935\u0930\u094d\u0921 \u092d\u0942\u0932 \u0917\u090f?',
-        'auth.googleSuccess': '\ud83d\udc4b {name} \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 Google \u0938\u0947 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u093f\u092f\u093e \u0917\u092f\u093e!',
-        'auth.googleNotConfigured': 'Google \u0938\u093e\u0907\u0928-\u0907\u0928 \u0905\u092d\u0940 \u0915\u0949\u0928\u094d\u092b\u093c\u093f\u0917\u0930 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964',
-        'auth.googleUnavailable': 'Google \u0938\u0947\u0935\u093e \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964',
-        'auth.orContinue': '\u092f\u093e \u0907\u0938\u0915\u0947 \u0938\u093e\u0925 \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902',
-        'auth.termsRequired': '\u091c\u093e\u0930\u0940 \u0930\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0928\u093f\u092f\u092e \u0914\u0930 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0947\u0902\u0964',
-        'auth.iAgree': '\u092e\u0948\u0902 \u0907\u0928\u0938\u0947 \u0938\u0939\u092e\u0924 \u0939\u0942\u0901:',
-        'auth.terms': '\u0928\u093f\u092f\u092e',
-        'auth.privacy': '\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f',
-        'auth.remember': '\u092e\u0941\u091d\u0947 \u0930\u0916\u0947\u0902', 'auth.forgot': '\u092a\u093e\u0938\u0935\u0930\u094d\u0921 \u092d\u0942\u0932 \u0917\u090f?',
-        'auth.submitLogin': '\u0916\u093e\u0924\u0947 \u092e\u0947\u0902 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902', 'auth.submitRegister': '\u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902',
-        'cart.title': 'मेरी कार्ट',
-        'cart.itemSingular': 'आइटम',
-        'cart.itemPlural': 'आइटम',
-        'cart.freeThreshold': 'निःशुल्क डिलीवरी सीमा:',
-        'cart.addMore': '₹{amt} और जोड़ें',
-        'cart.freeUnlocked': 'निःशुल्क डिलीवरी अनलॉक',
-        'cart.trolleyTitle': 'ट्रॉली लोड (4,000 पीस)',
-        'cart.trolleyHintEmpty': '1 पूरी ट्रॉली लोड और 5% बल्क छूट के लिए 4,000 ईंटें जोड़ें।',
-        'cart.trolleyHintNeed': '<strong>{n} और ईंटें</strong> जोड़ें — <strong>5% बल्क ट्रॉली छूट</strong> अनलॉक करें!',
-        'cart.trolleyHintFull': 'पूर्ण ट्रॉली लोड ({t} ट्रॉली) · 5% बल्क छूट अनलॉक!',
-        'cart.unlocked': '🎉 निःशुल्क डिलीवरी अनलॉक हो गई!',
-        'cart.emptyTitle': 'आपकी कार्ट खाली है',
-        'cart.emptyText': 'प्रोजेक्ट लागत और डिलीवरी जानने के लिए ग्रेड-A ईंटें जोड़ें।',
-        'cart.browse': 'उत्पाद देखें →',
-        'cart.couponPh': 'कूपन कोड दर्ज करें (जैसे GURU10)',
-        'cart.apply': 'लागू करें',
-        'cart.couponInvalid': '❌ कूपन कोड गलत है। GURU10 आज़माएँ',
-        'cart.billSummary': 'बिल सारांश',
-        'cart.subtotal': 'उप-योग',
-        'cart.delivery': 'डिलीवरी शुल्क',
-        'cart.savings': 'कूपन बचत',
-        'cart.grandTotal': 'कुल योग',
-        'cart.checkout': 'चेकआउट करें',
-        'cart.secure': '100% एन्क्रिप्टेड और सुरक्षित चेकआउट',
-        'cart.remove': 'हटाएँ',
-        'checkout.emptyCart': '🛒 आपका कार्ट खाली है!',
-        'checkout.fillFields': '❌ कृपया सभी ज़रूरी डिलीवरी फ़ील्ड भरें।',
-        'checkout.upiCopied': '📋 UPI ID "gurukripa@upi" कॉपी हो गई!',
-        'checkout.orderPlaced': '🎉 ऑर्डर सफलतापूर्वक प्लेस हो गया!',
-        'wishlist.added': '❤️ विशलिस्ट में जोड़ा गया!',
-        'wishlist.removed': 'विशलिस्ट से हटाया गया।',
-        'wishlist.empty': 'कोई सेव्ड विशलिस्ट आइटम नहीं।',
-        'wishlist.title': 'मेरी विशलिस्ट',
-        'wishlist.emptyTitle': 'आपकी विशलिस्ट खाली है',
-        'wishlist.emptyText': 'किसी भी उत्पाद कार्ड पर दिल टैप करके ईंटें सेव करें।',
-        'wishlist.browse': 'उत्पाद देखें',
-        'wishlist.addAll': 'सभी कार्ट में जोड़ें',
-        'wishlist.addAllToast': 'सभी विशलिस्ट आइटम कार्ट में जोड़े गए!',
-        'checkout.title': 'चेकआउट और ऑर्डर सारांश',
-        'checkout.sub': 'ऑर्डर पहुँचने के बाद यार्ड लोडिंग स्लॉट की पुष्टि करता है।',
-        'checkout.stepDetails': 'विवरण',
-        'checkout.stepPayment': 'भुगतान',
-        'checkout.stepConfirm': 'पुष्टि',
-        'dialog.fieldRequired': 'यह फ़ील्ड ज़रूरी है।',
-        'dialog.genericError': 'कुछ गलत हो गया। कृपया फिर से कोशिश करें।',
-        'profile.enquiries.empty': 'इस डिवाइस से अभी कोई पूछताछ या कोटेशन अनुरोध नहीं भेजा गया है।',
-        'product.add': 'जोड़ें',
-        'tracker.demoLoaded': '🚚 डेमो ऑर्डर ट्रैकिंग लोड हुई!',
-        'tracker.enterId': 'कृपया ऑर्डर ID या मोबाइल नंबर दर्ज करें',
-        'invoice.trolleyAdded': '🔄 ट्रॉली री-ऑर्डर कार्ट में जोड़ा गया!',
-        'calc.addedToCart': '🛒 {qty} {name} कार्ट में जोड़े गए!',
-        'calc.soundGradeA': '🔔 ग्रेड-A धातु जैसी खनक आवाज़',
-        'calc.soundClear': '🔉 स्पष्ट ईंट की आवाज़',
-        'calc.soundDull': 'मंद कम-गुणवत्ता आवाज़ (कच्ची ईंट)',
-        'calc.soundPlayed': '🔔 ईंट साउंड टेस्ट चलाया गया!',
-        // Footer
-        'footer.quickLinks': '\u0924\u094d\u0935\u0930\u093f\u0924 \u0932\u093f\u0902\u0915', 'footer.ourProducts': '\u0939\u092e\u093e\u0930\u0947 \u0909\u0924\u094d\u092a\u093e\u0926',
-        'footer.connect': '\u0939\u092e\u0938\u0947 \u091c\u0941\u0921\u093c\u0947\u0902', 'footer.newsletter': '\u0928\u094d\u092f\u0942\u091c\u093c\u0932\u0947\u091f\u0930',
-        'footer.newsletterDesc': 'WhatsApp \u092a\u0930 \u0930\u0947\u091f \u0905\u092a\u0921\u0947\u091f \u092a\u093e\u090f\u0902', 'footer.subscribe': '\u0938\u0926\u0938\u094d\u092f\u0924\u093e \u0932\u0947\u0902',
-        'footer.emailPh': '\u0906\u092a\u0915\u093e \u0908\u092e\u0947\u0932',
-        'footer.phoneLabel': 'WhatsApp \u0905\u092a\u0921\u0947\u091f \u0915\u0947 \u0932\u093f\u090f \u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930',
-        'footer.phonePh': '10-\u0905\u0902\u0915\u0940 \u092e\u094b\u092c\u093e\u0907\u0932',
-        'footer.whatsappUpdates': '\u0905\u092a\u0921\u0947\u091f \u092a\u093e\u090f\u0902',
-        'footer.phoneInvalid': '\u0938\u0939\u0940 10-\u0905\u0902\u0915\u0940 \u092d\u093e\u0930\u0924\u0940\u092f \u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902\u0964',
-        'footer.phoneOpening': 'WhatsApp \u0916\u0941\u0932 \u0930\u0939\u093e \u0939\u0948\u2026',
-        'footer.phoneSuccess': 'WhatsApp \u0916\u0941\u0932 \u0917\u092f\u093e — \u0930\u0947\u091f \u0905\u092a\u0921\u0947\u091f \u0915\u0947 \u0932\u093f\u090f \u0938\u0902\u0926\u0947\u0936 \u092d\u0947\u091c\u0947\u0902\u0964',
-        'footer.phoneError': 'WhatsApp \u0928\u0939\u0940\u0902 \u0916\u0941\u0932\u093e\u0964 +91 91989 23230 \u092a\u0930 \u0915\u0949\u0932 \u0915\u0930\u0947\u0902\u0964',
-        'footer.brandName': '\u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0909\u0926\u094d\u092f\u094b\u0917',
-        'footer.brandDesc': '\u091c\u094c\u0928\u092a\u0941\u0930 \u0915\u0947 \u0935\u093f\u0936\u094d\u0935\u0938\u0928\u0940\u092f \u092d\u091f\u094d\u091f\u0947 \u0938\u0947 \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0938\u093e\u092e\u0917\u094d\u0930\u0940 \u0914\u0930 \u0908\u0902\u091f \u0938\u092a\u094d\u0932\u093e\u0908\u0964 Grade-A \u0908\u0902\u091f\u0947\u0902, \u092d\u0930\u094b\u0938\u0947\u092e\u0902\u0926 \u0921\u093f\u0932\u0940\u0935\u0930\u0940 \u0914\u0930 \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0916\u094b\u091c\u0964',
-        'footer.quality': '\u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u092e\u093e\u0928\u0915',
-        'footer.privacy': '\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f',
-        'footer.terms': '\u0928\u093f\u092f\u092e \u0914\u0930 \u0936\u0930\u094d\u0924\u0947\u0902',
-        'footer.shipping': '\u0936\u093f\u092a\u093f\u0902\u0917 \u0928\u0940\u0924\u093f',
-        'footer.weAccept': '\u0939\u092e \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902:',
-        'footer.payUpi': 'UPI (\u092e\u0948\u0928\u0941\u0905\u0932)',
-        'footer.payNeft': 'NEFT / RTGS',
-        'footer.payCod': '\u0921\u093f\u0932\u0940\u0935\u0930\u0940 \u092a\u0930 \u0928\u0915\u0926 / \u0938\u093e\u0907\u091f \u092a\u0930 \u0928\u0915\u0926',
-        'footer.gstinLabel': 'GSTIN',
-        'footer.kilnLabel': '\u092d\u091f\u094d\u091f\u093e',
-        'footer.gstinCopied': 'GSTIN \u0915\u0949\u092a\u0940 \u0939\u094b \u0917\u092f\u093e',
-        'footer.address': '\u0928\u0947\u0935\u093e\u0921\u093e, \u091c\u0932\u093e\u0932\u092a\u0941\u0930-\u091a\u0935\u0930\u0940 \u0930\u094b\u0921, \u091c\u0932\u093e\u0932\u092a\u0941\u0930, \u091c\u094c\u0928\u092a\u0941\u0930 (UP) — 222001',
-        'footer.hours': '\u0938\u094b\u092e–\u0936\u0928\u093f | \u0938\u0941\u092c\u0939 8:00 – \u0936\u093e\u092e 6:00 (\u0930\u0935\u093f\u0935\u093e\u0930 \u092c\u0902\u0926)',
-        'footer.sameDay': '\u0909\u0938\u0940 \u0926\u093f\u0928 \u0921\u093f\u0932\u0940\u0935\u0930\u0940',
-        'footer.sameDayCities': '\u091c\u094c\u0928\u092a\u0941\u0930, \u0935\u093e\u0930\u093e\u0923\u0938\u0940, \u091c\u0932\u093e\u0932\u092a\u0941\u0930, \u0924\u094d\u0930\u093f\u0932\u094b\u091a\u0928, \u0936\u093e\u0939\u0917\u0902\u091c, \u092e\u0930\u093f\u092f\u093e\u0939\u0942 \u0914\u0930 \u0906\u0938-\u092a\u093e\u0938 \u0915\u0947 \u0938\u094d\u0925\u0932\u0964',
-        'footer.rights': '\u00a9 2026 \u0917\u0941\u0930\u0941\u0915\u0943\u092a\u093e \u0908\u0902\u091f \u0909\u0926\u094d\u092f\u094b\u0917\u0964 \u0938\u0930\u094d\u0935\u093e\u0927\u093f\u0915\u093e\u0930 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924\u0964',
-        'fab.chat': '\u091a\u0948\u091f', 'fab.call': '\u0915\u0949\u0932', 'fab.whatsapp': 'WhatsApp',
-        // Drawer / Mobile Nav
-        'drawer.callUs': '\u0915\u0949\u0932 \u0915\u0930\u0947\u0902', 'drawer.whatsapp': 'WhatsApp',
-        'drawer.signUp': '\u0938\u093e\u0907\u0928 \u0905\u092a \u0915\u0930\u0947\u0902', 'drawer.signIn': '\u0938\u093e\u0907\u0928 \u0907\u0928',
-        'drawer.trackDelivery': '\u0921\u093f\u0932\u0940\u0935\u0930\u0940 \u091f\u094d\u0930\u0948\u0915 \u0915\u0930\u0947\u0902',
-        'drawer.qualitySpec': '\u0917\u0941\u0923\u0935\u0924\u094d\u0924\u093e \u0935\u093f\u0936\u0947\u0937',
-        'drawer.estimator': '\u0908\u0902\u091f \u0905\u0928\u0941\u092e\u093e\u0928\u0915',
-        'drawer.aboutUs': '\u0939\u092e\u093e\u0930\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902',
-        // Mobile bottom nav
-        'mobile.home': '\u0939\u094b\u092e', 'mobile.products': '\u0909\u0924\u094d\u092a\u093e\u0926',
-        'mobile.cart': '\u0915\u093e\u0930\u094d\u091f', 'mobile.calc': '\u0905\u0928\u0941\u092e\u093e\u0928\u0915', 'mobile.profile': '\u0916\u093e\u0924\u093e',
-        // CTA Banner
-        'cta.title': '\u0906\u091c \u0939\u0940 \u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e \u0908\u0902\u091f\u0947\u0902 \u0911\u0930\u094d\u0921\u0930 \u0915\u0930\u0947\u0902 \u2014<br>\u091c\u094c\u0928\u092a\u0941\u0930 \u092e\u0947\u0902 \u0924\u0947\u091c\u093c \u0921\u093f\u0932\u0940\u0935\u0930\u0940!',
-        'cta.subtitle': '\u0906\u091c \u0939\u0940 \u0911\u0930\u094d\u0921\u0930 \u0915\u0930\u0947\u0902 \u0914\u0930 \u0935\u093f\u0936\u094d\u0935\u093e\u0938 \u0915\u0947 \u0938\u093e\u0925 \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0915\u0930\u0947\u0902',
-        'cta.call': '\u0905\u092d\u0940 \u0915\u0949\u0932 \u0915\u0930\u0947\u0902: +91 91989 23230',
-        'cta.wa': 'WhatsApp \u0915\u0930\u0947\u0902',
-        // Dialogs
-        'dialog.cancel': '\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902', 'dialog.confirm': '\u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902', 'dialog.save': '\u0938\u0939\u0947\u091c\u0947\u0902',
-        'dialog.ok': '\u0939\u093e\u0901', 'dialog.working': '\u0915\u093e\u0930\u094d\u092f \u091a\u0932 \u0930\u0939\u093e \u0939\u0948\u2026', 'dialog.tryAgain': '\u092b\u093f\u0930 \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902',
-        'dialog.discardTitle': '\u092a\u0930\u093f\u0935\u0930\u094d\u0924\u0928 \u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902?',
-        'dialog.discardMsg': '\u0906\u092a\u0915\u0947 \u0915\u0941\u091b \u092c\u0926\u0932\u093e\u0935 \u0938\u092c\u092e\u093f\u091f \u0928\u0939\u0940\u0902 \u0939\u0941\u090f \u0939\u0948\u0902\u0964 \u092b\u093f\u0930 \u092d\u0940 \u092c\u0902\u0926 \u0915\u0930\u0947\u0902?',
-        'dialog.discard': '\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902', 'dialog.keepEditing': '\u0938\u0902\u092a\u093e\u0926\u0928 \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902',
+(function (global) {
+    'use strict';
+
+    var STORAGE_KEY = 'gb_lang';
+
+    function emptyDict() {
+        return { en: {}, hi: {} };
     }
-};
+
+    function fromBundle() {
+        var b = global.__GBI_I18N__;
+        if (!b || typeof b !== 'object') return null;
+        return {
+            en: b.en && typeof b.en === 'object' ? b.en : {},
+            hi: b.hi && typeof b.hi === 'object' ? b.hi : {}
+        };
+    }
+
+    var TRANSLATIONS = fromBundle() || emptyDict();
+    global.TRANSLATIONS = TRANSLATIONS;
+
+    function resolveDict(lang) {
+        return (TRANSLATIONS && TRANSLATIONS[lang]) || {};
+    }
+
+    /**
+     * t(key, params)
+     * - Missing key → English → key itself
+     * - {name} interpolation
+     * - Plurals: if params.count is set, tries key.one / key.other (EN+HI one/other)
+     */
+    function t(key, vars) {
+        if (!key) return '';
+        var lang = (typeof global.currentLang === 'string' && global.currentLang) || 'en';
+        var count = vars && Object.prototype.hasOwnProperty.call(vars, 'count') ? Number(vars.count) : NaN;
+        var lookupKey = key;
+        if (!isNaN(count)) {
+            var plural = count === 1 ? '.one' : '.other';
+            var pluralKey = key + plural;
+            if (resolveDict(lang)[pluralKey] !== undefined || resolveDict('en')[pluralKey] !== undefined) {
+                lookupKey = pluralKey;
+            }
+        }
+        var val = resolveDict(lang)[lookupKey];
+        if (val === undefined) val = resolveDict('en')[lookupKey];
+        if (val === undefined) val = resolveDict(lang)[key];
+        if (val === undefined) val = resolveDict('en')[key];
+        if (val === undefined) return key;
+        if (vars) {
+            Object.keys(vars).forEach(function (k) {
+                val = String(val).split('{' + k + '}').join(String(vars[k]));
+            });
+        }
+        return val;
+    }
+
+    function setTextOrHtml(el, val) {
+        // Prefer textContent; only legacy keys with markup (e.g. cta.title <br>) use HTML.
+        if (typeof val === 'string' && /<[a-z][\s\S]*>/i.test(val)) {
+            el.innerHTML = val;
+        } else {
+            el.textContent = val;
+        }
+    }
+
+    function applyAttr(el, attrName, key) {
+        var val = t(key);
+        if (val === key && !(resolveDict('en')[key])) return;
+        if (attrName === 'content' && el.tagName === 'META') {
+            el.setAttribute('content', val);
+            return;
+        }
+        if (attrName === 'placeholder') el.setAttribute('placeholder', val);
+        else if (attrName === 'title') el.setAttribute('title', val);
+        else if (attrName === 'aria-label') el.setAttribute('aria-label', val);
+        else if (attrName === 'alt') el.setAttribute('alt', val);
+        else if (attrName === 'value') el.setAttribute('value', val);
+        else el.setAttribute(attrName, val);
+    }
+
+    /**
+     * Translate [data-i18n] + data-i18n-placeholder|title|aria-label|alt|value|content
+     */
+    function applyTranslations(root) {
+        var scope = root && root.querySelectorAll ? root : document;
+        var nodes;
+        try {
+            nodes = scope.querySelectorAll(
+                '[data-i18n],[data-i18n-placeholder],[data-i18n-title],[data-i18n-aria-label],[data-i18n-alt],[data-i18n-value],[data-i18n-content]'
+            );
+        } catch (_e) {
+            nodes = scope.querySelectorAll('[data-i18n]');
+        }
+        nodes.forEach(function (el) {
+            var key = el.getAttribute('data-i18n');
+            if (key) {
+                var val = t(key);
+                if (val === key && resolveDict('en')[key] === undefined) {
+                    /* missing — leave existing text */
+                } else {
+                    var tag = el.tagName.toUpperCase();
+                    if ((tag === 'INPUT' || tag === 'TEXTAREA') && el.type !== 'submit' && el.type !== 'button') {
+                        el.placeholder = val;
+                    } else if (tag === 'OPTION') {
+                        el.textContent = val;
+                    } else if (tag === 'BUTTON' && el.type === 'submit') {
+                        setTextOrHtml(el, val);
+                    } else {
+                        setTextOrHtml(el, val);
+                    }
+                }
+            }
+            var ph = el.getAttribute('data-i18n-placeholder');
+            if (ph) applyAttr(el, 'placeholder', ph);
+            var ti = el.getAttribute('data-i18n-title');
+            if (ti) applyAttr(el, 'title', ti);
+            var ar = el.getAttribute('data-i18n-aria-label');
+            if (ar) applyAttr(el, 'aria-label', ar);
+            var al = el.getAttribute('data-i18n-alt');
+            if (al) applyAttr(el, 'alt', al);
+            var va = el.getAttribute('data-i18n-value');
+            if (va) applyAttr(el, 'value', va);
+            var co = el.getAttribute('data-i18n-content');
+            if (co) applyAttr(el, 'content', co);
+        });
+    }
+
+    function mergeDict(lang, data) {
+        if (!data || typeof data !== 'object') return;
+        TRANSLATIONS[lang] = Object.assign({}, TRANSLATIONS[lang] || {}, data);
+    }
+
+    /** Optional background refresh from JSON (offline uses precache / bundle). */
+    function refreshFromJson() {
+        if (typeof fetch !== 'function') return Promise.resolve(TRANSLATIONS);
+        var base = '';
+        try {
+            var scripts = document.getElementsByTagName('script');
+            for (var i = 0; i < scripts.length; i++) {
+                var s = scripts[i].getAttribute('src') || '';
+                if (s.indexOf('i18n') !== -1) {
+                    base = s.replace(/src\/js\/i18n[^/]*$/, '').replace(/\/?$/, '/');
+                    break;
+                }
+            }
+        } catch (_e) { /* ignore */ }
+        var enUrl = (base || './') + 'i18n/en.json';
+        var hiUrl = (base || './') + 'i18n/hi.json';
+        return Promise.all([
+            fetch(enUrl, { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+            fetch(hiUrl, { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+        ]).then(function (pair) {
+            if (pair[0]) mergeDict('en', pair[0]);
+            if (pair[1]) mergeDict('hi', pair[1]);
+            return TRANSLATIONS;
+        });
+    }
+
+    function runI18nDebug() {
+        try {
+            if (!/\bi18n-debug=1\b/.test(String(location.search || ''))) return;
+            var enKeys = Object.keys(TRANSLATIONS.en || {});
+            var hiKeys = Object.keys(TRANSLATIONS.hi || {});
+            var enSet = new Set(enKeys);
+            var hiSet = new Set(hiKeys);
+            var missingHi = enKeys.filter(function (k) { return !hiSet.has(k); });
+            var missingEn = hiKeys.filter(function (k) { return !enSet.has(k); });
+            var used = new Set();
+            document.querySelectorAll('[data-i18n],[data-i18n-placeholder],[data-i18n-title],[data-i18n-aria-label],[data-i18n-alt],[data-i18n-value],[data-i18n-content]').forEach(function (el) {
+                ['data-i18n', 'data-i18n-placeholder', 'data-i18n-title', 'data-i18n-aria-label', 'data-i18n-alt', 'data-i18n-value', 'data-i18n-content'].forEach(function (a) {
+                    var v = el.getAttribute(a);
+                    if (v) used.add(v);
+                });
+            });
+            var unused = enKeys.filter(function (k) { return !used.has(k); });
+            var missingInDom = [];
+            used.forEach(function (k) {
+                if (!enSet.has(k)) missingInDom.push(k);
+            });
+            var latinLeft = [];
+            if ((global.currentLang || '') === 'hi') {
+                var allow = new RegExp('Gurukripa|GSTIN|WhatsApp|UPI|ISI|PIN|OTP|PDF|FAQ|GPS|API|COD|[0-9+\\-().\\s/]', 'g');
+                document.querySelectorAll('h1,h2,h3,button,a,label,p,span,li').forEach(function (el) {
+                    if (!el.offsetParent && el !== document.body) return;
+                    var text = (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) ? (el.textContent || '').trim() : '';
+                    if (text.length > 2 && /[A-Za-z]{3,}/.test(text.replace(allow, ''))) {
+                        latinLeft.push(text.slice(0, 80));
+                    }
+                });
+            }
+            var report = {
+                en: enKeys.length,
+                hi: hiKeys.length,
+                missingHi: missingHi,
+                missingEn: missingEn,
+                missingInDom: missingInDom,
+                unusedCount: unused.length,
+                latinSampleInHi: latinLeft.slice(0, 40)
+            };
+            console.info('[i18n-debug]', report);
+            var banner = document.createElement('pre');
+            banner.id = 'i18n-debug-banner';
+            banner.setAttribute('role', 'status');
+            banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:30vh;overflow:auto;z-index:99999;background:#1a1a1a;color:#9f9;font:12px/1.4 monospace;padding:8px;margin:0';
+            banner.textContent = JSON.stringify(report, null, 2);
+            document.body.appendChild(banner);
+        } catch (err) {
+            console.warn('[i18n-debug] failed', err);
+        }
+    }
+
+    global.t = t;
+    global.applyTranslations = applyTranslations;
+    global.refreshI18nFromJson = refreshFromJson;
+    global.runI18nDebug = runI18nDebug;
+
+    // Soft-refresh from JSON when online (bundle already applied).
+    if (typeof document !== 'undefined') {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () {
+                refreshFromJson().then(function () { runI18nDebug(); }).catch(function () { runI18nDebug(); });
+            });
+        } else {
+            refreshFromJson().then(function () { runI18nDebug(); }).catch(function () { runI18nDebug(); });
+        }
+    }
+})(typeof window !== 'undefined' ? window : globalThis);

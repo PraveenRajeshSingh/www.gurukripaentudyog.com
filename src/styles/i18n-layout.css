@@ -1,0 +1,74 @@
+/* Phase 1: cascade layer patches — Hindi / i18n layout safety */
+@layer patches {
+/* ── Hindi (Devanagari) layout safety ───────────────────────────
+   Noto Sans Devanagari, line-height 1.5+, no letter-spacing /
+   text-transform on Hindi, allow 2-line buttons, balanced titles.
+   ───────────────────────────────────────────────────────────── */
+html[lang="hi"],
+html[data-lang="hi"] {
+    --lh-hi: 1.55;
+}
+
+html[lang="hi"] body,
+html[data-lang="hi"] body,
+html[lang="hi"] button,
+html[lang="hi"] input,
+html[lang="hi"] textarea,
+html[lang="hi"] select,
+html[data-lang="hi"] button,
+html[data-lang="hi"] input,
+html[data-lang="hi"] textarea,
+html[data-lang="hi"] select {
+    font-family: "Noto Sans Devanagari", "Plus Jakarta Sans", system-ui, sans-serif;
+    line-height: var(--lh-hi, 1.55);
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+html[lang="hi"] h1,
+html[lang="hi"] h2,
+html[lang="hi"] h3,
+html[lang="hi"] .sec-title,
+html[lang="hi"] .hero-h1,
+html[data-lang="hi"] h1,
+html[data-lang="hi"] h2,
+html[data-lang="hi"] h3,
+html[data-lang="hi"] .sec-title,
+html[data-lang="hi"] .hero-h1 {
+    line-height: 1.45;
+    letter-spacing: normal;
+    text-wrap: balance;
+}
+
+/* Buttons / chips / tabs / badges — wrap instead of clipping matras */
+html[lang="hi"] .btn,
+html[lang="hi"] .studio-btn,
+html[lang="hi"] .studio-tab,
+html[lang="hi"] .profile-tab,
+html[lang="hi"] .filter-btn,
+html[lang="hi"] .nav-link,
+html[lang="hi"] .mn-item span,
+html[lang="hi"] .hub-tile__label,
+html[lang="hi"] .nav-badge,
+html[data-lang="hi"] .btn,
+html[data-lang="hi"] .studio-btn,
+html[data-lang="hi"] .studio-tab,
+html[data-lang="hi"] .profile-tab,
+html[data-lang="hi"] .filter-btn,
+html[data-lang="hi"] .nav-link,
+html[data-lang="hi"] .mn-item span,
+html[data-lang="hi"] .hub-tile__label,
+html[data-lang="hi"] .nav-badge {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+html[lang="hi"] .btn,
+html[data-lang="hi"] .btn {
+    min-height: 44px;
+    padding-block: 0.55em;
+}
+}
