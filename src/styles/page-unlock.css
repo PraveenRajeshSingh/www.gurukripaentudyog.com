@@ -1,0 +1,27 @@
+/* CHANGE: nuclear page-unlock — closed full-screen layers must never block the site.
+   Unlayered + !important so this wins over mobile-scroll-master / mobile-fixes. */
+.modal-overlay:not(.open),
+.cart-overlay:not(.open),
+.wishlist-overlay:not(.open),
+.drawer-overlay:not(.open),
+.lb-overlay:not(.open),
+#lb:not(.open),
+.chatbot-wrap:not(.open),
+#mobileSearchOverlay[hidden],
+.msearch-overlay[hidden] {
+  pointer-events: none !important;
+  visibility: hidden !important;
+  touch-action: auto !important;
+}
+
+html:not(.msearch-open):not(.overlay-open) body:not(.overlay-open):not(.account-popup-open) {
+  overflow: visible !important;
+  overflow-x: clip !important;
+  position: static !important;
+  touch-action: pan-y !important;
+}
+
+html:not(.overlay-open):not(.msearch-open) {
+  overflow: visible !important;
+  touch-action: pan-y !important;
+}

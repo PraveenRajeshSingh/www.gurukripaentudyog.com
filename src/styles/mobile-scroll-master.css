@@ -256,15 +256,26 @@ section,
    5. MODAL / DRAWER / POPUP SCROLL
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Overlay backdrops — full visual viewport, independent from page scroll */
+/* Overlay backdrops — full visual viewport, independent from page scroll.
+   CRITICAL: touch-action:none ONLY when .open. Applying it to closed overlays
+   (still position:fixed; inset:0 + GPU layer) eats every touch/scroll on the page. */
 .modal-overlay,
 .cart-overlay,
 .wishlist-overlay,
-.lb-overlay {
+.lb-overlay,
+.drawer-overlay {
     position: fixed !important;
     inset: 0;
-    overflow: hidden; /* the .modal-box owns the scroll, not the overlay */
-    /* Prevent swipe-dismiss gesture on the backdrop itself */
+    overflow: hidden;
+    pointer-events: none !important;
+    touch-action: manipulation;
+}
+.modal-overlay.open,
+.cart-overlay.open,
+.wishlist-overlay.open,
+.lb-overlay.open,
+.drawer-overlay.open {
+    pointer-events: auto !important;
     touch-action: none;
 }
 
@@ -523,8 +534,9 @@ body.overlay-open {
  * left the mobile nav, cart, and wishlist visibly open on every page load.
  * Promote layers with will-change / translate3d that preserves slide offsets.
  */
-.modal-overlay,
-.modal-box,
+/* GPU promote only open overlays / boxes — closed full-screen layers must not composite on top */
+.modal-overlay.open,
+.modal-overlay.open .modal-box,
 .gb-ptr-indicator {
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
