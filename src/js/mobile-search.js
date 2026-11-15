@@ -1,4 +1,7 @@
-/* Phase 4: mobile / compact full-screen search overlay */
+/* Phase 4: mobile / compact full-screen search overlay
+   CHANGE: do NOT use [aria-modal="true"] for popup detection — closed modals
+   keep that attribute and were forcing html.popup-open + a body-wide MutationObserver
+   that froze scroll and clicks. */
 (function () {
   'use strict';
 
@@ -24,15 +27,27 @@
     } catch (e) { /* ignore */ }
   }
 
+  function anyPopupOpen() {
+    try {
+      if (document.body.classList.contains('overlay-open')) return true;
+      if (document.querySelector('.modal-overlay.open')) return true;
+      if (document.querySelector('.cart-drawer.open, .wishlist-drawer.open')) return true;
+      if (document.querySelector('#mobileDrawer.open, .drawer.open')) return true;
+      if (overlay && !overlay.hidden) return true;
+    } catch (e) { /* ignore */ }
+    return false;
+  }
+
+  function syncPopupClass() {
+    document.documentElement.classList.toggle('popup-open', anyPopupOpen());
+  }
+
   function renderSuggest(q) {
     if (!suggest) return;
     var query = String(q || '').trim().toLowerCase();
     suggest.innerHTML = '';
     if (emptyEl) emptyEl.hidden = true;
-    if (!query) {
-      if (emptyEl) emptyEl.hidden = true;
-      return;
-    }
+    if (!query) return;
     var list = (typeof PRODUCTS !== 'undefined' && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
     var lang = (typeof currentLang !== 'undefined' && currentLang === 'hi') ? 'hi' : 'en';
     var hits = list.filter(function (p) {
@@ -56,10 +71,7 @@
       btn.addEventListener('click', function () {
         closeSiteSearch();
         if (typeof openProductDetail === 'function') openProductDetail(p.id);
-        else if (typeof filterProducts === 'function') {
-          try { document.getElementById('navSearch').value = title; } catch (e) {}
-          location.hash = '#products';
-        }
+        else location.hash = '#products';
       });
       suggest.appendChild(btn);
     });
@@ -76,24 +88,15 @@
       if (nav) nav.focus();
       return;
     }
-    // Desktop expanded: focus inline search instead of overlay
     if (!isCompact()) {
       var navIn = $('navSearch');
-      if (navIn) {
-        navIn.focus();
-        return;
-      }
+      if (navIn) { navIn.focus(); return; }
     }
     lastTrigger = trigger || document.activeElement;
     prevFocus = document.activeElement;
     overlay.hidden = false;
     document.documentElement.classList.add('msearch-open');
-    try {
-      var header = $('siteHeader') || document.querySelector('.nav-premium');
-      var bottom = document.querySelector('.mobile-nav, #mobileNav, .mn-bar');
-      if (header) { header.setAttribute('inert', ''); header.setAttribute('aria-hidden', 'true'); }
-      if (bottom) { bottom.setAttribute('inert', ''); bottom.setAttribute('aria-hidden', 'true'); }
-    } catch (e) { /* ignore */ }
+    syncPopupClass();
     setVvPad();
     setTimeout(function () { try { input.focus(); } catch (e2) {} }, 30);
     var seed = '';
@@ -105,20 +108,9 @@
 
   function closeSiteSearch() {
     overlay = overlay || $('mobileSearchOverlay');
-    if (!overlay || overlay.hidden) {
-      document.documentElement.classList.remove('msearch-open');
-      return;
-    }
-    overlay.hidden = true;
+    if (overlay) overlay.hidden = true;
     document.documentElement.classList.remove('msearch-open');
-    try {
-      document.querySelectorAll('[inert]').forEach(function (el) {
-        if (el.id === 'siteHeader' || el.classList.contains('nav-premium') || el.classList.contains('mobile-nav') || el.id === 'mobileNav' || el.classList.contains('mn-bar')) {
-          el.removeAttribute('inert');
-          el.removeAttribute('aria-hidden');
-        }
-      });
-    } catch (e) { /* ignore */ }
+    syncPopupClass();
     var t = lastTrigger || prevFocus;
     lastTrigger = null;
     if (t && typeof t.focus === 'function') {
@@ -142,8 +134,8 @@
   function bindKbChrome() {
     document.addEventListener('focusin', function (e) {
       var tag = e.target && e.target.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) {
-        if (isCompact()) document.documentElement.classList.add('kb-up');
+      if ((tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) && isCompact()) {
+        document.documentElement.classList.add('kb-up');
       }
     });
     document.addEventListener('focusout', function () {
@@ -155,17 +147,33 @@
         }
       }, 80);
     });
-    // Popup open class for bottom-nav hide
+    // Lightweight sync — only when open class toggles on known overlays (no body-wide observer)
+    document.addEventListener('click', function () { setTimeout(syncPopupClass, 0); }, true);
+    window.addEventListener('gbi:overlay', syncPopupClass);
+  }
+
+  /** Boot recovery: unlock page if a previous session left lock classes */
+  function forceUnlockPage() {
     try {
-      var obs = new MutationObserver(function () {
-        var open = document.querySelector('.modal.open, .drawer.open, [aria-modal="true"]:not([hidden])');
-        document.documentElement.classList.toggle('popup-open', !!open);
+      document.documentElement.classList.remove('msearch-open', 'popup-open', 'kb-up', 'overlay-open');
+      document.body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
+      document.body.style.removeProperty('top');
+      document.body.style.removeProperty('left');
+      document.body.style.removeProperty('right');
+      document.body.style.removeProperty('width');
+      document.body.style.removeProperty('position');
+      document.body.style.removeProperty('overflow');
+      if (typeof __overlayCount !== 'undefined') __overlayCount = 0;
+      var ms = $('mobileSearchOverlay');
+      if (ms) ms.hidden = true;
+      document.querySelectorAll('[inert]').forEach(function (el) {
+        el.removeAttribute('inert');
       });
-      obs.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class', 'hidden', 'aria-hidden'] });
     } catch (e) { /* ignore */ }
   }
 
   function init() {
+    forceUnlockPage();
     overlay = $('mobileSearchOverlay');
     input = $('mobileSearchInput');
     clearBtn = $('mobileSearchClear');
@@ -193,6 +201,7 @@
       else closeSiteSearch();
     });
     bindKbChrome();
+    syncPopupClass();
   }
 
   window.openSiteSearch = openSiteSearch;
@@ -200,6 +209,7 @@
   window.clearSiteSearch = function () {
     if (input) { input.value = ''; onInput(); input.focus(); }
   };
+  window.forceUnlockPage = forceUnlockPage;
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

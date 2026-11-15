@@ -390,14 +390,22 @@ function ensureOverlaysClosedOnBoot() {
 
     // Reset scroll lock if nothing should be open
     document.body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
-    document.documentElement.classList.remove('overlay-open');
+    document.documentElement.classList.remove('overlay-open', 'msearch-open', 'popup-open', 'kb-up');
     document.body.style.removeProperty('top');
     document.body.style.removeProperty('left');
     document.body.style.removeProperty('right');
     document.body.style.removeProperty('width');
+    document.body.style.removeProperty('position');
+    document.body.style.removeProperty('overflow');
     if (typeof __overlayCount !== 'undefined') {
         try { __overlayCount = 0; } catch (_e) { /* ignore */ }
     }
+    try {
+        const ms = document.getElementById('mobileSearchOverlay');
+        if (ms) ms.hidden = true;
+        document.querySelectorAll('[inert]').forEach((el) => el.removeAttribute('inert'));
+    } catch (_e2) { /* ignore */ }
+    try { window.dispatchEvent(new CustomEvent('gbi:overlay')); } catch (_e3) { /* ignore */ }
 }
 
 // ══════════════════════════════════════════
@@ -736,6 +744,7 @@ function overlayLock() {
         document.documentElement.classList.add('overlay-open');
     }
     __overlayCount++;
+    try { window.dispatchEvent(new CustomEvent('gbi:overlay')); } catch (_e) { /* ignore */ }
     // Move keyboard / screen-reader focus into the dialog that just opened.
     // Fields that want the caret (pincode, search) focus themselves after.
     setTimeout(function () {
@@ -762,6 +771,7 @@ function overlayUnlock() {
             try { prev.focus(); } catch (_e) {}
         }
     }
+    try { window.dispatchEvent(new CustomEvent('gbi:overlay')); } catch (_e) { /* ignore */ }
 }
 
 function _notifyOverlayLayout(el) {
