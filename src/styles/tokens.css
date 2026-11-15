@@ -62,20 +62,38 @@
         --btn-primary-hover: #8F2A20;
         --btn-primary-active: #7F241C;
 
-        /* ─── 8. Radii Scale ─── */
+        /* ─── 8. Radii Scale (8 / 12 / 16 / 24 / pill; --r-lg kept at 18 for legacy) ─── */
         --r-xs: 4px;
         --r-sm: 8px;
         --r-md: 12px;
+        --r-16: 16px;
         --r-lg: 18px;
         --r-xl: 24px;
-        --radius-pill: 50px;
+        --radius-pill: 999px;
+        --r-pill: var(--radius-pill);
 
-        /* ─── 9. Shadows & Elevation ─── */
+        /* ─── 9. Shadows & Elevation (+ clay) ─── */
         --sh-sm: 0 1px 3px rgba(37, 37, 37, 0.06);
+        --sh-md: 0 4px 16px rgba(37, 37, 37, 0.08);
+        --sh-lg: 0 16px 40px rgba(37, 37, 37, 0.14);
         --sh-card: 0 2px 16px rgba(37, 37, 37, 0.07);
         --sh-hover: 0 10px 40px rgba(168, 50, 38, 0.14);
         --sh-modal: 0 32px 80px rgba(0, 0, 0, 0.22);
         --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        --clay-outer: 6px 6px 14px rgba(37, 37, 37, 0.10), -4px -4px 12px rgba(255, 255, 255, 0.85);
+        --clay-inner: inset 3px 3px 8px rgba(37, 37, 37, 0.08), inset -2px -2px 6px rgba(255, 255, 255, 0.7);
+
+        /* Warm gold accent (brand-friendly gradients) */
+        --gold: #C9A227;
+        --gold-soft: #E8D48B;
+        --gold-deep: #8A7018;
+        --grad-brand: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 55%, var(--gold) 140%);
+        --grad-warm: linear-gradient(160deg, var(--bg) 0%, var(--brand-light) 55%, rgba(201, 162, 39, 0.18) 100%);
+
+        /* Blur scale */
+        --blur-sm: 8px;
+        --blur-md: 16px;
+        --blur-lg: 24px;
 
         /* ─── 10. Typography Stacks & Scale ─── */
         --display: 'Fraunces', Georgia, 'Noto Sans Devanagari', serif;
@@ -134,6 +152,12 @@
 
         /* ─── 15. Motion & Transitions ─── */
         --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+        --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --dur-1: 120ms;
+        --dur-2: 200ms;
+        --dur-3: 320ms;
+        --dur-4: 480ms;
         --t: 0.22s;
         --t-fast: 0.15s;
         --transition-fast: 180ms ease;
@@ -165,18 +189,27 @@
         --sal: env(safe-area-inset-left, 0px);
         --sar: env(safe-area-inset-right, 0px);
 
-        /* ─── 19. Z-Index Scale ─── */
+        /* ─── 19. Z-Index Scale (content < sticky < fab < drawers/modals < toasts) ─── */
         --z-negative: -1;
         --z-base: 1;
+        --z-content: 1;
         --z-sticky: 100;
         --z-fixed: 900;
         --z-header: 900;
+        --z-fab: 950;
         --z-overlay: 1000;
         --z-drawer: 1010;
         --z-modal: 1100;
         --z-chat: 1150;
         --z-lightbox: 1200;
         --z-toast: 9999;
+
+        /* ─── 20. Surface aliases (premium UI kit) ─── */
+        --surface: var(--bg-card);
+        --surface-raised: var(--bg-elevated);
+        --surface-tint: var(--brand-light);
+        --text: var(--ink);
+        --muted: var(--ink-3);
     }
 
     html[lang="hi"] {
@@ -215,8 +248,17 @@
         --footer-bg: #0F0D0B;
 
         --sh-card: 0 4px 20px rgba(0, 0, 0, 0.45);
+        --sh-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+        --sh-lg: 0 18px 48px rgba(0, 0, 0, 0.5);
         --sh-hover: 0 12px 40px rgba(168, 50, 38, 0.22);
         --focus-ring: 0 0 0 3px rgba(214, 106, 69, 0.45);
+        --clay-outer: 6px 6px 16px rgba(0, 0, 0, 0.45), -3px -3px 10px rgba(255, 255, 255, 0.04);
+        --clay-inner: inset 3px 3px 8px rgba(0, 0, 0, 0.35), inset -2px -2px 6px rgba(255, 255, 255, 0.04);
+        --surface: var(--bg-card);
+        --surface-raised: var(--bg-elevated);
+        --surface-tint: rgba(169, 50, 38, 0.18);
+        --text: var(--ink);
+        --muted: var(--ink-3);
     }
 }
 

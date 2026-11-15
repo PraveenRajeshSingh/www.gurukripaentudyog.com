@@ -695,36 +695,10 @@
             padding: 24px 28px
         }
 
-        /* Auth tabs */
-        .auth-tabs {
-            display: flex;
-            background: var(--bg-subtle);
-            border-radius: var(--r-md);
-            padding: 4px;
-            gap: 4px;
-            margin-bottom: 24px;
-            border: 1px solid var(--line)
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 9px;
-            border-radius: var(--r-sm);
-            font-size: .85rem;
-            font-weight: 600;
-            color: var(--ink-3);
-            transition: all var(--t);
-            cursor: pointer;
-            text-align: center
-        }
-
-        .auth-tab.active {
-            background: var(--bg-card);
-            color: var(--brand);
-            box-shadow: var(--sh-card)
-        }
-
-        /* Form fields */
+        /* Auth form primitives (shared by nearby/RFQ/etc).
+           Modal chrome for #authModal lives in auth-premium.css (Phase 1).
+           REMOVED from modal scope: old tab/submit/strength visual rules —
+           see REMOVAL_LOG.md § Phase 1 Auth Premium. */
         .auth-field {
             margin-bottom: 16px
         }
@@ -749,19 +723,19 @@
             font-size: .88rem;
             color: var(--ink);
             background: var(--bg-subtle);
-            transition: all var(--t)
+            transition: border-color var(--t), box-shadow var(--t), background var(--t)
         }
 
         .auth-input:focus {
             outline: none;
             border-color: var(--brand);
-            background: #fff;
+            background: var(--bg-card);
             box-shadow: 0 0 0 3px var(--brand-glow)
         }
 
         .auth-input.error {
-            border-color: #e53e3e;
-            background: #fff5f5
+            border-color: var(--danger);
+            background: var(--danger-bg)
         }
 
         .auth-icon {
@@ -791,7 +765,7 @@
 
         .auth-error-msg {
             font-size: .74rem;
-            color: #e53e3e;
+            color: var(--danger);
             margin-top: 4px;
             display: block
         }
@@ -800,13 +774,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px
-        }
-
-        .auth-options {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px
         }
 
         .auth-check {
@@ -822,23 +789,17 @@
             accent-color: var(--brand)
         }
 
-        .auth-forgot {
-            font-size: .8rem;
-            color: var(--brand);
-            font-weight: 600
-        }
-
         .auth-submit {
             width: 100%;
             padding: 13px;
             background: var(--brand);
-            color: #fff;
+            color: var(--ink-inverse);
             border-radius: var(--r-md);
             font-size: .9rem;
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: all var(--t);
+            transition: background var(--t);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -853,100 +814,6 @@
         .auth-submit:disabled {
             opacity: .65;
             cursor: not-allowed
-        }
-
-        .auth-divider {
-            text-align: center;
-            position: relative;
-            margin: 20px 0
-        }
-
-        .auth-divider::before {
-            content: '';
-            position: absolute;
-            inset-block: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: var(--line)
-        }
-
-        .auth-divider span {
-            background: var(--bg-card);
-            padding: 0 12px;
-            font-size: .78rem;
-            color: var(--ink-3);
-            position: relative
-        }
-
-        .auth-social-btns {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px
-        }
-
-        .auth-social-btn {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px;
-            border: 1.5px solid var(--line);
-            border-radius: var(--r-sm);
-            font-size: .82rem;
-            font-weight: 600;
-            color: var(--ink-2);
-            background: var(--bg-subtle);
-            cursor: pointer;
-            transition: all var(--t)
-        }
-
-        .auth-social-btn:hover {
-            border-color: var(--brand);
-            background: var(--brand-glow);
-            color: var(--brand)
-        }
-
-        .auth-social-btn svg {
-            width: 18px;
-            height: 18px
-        }
-
-        .auth-switch {
-            text-align: center;
-            font-size: .82rem;
-            color: var(--ink-3);
-            margin-top: 8px
-        }
-
-        .auth-switch a {
-            color: var(--brand);
-            font-weight: 700
-        }
-
-        /* Strength bar */
-        .pw-strength {
-            margin-top: 6px
-        }
-
-        .pw-strength-bar {
-            height: 4px;
-            background: var(--bg-muted);
-            border-radius: 4px;
-            overflow: hidden
-        }
-
-        .pw-strength-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: all .3s
-        }
-
-        .pw-strength-text {
-            font-size: .72rem;
-            font-weight: 600;
-            margin-top: 4px
         }
 
         @media(max-width:480px) {

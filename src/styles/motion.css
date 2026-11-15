@@ -1,0 +1,100 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   COMPONENT: Shared motion utilities (Phase 1+)
+   Animate transform/opacity (and clip-path / grid-template-rows where noted).
+   Respects prefers-reduced-motion globally via tokens reset + local guards.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@layer utilities {
+  .icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+    stroke: currentColor;
+    fill: none;
+  }
+  .icon--sm { width: 1rem; height: 1rem; }
+  .icon--md { width: 1.25rem; height: 1.25rem; }
+  .icon--lg { width: 1.5rem; height: 1.5rem; }
+  .icon--xl { width: 2rem; height: 2rem; }
+
+  .motion-fade-in {
+    animation: gb-fade-in var(--dur-3) var(--ease-out) both;
+  }
+  .motion-slide-up {
+    animation: gb-slide-up var(--dur-3) var(--ease-out) both;
+  }
+  .motion-slide-in-right {
+    animation: gb-slide-in-right var(--dur-3) var(--ease-out) both;
+  }
+  .motion-slide-in-left {
+    animation: gb-slide-in-left var(--dur-3) var(--ease-out) both;
+  }
+  .motion-scale-in {
+    animation: gb-scale-in var(--dur-3) var(--ease-spring) both;
+  }
+  .motion-shake {
+    animation: gb-shake var(--dur-4) var(--ease-out) both;
+  }
+  .motion-check-draw .check-path {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    animation: gb-check-draw var(--dur-4) var(--ease-out) forwards;
+  }
+  .is-busy .icon-spin,
+  .icon-spin {
+    animation: gb-spin 0.8s linear infinite;
+  }
+
+  @keyframes gb-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes gb-slide-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes gb-slide-in-right {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes gb-slide-in-left {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes gb-scale-in {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes gb-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  @keyframes gb-check-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes gb-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion-fade-in,
+    .motion-slide-up,
+    .motion-slide-in-right,
+    .motion-slide-in-left,
+    .motion-scale-in,
+    .motion-shake,
+    .motion-check-draw .check-path,
+    .icon-spin,
+    .is-busy .icon-spin {
+      animation: none !important;
+      opacity: 1;
+      transform: none;
+      stroke-dashoffset: 0;
+    }
+  }
+}
