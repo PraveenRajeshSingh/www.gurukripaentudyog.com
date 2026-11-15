@@ -13,7 +13,7 @@
    =========================================================================== */
 
 // [FIX] v21 — never serve text/plain "Offline" as CSS/JS; network-first shell assets
-const CACHE_VER = 'v21-load-fix';
+const CACHE_VER = 'v22-i18n-json';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -62,7 +62,10 @@ const SHELL_ASSETS = [
     './src/js/reliability.js',
     './src/js/utils.js',
     './src/js/data.js',
+    './src/js/i18n-data.js',
     './src/js/i18n.js',
+    './i18n/en.json',
+    './i18n/hi.json',
     './src/js/state.js',
     './src/js/commerce-store.js',
     './src/js/offline-store.js',

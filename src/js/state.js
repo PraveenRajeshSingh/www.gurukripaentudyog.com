@@ -97,19 +97,17 @@ let couponDiscount   = 0;
 let appliedCoupon    = '';
 let currentFilter    = 'all';
 let selectedPayMethod = 'cod';
-// Language: persist across refresh/login. First visit only — detect browser lang.
+// Language: saved choice wins → navigator.language starting with "hi" → English.
 let currentLang = (function resolveInitialLang() {
     try {
         const saved = localStorage.getItem('gb_lang');
         if (saved === 'en' || saved === 'hi') return saved;
         const nav = String((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
-        let detected = 'hi';
-        if (nav.indexOf('hi') === 0) detected = 'hi';
-        else if (nav.indexOf('en') === 0) detected = 'en';
-        localStorage.setItem('gb_lang', detected);
+        const detected = nav.indexOf('hi') === 0 ? 'hi' : 'en';
+        try { localStorage.setItem('gb_lang', detected); } catch (_w) { /* ignore */ }
         return detected;
     } catch (_e) { /* ignore */ }
-    return 'hi';
+    return 'en';
 })();
 /** Whether the current session should survive browser restarts (Remember me). */
 let rememberUserSession = !!getSafeStorage('gb_user', null);

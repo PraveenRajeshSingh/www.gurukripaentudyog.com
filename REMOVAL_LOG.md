@@ -4,6 +4,20 @@ This document logs all elements, CSS rules, inline styles, and spacers modified 
 
 ---
 
+## Phase 1 — i18n JSON source of truth (2026-11-15)
+
+### A. Embedded TRANSLATIONS object in `src/js/i18n.js`
+- **Removed:** ~800-line in-file `const TRANSLATIONS = { en:…, hi:… }` dictionary.
+- **Replacement:** `/i18n/en.json` + `/i18n/hi.json` (source of truth) + generated `src/js/i18n-data.js` sync bundle + thin `i18n.js` runtime.
+- **Proof:** `node scripts/check-i18n-parity.js` (465/465); `node --test tests/i18n.test.js`; grep shows no `const TRANSLATIONS =` in runtime file.
+- **Kept:** Public `t()`, `applyTranslations()`, `setLang()` / `setLanguage()` names and `gb_lang` storage key.
+
+### B. Duplicate `t` / `applyTranslations` in `ui.js`
+- **Removed:** Second copies that overwrote the i18n runtime after defer load order.
+- **Replacement:** `ui.js` only owns `setLang` / `setLanguage` and re-render hooks.
+
+---
+
 ## Auth overlap / cascade fix (2026-11-15)
 
 ### A. Legacy refinements R2 auth chrome

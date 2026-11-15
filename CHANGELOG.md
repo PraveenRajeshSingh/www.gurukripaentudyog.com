@@ -1,5 +1,42 @@
 # GURUKRIPA BRICKS INDUSTRY — CHANGELOG
 
+## Fix buttons / i18n / theme / mobile search — Phase 1 (2026-11-15)
+
+**Branch:** `fix-buttons-i18n-theme`  
+**Status:** Phase 1 complete (translation system). Phase 0 audit in `I18N_THEME_AUDIT.md`.
+
+| Component | Where | What changed | Status |
+|-----------|-------|--------------|--------|
+| Source of truth | `/i18n/en.json`, `/i18n/hi.json` | Flat keys; 465 EN + 465 HI; parity script | Done |
+| Sync bundle | `src/js/i18n-data.js` | `window.__GBI_I18N__` — no network wait on first paint | Done |
+| Runtime | `src/js/i18n.js` | `t()` with `{var}` + `.one`/`.other` plurals; `applyTranslations` for data-i18n-* attrs; `?i18n-debug=1` | Done |
+| Live switch | `setLang` / `setLanguage` in `ui.js` | No reload; re-applies DOM + open dynamic UI; `html lang` + `data-lang` | Done |
+| Before paint | `head.html` inline script | Sets lang from `gb_lang` / navigator (hi → else en) | Done |
+| Default lang | `state.js` | Saved → hi prefix → **English** (was defaulting to hi) | Done |
+| Hindi layout | `i18n-layout.css` | Devanagari font, LH 1.5+, no letter-spacing/transform, wrap buttons | Done |
+| SW | `sw.js` `v22-i18n-json` | Precache JSON + i18n-data.js | Done |
+| Review | `TRANSLATION_REVIEW.csv` | Flags legal/HTML/uncertain strings | Done |
+| Gap fix | `products.filters` | Added (Phase 0 missing key) | Done |
+
+**Open for later phases:** desktop `.nav-lang` CSS hide (>900px), theme toggle restoration, full hard-coded string sweep into keys, button registry, mobile search overlay, Playwright evidence.
+
+**Not claimed:** full zero-untranslated Hindi sweep (remaining JS literals); dark theme (still pinned light until Phase 2).
+
+---
+
+## Phase 0 — I18N/Theme diagnose (2026-11-15)
+
+| Finding | Root cause |
+|---------|------------|
+| Lang toggle missing on desktop | `@layer patches` `.nav-lang{display:none}` until `max-width:900px` beats features layer |
+| Theme toggle missing | Markup removed; head + `platform.js` pin `data-theme=light` and clear `gb_theme` |
+| Buttons | 265 buttons, 285 onclick, only 1 `data-action` |
+| i18n | In-memory dict only (now JSON in Phase 1) |
+
+Evidence: `qa/phase0-audit.json`. Screenshots `/qa/before/` not captured in-session (local server aborted).
+
+---
+
 ## Auth UI — overlap & cascade fix (2026-11-15)
 
 **Status:** Complete (presentation only; login/register handlers unchanged)
