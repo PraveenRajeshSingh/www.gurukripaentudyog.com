@@ -78,7 +78,12 @@ function switchAuthTab(tab, btn) {
     if (recoverPanel) recoverPanel.hidden = !showRecover;
     if (resetPanel) resetPanel.hidden = !showReset;
 
-    if (tabsBar) tabsBar.hidden = showRecover || showReset;
+    if (tabsBar) {
+        tabsBar.hidden = showRecover || showReset;
+        try {
+            tabsBar.setAttribute('data-active', showRegister ? 'register' : 'login');
+        } catch (_e) { /* ignore */ }
+    }
     tabLogin?.classList.toggle('active', showLogin);
     tabReg?.classList.toggle('active', showRegister);
     showLogin ? tabLogin?.setAttribute('aria-current', 'true') : tabLogin?.removeAttribute('aria-current');

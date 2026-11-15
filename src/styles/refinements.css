@@ -29,93 +29,11 @@
 .modal-close-btn:hover { background: rgba(200, 62, 10, .1); transform: rotate(90deg) }
 .modal-close-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px }
 
-/* ── R2. Auth modal — premium sign-in / sign-up ────────────────── */
-#authModal .modal-box { max-width: 460px; overflow-x: hidden }
-.auth-modal-brand {
-    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
-    padding: 18px 0 46px;
-    margin: 0 0 -34px;
-    border-radius: var(--r-lg) var(--r-lg) 0 0;
-    position: relative;
-}
-#authModal .modal-head { padding-top: 34px !important; position: relative; z-index: 1 }
-#authModal .modal-badge { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; background: var(--bg-subtle); border-radius: 50%; font-size: 1.2rem }
-.auth-brand-icon {
-    width: 64px; height: 64px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.9rem;
-    background: #fffdf9;
-    border: 3px solid rgba(255, 255, 255, .65);
-    border-radius: 18px;
-    box-shadow: 0 10px 26px rgba(32, 33, 36, .3);
-}
-.auth-tabs { gap: 6px; background: var(--bg-subtle); border-radius: var(--radius-pill); padding: 5px }
-.auth-tab {
-    flex: 1; min-height: 44px;
-    border-radius: var(--radius-pill);
-    font-weight: 700; font-size: .88rem;
-    color: var(--ink-2);
-    transition: background .22s var(--ease), color .22s var(--ease), box-shadow .22s var(--ease);
-}
-.auth-tab.active {
-    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-    color: #fff;
-    box-shadow: 0 6px 16px -4px rgba(200, 62, 10, .45);
-}
-.auth-input {
-    min-height: 48px;
-    border-radius: var(--r-md);
-    border: 1.5px solid var(--line-mid);
-    background: #fffdfb;
-    transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
-}
-.auth-input:focus {
-    border-color: var(--brand);
-    box-shadow: 0 0 0 4px rgba(200, 62, 10, .12);
-    outline: none;
-}
-.auth-input.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(198, 40, 40, .12) }
-.auth-error-msg { font-size: .74rem; color: var(--danger); font-weight: 600 }
-.auth-submit {
-    min-height: 50px;
-    border-radius: var(--radius-pill);
-    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
-    color: #fff; font-weight: 800; letter-spacing: .01em;
-    box-shadow: 0 10px 24px -8px rgba(200, 62, 10, .55);
-    transition: transform .18s var(--ease), box-shadow .18s var(--ease), filter .18s var(--ease);
-}
-.auth-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -8px rgba(200, 62, 10, .6); filter: brightness(1.05) }
-.auth-submit:active { transform: translateY(0) scale(.99) }
-.auth-submit:disabled { opacity: .75; cursor: progress; transform: none }
-.auth-social-btn {
-    min-height: 46px;
-    border: 1.5px solid var(--line-mid);
-    border-radius: var(--radius-pill);
-    background: #fff;
-    font-weight: 700; font-size: .86rem;
-    transition: border-color .2s var(--ease), background .2s var(--ease), transform .15s var(--ease);
-}
-.auth-social-btn:hover { border-color: var(--brand); background: #fff7f2; transform: translateY(-1px) }
+/* ── R2. Auth modal — legacy chrome REMOVED (see REMOVAL_LOG / auth-premium.css)
+   Old #authModal max-width:460px + global .auth-tab/.auth-input/.auth-submit
+   crushed the split shell and floated labels. Shared primitives for nearby/RFQ
+   stay in overlays.css; #authModal is owned by auth-premium.css (@layer patches). */
 .google-gsi-mount { min-height: 44px }
-.auth-divider { color: var(--ink-3); font-size: .76rem; font-weight: 600 }
-.auth-divider::before, .auth-divider::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--line-mid), transparent);
-}
-.auth-terms-check {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: .8rem; color: var(--ink-2);
-    margin: 2px 0 8px; line-height: 1.45;
-}
-.auth-terms-check input[type="checkbox"] {
-    width: 18px; height: 18px; margin-top: 1px;
-    accent-color: var(--brand);
-    cursor: pointer; flex-shrink: 0;
-}
-.auth-terms-check a,
-.auth-terms-check .auth-inline-link {
-    color: var(--brand); font-weight: 700; text-decoration: underline; text-underline-offset: 2px;
-}
 .auth-terms-err { display: block; margin: -4px 0 8px; min-height: 1em }
 
 /* ── R3. Cart drawer — refined side/full sheet ──────────────────── */
@@ -2206,13 +2124,10 @@ button.drawer-link {
 /* ── Auth dialog: panels, password gutters, link-shaped buttons ───── */
 .modal-head-tight { padding-top: 8px !important }
 
-/* The global mobile reset gives every modal input `padding: 12px 14px
-   !important`, which slides typed text under the leading field icon and the
-   trailing visibility toggle. That rule is `.modal-box input[type=...]` - two
-   class-level selectors plus a type - so the override needs three classes to
-   outrank it. Verified in the browser at 466px: 14px before, 40px after. */
-.modal-box .auth-input-wrap .auth-input { padding-left: 40px !important }
-.modal-box .auth-input-wrap .auth-input-pw { padding-right: 44px !important }
+/* Auth modal floating fields: owned by auth-premium.css (higher specificity).
+   Non-auth modals that reuse .auth-input-wrap still need icon gutters. */
+.modal-box:not(.auth-shell) .auth-input-wrap .auth-input { padding-left: 40px !important }
+.modal-box:not(.auth-shell) .auth-input-wrap .auth-input-pw { padding-right: 44px !important }
 
 .auth-submit-arrow { flex-shrink: 0 }
 

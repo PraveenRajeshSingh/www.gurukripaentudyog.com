@@ -2220,22 +2220,22 @@ body { overscroll-behavior-y: contain; }
 }
 
 /* Modern Pill Inputs & Selects inside all Modals */
-.modal-box input[type="text"],
-.modal-box input[type="email"],
-.modal-box input[type="tel"],
-.modal-box input[type="number"],
-.modal-box input[type="password"],
-.modal-box textarea,
-.modal-box select {
+.modal-box:not(.auth-shell) input[type="text"],
+.modal-box:not(.auth-shell) input[type="email"],
+.modal-box:not(.auth-shell) input[type="tel"],
+.modal-box:not(.auth-shell) input[type="number"],
+.modal-box:not(.auth-shell) input[type="password"],
+.modal-box:not(.auth-shell) textarea,
+.modal-box:not(.auth-shell) select {
     border: 1.5px solid #E8E2DC !important;
     border-radius: 12px !important;
     background: #FDFCFA !important;
     transition: border-color 0.18s, box-shadow 0.18s !important;
 }
 
-.modal-box input:focus,
-.modal-box textarea:focus,
-.modal-box select:focus {
+.modal-box:not(.auth-shell) input:focus,
+.modal-box:not(.auth-shell) textarea:focus,
+.modal-box:not(.auth-shell) select:focus {
     border-color: var(--brand) !important;
     box-shadow: 0 0 0 3px rgba(200, 70, 10, 0.12) !important;
     background: #FFFFFF !important;
@@ -2735,7 +2735,7 @@ body.overlay-open .modal-close-btn {
         -webkit-backdrop-filter: blur(8px) !important;
     }
 
-    .modal-box {
+    .modal-box:not(.auth-shell) {
         width: 100% !important;
         max-width: 100% !important;
         border-radius: 24px 24px 0 0 !important;
@@ -2746,7 +2746,7 @@ body.overlay-open .modal-close-btn {
         animation: none !important;
     }
 
-    .modal-overlay.open .modal-box {
+    .modal-overlay.open .modal-box:not(.auth-shell) {
         animation: sheetSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
     }
 
@@ -2761,8 +2761,8 @@ body.overlay-open .modal-close-btn {
         }
     }
 
-    /* Tactile Drag Handle */
-    .modal-box::before {
+    /* Tactile Drag Handle — not on auth split shell (overlaps brand / labels) */
+    .modal-box:not(.auth-shell)::before {
         content: '' !important;
         display: block !important;
         width: 48px !important;
@@ -2771,6 +2771,11 @@ body.overlay-open .modal-close-btn {
         background: rgba(28, 16, 9, 0.22) !important;
         margin: 10px auto 4px auto !important;
         flex-shrink: 0 !important;
+    }
+
+    #authModal .auth-shell::before {
+        content: none !important;
+        display: none !important;
     }
 
     /* Modal Head on Mobile */
@@ -2793,7 +2798,7 @@ body.overlay-open .modal-close-btn {
     }
 
     /* Modal Body with smooth scrolling and keyboard avoidance */
-    .modal-body {
+    .modal-body:not(.auth-scroll) {
         padding: 16px 18px calc(24px + env(safe-area-inset-bottom, 16px)) !important;
         max-height: calc(100dvh - 120px) !important;
         overflow-y: auto !important;
@@ -2801,13 +2806,14 @@ body.overlay-open .modal-close-btn {
         overscroll-behavior: contain !important;
     }
 
-    /* Form Fields 48px touch targets & iOS zoom prevention */
-    .modal-box input[type="text"],
-    .modal-box input[type="email"],
-    .modal-box input[type="tel"],
-    .modal-box input[type="number"],
-    .modal-box input[type="password"],
-    .modal-box select {
+    /* Form Fields 48px touch targets & iOS zoom prevention
+       (exclude #authModal — floating labels need asymmetric padding) */
+    .modal-box:not(.auth-shell) input[type="text"],
+    .modal-box:not(.auth-shell) input[type="email"],
+    .modal-box:not(.auth-shell) input[type="tel"],
+    .modal-box:not(.auth-shell) input[type="number"],
+    .modal-box:not(.auth-shell) input[type="password"],
+    .modal-box:not(.auth-shell) select {
         min-height: 48px !important;
         font-size: 16px !important; /* Prevents iOS auto-zoom on input focus */
         padding: 12px 14px !important;

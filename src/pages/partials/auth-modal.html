@@ -40,7 +40,7 @@
                         <span>Too many failed attempts. Try again in <strong id="lockoutTimer">30</strong>s.</span>
                     </div>
 
-                    <div class="auth-tabs" id="authTabs" role="group" aria-label="Sign in or create an account">
+                    <div class="auth-tabs" id="authTabs" data-active="login" role="group" aria-label="Sign in or create an account">
                         <button type="button" class="auth-tab active" onclick="switchAuthTab('login',this)" id="tabLogin" aria-controls="loginPanel" aria-current="true" data-i18n="auth.signIn">Sign In</button>
                         <button type="button" class="auth-tab" onclick="switchAuthTab('register',this)" id="tabRegister" aria-controls="registerPanel" data-i18n="auth.signUp">Sign Up</button>
                     </div>

@@ -2,22 +2,27 @@
    COMPONENT: Authentication shell (Login / Register / Recover / Reset)
    Scoped to #authModal so shared .auth-input reuse elsewhere is unchanged.
    Desktop: split card · Mobile: full-height sheet with sticky header/CTA
+   @layer patches — must beat overlays/refinements/mobile-fixes cascade.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-@layer components {
+@layer patches {
   /* ── Shell ── */
   #authModal.modal-overlay {
     align-items: stretch;
     justify-content: center;
     padding: 0;
+    /* Lighter blur than global mobile sheet — less GPU lag */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   #authModal .auth-shell.modal-box,
   #authModal .auth-shell {
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr);
     width: min(100%, 920px);
-    max-width: 920px;
+    max-width: 920px !important;
     max-height: min(100dvh, 920px);
     margin: auto;
     background: var(--surface);
@@ -25,7 +30,16 @@
     box-shadow: var(--sh-modal);
     overflow: hidden;
     border: 1px solid var(--line);
-    padding: 0;
+    padding: 0 !important;
+    container-type: inline-size;
+    container-name: auth;
+  }
+
+  /* Kill generic modal drag-pill / ::before on the auth shell */
+  #authModal .auth-shell::before,
+  #authModal .auth-shell::after {
+    content: none !important;
+    display: none !important;
   }
 
   #authModal .auth-brand-panel {
@@ -111,8 +125,17 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
+    min-width: 0;
     background: var(--surface);
     position: relative;
+    overflow: hidden;
+  }
+
+  #authModal .auth-form-panel > form,
+  #authModal .auth-panel > form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   #authModal .auth-sheet-head {
@@ -124,15 +147,9 @@
     justify-content: space-between;
     gap: var(--space-3);
     padding: max(var(--space-4), var(--sat)) var(--space-4) var(--space-3);
-    background: color-mix(in srgb, var(--surface) 88%, transparent);
-    backdrop-filter: blur(var(--blur-md));
+    /* Solid surface — no sticky blur (was causing lag + label bleed) */
+    background: var(--surface);
     border-bottom: 1px solid var(--line);
-  }
-
-  @supports not (backdrop-filter: blur(1px)) {
-    #authModal .auth-sheet-head {
-      background: var(--surface);
-    }
   }
 
   #authModal .auth-head-text {
@@ -161,12 +178,15 @@
     min-height: var(--touch-min);
   }
 
-  #authModal .auth-scroll {
+  #authModal .auth-scroll,
+  #authModal .auth-scroll.modal-body {
     flex: 1 1 auto;
+    min-height: 0;
     overflow: auto;
     overscroll-behavior: contain;
-    padding: var(--space-4);
-    padding-bottom: calc(var(--space-5) + var(--sab));
+    padding: var(--space-4) !important;
+    padding-bottom: calc(var(--space-5) + var(--sab)) !important;
+    max-height: none !important;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -212,27 +232,53 @@
     margin-top: 1px;
   }
 
-  /* Tabs */
+  /* Tabs — segmented control with sliding pill */
   #authModal .auth-tabs {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4px;
+    gap: 0;
     padding: 4px;
     margin-bottom: var(--space-4);
     background: var(--bg-subtle);
     border: 1px solid var(--line);
-    border-radius: var(--r-md);
+    border-radius: var(--r-pill, 999px);
     position: relative;
+    isolation: isolate;
+  }
+
+  #authModal .auth-tabs::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    border-radius: var(--r-pill, 999px);
+    background: var(--surface);
+    box-shadow: var(--sh-sm);
+    z-index: 0;
+    transform: translateX(0);
+    transition: transform var(--dur-3) var(--ease-spring);
+    pointer-events: none;
+  }
+
+  #authModal .auth-tabs[data-active="register"]::before {
+    transform: translateX(100%);
   }
 
   #authModal .auth-tab {
+    position: relative;
+    z-index: 1;
     min-height: var(--touch-min);
     padding: var(--space-2) var(--space-3);
-    border-radius: var(--r-sm);
+    border: 0;
+    background: transparent !important;
+    border-radius: var(--r-pill, 999px);
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--muted);
-    transition: color var(--dur-2) var(--ease-out), background var(--dur-2) var(--ease-out), transform var(--dur-1) var(--ease-out);
+    box-shadow: none !important;
+    transition: color var(--dur-2) var(--ease-out), transform var(--dur-1) var(--ease-out);
   }
 
   #authModal .auth-tab:active {
@@ -240,9 +286,9 @@
   }
 
   #authModal .auth-tab.active {
-    background: var(--surface);
-    color: var(--brand);
-    box-shadow: var(--sh-sm);
+    background: transparent !important;
+    color: var(--brand) !important;
+    box-shadow: none !important;
   }
 
   /* Panels / step transitions */
@@ -274,24 +320,28 @@
   #authModal .auth-field--float .auth-label {
     position: absolute;
     left: 44px;
+    right: 48px;
     top: 50%;
     transform: translateY(-50%);
-    margin: 0;
+    margin: 0 !important;
     padding: 0 4px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
     color: var(--muted);
     pointer-events: none;
     transition:
       transform var(--dur-2) var(--ease-out),
       top var(--dur-2) var(--ease-out),
-      left var(--dur-2) var(--ease-out),
       font-size var(--dur-2) var(--ease-out),
       color var(--dur-2) var(--ease-out),
       background var(--dur-2) var(--ease-out);
     background: transparent;
     z-index: 1;
     line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block; /* override overlays.css block+margin that pushed layout */
   }
 
   #authModal .auth-field--float .auth-input:focus + .auth-label,
@@ -299,16 +349,19 @@
   #authModal .auth-field--float.is-filled .auth-label,
   #authModal .auth-field--float.is-focused .auth-label {
     top: 0;
-    left: 36px;
+    left: 40px;
+    right: auto;
     transform: translateY(-50%);
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-size: 0.7rem;
+    font-weight: 700;
     color: var(--brand);
     background: var(--surface);
+    max-width: calc(100% - 56px);
   }
 
   #authModal .auth-input-wrap {
     position: relative;
+    isolation: isolate;
   }
 
   #authModal .auth-icon {
@@ -316,43 +369,61 @@
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
+    width: 1.15rem;
+    height: 1.15rem;
     color: var(--muted);
     pointer-events: none;
     z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  #authModal .auth-input {
+  #authModal .auth-icon .icon {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  #authModal .auth-input,
+  #authModal .auth-shell input.auth-input,
+  #authModal .auth-shell input[type="text"],
+  #authModal .auth-shell input[type="email"],
+  #authModal .auth-shell input[type="tel"],
+  #authModal .auth-shell input[type="password"] {
     width: 100%;
-    min-height: 52px;
-    padding: 1.1rem 3rem 0.7rem 44px;
-    border: 1.5px solid var(--line);
-    border-radius: var(--r-md);
-    font-size: 16px; /* prevents iOS zoom */
+    min-height: 52px !important;
+    /* Asymmetric padding for floating label — beats mobile-fixes 12px 14px */
+    padding: 1.2rem 3rem 0.55rem 44px !important;
+    border: 1.5px solid var(--line) !important;
+    border-radius: var(--r-md) !important;
+    font-size: 16px !important; /* prevents iOS zoom */
     line-height: 1.4;
-    color: var(--text);
-    background: var(--bg-subtle);
+    color: var(--ink);
+    background: var(--bg-subtle) !important;
+    box-sizing: border-box;
     transition: border-color var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), background var(--dur-2) var(--ease-out);
   }
 
   #authModal .auth-field--float .auth-input {
-    padding-top: 1.25rem;
-    padding-bottom: 0.55rem;
+    padding-top: 1.25rem !important;
+    padding-bottom: 0.55rem !important;
   }
 
   #authModal .auth-input::placeholder {
     color: transparent;
   }
 
-  #authModal .auth-input:focus {
+  #authModal .auth-input:focus,
+  #authModal .auth-shell input.auth-input:focus {
     outline: none;
-    border-color: var(--brand);
-    background: var(--surface);
-    box-shadow: var(--focus-ring);
+    border-color: var(--brand) !important;
+    background: var(--surface) !important;
+    box-shadow: var(--focus-ring, 0 0 0 3px var(--brand-glow)) !important;
   }
 
   #authModal .auth-input.error {
-    border-color: var(--danger);
-    background: var(--danger-bg);
+    border-color: var(--danger) !important;
+    background: var(--danger-bg) !important;
   }
 
   #authModal .auth-pw-toggle {
@@ -548,12 +619,13 @@
     width: 100%;
     min-height: 52px;
     padding: var(--space-3) var(--space-4);
-    background: var(--grad-brand);
+    background: var(--grad-brand) !important;
     background-size: 140% 140%;
-    color: var(--ink-inverse);
-    border-radius: var(--r-md);
+    color: var(--ink-inverse) !important;
+    border-radius: var(--r-md) !important; /* not pill — cleaner modern CTA */
     font-size: 1rem;
     font-weight: 700;
+    letter-spacing: 0.01em;
     border: none;
     cursor: pointer;
     display: inline-flex;
@@ -561,11 +633,13 @@
     justify-content: center;
     gap: var(--space-2);
     box-shadow: var(--sh-md);
+    filter: none !important;
     transition: transform var(--dur-1) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out);
   }
 
   #authModal .auth-submit:hover:not(:disabled) {
     box-shadow: var(--sh-hover);
+    transform: translateY(-1px);
   }
 
   #authModal .auth-submit:active:not(:disabled) {
@@ -812,32 +886,58 @@
   /* Mobile full-bleed sheet */
   @media (max-width: 767.98px) {
     #authModal.modal-overlay {
-      align-items: flex-end;
-      padding: 0;
+      align-items: stretch !important;
+      padding: 0 !important;
+      backdrop-filter: none; /* less lag on low-end phones */
+      -webkit-backdrop-filter: none;
+      background: rgba(18, 10, 5, 0.55);
     }
 
     #authModal .auth-shell {
-      width: 100%;
-      max-width: none;
-      min-height: 100dvh;
-      max-height: 100dvh;
-      border-radius: 0;
-      border: 0;
+      width: 100% !important;
+      max-width: none !important;
+      min-height: 100dvh !important;
+      max-height: 100dvh !important;
+      height: 100dvh !important;
+      border-radius: 0 !important;
+      border: 0 !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+      animation: none !important;
     }
 
     #authModal .auth-brand-panel {
       display: none !important;
+    }
+
+    #authModal .auth-form-panel {
+      height: 100%;
+      max-height: 100dvh;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     #authModal .auth-panel.is-enter-forward,
     #authModal .auth-panel.is-enter-back,
-    #authModal .auth-form-shake {
+    #authModal .auth-form-shake,
+    #authModal .auth-tabs::before {
       animation: none !important;
+      transition: none !important;
     }
+  }
+
+  /* Dark theme: floating label chip + inputs */
+  [data-theme="dark"] #authModal .auth-field--float .auth-input:focus + .auth-label,
+  [data-theme="dark"] #authModal .auth-field--float .auth-input:not(:placeholder-shown) + .auth-label,
+  [data-theme="dark"] #authModal .auth-field--float.is-filled .auth-label,
+  [data-theme="dark"] #authModal .auth-field--float.is-focused .auth-label {
+    background: var(--surface);
+  }
+
+  [data-theme="dark"] #authModal .auth-divider span {
+    background: var(--surface);
   }
 }
 
 /* Legacy auth modal chrome that auth-premium replaces inside #authModal */
-/* See REMOVAL_LOG.md — Phase 1 auth premium */
+/* See REMOVAL_LOG.md — Phase 1 auth premium + 2026-11-15 overlap fix */
