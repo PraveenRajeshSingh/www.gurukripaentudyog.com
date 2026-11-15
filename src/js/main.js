@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'initScrollProgress': () => initScrollProgress(),
         'initCounters': () => initCounters(),
         'initHeaderNavFit': () => { if (typeof initHeaderNavFit === 'function') initHeaderNavFit(); },
+        'initStickyHeader': () => { if (typeof initStickyHeader === 'function') initStickyHeader(); },
         'initNavHighlight': () => initNavHighlight(),
         'initScrollReveal': () => initScrollReveal(),
         'initTouchSwipe': () => initTouchSwipe(),

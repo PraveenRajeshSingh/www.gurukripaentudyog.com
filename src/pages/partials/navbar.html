@@ -1,8 +1,13 @@
     <!-- ━━━━━━━━━━━━━━━━━ ACCESSIBILITY SKIP LINK ━━━━━━━━━━━━━━━━━ -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- ━━━━━━━━━━━━━━━━━ PREMIUM GLOBAL HEADER ━━━━━━━━━━━━━━━━━ -->
-    <header class="nav nav-premium" role="banner">
+    <!-- ━━━━━━━━━━━━━━━━━ COMPONENT: Sticky / floating header ━━━━━━━━━━━━━━━━━
+         Full-width at top → floating pill after scroll (sticky-header.js/css).
+         Progress line + sliding active pill; hide-on-scroll-down (reduced-motion safe).
+         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <div id="navSentinel" class="nav-sentinel" aria-hidden="true"></div>
+    <header class="nav nav-premium" role="banner" id="siteHeader">
+        <div class="nav-progress" aria-hidden="true"><span class="nav-progress__fill"></span></div>
         <div class="container">
             <div class="nav-inner">
                 <!-- Left: brand -->
@@ -26,7 +31,8 @@
 
                 <!-- Center: primary nav -->
                 <nav class="nav-links nav-links-premium" aria-label="Primary Navigation">
-                    <!-- [FIX #4] Active state dynamically managed by IntersectionObserver scroll-spy -->
+                    <span class="nav-active-pill" aria-hidden="true"></span>
+                    <!-- Active state: IntersectionObserver scroll-spy + sliding pill -->
                     <a href="#home" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.home">Home</a>
                     <a href="#products" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.products">Products</a>
                     <a href="#nearby-bhatta" class="nav-link" onclick="setActiveNav(this)" data-i18n="nav.suppliers">Brick Suppliers</a>

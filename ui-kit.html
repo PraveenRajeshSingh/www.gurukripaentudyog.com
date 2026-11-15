@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="src/styles/overlays.css">
   <link rel="stylesheet" href="src/styles/auth-premium.css">
   <link rel="stylesheet" href="src/styles/otp-autofill.css">
+  <link rel="stylesheet" href="src/styles/chrome-premium.css">
+  <link rel="stylesheet" href="src/styles/sticky-header.css">
   <style>
     body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); }
     .kit { width: min(100% - 2rem, 1100px); margin: 0 auto; padding: 2rem 0 4rem; }
@@ -62,7 +64,7 @@
 
   <div class="kit">
     <h1>Gurukripa UI Kit</h1>
-    <p class="kit-note">Internal review page (not in public nav / sitemap). Phase 1 documents Authentication. Open live screens from the storefront, or use the buttons below to mount the real auth shell.</p>
+    <p class="kit-note">Internal review page (not in public nav / sitemap). Batch 3 Phase 1: sticky / floating header. Earlier: Authentication, OTP Autofill.</p>
 
     <div class="kit-toolbar">
       <button type="button" onclick="document.documentElement.setAttribute('data-theme','light')">Light</button>
@@ -72,7 +74,53 @@
       <a href="index.html">Open storefront</a>
       <a href="AUTH_NOTES.md">AUTH_NOTES.md</a>
       <a href="OTP_NOTES.md">OTP_NOTES.md</a>
+      <a href="CHANGELOG.md">CHANGELOG.md</a>
     </div>
+
+    <!-- ━━━━━━━━━━━━━━━━━ COMPONENT: Sticky / floating header ━━━━━━━━━━━━━━━━━ -->
+    <section class="kit-section" id="kit-sticky-header">
+      <h2>COMPONENT: Sticky / floating header</h2>
+      <p class="kit-note">
+        Live behavior is on the storefront (<code>.nav-premium</code>). Demo below forces CSS states.
+        Reduced motion / Save-Data: no hide animation; header stays visible.
+      </p>
+      <div id="navSentinel" class="nav-sentinel" aria-hidden="true"></div>
+      <header class="nav nav-premium" id="kitHeaderDemo" role="banner" style="position:relative;z-index:2">
+        <div class="nav-progress" aria-hidden="true"><span class="nav-progress__fill" style="transform:scaleX(.42)"></span></div>
+        <div class="container">
+          <div class="nav-inner" style="min-height:56px;gap:12px;display:flex;align-items:center;padding:8px 12px">
+            <a class="nav-brand" href="#kit-sticky-header" style="font-weight:700;color:var(--brand)">Gurukripa</a>
+            <nav class="nav-links nav-links-premium" aria-label="Demo nav" style="display:flex;gap:4px;position:relative">
+              <span class="nav-active-pill is-on" aria-hidden="true" style="--pill-x:0px;--pill-w:72px"></span>
+              <a href="#kit-sticky-header" class="nav-link active">Home</a>
+              <a href="#kit-auth" class="nav-link">Auth</a>
+              <a href="#kit-otp" class="nav-link">OTP</a>
+            </nav>
+            <button type="button" class="nav-icon-btn" aria-label="Cart demo">
+              Cart <span class="nav-badge is-bounce" id="kitCartBadge">2</span>
+            </button>
+          </div>
+        </div>
+      </header>
+      <div class="kit-toolbar" style="margin-top:1rem">
+        <button type="button" id="kitHdrDefault">Default (top)</button>
+        <button type="button" id="kitHdrFloat">Floating</button>
+        <button type="button" id="kitHdrHidden">Hidden (scroll-down)</button>
+        <button type="button" id="kitHdrPinned">Pinned (focus)</button>
+        <button type="button" id="kitHdrProgress">Progress 0→100%</button>
+        <button type="button" id="kitHdrBounce">Badge bounce</button>
+      </div>
+      <div class="kit-grid">
+        <div class="state-card"><strong>Default</strong> Full-width sticky bar</div>
+        <div class="state-card"><strong>Floating</strong> Pill inset + blur + progress line</div>
+        <div class="state-card"><strong>Hidden</strong> translateY(-110%) — not under reduced-motion</div>
+        <div class="state-card"><strong>Pinned / focus</strong> Stays visible; focus reveals</div>
+        <div class="state-card"><strong>Active pill</strong> Sliding indicator under scroll-spy</div>
+        <div class="state-card"><strong>--header-h</strong> ResizeObserver → scroll-margin</div>
+        <div class="state-card"><strong>Mobile compact</strong> Logo + essentials; rest in drawer</div>
+        <div class="state-card"><strong>Dark / EN-HI</strong> Token-driven glass + labels</div>
+      </div>
+    </section>
 
     <section class="kit-section" id="kit-auth">
       <h2>COMPONENT: Authentication</h2>
@@ -147,6 +195,47 @@
   </div>
 
   <script src="src/js/otp-autofill.js"></script>
+  <script>
+    (function () {
+      var hdr = document.getElementById('kitHeaderDemo');
+      var root = document.documentElement;
+      function clearHdr() {
+        if (!hdr) return;
+        hdr.classList.remove('is-floating', 'is-scrolled', 'is-hidden', 'is-pinned');
+      }
+      document.getElementById('kitHdrDefault').onclick = function () { clearHdr(); };
+      document.getElementById('kitHdrFloat').onclick = function () {
+        clearHdr();
+        hdr.classList.add('is-floating', 'is-scrolled');
+      };
+      document.getElementById('kitHdrHidden').onclick = function () {
+        clearHdr();
+        hdr.classList.add('is-floating', 'is-scrolled', 'is-hidden');
+      };
+      document.getElementById('kitHdrPinned').onclick = function () {
+        clearHdr();
+        hdr.classList.add('is-floating', 'is-scrolled', 'is-pinned');
+        hdr.querySelector('.nav-link').focus();
+      };
+      document.getElementById('kitHdrProgress').onclick = function () {
+        var p = 0;
+        root.style.setProperty('--nav-progress', '0');
+        hdr.classList.add('is-floating', 'is-scrolled');
+        var t = setInterval(function () {
+          p += 0.05;
+          if (p >= 1) { p = 1; clearInterval(t); }
+          root.style.setProperty('--nav-progress', String(p));
+        }, 40);
+      };
+      document.getElementById('kitHdrBounce').onclick = function () {
+        var b = document.getElementById('kitCartBadge');
+        if (!b) return;
+        b.classList.remove('is-bounce');
+        void b.offsetWidth;
+        b.classList.add('is-bounce');
+      };
+    })();
+  </script>
   <script>
     (function () {
       var api = null;

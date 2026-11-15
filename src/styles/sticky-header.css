@@ -1,0 +1,225 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   COMPONENT: Sticky / floating header (Batch 3 · Phase 1)
+   Full-width at top → floating rounded bar after scroll.
+   Hide on scroll-down (transform only); --header-h via JS.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* features layer so floating/hide rules beat chrome-premium (@layer features) */
+@layer features {
+  :root {
+    --header-h: 64px;
+  }
+
+  html {
+    scroll-padding-top: calc(var(--header-h) + 16px);
+  }
+
+  main section[id],
+  #main-content [id] {
+    scroll-margin-top: calc(var(--header-h) + 16px);
+  }
+
+  .nav-sentinel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  /* Floating pill after ~24px scroll */
+  .nav-premium.is-floating {
+    top: calc(8px + var(--sat, 0px));
+    margin-inline: var(--gutter, clamp(16px, 4vw, 32px));
+    width: auto;
+    max-width: calc(100% - (2 * var(--gutter, clamp(16px, 4vw, 32px))));
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    border-bottom: 1px solid transparent;
+    background: color-mix(in srgb, var(--nav-glass) 92%, transparent);
+    box-shadow: var(--sh-md), 0 1px 0 color-mix(in srgb, var(--surface, #fff) 55%, transparent) inset;
+    transition:
+      transform var(--dur-3) var(--ease-out),
+      margin var(--dur-3) var(--ease-out),
+      border-radius var(--dur-3) var(--ease-out),
+      box-shadow var(--dur-3) var(--ease-out),
+      background var(--dur-2) var(--ease-out);
+  }
+
+  @supports not (background: color-mix(in srgb, white 50%, black)) {
+    .nav-premium.is-floating {
+      background: var(--nav-glass);
+    }
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .nav-premium.is-floating {
+      background: var(--bg-card);
+    }
+  }
+
+  .nav-premium.is-floating .nav-inner {
+    min-height: 56px;
+    padding-block: 2px;
+  }
+
+  .nav-premium.is-floating .nav-brand-tag {
+    display: none;
+  }
+
+  /* Hide while scrolling down (never under reduced motion — see below) */
+  .nav-premium.is-hidden {
+    transform: translateY(calc(-110% - 12px));
+    pointer-events: none;
+  }
+
+  .nav-premium.is-hidden:focus-within,
+  .nav-premium.is-pinned {
+    transform: none;
+    pointer-events: auto;
+  }
+
+  /* Scroll progress as thin gradient line under the bar */
+  .nav-progress {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 2px;
+    border-radius: var(--r-pill);
+    background: var(--bg-muted);
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease-out);
+  }
+
+  .nav-premium.is-floating .nav-progress,
+  .nav-premium.is-scrolled .nav-progress {
+    opacity: 1;
+  }
+
+  .nav-progress__fill {
+    display: block;
+    height: 100%;
+    width: 100%;
+    transform-origin: left center;
+    transform: scaleX(var(--nav-progress, 0));
+    background: var(--grad-brand);
+    border-radius: inherit;
+    will-change: transform;
+  }
+
+  .nav-premium {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    transition: transform var(--dur-3) var(--ease-out);
+    will-change: transform;
+  }
+
+  /* Sliding active pill behind nav links */
+  .nav-links-premium {
+    position: relative;
+  }
+
+  .nav-active-pill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 36px;
+    width: var(--pill-w, 0px);
+    transform: translate(var(--pill-x, 0px), -50%);
+    border-radius: var(--r-pill);
+    background: var(--brand-light);
+    box-shadow: inset 0 0 0 1px var(--line-mid);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition:
+      transform var(--dur-3) var(--ease-spring),
+      width var(--dur-3) var(--ease-spring),
+      opacity var(--dur-2) var(--ease-out);
+  }
+
+  .nav-active-pill.is-on {
+    opacity: 1;
+  }
+
+  .nav-links-premium .nav-link,
+  .nav-links-premium .nav-link-btn {
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-links-premium .nav-link.active,
+  .nav-links-premium .nav-link-btn.active {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  /* Soft underline growth on hover (fine pointers) */
+  @media (hover: hover) and (pointer: fine) {
+    .nav-links-premium .nav-link::after,
+    .nav-links-premium .nav-link-btn::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 6px;
+      width: 0;
+      height: 2px;
+      border-radius: 1px;
+      background: var(--brand);
+      transform: translateX(-50%);
+      transition: width var(--dur-2) var(--ease-out);
+    }
+    .nav-links-premium .nav-link:hover::after,
+    .nav-links-premium .nav-link-btn:hover::after {
+      width: 40%;
+    }
+    .nav-links-premium .nav-link.active::after,
+    .nav-links-premium .nav-link-btn.active::after {
+      width: 0;
+    }
+  }
+
+  /* Cart badge bounce (triggered by .is-bounce) */
+  .nav-badge.is-bounce {
+    animation: nav-badge-bounce var(--dur-4) var(--ease-spring);
+  }
+
+  @keyframes nav-badge-bounce {
+    0%, 100% { transform: scale(1); }
+    40% { transform: scale(1.28); }
+    70% { transform: scale(0.92); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-premium,
+    .nav-premium.is-floating,
+    .nav-active-pill,
+    .nav-progress__fill {
+      transition: none !important;
+    }
+    .nav-premium.is-hidden {
+      transform: none !important;
+      pointer-events: auto;
+    }
+    .nav-badge.is-bounce {
+      animation: none;
+    }
+  }
+
+  @media print {
+    .nav-premium.is-floating,
+    .nav-premium.is-hidden {
+      position: static;
+      transform: none;
+      margin: 0;
+      box-shadow: none;
+    }
+    .nav-progress { display: none; }
+  }
+}

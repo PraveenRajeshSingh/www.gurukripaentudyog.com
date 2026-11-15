@@ -1132,7 +1132,7 @@ html {
 }
 main section[id],
 main [id].cta-banner {
-    scroll-margin-top: 78px;
+    scroll-margin-top: calc(var(--header-h, 64px) + 16px);
 }
 
 /* Honour users who prefer reduced motion: jump instantly, no animated scroll. */
