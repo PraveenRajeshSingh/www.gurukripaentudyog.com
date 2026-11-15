@@ -13,7 +13,7 @@
    =========================================================================== */
 
 // [FIX] Fluid Layout & Console Cleanup pass v16
-const CACHE_VER = 'v17-auth-ui';
+const CACHE_VER = 'v18-otp-ui';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -81,6 +81,7 @@ const RUNTIME_WARM = [
     './src/styles/a11y-phase6.css',
     './src/styles/overlays.css',
     './src/styles/auth-premium.css',
+    './src/styles/otp-autofill.css',
     './src/styles/polish-pass.css',
     './src/styles/catalog-premium.css',
     './src/styles/popups.css',
@@ -124,6 +125,7 @@ const RUNTIME_WARM = [
     './src/js/wishlist-drawer.js',
     './src/js/auth-ui.js',
     './src/js/auth-modal.js',
+    './src/js/otp-autofill.js',
     './src/js/role-access.js',
     './src/js/account-popup.js',
     './src/js/profile-modal.js',

@@ -1,0 +1,329 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   COMPONENT: OTP Autofill UI
+   Hidden real input + mirrored digit boxes.
+   No OTP backend on this static site — demo / future wiring only.
+   Replaces legacy .otp-row / .otp-digit in mobile-fixes.css.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@layer components {
+  .otp-field {
+    --otp-len: 6;
+    --otp-gap: clamp(6px, 2vw, 12px);
+    --otp-mid-gap: clamp(14px, 3.5vw, 22px);
+    --otp-box: clamp(40px, 12vw, 56px);
+    position: relative;
+    width: 100%;
+    max-width: min(100%, calc(var(--otp-len) * var(--otp-box) + (var(--otp-len) - 1) * var(--otp-gap) + var(--otp-mid-gap)));
+    margin-inline: auto;
+  }
+
+  .otp-field[data-length="4"] {
+    --otp-len: 4;
+    --otp-mid-gap: var(--otp-gap);
+  }
+
+  .otp-field__sr {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.01;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    color: transparent;
+    caret-color: transparent;
+    background: transparent;
+    z-index: 2;
+    font-size: 16px; /* iOS zoom guard */
+    letter-spacing: 0.5em;
+  }
+
+  .otp-field__sr:focus {
+    outline: none;
+  }
+
+  .otp-row {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: var(--otp-gap);
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .otp-row[data-length="6"] .otp-digit:nth-child(3) {
+    margin-inline-end: calc(var(--otp-mid-gap) - var(--otp-gap));
+  }
+
+  .otp-digit {
+    position: relative;
+    width: var(--otp-box);
+    height: calc(var(--otp-box) + 4px);
+    min-width: 40px;
+    min-height: 44px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--line-mid);
+    border-radius: var(--r-md);
+    background: var(--bg-subtle);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: clamp(1.15rem, 4vw, 1.45rem);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      background var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out),
+      transform var(--dur-2) var(--ease-spring),
+      color var(--dur-2) var(--ease-out);
+  }
+
+  .otp-digit__char {
+    display: block;
+    transform: translateZ(0);
+  }
+
+  .otp-digit.is-caret::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 1.15em;
+    border-radius: 1px;
+    background: var(--brand);
+    animation: otp-caret 1s steps(1) infinite;
+  }
+
+  .otp-digit.is-filled {
+    border-color: var(--brand);
+    background: var(--brand-glow);
+    color: var(--brand-dark);
+  }
+
+  .otp-digit.is-active {
+    border-color: var(--brand);
+    background: var(--surface);
+    box-shadow: var(--focus-ring);
+  }
+
+  .otp-digit.is-pop {
+    animation: otp-pop var(--dur-2) var(--ease-spring) both;
+  }
+
+  .otp-field.is-success .otp-digit {
+    border-color: var(--success);
+    background: var(--success-bg);
+    color: var(--success);
+  }
+
+  .otp-field.is-success .otp-digit.is-check::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: none;
+  }
+
+  .otp-field.is-error .otp-digit {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+    color: var(--danger);
+  }
+
+  .otp-field.is-error .otp-row {
+    animation: gb-shake var(--dur-4) var(--ease-out) both;
+  }
+
+  .otp-field.is-verifying .otp-digit:last-child {
+    position: relative;
+  }
+
+  .otp-field.is-verifying .otp-digit:last-child .otp-digit__spin {
+    display: grid;
+  }
+
+  .otp-digit__spin {
+    display: none;
+    place-items: center;
+    position: absolute;
+    inset: 0;
+    color: var(--brand);
+  }
+
+  .otp-progress {
+    height: 3px;
+    margin-top: var(--space-3);
+    border-radius: var(--r-pill);
+    background: var(--bg-muted);
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease-out);
+  }
+
+  .otp-field.is-verifying .otp-progress {
+    opacity: 1;
+  }
+
+  .otp-progress__bar {
+    height: 100%;
+    width: 35%;
+    background: var(--grad-brand);
+    border-radius: inherit;
+    animation: otp-indeterminate 1.1s var(--ease-out) infinite;
+  }
+
+  .otp-meta {
+    margin-top: var(--space-3);
+    text-align: center;
+    font-size: var(--fs-small);
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .otp-status {
+    min-height: 1.35em;
+    margin-top: var(--space-2);
+    text-align: center;
+    font-size: var(--fs-small);
+    font-weight: 600;
+  }
+
+  .otp-status[data-tone="error"] { color: var(--danger); }
+  .otp-status[data-tone="success"] { color: var(--success); }
+  .otp-status[data-tone="info"] { color: var(--info); }
+  .otp-status[data-tone="warning"] { color: var(--warning); }
+
+  .otp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--space-4);
+  }
+
+  .otp-resend {
+    min-height: var(--touch-min);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--r-md);
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    color: var(--brand);
+    font-weight: 700;
+    font-size: var(--fs-small);
+    transition: background var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out);
+  }
+
+  .otp-resend:disabled {
+    opacity: var(--disabled-opacity);
+    cursor: not-allowed;
+    color: var(--muted);
+  }
+
+  .otp-resend:not(:disabled):hover {
+    border-color: var(--brand);
+    background: var(--brand-glow);
+  }
+
+  .otp-paste-chip {
+    display: none;
+    min-height: 36px;
+    padding: 0 var(--space-3);
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-mid);
+    background: var(--surface-tint);
+    color: var(--brand-dark);
+    font-size: var(--fs-caption);
+    font-weight: 700;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .otp-paste-chip.is-on {
+    display: inline-flex;
+  }
+
+  .otp-banner {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    margin-bottom: var(--space-4);
+    padding: var(--space-3);
+    border-radius: var(--r-md);
+    background: var(--info-bg);
+    border: 1px solid var(--info-border);
+    color: var(--ink-2);
+    font-size: var(--fs-caption);
+    line-height: 1.5;
+  }
+
+  .otp-banner .icon {
+    color: var(--info);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .otp-banner--warn {
+    background: var(--warning-bg);
+    border-color: var(--warning-border);
+  }
+
+  .otp-banner--warn .icon {
+    color: var(--warning);
+  }
+
+  /* Auth recover verification step polish */
+  #authModal .auth-verify-step {
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: var(--space-4);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--brand-light) 55%, transparent), transparent 48%),
+      var(--bg-subtle);
+    box-shadow: var(--sh-sm);
+  }
+
+  #authModal .auth-verify-step__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--display);
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: var(--space-2);
+  }
+
+  #authModal .auth-verify-step__badge {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    background: var(--surface-tint);
+    color: var(--brand);
+  }
+
+  @keyframes otp-caret {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  @keyframes otp-pop {
+    from { transform: scale(0.86); opacity: 0.5; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes otp-indeterminate {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(320%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .otp-digit.is-caret::after { animation: none; opacity: 1; }
+    .otp-digit.is-pop { animation: none; }
+    .otp-field.is-error .otp-row { animation: none; }
+    .otp-progress__bar { animation: none; width: 100%; }
+  }
+}

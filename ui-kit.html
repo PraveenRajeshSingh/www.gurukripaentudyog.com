@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="src/styles/base.css">
   <link rel="stylesheet" href="src/styles/overlays.css">
   <link rel="stylesheet" href="src/styles/auth-premium.css">
+  <link rel="stylesheet" href="src/styles/otp-autofill.css">
   <style>
     body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); }
     .kit { width: min(100% - 2rem, 1100px); margin: 0 auto; padding: 2rem 0 4rem; }
@@ -70,25 +71,52 @@
       <button type="button" onclick="document.documentElement.lang='hi'">HI</button>
       <a href="index.html">Open storefront</a>
       <a href="AUTH_NOTES.md">AUTH_NOTES.md</a>
+      <a href="OTP_NOTES.md">OTP_NOTES.md</a>
     </div>
 
     <section class="kit-section" id="kit-auth">
       <h2>COMPONENT: Authentication</h2>
-      <p class="kit-note">States to verify on storefront: default, hover, focus-visible, active, disabled, loading, error, empty, lockout, recover, reset (disabled). OTP: N/A — no OTP flow in codebase.</p>
+      <p class="kit-note">States to verify on storefront: default, hover, focus-visible, active, disabled, loading, error, empty, lockout, recover (verification step), reset (disabled).</p>
       <div class="kit-toolbar">
         <a class="btn" href="index.html" onclick="sessionStorage.setItem('gb_kit_open_auth','login')">Open Login on site</a>
         <a href="index.html" onclick="sessionStorage.setItem('gb_kit_open_auth','register')">Open Sign Up on site</a>
-        <a href="index.html" onclick="sessionStorage.setItem('gb_kit_open_auth','recover')">Open Recover on site</a>
+        <a href="index.html" onclick="sessionStorage.setItem('gb_kit_open_auth','recover')">Open Recover / verify on site</a>
       </div>
       <div class="kit-grid">
         <div class="state-card"><strong>Default</strong> Split card (desktop) / full sheet (mobile)</div>
         <div class="state-card"><strong>Loading</strong> Spinner inside primary CTA (`aria-busy`)</div>
         <div class="state-card"><strong>Error</strong> Field messages + form shake (reduced-motion safe)</div>
         <div class="state-card"><strong>Lockout</strong> Warning banner + countdown</div>
-        <div class="state-card"><strong>Recover</strong> Honest Call / WhatsApp — no fake email</div>
+        <div class="state-card"><strong>Recover / verify</strong> Honest Call / WhatsApp — no fake SMS</div>
         <div class="state-card"><strong>Reset</strong> Coming soon — fields disabled</div>
         <div class="state-card"><strong>Google</strong> Hidden unless client id configured</div>
-        <div class="state-card"><strong>OTP</strong> Not shipped (see AUTH_NOTES.md)</div>
+      </div>
+    </section>
+
+    <section class="kit-section" id="kit-otp">
+      <h2>COMPONENT: OTP Autofill</h2>
+      <p class="kit-note">
+        <strong>Sample / demo only.</strong> There is no OTP backend on the live site (see OTP_NOTES.md).
+        WebOTP is feature-detected but inactive without an SMS ending in <code>@domain #code</code>.
+        Paste a full code (e.g. <code>482-913</code>), type digits, or use the buttons to force states.
+      </p>
+      <div id="kitOtpMount6" class="motion-fade-in" style="max-width:420px;margin:0 auto 1.25rem"></div>
+      <div class="kit-toolbar">
+        <button type="button" id="kitOtpPasteSim">Simulate paste 482913</button>
+        <button type="button" id="kitOtpErrorSim">Force error state</button>
+        <button type="button" id="kitOtpRemount4">Remount 4-digit</button>
+        <button type="button" id="kitOtpRemount6">Remount 6-digit</button>
+      </div>
+      <div id="kitOtpMount4" hidden style="max-width:320px;margin:0 auto 1rem"></div>
+      <div class="kit-grid">
+        <div class="state-card"><strong>Idle / filling</strong> Caret + focus ring</div>
+        <div class="state-card"><strong>Paste / autofill</strong> Stagger pop (≤60ms feel)</div>
+        <div class="state-card"><strong>Verifying</strong> Spinner + progress bar</div>
+        <div class="state-card"><strong>Success</strong> Green + check morph</div>
+        <div class="state-card"><strong>Error</strong> Shake + assertive live region</div>
+        <div class="state-card"><strong>Resend</strong> Timestamp countdown</div>
+        <div class="state-card"><strong>WebOTP</strong> Detected only — inactive here</div>
+        <div class="state-card"><strong>Reduced motion</strong> Color/icon only</div>
       </div>
     </section>
 
@@ -118,15 +146,63 @@
     </section>
   </div>
 
+  <script src="src/js/otp-autofill.js"></script>
   <script>
-    // Optional deep-link helper used by kit links above
     (function () {
-      try {
-        var step = sessionStorage.getItem('gb_kit_open_auth');
-        if (!step) return;
-        sessionStorage.removeItem('gb_kit_open_auth');
-        // Consumer is index.html main.js — kit only sets the flag when navigating.
-      } catch (e) {}
+      var api = null;
+      function remount(len) {
+        var m6 = document.getElementById('kitOtpMount6');
+        var m4 = document.getElementById('kitOtpMount4');
+        if (api && api.destroy) api.destroy();
+        if (len === 4) {
+          m6.hidden = true;
+          m4.hidden = false;
+          api = GBOtpAutofill.mount(m4, {
+            length: 4,
+            demo: true,
+            autoSubmit: true,
+            destination: '919198923230',
+            resendSeconds: 30,
+            maxAttempts: 3
+          });
+        } else {
+          m4.hidden = true;
+          m6.hidden = false;
+          api = GBOtpAutofill.mount(m6, {
+            length: 6,
+            demo: true,
+            autoSubmit: true,
+            destination: '919198923230',
+            resendSeconds: 30,
+            maxAttempts: 3
+          });
+        }
+        if (api) api.focus();
+      }
+      remount(6);
+      document.getElementById('kitOtpPasteSim').onclick = function () {
+        if (api) api.setCode('482913');
+      };
+      document.getElementById('kitOtpErrorSim').onclick = function () {
+        var host = document.getElementById('kitOtpMount6');
+        m4hide();
+        host.hidden = false;
+        if (api) api.destroy();
+        api = GBOtpAutofill.mount(host, {
+          length: 6,
+          demo: true,
+          autoSubmit: true,
+          destination: '919198923230',
+          maxAttempts: 3,
+          onComplete: function () { return Promise.resolve({ ok: false, message: 'Invalid code.' }); }
+        });
+        api.setCode('000000');
+      };
+      function m4hide() {
+        document.getElementById('kitOtpMount4').hidden = true;
+      }
+      document.getElementById('kitOtpRemount4').onclick = function () { remount(4); };
+      document.getElementById('kitOtpRemount6').onclick = function () { remount(6); };
     })();
   </script>
 </body>

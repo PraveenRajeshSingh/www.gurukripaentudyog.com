@@ -4,6 +4,16 @@ This document logs all elements, CSS rules, inline styles, and spacers modified 
 
 ---
 
+## Batch 2 Phase 1 — OTP Autofill (2026-11-15)
+
+### A. Legacy unused OTP digit styles
+- **Removed:** `.otp-row`, `.otp-digit`, `.otp-digit:focus`, `.otp-digit.filled` from `src/styles/mobile-fixes.css`
+- **Reason:** No HTML used these classes; leftover from an unfinished OTP sketch.
+- **Replacement:** `src/styles/otp-autofill.css` (`.otp-field`, `.otp-digit` under the new component)
+- **Verification:** `rg "otp-row|otp-digit" --glob "*.{html,js}"` shows only the new module / template / ui-kit.
+
+---
+
 ## Phase 1 — Auth Premium (2026-11-15)
 
 ### A. Modal-scoped auth chrome moved out of `overlays.css`

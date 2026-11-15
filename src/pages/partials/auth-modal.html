@@ -233,20 +233,26 @@
                             </form>
                         </div>
 
-                        <!-- Recover Panel (Forgot Password) — honest yard recovery, no fake email/OTP -->
+                        <!-- Recover / verification step — honest yard recovery (no SMS OTP backend) -->
                         <div id="recoverPanel" class="auth-panel" hidden data-auth-step="recover">
                             <button type="button" class="auth-back-link" onclick="switchAuthTab('login')">
                                 <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
                                 Back to Sign In
                             </button>
-                            <div class="auth-recover-card">
+                            <div class="auth-recover-card auth-verify-step" id="authVerifyStep">
+                                <div class="auth-verify-step__title">
+                                    <span class="auth-verify-step__badge" aria-hidden="true">
+                                        <svg class="icon"><use href="#i-shield"/></svg>
+                                    </span>
+                                    <span>Verify your account</span>
+                                </div>
                                 <p id="authRecoverLead">
                                     Gurukripa does not send automatic password-reset emails or SMS OTPs yet.
-                                    Our yard office resets access by hand.
+                                    Our yard office resets access by hand after verifying the mobile on your account.
                                 </p>
                                 <p class="auth-brand-meta" style="margin-top:12px;opacity:1;color:var(--muted)">
-                                    Tell them the mobile on your account:
-                                    <strong>+91 ******3230</strong> (yard line for reset requests).
+                                    Yard line for reset requests:
+                                    <strong>+91 ******3230</strong>
                                 </p>
                                 <div class="auth-recover-actions">
                                     <a class="auth-submit" href="tel:+919198923230" id="authRecoverCall">
@@ -257,6 +263,15 @@
                                         <svg class="icon" aria-hidden="true"><use href="#i-message-circle"/></svg>
                                         WhatsApp the yard
                                     </a>
+                                </div>
+                                <!-- Dormant OTP mount: UI module ready; inactive until a verify API exists -->
+                                <div class="auth-coming-soon" id="authOtpComingSoon" style="margin-top:16px">
+                                    <h4>SMS one-time code</h4>
+                                    <p>
+                                        The digit-box OTP autofill UI is built (see /ui-kit.html) but not connected —
+                                        this site does not send SMS. We will not show a fake code entry here.
+                                    </p>
+                                    <div id="authOtpMount" hidden data-otp-dormant></div>
                                 </div>
                                 <div class="auth-coming-soon" id="authResetComingSoon">
                                     <h4>Self-service reset</h4>
