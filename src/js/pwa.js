@@ -17,11 +17,46 @@ const GbiPwa = (function () {
     }
 
     // ── 13.1 Registration (relative URL + scope "./") ───────────
+    function designTokensMissing() {
+        try {
+            return !String(getComputedStyle(document.documentElement).getPropertyValue('--brand') || '').trim();
+        } catch (_e) {
+            return false;
+        }
+    }
+
+    /** One-shot recovery when an old SW poisoned CSS/JS with text/plain "Offline". */
+    function recoverBrokenShell() {
+        if (!designTokensMissing()) {
+            try { sessionStorage.removeItem('gbi_sw_recover'); } catch (_e) { /* ignore */ }
+            return false;
+        }
+        try {
+            if (sessionStorage.getItem('gbi_sw_recover') === '1') return false;
+            sessionStorage.setItem('gbi_sw_recover', '1');
+        } catch (_e) { /* ignore */ }
+        const clearCaches = () => {
+            if (!window.caches || !caches.keys) return Promise.resolve();
+            return caches.keys().then((keys) => Promise.all(keys.map((k) => caches.delete(k))));
+        };
+        const unreg = ('serviceWorker' in navigator)
+            ? navigator.serviceWorker.getRegistrations().then((regs) =>
+                Promise.all(regs.map((r) => r.unregister())))
+            : Promise.resolve();
+        unreg.then(clearCaches).then(() => location.reload()).catch(() => location.reload());
+        return true;
+    }
+
     function registerServiceWorker() {
         if (!('serviceWorker' in navigator)) return;
         window.addEventListener('load', () => {
+            // If styles never applied, do not re-register the broken controller.
+            if (recoverBrokenShell()) return;
+
             navigator.serviceWorker.register('./sw.js', { scope: './' })
                 .then((reg) => {
+                    // Always check for an updated worker (bypass stale controlled fetches)
+                    try { reg.update(); } catch (_e) { /* ignore */ }
                     if (reg.waiting) promptUpdate(reg.waiting);
                     reg.addEventListener('updatefound', () => {
                         const sw = reg.installing;

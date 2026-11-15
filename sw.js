@@ -12,8 +12,8 @@
    Hash routes (#products, #calculator) stay on index.html offline.
    =========================================================================== */
 
-// [FIX] Fluid Layout & Console Cleanup pass v16
-const CACHE_VER = 'v20-auth-overlap-fix';
+// [FIX] v21 — never serve text/plain "Offline" as CSS/JS; network-first shell assets
+const CACHE_VER = 'v21-load-fix';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -21,6 +21,7 @@ const DATA  = 'gbi-data-' + CACHE_VER;
 const ALL_CACHES = [SHELL, PAGES, IMGS, DATA];
 const IMG_MAX = 60;
 const NAV_TIMEOUT_MS = 3000;
+const ASSET_TIMEOUT_MS = 8000;
 
 /**
  * Phase 5 — install precache = offline shell ONLY.
@@ -272,6 +273,10 @@ self.addEventListener('fetch', (event) => {
 
     const url = new URL(req.url);
 
+    // Never intercept the service worker script itself — a hung/broken SW
+    // returning "Offline" for sw.js blocks every update forever.
+    if (/\/sw\.js$/i.test(url.pathname)) return;
+
     // External / third-party: network only, graceful failure left to page
     if (isExternal(req.url)) return;
 
@@ -340,33 +345,64 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // App shell CSS/JS/fonts/icons: cache-first with safe valid syntax fallbacks
+    // App shell CSS/JS/fonts/icons: network-first (timed) → cache → safe syntax fallbacks.
+    // Never return text/plain "Offline" for CSS/JS — that blanks the whole UI.
     if (isShellPath(url) || isSameOrigin(req.url)) {
         event.respondWith((async () => {
-            const cached = await caches.match(req);
-            if (cached) return cached;
+            const isJs = /\.js$/i.test(url.pathname);
+            const isCss = /\.css$/i.test(url.pathname);
+            const emptyOk = () => {
+                if (isJs) {
+                    return new Response('/* offline fallback */', {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/javascript; charset=utf-8' }
+                    });
+                }
+                if (isCss) {
+                    return new Response('/* offline fallback */', {
+                        status: 200,
+                        headers: { 'Content-Type': 'text/css; charset=utf-8' }
+                    });
+                }
+                return new Response('', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+            };
+
+            const matchCached = async () => {
+                return (await caches.match(req)) ||
+                    (await caches.match(url.pathname)) ||
+                    (await caches.match('./' + url.pathname.replace(/^\//, '')));
+            };
+
             try {
-                const resp = await fetch(req);
+                const resp = await timeoutFetch(req, ASSET_TIMEOUT_MS);
                 if (resp && resp.ok) {
-                    const dest = isDataPath(url) ? DATA : SHELL;
-                    caches.open(dest).then((c) => c.put(req, resp.clone())).catch(() => {});
+                    const ct = (resp.headers.get('content-type') || '').toLowerCase();
+                    // Reject poisoned cache candidates (old SW stored "Offline" as CSS)
+                    const looksPlainOffline = ct.indexOf('text/plain') >= 0 && (isCss || isJs);
+                    if (!looksPlainOffline) {
+                        const dest = isDataPath(url) ? DATA : SHELL;
+                        caches.open(dest).then((c) => c.put(req, resp.clone())).catch(() => {});
+                        return resp;
+                    }
                 }
-                return resp;
-            } catch (_e) {
-                if (/\.js$/i.test(url.pathname)) {
-                    return new Response('/* offline fallback */', {
-                        status: 200,
-                        headers: { 'Content-Type': 'application/javascript' }
-                    });
+                if (resp && resp.ok) return resp;
+            } catch (_e) { /* fall through to cache */ }
+
+            const cached = await matchCached();
+            if (cached) {
+                try {
+                    const ct = (cached.headers.get('content-type') || '').toLowerCase();
+                    if ((isCss || isJs) && ct.indexOf('text/plain') >= 0) {
+                        // Drop poisoned entry
+                        caches.open(SHELL).then((c) => c.delete(req)).catch(() => {});
+                    } else {
+                        return cached;
+                    }
+                } catch (_e) {
+                    return cached;
                 }
-                if (/\.css$/i.test(url.pathname)) {
-                    return new Response('/* offline fallback */', {
-                        status: 200,
-                        headers: { 'Content-Type': 'text/css' }
-                    });
-                }
-                return new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain' } });
             }
+            return emptyOk();
         })());
     }
 });
