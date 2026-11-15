@@ -1,5 +1,19 @@
 # GURUKRIPA BRICKS INDUSTRY — CHANGELOG
 
+## Auth UI — overlap & cascade fix (2026-11-15)
+
+**Status:** Complete (presentation only; login/register handlers unchanged)
+
+| Issue | Fix |
+|-------|-----|
+| Split shell capped at 460px / labels under icons | Removed refinements R2 `#authModal` rules; auth-premium → `@layer patches` |
+| Drag-pill + flat `12px` padding overlapping fields | `mobile-fixes` excludes `.auth-shell` |
+| Sticky head blur lag | Solid surface header; lighter overlay blur |
+| Tabs look broken / dual styles | Segmented pill with `data-active` sliding indicator |
+| Floating label vs typed text | Asymmetric padding `!important` + label chip background |
+
+---
+
 ## Batch 3 Phase 1 — Sticky / floating header (2026-11-15)
 
 **Branch:** `ui-premium-batch3-header`  

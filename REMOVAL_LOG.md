@@ -4,6 +4,19 @@ This document logs all elements, CSS rules, inline styles, and spacers modified 
 
 ---
 
+## Auth overlap / cascade fix (2026-11-15)
+
+### A. Legacy refinements R2 auth chrome
+- **Removed from `refinements.css`:** `#authModal .modal-box { max-width: 460px }`, old `.auth-modal-brand` / `.auth-tab` gradient pills, global `.auth-input` / `.auth-submit` / `.auth-social-btn` visual rules that applied site-wide and crushed `#authModal` floating labels + split shell.
+- **Kept:** `.google-gsi-mount`, `.auth-terms-err`; shared form primitives in `overlays.css` for nearby/RFQ.
+- **Replacement:** `auth-premium.css` moved to `@layer patches` (wins cascade).
+
+### B. Mobile sheet drag-pill + flat input padding on auth
+- **Changed in `mobile-fixes.css`:** `.modal-box::before` drag handle, sheet radius, and `padding: 12px 14px !important` on inputs now use `:not(.auth-shell)` so they no longer overlap the auth header/labels.
+- **Changed:** `.modal-body` max-height clamp excluded for `.auth-scroll`.
+
+---
+
 ## Batch 3 Phase 1 — Sticky / floating header (2026-11-15)
 
 ### A. Hardcoded header glass color

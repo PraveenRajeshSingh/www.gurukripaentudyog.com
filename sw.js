@@ -13,7 +13,7 @@
    =========================================================================== */
 
 // [FIX] Fluid Layout & Console Cleanup pass v16
-const CACHE_VER = 'v19-sticky-header';
+const CACHE_VER = 'v20-auth-overlap-fix';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;

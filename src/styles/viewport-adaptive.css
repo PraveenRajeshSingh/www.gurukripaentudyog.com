@@ -209,8 +209,9 @@ table {
     #nearbyCompareModal .modal-box,
     #nearbyQuoteModal .modal-box,
     #trackerModal .modal-box,
-    #authModal .modal-box {
-        max-height: min(96dvh, var(--vv-height, 100dvh)) !important;
+    /* Auth uses full-viewport sheet via auth-premium.css — do not clamp like other modals */
+    #authModal .auth-shell {
+        max-height: 100dvh !important;
     }
 
     .cart-drawer,
