@@ -1,0 +1,294 @@
+{
+  "generatedAt": "2026-11-15T15:37:08.400Z",
+  "i18n": {
+    "source": "src/js/i18n.js (in-memory TRANSLATIONS; no /i18n/*.json)",
+    "enKeyCount": 464,
+    "hiKeyCount": 464,
+    "dataI18nUniqueInIndex": 233,
+    "dataI18nOccurrences": 260,
+    "missingInEn": [
+      "products.filters"
+    ],
+    "missingInHi": [
+      "products.filters"
+    ],
+    "keysOnlyInEn": [],
+    "keysOnlyInHi": [],
+    "keysOnlyInEnCount": 0,
+    "keysOnlyInHiCount": 0
+  },
+  "buttonsBefore": {
+    "buttonElements": 265,
+    "anchorElements": 59,
+    "roleButton": 0,
+    "roleTab": 11,
+    "roleMenuitem": 15,
+    "roleSwitch": 0,
+    "onclickAttributes": 285,
+    "dataActionAttributes": 1,
+    "hrefHash": 0,
+    "hrefEmpty": 0,
+    "typeSubmit": 7,
+    "uniqueOnclickHandlers": 121,
+    "onclickHandlerHistogram": {
+      "lbClose": 2,
+      "openAdminPortal": 1,
+      "setLang": 5,
+      "setActiveNav": 6,
+      "openBulkQuoteModal": 7,
+      "document.getElementById": 6,
+      "toggleVoiceSearch": 1,
+      "openNotificationCenter": 3,
+      "openCart": 2,
+      "openWishlistDrawer": 2,
+      "openAuth": 2,
+      "toggleUserDropdown": 1,
+      "closeUserDropdown": 3,
+      "RoleAccess.goCustomerDashboard": 1,
+      "RoleAccess.goEstimator": 1,
+      "RoleAccess.goBulkQuote": 1,
+      "openProfile": 1,
+      "openAccountEditProfile": 1,
+      "openProfileTab": 13,
+      "openTrackerModal": 1,
+      "scrollToSection": 1,
+      "requestSignOut": 1,
+      "toggleDrawer": 22,
+      "openAuthFromDrawer": 2,
+      "filterProducts": 11,
+      "toggleFilterSheet": 4,
+      "setProductsView": 2,
+      "CatalogDiscovery.resetFilters": 1,
+      "refreshCalcRates": 1,
+      "setCalcUnit": 2,
+      "setWallThickness": 3,
+      "runEstimate": 1,
+      "resetCalc": 1,
+      "runEstimatorPincodeCheck": 1,
+      "clearSavedEstimates": 1,
+      "saveConstructionSite": 2,
+      "scrollToCalcResult": 1,
+      "lbOpen": 5,
+      "document.querySelectorAll": 5,
+      "toggleFaq": 5,
+      "copyFooterGstin": 1,
+      "typeof handleMobileProfile==='function'?handleMobileProfile": 1,
+      "typeof RoleAccess!=='undefined'?RoleAccess.requireCustomer": 1,
+      "openLegalModal": 7,
+      "closeCart": 3,
+      "applyCoupon": 1,
+      "openCheckout": 1,
+      "WhatsAppOrder.orderFromCart": 1,
+      "closeWishlistDrawer": 3,
+      "moveAllWishlistToCart": 1,
+      "handleAuthOverlayClick": 1,
+      "closeAuth": 1,
+      "switchAuthTab": 6,
+      "togglePw": 3,
+      "openAuthRecover": 2,
+      "handleGoogleSignIn": 2,
+      "openAuthResetPreview": 1,
+      "handleProfileOverlayClick": 1,
+      "closeProfile": 4,
+      "switchProfileTab": 8,
+      "switchToEditProfile": 1,
+      "requestProfileSignOut": 1,
+      "cancelEditProfile": 1,
+      "addSiteFromProfile": 1,
+      "saveBuyerProfileType": 1,
+      "handleCheckoutOverlayClick": 1,
+      "closeCheckout": 2,
+      "SiteInspection.captureForCheckout": 1,
+      "toggleCheckoutSaveSite": 1,
+      "selectPayMethod": 3,
+      "copyUpiId": 1,
+      "backToDetails": 1,
+      "confirmOrderOnWhatsApp": 1,
+      "coFootPrimaryAction": 1,
+      "if": 14,
+      "closeBulkQuoteModal": 1,
+      "sendBulkQuoteViaWhatsApp": 1,
+      "NearbyBhatta.closeDetail": 1,
+      "NearbyBhatta.closeCompare": 1,
+      "NearbyBhatta.closeQuote": 1,
+      "closeAdminPortal": 1,
+      "switchAdminTab": 9,
+      "handleProductModalClick": 1,
+      "closeProductModal": 1,
+      "CatalogDiscovery.closeCompareModal": 1,
+      "closePincodeModal": 2,
+      "runModalPincodeCheck": 1,
+      "setModalPincode": 6,
+      "whatsappModalDeliveryQuote": 1,
+      "closeTrackerModal": 1,
+      "trackOrderSubmit": 1,
+      "closeOrderDetailsModal": 2,
+      "closeGstInvoice": 2,
+      "window.print": 1,
+      "closeInvoicePdf": 2,
+      "printCurrentInvoice": 1,
+      "downloadCurrentInvoice": 1,
+      "shareCurrentInvoice": 1,
+      "resendCurrentInvoice": 1,
+      "closeCompanyProfile": 2,
+      "clearCompanyLogo": 1,
+      "resetCompanyProfileForm": 1,
+      "saveCompanyProfileForm": 1,
+      "closeLegalModal": 2,
+      "switchLegalTab": 4,
+      "closeNotificationCenter": 1,
+      "PushNotifications.enableAlerts": 1,
+      "PushNotifications.downloadRateCard": 1,
+      "PushNotifications.checkAlertsNow": 1,
+      "PushNotifications.markAllRead": 1,
+      "PushNotifications.clearAlerts": 1,
+      "minimizeChatbot": 1,
+      "toggleChatbot": 2,
+      "sendChatChip": 3,
+      "openWhatsAppBhattaManager": 1,
+      "sendChat": 1,
+      "toggleFabHelp": 1,
+      "scrollDocumentTop": 1,
+      "setMNActive": 3,
+      "openMobileEstimator": 1,
+      "handleMobileProfile": 1
+    },
+    "handlersNotFoundInSrcJs": [
+      {
+        "name": "RoleAccess.goCustomerDashboard",
+        "count": 1
+      },
+      {
+        "name": "RoleAccess.goEstimator",
+        "count": 1
+      },
+      {
+        "name": "RoleAccess.goBulkQuote",
+        "count": 1
+      },
+      {
+        "name": "CatalogDiscovery.resetFilters",
+        "count": 1
+      },
+      {
+        "name": "typeof handleMobileProfile==='function'?handleMobileProfile",
+        "count": 1
+      },
+      {
+        "name": "typeof RoleAccess!=='undefined'?RoleAccess.requireCustomer",
+        "count": 1
+      },
+      {
+        "name": "SiteInspection.captureForCheckout",
+        "count": 1
+      },
+      {
+        "name": "if",
+        "count": 14
+      },
+      {
+        "name": "NearbyBhatta.closeDetail",
+        "count": 1
+      },
+      {
+        "name": "NearbyBhatta.closeCompare",
+        "count": 1
+      },
+      {
+        "name": "NearbyBhatta.closeQuote",
+        "count": 1
+      },
+      {
+        "name": "PushNotifications.enableAlerts",
+        "count": 1
+      },
+      {
+        "name": "PushNotifications.downloadRateCard",
+        "count": 1
+      },
+      {
+        "name": "PushNotifications.checkAlertsNow",
+        "count": 1
+      },
+      {
+        "name": "PushNotifications.markAllRead",
+        "count": 1
+      },
+      {
+        "name": "PushNotifications.clearAlerts",
+        "count": 1
+      }
+    ]
+  },
+  "themeHardcodedColorsOutsideTokens": {
+    "count": 461,
+    "sampleFiles": [
+      {
+        "file": "src\\styles\\a11y-phase6.css",
+        "count": 6
+      },
+      {
+        "file": "src\\styles\\account.css",
+        "count": 3
+      },
+      {
+        "file": "src\\styles\\app.css",
+        "count": 19
+      },
+      {
+        "file": "src\\styles\\base.css",
+        "count": 12
+      },
+      {
+        "file": "src\\styles\\calculator-studio.css",
+        "count": 8
+      },
+      {
+        "file": "src\\styles\\catalog-premium.css",
+        "count": 50
+      },
+      {
+        "file": "src\\styles\\chrome-premium.css",
+        "count": 4
+      },
+      {
+        "file": "src\\styles\\compact-catalog-account.css",
+        "count": 24
+      },
+      {
+        "file": "src\\styles\\design-system.css",
+        "count": 3
+      },
+      {
+        "file": "src\\styles\\ecommerce.css",
+        "count": 5
+      },
+      {
+        "file": "src\\styles\\extras.css",
+        "count": 31
+      },
+      {
+        "file": "src\\styles\\fab-stack.css",
+        "count": 13
+      },
+      {
+        "file": "src\\styles\\footer-studio.css",
+        "count": 10
+      },
+      {
+        "file": "src\\styles\\interaction-fixes.css",
+        "count": 5
+      },
+      {
+        "file": "src\\styles\\mobile-fixes.css",
+        "count": 98
+      }
+    ]
+  },
+  "toggleFindings": {
+    "langToggleMarkup": "header .nav-lang (#navLangEn/#navLangHi) present; topbar .topbar-controls hidden",
+    "langHiddenDesktopRule": "src/styles/ux-responsive.css .nav-lang{display:none} + @media (max-width:900px){.nav-lang{display:inline-flex}} in @layer patches beats chrome-premium .nav-premium .nav-lang{display:inline-flex} in @layer features — so DESKTOP (>900px) hides the header language toggle",
+    "themeToggleMarkup": "NONE — .theme-toggle-btn removed from templates",
+    "themePinnedLight": "head.html inline script + platform.js init() force data-theme=light and removeItem(gb_theme)"
+  }
+}

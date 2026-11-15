@@ -143,6 +143,53 @@
         } catch (e) {}
       })();
     </script>
+    <!-- CHANGE: recover from a poisoned service worker that served "Offline" as CSS/JS -->
+    <script>
+      (function () {
+        function tokensMissing() {
+          try {
+            return !String(getComputedStyle(document.documentElement).getPropertyValue('--brand') || '').trim();
+          } catch (e) { return false; }
+        }
+        function nukeAndReload() {
+          try {
+            if (sessionStorage.getItem('gbi_sw_recover') === '1') return;
+            sessionStorage.setItem('gbi_sw_recover', '1');
+          } catch (e) { /* ignore */ }
+          var done = function () { try { location.reload(); } catch (e2) {} };
+          var clearCaches = function () {
+            if (!window.caches || !caches.keys) return Promise.resolve();
+            return caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+            });
+          };
+          var unreg = Promise.resolve();
+          if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+            unreg = navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all(regs.map(function (r) { return r.unregister(); }));
+            });
+          }
+          unreg.then(clearCaches).then(done).catch(done);
+        }
+        function check() {
+          if (!tokensMissing()) {
+            try { sessionStorage.removeItem('gbi_sw_recover'); } catch (e) {}
+            return;
+          }
+          // Confirm CSS was poisoned (body "Offline") before nuking — avoid false positives
+          fetch('src/styles/tokens.css', { cache: 'reload' }).then(function (r) {
+            return r.text().then(function (t) {
+              var poisoned = r.status === 503 || /^\s*Offline\s*$/i.test(t) || t.indexOf('--brand') < 0;
+              if (poisoned && tokensMissing()) nukeAndReload();
+            });
+          }).catch(function () {
+            if (tokensMissing()) nukeAndReload();
+          });
+        }
+        if (document.readyState === 'complete') setTimeout(check, 50);
+        else window.addEventListener('load', function () { setTimeout(check, 80); });
+      })();
+    </script>
 
     <!-- Stylesheets: layers → tokens → design-system → base → pages → features → patches -->
     <link rel="stylesheet" href="src/styles/layers.css">
