@@ -22,8 +22,15 @@
         };
     }
 
+    // Bundle may load after this file (defer order). Start empty-safe; merge when ready.
     var TRANSLATIONS = fromBundle() || emptyDict();
     global.TRANSLATIONS = TRANSLATIONS;
+    global.__GBI_I18N_REBIND__ = function () {
+        var b = fromBundle();
+        if (!b) return;
+        TRANSLATIONS.en = Object.assign({}, TRANSLATIONS.en || {}, b.en || {});
+        TRANSLATIONS.hi = Object.assign({}, TRANSLATIONS.hi || {}, b.hi || {});
+    };
 
     function resolveDict(lang) {
         return (TRANSLATIONS && TRANSLATIONS[lang]) || {};

@@ -1,9 +1,10 @@
-<!-- CHANGE: branded page loader (§4) — inline critical CSS + SVG, <2KB, no external assets.
-     Shows only if not interactive within ~300ms; removed on DOMContentLoaded+hero decode or 2.5s; hard failsafe 6s. -->
+<!-- CHANGE: branded page loader — must NEVER trap the page.
+     Show after 200ms only if still loading; dismiss on DOMContentLoaded,
+     window load, pageshow, or hard caps (1.2s / 3s). No hero.decode wait. -->
 <style id="gbi-loader-css">
-#gbi-page-loader{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:linear-gradient(160deg,#7B241C 0%,#A93226 55%,#C0392B 100%);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;opacity:0;pointer-events:none;transition:opacity .35s ease}
+#gbi-page-loader{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:linear-gradient(160deg,#7B241C 0%,#A93226 55%,#C0392B 100%);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;opacity:0;pointer-events:none;transition:opacity .28s ease}
 #gbi-page-loader.is-on{opacity:1;pointer-events:auto}
-#gbi-page-loader.is-out{opacity:0;pointer-events:none}
+#gbi-page-loader.is-out,#gbi-page-loader.is-gone{opacity:0!important;pointer-events:none!important;visibility:hidden!important;display:none!important}
 #gbi-page-loader .gbi-ld-mark{width:64px;height:64px}
 #gbi-page-loader .gbi-ld-bricks{display:flex;flex-direction:column;gap:4px;width:56px}
 #gbi-page-loader .gbi-ld-bricks span{display:block;height:10px;border-radius:2px;background:rgba(255,255,255,.85);transform-origin:center;animation:gbiBrick 1.1s ease-in-out infinite}
@@ -33,39 +34,47 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 </div>
 <script>
 (function(){
-  /* CHANGE: loader show/hide logic — delayed show, early dismiss, 6s failsafe */
+  /* CHANGE: loader must dismiss even if deferred scripts hang DOMContentLoaded */
   var el=document.getElementById('gbi-page-loader');
   if(!el)return;
-  var shown=false,gone=false,showT,capT,failT;
+  var shown=false,gone=false,showT;
   function removeLoader(){
-    if(gone)return;gone=true;
-    el.classList.add('is-out');el.classList.remove('is-on');
-    el.setAttribute('aria-busy','false');
-    setTimeout(function(){try{el.remove();var c=document.getElementById('gbi-loader-css');if(c)c.remove();}catch(e){}},400);
+    if(gone)return;
+    gone=true;
+    try{
+      el.classList.add('is-out','is-gone');
+      el.classList.remove('is-on');
+      el.setAttribute('aria-busy','false');
+      el.style.cssText='display:none!important;opacity:0!important;pointer-events:none!important;visibility:hidden!important';
+      var c=document.getElementById('gbi-loader-css');
+      if(c)c.remove();
+      el.remove();
+    }catch(e){}
   }
   function show(){
-    if(gone||shown)return;shown=true;el.classList.add('is-on');
+    if(gone||shown)return;
+    shown=true;
+    el.classList.add('is-on');
   }
-  showT=setTimeout(show,300);
+  showT=setTimeout(show,200);
   function ready(){
     clearTimeout(showT);
-    var hero=document.querySelector('.hero img, #hero img, img[fetchpriority="high"]');
-    var finish=function(){clearTimeout(capT);removeLoader();};
-    if(hero&&typeof hero.decode==='function'){
-      var p=hero.decode();
-      if(p&&p.then)p.then(finish).catch(finish);
-      else finish();
-    }else finish();
+    removeLoader();
   }
-  capT=setTimeout(function(){clearTimeout(showT);removeLoader();},2500);
-  failT=setTimeout(function(){
+  /* Hard caps — never wait on hero.decode or deferred script completion */
+  setTimeout(ready,1200);
+  setTimeout(function(){
     if(gone)return;
-    if(shown){el.classList.add('is-fail');el.setAttribute('aria-busy','false');}
-    setTimeout(removeLoader,1500);
-  },6000);
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);
-  else ready();
-  window.addEventListener('pageshow',function(e){if(e.persisted)removeLoader();});
+    if(shown){try{el.classList.add('is-fail');}catch(e){}}
+    setTimeout(removeLoader,400);
+  },3000);
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',ready,{once:true});
+  }else{
+    ready();
+  }
+  window.addEventListener('load',ready,{once:true});
+  window.addEventListener('pageshow',function(e){ready();});
 })();
 </script>
 <noscript>
