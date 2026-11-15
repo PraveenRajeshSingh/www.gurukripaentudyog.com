@@ -24,12 +24,17 @@
             </button>
         </div>
 
-        <!-- Quick Preference: Language (single light theme — no dark toggle) -->
+        <!-- Phase 2: Language + Theme in drawer (mobile) -->
         <div class="drawer-settings">
-            <button type="button" class="btn btn-outline btn-sm drawer-lang-btn" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch language to Hindi or English">
+            <button type="button" class="btn btn-outline btn-sm drawer-lang-btn" data-action="toggle-lang" onclick="setLang(currentLang === 'hi' ? 'en' : 'hi')" aria-label="Switch language to Hindi or English">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
                 <span id="drawerLangLabel">हिंदी / EN</span>
             </button>
+            <div class="drawer-theme-row" role="group" aria-label="Theme">
+                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="light" aria-checked="false">Light</button>
+                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="dark" aria-checked="false">Dark</button>
+                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="system" aria-checked="false">System</button>
+            </div>
         </div>
 
         <!-- Navigation Links.

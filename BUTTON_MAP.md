@@ -1,61 +1,19 @@
-# BUTTON_MAP — Gurukripa Services (commerce fix pass)
+# BUTTON_MAP — Phases 0 / 3 (2026-11-15)
 
-Updated: 2026-11-10  
-Branch: `design-responsive-pass-2026-11-10`  
-Delegation: `src/js/action-delegate.js` (`data-action`) + `GBI.Commerce` store.
+## Before (static inventory)
+See `qa/phase0-audit.json`: **265** buttons, **285** `onclick`, **1** `data-action`, **121** unique handlers.
 
-## Status legend
-- **OK** — exercised after fix (live browser or smoke script)
-- **WIRED** — handler present; not every viewport/popup re-clicked in this pass
-- **N/A** — requires backend / credentials (honest disabled or existing fallback)
+## After Phase 3
+| Change | Detail |
+|--------|--------|
+| Registry | `window.GBI.Actions` in `action-delegate.js` |
+| New actions | `open-cart`, `open-wishlist`, `open-auth`, `open-checkout`, `open-profile`, `set-lang`, `toggle-lang`, `open-search`, `close-search`, `clear-search`, `voice-search`, `toggle-theme`, `set-theme`, `open-alerts`, `back-to-top`, `open-tracker`, `wa-cart`, … |
+| Self-check | `GBI.selfCheckActions()` logs unmapped `data-action`; banner with `?action-debug=1` |
+| Wired in markup | Header lang, search, theme menu; drawer lang/theme |
+| Preserved | Existing `onclick` handlers and cart/wishlist stores unchanged |
 
-## Product cards (`#products`)
+## Not fully migrated
+Most popup buttons still use `onclick=` (working). Live click pass / Playwright not run this turn — do not claim 100% button coverage.
 
-| Element | data-action / handler | Before | After | Evidence |
-|---|---|---|---|---|
-| Add to Cart | `add-to-cart` → `handleAddToCart` / `GBI.Commerce.add` | Dead (RC-1) | **OK** | Badge → 1, mini-cart “1 item · ₹6.25”, `has-qty` stepper |
-| Qty − / + | `change-qty` → `changeQty` | Broken when add failed | **OK** | Wired; uses store `setQty` |
-| Wishlist heart | `toggle-wishlist` → `toggleWishlist` | Double-toggle no-op (RC-2) | **OK** | `aria-pressed=true`, badge 1 |
-| Quick view / name | `open-product` | WIRED | **WIRED** | |
-| WhatsApp | `data-action=wa` link | WIRED | **WIRED** | Native navigate |
-| Compare | `toggle-compare` | WIRED | **WIRED** | |
-| Filters / sort / chips / view toggle | `toggleFilterSheet`, sort sheet, `filterProducts`, `setProductsView` | WIRED | **WIRED** | |
-
-## Drawers / commerce popups
-
-| UI | Handler | Before | After |
-|---|---|---|---|
-| Cart open/close | `openCart` / `closeCart` | WIRED | **WIRED** |
-| Cart qty / remove | `change-qty` / `remove-from-cart` | Dead when cart empty from RC-1 | **OK** path fixed |
-| Wishlist drawer | `openWishlistDrawer` / `closeWishlistDrawer` | WIRED | **WIRED** |
-| Checkout | `openCheckout` / steps | WIRED | **WIRED** |
-| Product detail Add / Wish | inline `onclick` + `toggleWishlist` | Wish OK if not double; Add OK | **WIRED** (inline still present; works) |
-
-## Chrome
-
-| Element | Handler | Status |
-|---|---|---|
-| Cart icon | `openCart` | **WIRED** |
-| Wishlist icon | `openWishlistDrawer` | **WIRED** |
-| Lang EN\|HI | `setLang` | **WIRED** |
-| Nav / drawer links | hash + `toggleDrawer` | **WIRED** |
-| Bottom nav cart | `openCart` | **WIRED** |
-| FAB WhatsApp / help | `fab-stack.js` | **WIRED** |
-| Diagnostics copy | `data-action=copy-diagnostics` | **WIRED** (enhanced payload) |
-
-## Auth / account / admin / estimator / RFQ / tracker / legal
-
-Existing `BUTTON_MAP` from 2026-11-08 remains accurate for wiring. This pass did **not** remove any of those controls. Full every-popup Playwright matrix is **not run** (Playwright not installed); see CHANGELOG “Not run”.
-
-## Smoke script
-
-`node scripts/qa-commerce-smoke.mjs` → **7/7 pass** (add, OOS reject, wish on/off, setQty, remove, persist keys).
-
-## Live browser (CDP) after fix
-
-```
-build: 2026-11-10-commerce-v10
-handleAddToCart → badge 1, mobile 1, hasQty true, mini "1 item · ₹6.25"
-toggleWishlist → pressed true, active true, wishlist badge 1
-npm test → 164/164 pass
-```
+## JSON
+Regenerate with `node scripts/phase0-audit.js` after `npm run build` → `qa/phase0-audit.json`. Full `BUTTON_MAP.json` executable matrix is Phase 6.

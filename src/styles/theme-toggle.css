@@ -1,0 +1,88 @@
+/* Phase 2: theme toggle (Light / Dark / System) — @layer patches */
+@layer patches {
+.theme-toggle {
+    position: relative;
+    flex-shrink: 0;
+}
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg-card);
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.theme-toggle-btn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+.theme-toggle-btn .theme-ico {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+.theme-toggle-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 168px;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg-raised, var(--bg-card));
+    box-shadow: var(--shadow-lg, 0 12px 32px rgba(0,0,0,.18));
+    z-index: var(--z-dropdown, 80);
+    display: none;
+}
+.theme-toggle-menu.is-open { display: block; }
+.theme-toggle-menu [role="menuitem"] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ink);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+}
+.theme-toggle-menu [role="menuitem"][aria-checked="true"] {
+    background: var(--bg-tint, var(--brand-tint, rgba(169,50,38,.08)));
+    color: var(--brand);
+}
+.theme-toggle-menu [role="menuitem"]:hover,
+.theme-toggle-menu [role="menuitem"]:focus-visible {
+    background: var(--bg-subtle, var(--bg-tint));
+    outline: none;
+}
+.drawer-theme-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+.drawer-theme-row .theme-mode-btn {
+    flex: 1 1 auto;
+    min-height: 44px;
+    min-width: 72px;
+}
+html.theme-xfade {
+    transition: background-color 200ms var(--ease-out, ease), color 200ms var(--ease-out, ease);
+}
+@media (prefers-reduced-motion: reduce) {
+    html.theme-xfade { transition: none; }
+}
+}

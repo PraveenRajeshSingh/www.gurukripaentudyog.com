@@ -1,5 +1,21 @@
 # GURUKRIPA BRICKS INDUSTRY — CHANGELOG
 
+## Phases 2–5 — toggles, actions, mobile search, sweep (2026-11-15)
+
+**Branch:** `fix-buttons-i18n-theme` · **SW:** `v24-phases-2-5`
+
+| Phase | Delivered | Status |
+|-------|-----------|--------|
+| 2 Language | `.nav-lang` forced visible all widths; pill segmented EN \| हिं | Done |
+| 2 Theme | Light/Dark/System restored (`gb_theme_mode`); header menu + drawer + account; head before-paint; OS sync | Done |
+| 3 Actions | Expanded `GBI.Actions` + self-check; chrome controls get `data-action` | Done (onclick still primary elsewhere) |
+| 4 Search | Full-screen `#mobileSearchOverlay`; inert header/bottom nav; visualViewport pad; kb-up / popup-open hide bottom nav | Done |
+| 5 Sweep | SW precache theme/search; `CONSOLE_ERRORS.md`; loader unstick from prior commit | Partial — no live Lighthouse/Playwright this turn |
+
+**Open:** full `onclick`→`data-action` migration; token cleanup for dark; Phase 6 evidence screenshots.
+
+---
+
 ## Fix buttons / i18n / theme / mobile search — Phase 1 (2026-11-15)
 
 **Branch:** `fix-buttons-i18n-theme`  

@@ -185,6 +185,12 @@
                                 <span>Account Settings — GSTIN &amp; Business Info</span>
                                 <span class="hub-nav__aside" id="hubNavGst">Not on file</span>
                             </button>
+                            <!-- Phase 2: theme copy inside account (header may be covered) -->
+                            <div class="hub-nav__row drawer-theme-row" role="group" aria-label="Theme" style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px">
+                                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="light" aria-checked="false">Light</button>
+                                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="dark" aria-checked="false">Dark</button>
+                                <button type="button" class="btn btn-outline btn-sm theme-mode-btn" data-theme-option="system" aria-checked="false">System</button>
+                            </div>
                             <!-- CHANGE: Diagnostics copy for support (polish §2) — hidden until Settings tab focus; always in DOM for a11y -->
                             <button type="button" class="hub-nav__row hub-nav__row--diagnostics" data-action="copy-diagnostics" aria-label="Copy diagnostics for support">
                                 <span>Diagnostics (copy for support)</span>
