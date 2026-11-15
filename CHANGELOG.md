@@ -1,5 +1,21 @@
 # GURUKRIPA BRICKS INDUSTRY — CHANGELOG
 
+## Batch 2 Phase 1 — OTP Autofill UI (2026-11-15)
+
+**Branch:** `ui-premium-batch2-otp`  
+**Status:** Complete (no OTP backend invented)
+
+| Component | Where applied | What changed |
+|-----------|---------------|--------------|
+| OTP Autofill | `/ui-kit.html` demo; dormant `#authOtpMount` | Digit boxes + hidden `one-time-code` input, paste, WebOTP detect, resend timer, states |
+| Verification step | `#authVerifyStep` / recover panel | Premium restyle; honest “no SMS OTP” copy |
+| Legacy OTP CSS | `mobile-fixes.css` | Removed unused `.otp-row` / `.otp-digit` → `otp-autofill.css` |
+| Docs | `OTP_NOTES.md` | WebOTP `@domain #code` honesty; wiring notes |
+
+**Open:** Real SMS / verify API before enabling live digit boxes on auth.
+
+---
+
 ## Phase 1 — Premium Authentication UI (2026-11-15)
 
 **Branch:** `ui-premium-phase1-auth`  

@@ -565,38 +565,9 @@
         /* Shake animation on error */
         .auth-form-shake { animation: shakeX 0.4s var(--ease) }
 
-        /* OTP input row */
-        .otp-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 16px 0;
-        }
-        .otp-digit {
-            width: 48px;
-            height: 56px;
-            border: 2px solid var(--line-mid);
-            border-radius: var(--r-md);
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--ink);
-            background: var(--bg-subtle);
-            transition: all var(--t);
-            outline: none;
-            caret-color: var(--brand);
-        }
-        .otp-digit:focus {
-            border-color: var(--brand);
-            background: #fff;
-            box-shadow: 0 0 0 3px var(--brand-glow);
-            transform: scale(1.08);
-        }
-        .otp-digit.filled {
-            border-color: var(--brand);
-            background: var(--brand-glow);
-            color: var(--brand);
-        }
+        /* OTP input row — REMOVED (Batch 2 Phase 1).
+           Replaced by src/styles/otp-autofill.css (.otp-field / .otp-digit).
+           See REMOVAL_LOG.md. */
 
         /* Rate limit warning */
         .auth-lockout {

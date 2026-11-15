@@ -203,6 +203,9 @@
     <link rel="stylesheet" href="src/styles/a11y-phase6.css">
     <!-- Phase 1 premium auth shell (scoped to #authModal) -->
     <link rel="stylesheet" href="src/styles/auth-premium.css">
+    <!-- Batch 2: OTP autofill (lazy visual; module mounts on demand) -->
+    <link rel="stylesheet" href="src/styles/otp-autofill.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="src/styles/otp-autofill.css"></noscript>
 </head>
 
 <body>
@@ -2597,20 +2600,26 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                             </form>
                         </div>
 
-                        <!-- Recover Panel (Forgot Password) — honest yard recovery, no fake email/OTP -->
+                        <!-- Recover / verification step — honest yard recovery (no SMS OTP backend) -->
                         <div id="recoverPanel" class="auth-panel" hidden data-auth-step="recover">
                             <button type="button" class="auth-back-link" onclick="switchAuthTab('login')">
                                 <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
                                 Back to Sign In
                             </button>
-                            <div class="auth-recover-card">
+                            <div class="auth-recover-card auth-verify-step" id="authVerifyStep">
+                                <div class="auth-verify-step__title">
+                                    <span class="auth-verify-step__badge" aria-hidden="true">
+                                        <svg class="icon"><use href="#i-shield"/></svg>
+                                    </span>
+                                    <span>Verify your account</span>
+                                </div>
                                 <p id="authRecoverLead">
                                     Gurukripa does not send automatic password-reset emails or SMS OTPs yet.
-                                    Our yard office resets access by hand.
+                                    Our yard office resets access by hand after verifying the mobile on your account.
                                 </p>
                                 <p class="auth-brand-meta" style="margin-top:12px;opacity:1;color:var(--muted)">
-                                    Tell them the mobile on your account:
-                                    <strong>+91 ******3230</strong> (yard line for reset requests).
+                                    Yard line for reset requests:
+                                    <strong>+91 ******3230</strong>
                                 </p>
                                 <div class="auth-recover-actions">
                                     <a class="auth-submit" href="tel:+919198923230" id="authRecoverCall">
@@ -2621,6 +2630,15 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
                                         <svg class="icon" aria-hidden="true"><use href="#i-message-circle"/></svg>
                                         WhatsApp the yard
                                     </a>
+                                </div>
+                                <!-- Dormant OTP mount: UI module ready; inactive until a verify API exists -->
+                                <div class="auth-coming-soon" id="authOtpComingSoon" style="margin-top:16px">
+                                    <h4>SMS one-time code</h4>
+                                    <p>
+                                        The digit-box OTP autofill UI is built (see /ui-kit.html) but not connected —
+                                        this site does not send SMS. We will not show a fake code entry here.
+                                    </p>
+                                    <div id="authOtpMount" hidden data-otp-dormant></div>
                                 </div>
                                 <div class="auth-coming-soon" id="authResetComingSoon">
                                     <h4>Self-service reset</h4>
@@ -2682,6 +2700,15 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
             </div>
         </div>
     </div>
+
+    <!-- ━━━━━━━━━━━━━━━━━ COMPONENT: OTP Autofill (template) ━━━━━━━━━━━━━━━━━
+         No OTP backend on this static site. Template is available for a future
+         verify flow; live auth uses the Recover verification step instead.
+         Mount via GBOtpAutofill.mount(el, options) — see OTP_NOTES.md.
+         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <template id="otpAutofillTpl">
+      <div class="otp-mount" data-otp-root data-length="6"></div>
+    </template>
 
     <!-- ━━━━━━━━━━━━━━━━━ ACCOUNT HUB — PROFILE MODAL ━━━━━━━━━━━━━━━━━
          Mobile: bottom sheet (grab handle, sticky header + tabs, scrolling
@@ -4203,6 +4230,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     <script src="src/js/wishlist-drawer.js" defer></script>
     <script src="src/js/auth-ui.js" defer></script>
     <script src="src/js/auth-modal.js" defer></script>
+    <script src="src/js/otp-autofill.js" defer></script>
     <script src="src/js/role-access.js" defer></script>
     <script src="src/js/account-popup.js" defer></script>
     <script src="src/js/profile-modal.js" defer></script>

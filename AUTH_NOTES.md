@@ -10,7 +10,7 @@ Honest security / capability notes for the storefront auth shell.
 | Sign In | Live | Server-first via `GBApi.login` when `gb-api-base` is set; else device verifier (`gb_auth_verifiers`, salted SHA-256). |
 | Sign Up | Live | Server-first `GBApi.register` when API on; else profile in `gb_users` + local verifier. |
 | Forgot / Recover | Honest UI | Opens recover panel with Call / WhatsApp to yard (`+91 91989 23230`). **No email link, no SMS OTP.** |
-| OTP Verification | **Not present** | Grep found no OTP / one-time-code auth flow. **Not invented.** |
+| OTP Verification | **UI kit only** | No SMS/verify API. Digit-box component ships for review; live auth keep Recover. See `OTP_NOTES.md`. |
 | Reset Password | UI preview only | Fields exist for review; inputs + submit **disabled**. No Platform API reset endpoint (`docs/PLATFORM-API.md`). |
 | Google Sign-In | Conditional | Shown only when `<meta name="google-client-id">` is non-empty; otherwise hidden by `google-auth.js`. |
 | Remember me | Live | Controls session persistence via existing `persistUserSession`. |
