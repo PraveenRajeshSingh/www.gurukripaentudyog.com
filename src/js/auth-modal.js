@@ -7,10 +7,11 @@
 //             closeUserDropdown (ui.js), toggleDrawer (ui.js),
 //             openProfile (profile-modal.js), GBDialogs (dialogs.js).
 // ══════════════════════════════════════════
-const _authEyeSVG = `<svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-const _authEyeOffSVG = `<svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
-const _authLockSVG = `<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`;
-const _authStarSVG = `<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.8L12 15.4 6.8 18.2l1-5.8L3.5 8.2l5.9-.9z"/></svg>`;
+const _authEyeSVG = `<svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg>`;
+const _authEyeOffSVG = `<svg class="icon" aria-hidden="true"><use href="#i-eye-off"/></svg>`;
+const _authLockSVG = `<svg class="icon icon--md" aria-hidden="true"><use href="#i-lock"/></svg>`;
+const _authStarSVG = `<svg class="icon icon--md" aria-hidden="true"><use href="#i-star"/></svg>`;
+const _authShieldSVG = `<svg class="icon icon--md" aria-hidden="true"><use href="#i-shield"/></svg>`;
 
 function openAuth(tab = 'login') {
     // Avoid stacked sheets covering the auth form (legal, profile, tracker…).
@@ -19,6 +20,7 @@ function openAuth(tab = 'login') {
             if (el.id !== 'authModal') closeOverlay(el);
         });
     }
+    if (window.GBAuthUi && typeof GBAuthUi.mount === 'function') GBAuthUi.mount();
     switchAuthTab(tab);
     if (typeof openOverlay === 'function') openOverlay('authModal');
     else {
@@ -26,11 +28,16 @@ function openAuth(tab = 'login') {
         overlayLock();
     }
     setTimeout(function () {
-        const panel = document.getElementById(tab === 'register' ? 'registerPanel' : 'loginPanel');
-        const first = panel && panel.querySelector('input:not([type="checkbox"]):not([type="hidden"])');
+        const panelId = tab === 'register' ? 'registerPanel'
+            : tab === 'recover' ? 'recoverPanel'
+            : tab === 'reset' ? 'resetPanel'
+            : 'loginPanel';
+        const panel = document.getElementById(panelId);
+        const first = panel && panel.querySelector('input:not([type="checkbox"]):not([type="hidden"]):not([disabled])');
         if (first) try { first.focus({ preventScroll: true }); } catch (_e) {}
         const body = document.querySelector('#authModal .modal-body');
         if (body) body.scrollTop = 0;
+        if (window.GBAuthUi) GBAuthUi.syncFloatFields();
     }, 60);
 }
 
@@ -49,40 +56,89 @@ function handleAuthOverlayClick(e) {
 function switchAuthTab(tab, btn) {
     const loginPanel = document.getElementById('loginPanel');
     const regPanel = document.getElementById('registerPanel');
+    const recoverPanel = document.getElementById('recoverPanel');
+    const resetPanel = document.getElementById('resetPanel');
     const tabLogin = document.getElementById('tabLogin');
     const tabReg = document.getElementById('tabRegister');
+    const tabsBar = document.getElementById('authTabs');
     if (!loginPanel || !regPanel) return;
 
-    // Driven by the `hidden` property rather than inline display, so the panels
-    // stay in one visibility model with the rest of the storefront.
-    const showLogin = tab === 'login' || (btn && btn.id === 'tabLogin');
-    loginPanel.hidden = !showLogin;
-    regPanel.hidden = showLogin;
-    tabLogin?.classList.toggle('active', showLogin);
-    tabReg?.classList.toggle('active', !showLogin);
-    // aria-current is set on the active control only, matching the profile hub.
-    // "page" would claim a navigation change that a dialog tab is not.
-    showLogin ? tabLogin?.setAttribute('aria-current', 'true') : tabLogin?.removeAttribute('aria-current');
-    showLogin ? tabReg?.removeAttribute('aria-current') : tabReg?.setAttribute('aria-current', 'true');
+    let step = 'login';
+    if (btn && btn.id === 'tabRegister') step = 'register';
+    else if (btn && btn.id === 'tabLogin') step = 'login';
+    else if (tab === 'register' || tab === 'login' || tab === 'recover' || tab === 'reset') step = tab;
 
-    // Headings come from the dictionary so switching to Hindi re-labels the
-    // dialog instead of leaving an English title painted over a Hindi form.
+    const showLogin = step === 'login';
+    const showRegister = step === 'register';
+    const showRecover = step === 'recover';
+    const showReset = step === 'reset';
+
+    loginPanel.hidden = !showLogin;
+    regPanel.hidden = !showRegister;
+    if (recoverPanel) recoverPanel.hidden = !showRecover;
+    if (resetPanel) resetPanel.hidden = !showReset;
+
+    if (tabsBar) tabsBar.hidden = showRecover || showReset;
+    tabLogin?.classList.toggle('active', showLogin);
+    tabReg?.classList.toggle('active', showRegister);
+    showLogin ? tabLogin?.setAttribute('aria-current', 'true') : tabLogin?.removeAttribute('aria-current');
+    showRegister ? tabReg?.setAttribute('aria-current', 'true') : tabReg?.removeAttribute('aria-current');
+
     const title = document.getElementById('authTitle');
     const sub = document.getElementById('authSubtitle');
-    if (title) title.textContent = t(showLogin ? 'auth.signInTitle' : 'auth.signUpTitle');
-    if (sub) sub.textContent = t(showLogin ? 'auth.signInSub' : 'auth.signUpSub');
     const badge = document.getElementById('authBadge');
-    if (badge) badge.innerHTML = showLogin ? _authLockSVG : _authStarSVG;
+    if (showRecover) {
+        if (title) title.textContent = t('auth.recoverTitle') || 'Recover your account';
+        if (sub) sub.textContent = t('auth.recoverSub') || 'Yard office resets access by hand';
+        if (badge) badge.innerHTML = _authShieldSVG;
+    } else if (showReset) {
+        if (title) title.textContent = t('auth.resetTitle') || 'Reset password';
+        if (sub) sub.textContent = t('auth.resetSub') || 'Coming soon — no reset API yet';
+        if (badge) badge.innerHTML = _authLockSVG;
+    } else {
+        if (title) title.textContent = t(showLogin ? 'auth.signInTitle' : 'auth.signUpTitle');
+        if (sub) sub.textContent = t(showLogin ? 'auth.signInSub' : 'auth.signUpSub');
+        if (badge) badge.innerHTML = showLogin ? _authLockSVG : _authStarSVG;
+    }
+
+    const activePanel = showRecover ? recoverPanel
+        : showReset ? resetPanel
+        : showRegister ? regPanel
+        : loginPanel;
+    if (window.GBAuthUi && activePanel) {
+        GBAuthUi.animatePanel(activePanel, (showRecover || showReset) ? 'forward' : (showRegister ? 'forward' : 'back'));
+    }
+
     clearAuthErrors();
     const body = document.querySelector('#authModal .modal-body');
     if (body) body.scrollTop = 0;
     setTimeout(function () {
-        const panel = showLogin ? loginPanel : regPanel;
-        const first = panel && panel.querySelector('input:not([type="checkbox"]):not([type="hidden"])');
+        const panel = activePanel;
+        const first = panel && panel.querySelector('input:not([type="checkbox"]):not([type="hidden"]):not([disabled]), button:not([disabled]), a[href]');
         if (first && document.getElementById('authModal')?.classList.contains('open')) {
             try { first.focus({ preventScroll: true }); } catch (_e) {}
         }
+        if (window.GBAuthUi) GBAuthUi.syncFloatFields();
     }, 40);
+}
+
+/** Open the honest recover step (no fake email/OTP). */
+function openAuthRecover() {
+    openAuth('recover');
+}
+
+/** UI-kit / preview only — reset fields stay disabled. */
+function openAuthResetPreview() {
+    switchAuthTab('reset');
+}
+
+/** Submit is intentionally a no-op — there is no reset API. */
+function handleResetPasswordPreview(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (typeof showToast === 'function') {
+        showToast(t('auth.resetUnavailable') || 'Self-service reset is not available yet. Please call the yard.', 'info');
+    }
+    return false;
 }
 
 function resolveLoginPhone(email) {
@@ -607,8 +663,12 @@ function setButtonLoading(id, loading, text) {
     btn.disabled = loading;
     btn.setAttribute('aria-busy', loading ? 'true' : 'false');
     btn.classList.toggle('is-busy', !!loading);
-    const span = btn.querySelector('span');
+    const span = btn.querySelector('.auth-submit-label') || btn.querySelector('span');
     if (span) span.textContent = text;
+    const spinner = btn.querySelector('.icon-spin');
+    if (spinner) spinner.hidden = !loading;
+    const arrow = btn.querySelector('.auth-submit-arrow');
+    if (arrow) arrow.hidden = !!loading;
 }
 
 function togglePw(inputId, btnId) {
@@ -626,16 +686,28 @@ function checkPwStrength(pw) {
     const fill = document.getElementById('pwStrengthFill');
     const text = document.getElementById('pwStrengthText');
     if (!fill) return;
-    const checks = [pw.length >= 6, /[A-Z]/.test(pw), /[0-9]/.test(pw), /[^A-Za-z0-9]/.test(pw)];
-    const score = checks.filter(Boolean).length;
-    const levels = [{ w: '25%', c: '#e53e3e', l: 'Weak' }, { w: '50%', c: '#f59e0b', l: 'Fair' }, { w: '75%', c: '#3b82f6', l: 'Good' }, { w: '100%', c: '#16a34a', l: 'Strong' }];
-    const lv = levels[score - 1] || levels[0];
-    fill.style.width = score ? lv.w : '0%';
-    fill.style.background = lv.c;
+    const raw = String(pw || '');
+    const rules = {
+        length: raw.length >= 6,
+        case: /[A-Z]/.test(raw) && /[a-z]/.test(raw),
+        number: /[0-9]/.test(raw),
+        symbol: /[^A-Za-z0-9]/.test(raw)
+    };
+    const score = Object.keys(rules).filter(function (k) { return rules[k]; }).length;
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    fill.style.width = score ? (score * 25) + '%' : '0%';
+    fill.setAttribute('data-level', String(score));
+    // Prefer token-driven colors via data-level CSS; clear inline override if present.
+    fill.style.background = '';
     if (text) {
-        text.textContent = score ? lv.l : '';
-        text.style.color = lv.c;
+        text.textContent = score ? labels[score] : '';
+        text.style.color = '';
     }
+    document.querySelectorAll('#pwRulesList [data-rule]').forEach(function (li) {
+        const key = li.getAttribute('data-rule');
+        li.classList.toggle('is-met', !!rules[key]);
+    });
+    if (window.GBAuthUi) GBAuthUi.updatePasswordMatch();
 }
 
 /**
@@ -649,6 +721,12 @@ function checkPwStrength(pw) {
  * hands the customer to a channel that genuinely can reset the account.
  */
 function handleForgotPw() {
+    // Prefer the in-modal recover step (presentation upgrade). Fallback: prior dialog.
+    const recover = document.getElementById('recoverPanel');
+    if (recover) {
+        openAuthRecover();
+        return;
+    }
     if (!window.GBDialogs) {
         showToast('Password reset is handled by our yard office. Please call +91 91989 23230.', 'info');
         return;

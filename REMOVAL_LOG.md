@@ -4,6 +4,24 @@ This document logs all elements, CSS rules, inline styles, and spacers modified 
 
 ---
 
+## Phase 1 — Auth Premium (2026-11-15)
+
+### A. Modal-scoped auth chrome moved out of `overlays.css`
+- **Removed / relocated:** `#authModal`-oriented visual rules for `.auth-tabs`, `.auth-tab`, `.auth-options`, `.auth-forgot`, `.auth-divider`, `.auth-social-*`, `.auth-switch`, `.pw-strength*` that targeted the old compact modal look.
+- **Kept:** Shared `.auth-input` / `.auth-field` / `.auth-label` / `.auth-submit` primitives used by Nearby Bhatta, RFQ, and other forms.
+- **Replacement:** `src/styles/auth-premium.css` (scoped under `#authModal`).
+- **Verification:** Grep confirms nearby/RFQ still use `.auth-input`; auth modal markup uses `#authModal` selectors.
+
+### B. Inline ad-hoc SVG icons in auth modal
+- **Removed:** Per-field inline eye/lock/mail path SVGs inside `auth-modal.html`.
+- **Replacement:** Lucide sprite `<use href="#i-…"/>` via `icon-sprite.html`.
+- **JS:** `_authEyeSVG` / `_authLockSVG` / `_authStarSVG` now reference sprite symbols.
+
+### C. Fabricated “reset email sent” path
+- **Already removed in prior work** (`handleForgotPw` honesty). Phase 1 keeps that contract and surfaces it as the Recover panel instead of a toast-only dialog.
+
+---
+
 ## 1. Unconditional Desktop Main Content Padding-Bottom
 - **Selector:** `main#main-content`
 - **File:** `src/styles/fab-stack.css` (lines 235–239)

@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /src/assets/vendors/
 Disallow: /*.md$
+Disallow: /ui-kit.html
 
 # Specific bot rules
 User-agent: Googlebot

@@ -13,7 +13,7 @@
    =========================================================================== */
 
 // [FIX] Fluid Layout & Console Cleanup pass v16
-const CACHE_VER = 'v16-fluid';
+const CACHE_VER = 'v17-auth-ui';
 const SHELL = 'gbi-shell-' + CACHE_VER;
 const PAGES = 'gbi-pages-' + CACHE_VER;
 const IMGS  = 'gbi-img-' + CACHE_VER;
@@ -41,6 +41,8 @@ const SHELL_ASSETS = [
     './src/assets/images/optimized/hero-1600.jpg',
     './src/styles/layers.css',
     './src/styles/tokens.css',
+    './src/styles/motion.css',
+    './src/assets/icons/lucide-sprite.svg',
     './src/styles/design-system.css',
     './src/styles/base.css',
     './src/styles/sections.css',
@@ -78,6 +80,7 @@ const RUNTIME_WARM = [
     './src/styles/popups-phase4.css',
     './src/styles/a11y-phase6.css',
     './src/styles/overlays.css',
+    './src/styles/auth-premium.css',
     './src/styles/polish-pass.css',
     './src/styles/catalog-premium.css',
     './src/styles/popups.css',
@@ -119,6 +122,7 @@ const RUNTIME_WARM = [
     './src/js/pincodeChecker.js',
     './src/js/voice-search.js',
     './src/js/wishlist-drawer.js',
+    './src/js/auth-ui.js',
     './src/js/auth-modal.js',
     './src/js/role-access.js',
     './src/js/account-popup.js',

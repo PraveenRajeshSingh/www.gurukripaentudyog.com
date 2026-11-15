@@ -1,5 +1,27 @@
 # GURUKRIPA BRICKS INDUSTRY — CHANGELOG
 
+## Phase 1 — Premium Authentication UI (2026-11-15)
+
+**Branch:** `ui-premium-phase1-auth`  
+**Status:** Complete (presentation only; business logic unchanged)
+
+| Component | Where applied | What changed |
+|-----------|---------------|--------------|
+| Auth shell | `#authModal` / `auth-modal.html` | Desktop split brand+form card; mobile full-height sheet; sticky header + CTA |
+| Login / Sign Up | same | Floating labels, 52px inputs, Lucide icons, remember switch, strength checklist, caps-lock hint, loading spinner |
+| Recover (Forgot) | `#recoverPanel` | Honest Call / WhatsApp yard recovery — no fake email/OTP |
+| Reset password | `#resetPanel` | UI preview only; fields + submit disabled (no API) |
+| OTP | — | **Not shipped** — no OTP flow in codebase |
+| Design tokens | `tokens.css` | Motion, clay shadows, gold accent, blur, z-fab, surface aliases |
+| Lucide sprite | `icon-sprite.html` + `lucide-sprite.svg` | Inline symbols; SW-precached file |
+| Motion utils | `motion.css` | Shared fade/slide/shake/spin classes |
+| Auth CSS/JS | `auth-premium.css`, `auth-ui.js`, `auth-modal.js` | Presentation module + handlers preserved |
+| Docs | `AUTH_NOTES.md`, `ui-kit.html`, `REMOVAL_LOG.md` | Honest capability notes + review page |
+
+**Open:** Self-service reset API; OTP if product wants it; Google Client ID to enable GSI.
+
+---
+
 ## Comprehensive Spacing, Grid Alignment, Image Fit, and Visual Cleanup Pass
 
 **Date:** 2026-11-11  

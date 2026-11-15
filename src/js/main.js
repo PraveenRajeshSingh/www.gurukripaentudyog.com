@@ -46,7 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'checkOrderStatus': () => { if (window.PushNotifications) PushNotifications.checkOrderStatusChanges(); },
         'renderOfflineOutbox': () => { if (window.WhatsAppOrder) WhatsAppOrder.renderQueuedNotice(); },
         'Platform.init': () => { if (window.Platform && typeof window.Platform.init === 'function') window.Platform.init(); },
-        'ensureOverlaysClosedAfterInit': () => { if (typeof ensureOverlaysClosedOnBoot === 'function') ensureOverlaysClosedOnBoot(); }
+        'ensureOverlaysClosedAfterInit': () => { if (typeof ensureOverlaysClosedOnBoot === 'function') ensureOverlaysClosedOnBoot(); },
+        'kitOpenAuth': () => {
+            try {
+                const step = sessionStorage.getItem('gb_kit_open_auth');
+                if (!step || typeof openAuth !== 'function') return;
+                sessionStorage.removeItem('gb_kit_open_auth');
+                setTimeout(function () { openAuth(step); }, 120);
+            } catch (_e) { /* ignore */ }
+        }
     };
     Object.keys(steps).forEach((k) => safeRun(k, steps[k]));
 });

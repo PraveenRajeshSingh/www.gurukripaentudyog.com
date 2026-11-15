@@ -34,7 +34,8 @@ function initGoogleSignIn() {
     const clientId = APP_CONFIG.googleClientId;
     if (!clientId) {
         // Hide dormant Google CTAs so they do not look clickable when unconfigured.
-        ['googleCustomBtn', 'googleCustomBtnReg', 'googleGsiBtn', 'googleGsiBtnReg'].forEach((id) => {
+        ['googleCustomBtn', 'googleCustomBtnReg', 'googleGsiBtn', 'googleGsiBtnReg',
+            'loginGoogleDivider', 'regGoogleDivider', 'loginSocialBtns', 'regSocialBtns'].forEach((id) => {
             const el = document.getElementById(id);
             if (el) el.hidden = true;
         });
