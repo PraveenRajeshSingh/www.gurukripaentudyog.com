@@ -618,8 +618,14 @@ window.addEventListener('resize', () => {
 
 // Desktop: close on scroll so the menu never floats over moving content.
 // Mobile sheet stays open while the page behind is locked.
+let __accountScrollCloseRaf = 0;
 window.addEventListener('scroll', () => {
-    if (!isAccountSheetMode()) closeUserDropdown();
+    if (isAccountSheetMode()) return;
+    if (__accountScrollCloseRaf) return;
+    __accountScrollCloseRaf = requestAnimationFrame(() => {
+        __accountScrollCloseRaf = 0;
+        closeUserDropdown();
+    });
 }, { passive: true });
 window.addEventListener('hashchange', () => closeUserDropdown());
 
@@ -1034,6 +1040,15 @@ function lbClose(e) {
 // SCROLL REVEAL (Intersection Observer)
 // ══════════════════════════════════════════
 function initScrollReveal() {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nodes = document.querySelectorAll(
+        '.sec, .cat-card, .product-card, .quality-card, .brick-detail-card, .vendor-card'
+    );
+    // Reveal early (or immediately) so content never sits blank while scrolling.
+    if (reduce || nodes.length > 40) {
+        nodes.forEach((el) => el.classList.add('fade-in'));
+        return;
+    }
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -1041,10 +1056,9 @@ function initScrollReveal() {
                 observer.unobserve(entry.target);
             }
         });
-    }, { root: null, rootMargin: '0px', threshold: 0.12 });
+    }, { root: null, rootMargin: '180px 0px', threshold: 0.01 });
 
-    document.querySelectorAll('.sec, .cat-card, .product-card, .quality-card, .brick-detail-card, .vendor-card')
-        .forEach(el => revealObserver.observe(el));
+    nodes.forEach(el => revealObserver.observe(el));
 }
 
 // ══════════════════════════════════════════

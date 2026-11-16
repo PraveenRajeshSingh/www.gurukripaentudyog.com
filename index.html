@@ -287,8 +287,9 @@
     <!-- Batch 2: OTP autofill (lazy visual; module mounts on demand) -->
     <link rel="stylesheet" href="src/styles/otp-autofill.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="src/styles/otp-autofill.css"></noscript>
-    <!-- LAST: nuclear unlock — wins over every prior patch layer -->
+    <!-- LAST: nuclear unlock + scroll/GPU lag polish -->
     <link rel="stylesheet" href="src/styles/page-unlock.css">
+    <link rel="stylesheet" href="src/styles/perf-polish.css">
     <!-- Boot unlock: clear stuck scroll locks once (do not keep closing UI after boot) -->
     <script>
       (function () {

@@ -1,0 +1,185 @@
+/* CHANGE: design lag polish — reduce GPU cost on mobile + desktop scroll.
+   Load LAST (after page-unlock). Unlayered so it wins over patch layers. */
+
+/* ── 1. Drop permanent will-change (keeps layers promoted forever = lag) ── */
+.fixed-bottom-nav,
+.mobile-nav,
+.wa-float,
+.whatsapp-fab,
+#spbar,
+.scroll-top,
+.mn-cart-fab,
+#ptrIndicator,
+#gb-ptr-indicator,
+.modal-overlay,
+.drawer-overlay,
+.cart-overlay,
+.modal-box,
+.cart-drawer {
+  will-change: auto !important;
+}
+
+/* ── 2. Lighter glass on mobile — blur(24px) tanks scroll FPS ── */
+@media (max-width: 1023.98px) {
+  .nav,
+  .nav-premium,
+  .nav-premium.is-floating,
+  .mobile-nav,
+  .topbar {
+    backdrop-filter: blur(8px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(8px) saturate(140%) !important;
+  }
+
+  .modal-overlay,
+  .cart-overlay,
+  .wishlist-overlay,
+  .lb-overlay,
+  .drawer-overlay {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
+
+  /* Prefer solid sheet chrome over heavy frosted panels while scrolling */
+  .chatbot-box,
+  .account-popup__sheet,
+  .cart-drawer,
+  .wishlist-drawer {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+@media (display-mode: standalone) {
+  .nav,
+  .nav-premium {
+    backdrop-filter: blur(8px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(8px) saturate(140%) !important;
+  }
+}
+
+/* ── 3. Kill decorative infinite motion while page is idle / on small screens ── */
+@media (max-width: 767.98px), (prefers-reduced-motion: reduce) {
+  .cart-empty-anim,
+  .auth-hero-float,
+  .float-up,
+  [class*="float-up"],
+  .live-dot,
+  .pulse,
+  .tracker-step.active .tracker-step-icon {
+    animation: none !important;
+  }
+
+  .trust-marquee .marquee-track,
+  .marquee-track {
+    animation-duration: 40s !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trust-marquee .marquee-track,
+  .marquee-track,
+  .skeleton,
+  .catalog-skel,
+  .dots-loader::after {
+    animation: none !important;
+  }
+}
+
+/* ── 4. Contain paint for below-fold sections (smoother scroll) ── */
+@supports (content-visibility: auto) {
+  #categories,
+  #products,
+  #calculator,
+  #about,
+  #gallery,
+  #testimonials,
+  #reviews,
+  #cities,
+  #nearby-bhatta,
+  #faq,
+  #contact,
+  .footer,
+  footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 720px;
+  }
+}
+
+/* ── 5. Cheaper card hover on touch / coarse pointers ── */
+@media (hover: none), (pointer: coarse) {
+  .product-card:hover,
+  .cat-card:hover,
+  .industrial-card:hover,
+  .btn:hover {
+    transform: none !important;
+    filter: none !important;
+    box-shadow: inherit;
+  }
+
+  .product-card,
+  .cat-card,
+  .btn,
+  .nav-link,
+  .mn-item {
+    transition-property: color, background-color, border-color, opacity !important;
+    transition-duration: 0.15s !important;
+  }
+}
+
+/* ── 6. Sticky header: avoid layout thrash from width/margin animate on mobile ── */
+@media (max-width: 767.98px) {
+  .nav-premium.is-floating {
+    top: 0 !important;
+    margin-inline: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+  }
+
+  .nav-premium.is-hidden {
+    transform: translateY(-100%) !important;
+  }
+}
+
+/* ── 7. Images / media: avoid decode jank during scroll ── */
+img,
+video {
+  content-visibility: auto;
+}
+
+#heroBannerImg,
+.hero-img img,
+.hero-premium__media img {
+  content-visibility: visible;
+}
+
+/* ── 8. Faster fade-in — long opacity anim feels like lag ── */
+.fade-in {
+  animation-duration: 0.22s !important;
+}
+@media (max-width: 767.98px) {
+  .fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── 9. Save-Data / slow network: strip glass entirely ── */
+@media (prefers-reduced-data: reduce) {
+  .nav,
+  .nav-premium,
+  .mobile-nav,
+  .modal-overlay,
+  .cart-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--bg-card, #fff) !important;
+  }
+
+  .trust-marquee .marquee-track,
+  .marquee-track {
+    animation: none !important;
+  }
+}

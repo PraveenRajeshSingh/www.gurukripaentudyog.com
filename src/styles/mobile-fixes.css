@@ -2545,7 +2545,7 @@ body {
    (Hardware acceleration, touch manipulation, responsive blueprint)
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── 1. 60fps GPU Hardware Acceleration for Sticky/Fixed Layers ── */
+/* ── 1. Fixed chrome — avoid permanent will-change (causes scroll lag) ── */
 .fixed-bottom-nav,
 .mobile-nav,
 .wa-float,
@@ -2554,19 +2554,13 @@ body {
 .scroll-top,
 .mn-cart-fab,
 #ptrIndicator {
-    will-change: transform, opacity;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
 }
-/* CHANGE: do not GPU-promote closed full-screen overlays — they block page scroll/taps */
+/* Only promote open overlays while visible */
 .modal-overlay.open,
 .drawer-overlay.open,
 .cart-overlay.open {
-    will-change: transform, opacity;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
 }

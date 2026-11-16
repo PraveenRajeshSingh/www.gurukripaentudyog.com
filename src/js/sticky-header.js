@@ -124,10 +124,13 @@
   function onFrame() {
     rafPending = false;
     var y = window.scrollY || window.pageYOffset || 0;
-    setFloating(y > FLOAT_Y);
+    var narrow = false;
+    try { narrow = window.matchMedia('(max-width: 767.98px)').matches; } catch (_e) { /* ignore */ }
+    // Mobile: keep header visible (hide/show transform feels laggy on low-end phones)
+    setFloating(!narrow && y > FLOAT_Y);
     updateProgress(y);
 
-    if (!reduced) {
+    if (!reduced && !narrow) {
       if (overlayOrMenuOpen() || userTyping()) {
         setHidden(false);
       } else if (y < HIDE_Y) {
