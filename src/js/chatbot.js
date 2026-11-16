@@ -68,15 +68,17 @@ function toggleChatbot(force) {
 
 // Collapse to the launcher without discarding the conversation.
 function minimizeChatbot() {
-    const box = chatEl('chatbotBox');
-    if (box) box.classList.add('minimized');
+    // Close the sheet so page scroll unlocks; conversation state stays in GBChat.
     GBChat.minimized = true;
-    setTimeout(() => chatEl('chatInput')?.focus({ preventScroll: true }), 60);
+    const box = chatEl('chatbotBox');
+    if (box) box.classList.remove('minimized');
+    toggleChatbot(false);
 }
 function restoreChatbot() {
     const box = chatEl('chatbotBox');
     if (box) box.classList.remove('minimized');
     GBChat.minimized = false;
+    toggleChatbot(true);
 }
 
 function openWhatsAppBhattaManager() {

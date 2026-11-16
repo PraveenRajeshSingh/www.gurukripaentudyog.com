@@ -157,15 +157,26 @@
     try {
       document.documentElement.classList.remove('msearch-open', 'popup-open', 'kb-up', 'overlay-open');
       document.body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
-      document.body.style.removeProperty('top');
-      document.body.style.removeProperty('left');
-      document.body.style.removeProperty('right');
-      document.body.style.removeProperty('width');
-      document.body.style.removeProperty('position');
-      document.body.style.removeProperty('overflow');
+      ['top', 'left', 'right', 'width', 'position', 'overflow', 'height', 'max-height'].forEach(function (p) {
+        document.body.style.removeProperty(p);
+      });
+      document.documentElement.style.removeProperty('overflow');
+      document.documentElement.style.removeProperty('touch-action');
       if (typeof __overlayCount !== 'undefined') __overlayCount = 0;
       var ms = $('mobileSearchOverlay');
       if (ms) ms.hidden = true;
+      document.querySelectorAll(
+        '.modal-overlay.open, .cart-overlay.open, .drawer-overlay.open, .lb-overlay.open, #lb.open, .cart-drawer.open, .wishlist-drawer.open, .drawer.open, .chatbot-wrap.open'
+      ).forEach(function (el) {
+        el.classList.remove('open');
+        el.setAttribute('aria-hidden', 'true');
+      });
+      var loader = document.getElementById('gbi-page-loader');
+      if (loader) {
+        loader.classList.add('is-out', 'is-gone');
+        loader.style.cssText = 'display:none!important;pointer-events:none!important;visibility:hidden!important';
+        if (loader.parentNode) loader.parentNode.removeChild(loader);
+      }
       document.querySelectorAll('[inert]').forEach(function (el) {
         el.removeAttribute('inert');
       });
@@ -210,6 +221,23 @@
     if (input) { input.value = ''; onInput(); input.focus(); }
   };
   window.forceUnlockPage = forceUnlockPage;
+
+  function anyOverlayOpen() {
+    return !!(
+      document.querySelector('.modal-overlay.open, .cart-overlay.open, .cart-drawer.open, .wishlist-drawer.open, .drawer.open, .chatbot-wrap.open, #lb.open') ||
+      document.body.classList.contains('overlay-open') ||
+      document.body.classList.contains('account-popup-open') ||
+      document.documentElement.classList.contains('msearch-open')
+    );
+  }
+
+  /** Restore scroll after bfcache / tab return if nothing should be open */
+  window.addEventListener('pageshow', function () {
+    if (!anyOverlayOpen()) forceUnlockPage();
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && !anyOverlayOpen()) forceUnlockPage();
+  });
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

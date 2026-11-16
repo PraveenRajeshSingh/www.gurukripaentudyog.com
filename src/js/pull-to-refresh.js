@@ -213,15 +213,17 @@
             document.body.classList.contains('gb-popup-open') ||
             document.body.classList.contains('account-popup-open')) {
             _startY = 0;
+            _pulling = false;
             return;
         }
 
         _currentY = e.touches[0].clientY;
         var deltaY = _currentY - _startY;
 
-        // Only respond to downward drags
+        // Only respond to downward drags — never block upward/page scroll
         if (deltaY <= 0) {
             if (_pulling) resetPTR();
+            _startY = 0;
             return;
         }
 
@@ -229,6 +231,7 @@
         var scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
         if (scrollTop > 2) {
             if (_pulling) resetPTR();
+            _startY = 0;
             return;
         }
 
@@ -236,7 +239,7 @@
         var pull    = Math.min(deltaY, MAX_PULL);
         var pullPct = pull / PULL_THRESHOLD;
 
-        if (!_pulling && pull > 4) {
+        if (!_pulling && pull > 8) {
             _pulling = true;
             if (!_indicator) _indicator = buildIndicator();
         }
@@ -244,8 +247,8 @@
         if (_pulling) {
             setIndicatorState('pulling', pullPct);
             // Prevent browser's native pull-to-refresh on Android Chrome
-            // only while we are handling the gesture
-            if (e.cancelable) {
+            // only while we are handling the gesture AND still at scroll top
+            if (e.cancelable && scrollTop <= 2) {
                 try { e.preventDefault(); } catch (_) {}
             }
         }

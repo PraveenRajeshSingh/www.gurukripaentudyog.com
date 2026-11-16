@@ -274,38 +274,6 @@
     <link rel="stylesheet" href="src/styles/i18n-layout.css">
     <link rel="stylesheet" href="src/styles/theme-toggle.css">
     <link rel="stylesheet" href="src/styles/mobile-search.css">
-    <link rel="stylesheet" href="src/styles/page-unlock.css">
-    <!-- Immediate unlock: closed overlays with touch-action:none were freezing the page -->
-    <script>
-      (function () {
-        function unlock() {
-          try {
-            var html = document.documentElement;
-            var body = document.body;
-            if (!body) return;
-            html.classList.remove('msearch-open', 'popup-open', 'kb-up', 'overlay-open');
-            body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
-            body.style.removeProperty('top');
-            body.style.removeProperty('left');
-            body.style.removeProperty('right');
-            body.style.removeProperty('width');
-            body.style.removeProperty('position');
-            body.style.removeProperty('overflow');
-            document.querySelectorAll('.modal-overlay.open, .cart-overlay.open, .drawer-overlay.open, .lb-overlay.open, #lb.open, .cart-drawer.open, .wishlist-drawer.open, .drawer.open').forEach(function (el) {
-              el.classList.remove('open');
-            });
-            var ms = document.getElementById('mobileSearchOverlay');
-            if (ms) ms.hidden = true;
-          } catch (e) {}
-        }
-        unlock();
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', unlock);
-        window.addEventListener('load', unlock);
-        setTimeout(unlock, 0);
-        setTimeout(unlock, 400);
-        setTimeout(unlock, 1200);
-      })();
-    </script>
     <!-- Phase 2 shell patches (bottom nav <768, one lang control, FAB) -->
     <link rel="stylesheet" href="src/styles/shell-phase2.css">
     <!-- Phase 3: catalog rail/drawer, count dedupe, card grid, section polish -->
@@ -319,6 +287,53 @@
     <!-- Batch 2: OTP autofill (lazy visual; module mounts on demand) -->
     <link rel="stylesheet" href="src/styles/otp-autofill.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="src/styles/otp-autofill.css"></noscript>
+    <!-- LAST: nuclear unlock — wins over every prior patch layer -->
+    <link rel="stylesheet" href="src/styles/page-unlock.css">
+    <!-- Boot unlock: clear stuck scroll locks once (do not keep closing UI after boot) -->
+    <script>
+      (function () {
+        var bootDone = false;
+        function unlock(closeOverlays) {
+          try {
+            var html = document.documentElement;
+            var body = document.body;
+            if (!body) return;
+            html.classList.remove('msearch-open', 'popup-open', 'kb-up', 'overlay-open');
+            body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
+            ['top','left','right','width','position','overflow','height','max-height'].forEach(function (p) {
+              body.style.removeProperty(p);
+            });
+            if (closeOverlays) {
+              document.querySelectorAll('.modal-overlay.open, .cart-overlay.open, .drawer-overlay.open, .lb-overlay.open, #lb.open, .cart-drawer.open, .wishlist-drawer.open, .drawer.open, .chatbot-wrap.open').forEach(function (el) {
+                el.classList.remove('open');
+              });
+              var ms = document.getElementById('mobileSearchOverlay');
+              if (ms) ms.hidden = true;
+              var loader = document.getElementById('gbi-page-loader');
+              if (loader) {
+                loader.classList.add('is-out','is-gone');
+                loader.style.cssText = 'display:none!important;pointer-events:none!important';
+              }
+            }
+          } catch (e) {}
+        }
+        unlock(true);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function () {
+            unlock(true);
+            bootDone = true;
+          });
+        } else {
+          bootDone = true;
+        }
+        window.addEventListener('load', function () {
+          unlock(!bootDone);
+          bootDone = true;
+        });
+        setTimeout(function () { unlock(false); }, 0);
+        setTimeout(function () { unlock(false); }, 300);
+      })();
+    </script>
 </head>
 
 <body>
@@ -351,11 +366,10 @@
     </svg>
 
 <!-- CHANGE: branded page loader — must NEVER trap the page.
-     Show after 200ms only if still loading; dismiss on DOMContentLoaded,
-     window load, pageshow, or hard caps (1.2s / 3s). No hero.decode wait. -->
+     Never uses pointer-events; dismiss on DOMContentLoaded / load / hard cap 600ms. -->
 <style id="gbi-loader-css">
-#gbi-page-loader{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:linear-gradient(160deg,#7B241C 0%,#A93226 55%,#C0392B 100%);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;opacity:0;pointer-events:none;transition:opacity .28s ease}
-#gbi-page-loader.is-on{opacity:1;pointer-events:auto}
+#gbi-page-loader{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:linear-gradient(160deg,#7B241C 0%,#A93226 55%,#C0392B 100%);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;opacity:0;pointer-events:none!important;transition:opacity .2s ease}
+#gbi-page-loader.is-on{opacity:1;pointer-events:none!important}
 #gbi-page-loader.is-out,#gbi-page-loader.is-gone{opacity:0!important;pointer-events:none!important;visibility:hidden!important;display:none!important}
 #gbi-page-loader .gbi-ld-mark{width:64px;height:64px}
 #gbi-page-loader .gbi-ld-bricks{display:flex;flex-direction:column;gap:4px;width:56px}
@@ -367,7 +381,7 @@
 #gbi-page-loader .gbi-ld-fail{display:none;font-size:13px;text-align:center;max-width:18rem}
 #gbi-page-loader.is-fail .gbi-ld-bricks,#gbi-page-loader.is-fail .gbi-ld-text{display:none}
 #gbi-page-loader.is-fail .gbi-ld-fail{display:block}
-#gbi-page-loader .gbi-ld-fail a{color:#fff;font-weight:600;text-decoration:underline}
+#gbi-page-loader .gbi-ld-fail a{color:#fff;font-weight:600;text-decoration:underline;pointer-events:auto}
 @keyframes gbiBrick{0%,100%{opacity:.35;transform:scaleX(.92)}50%{opacity:1;transform:scaleX(1)}}
 @media (prefers-reduced-motion:reduce){#gbi-page-loader .gbi-ld-bricks span{animation:none;opacity:.85}}
 html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08 0%,#7B241C 60%,#A93226 100%)}
@@ -386,7 +400,6 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
 </div>
 <script>
 (function(){
-  /* CHANGE: loader must dismiss even if deferred scripts hang DOMContentLoaded */
   var el=document.getElementById('gbi-page-loader');
   if(!el)return;
   var shown=false,gone=false,showT;
@@ -400,7 +413,7 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
       el.style.cssText='display:none!important;opacity:0!important;pointer-events:none!important;visibility:hidden!important';
       var c=document.getElementById('gbi-loader-css');
       if(c)c.remove();
-      el.remove();
+      if(el.parentNode)el.parentNode.removeChild(el);
     }catch(e){}
   }
   function show(){
@@ -408,25 +421,25 @@ html[data-theme=dark] #gbi-page-loader{background:linear-gradient(160deg,#1a0a08
     shown=true;
     el.classList.add('is-on');
   }
-  showT=setTimeout(show,200);
+  showT=setTimeout(show,120);
   function ready(){
     clearTimeout(showT);
     removeLoader();
   }
-  /* Hard caps — never wait on hero.decode or deferred script completion */
-  setTimeout(ready,1200);
+  /* Hard caps — never wait on deferred scripts */
+  setTimeout(ready,600);
   setTimeout(function(){
     if(gone)return;
     if(shown){try{el.classList.add('is-fail');}catch(e){}}
-    setTimeout(removeLoader,400);
-  },3000);
+    setTimeout(removeLoader,200);
+  },1500);
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded',ready,{once:true});
   }else{
     ready();
   }
   window.addEventListener('load',ready,{once:true});
-  window.addEventListener('pageshow',function(e){ready();});
+  window.addEventListener('pageshow',function(){ready();});
 })();
 </script>
 <noscript>

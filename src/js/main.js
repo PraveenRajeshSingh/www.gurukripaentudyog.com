@@ -59,6 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     Object.keys(steps).forEach((k) => safeRun(k, steps[k]));
+
+    // Safety: if a late module left the page locked with no open UI, unlock once.
+    setTimeout(function () {
+        try {
+            var open = document.querySelector(
+                '.modal-overlay.open, .cart-overlay.open, .cart-drawer.open, .wishlist-drawer.open, .drawer.open, .chatbot-wrap.open, #lb.open, #mobileSearchOverlay:not([hidden])'
+            );
+            if (!open && typeof forceUnlockPage === 'function') forceUnlockPage();
+        } catch (_e) { /* ignore */ }
+    }, 800);
 });
 
 // FAQ Accordion

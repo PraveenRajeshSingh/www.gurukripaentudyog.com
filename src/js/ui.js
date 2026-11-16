@@ -516,6 +516,9 @@ function syncAccountPopupChrome(open) {
     if (wantSheetLock && !wasSheetLock && !document.body.classList.contains('overlay-open')) {
         __overlayScrollY = window.scrollY || window.pageYOffset || 0;
         document.body.style.top = '-' + __overlayScrollY + 'px';
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
         try {
             document.documentElement.style.setProperty(
                 '--vv-height',
@@ -523,7 +526,12 @@ function syncAccountPopupChrome(open) {
             );
         } catch (_e) { /* ignore */ }
     } else if (!wantSheetLock && wasSheetLock && !document.body.classList.contains('overlay-open')) {
-        document.body.style.top = '';
+        document.body.style.removeProperty('top');
+        document.body.style.removeProperty('left');
+        document.body.style.removeProperty('right');
+        document.body.style.removeProperty('width');
+        document.body.style.removeProperty('position');
+        document.body.style.removeProperty('overflow');
         window.scrollTo(0, __overlayScrollY || 0);
     }
 }
@@ -761,10 +769,12 @@ function overlayUnlock() {
     if (__overlayCount === 0) {
         document.body.classList.remove('overlay-open');
         document.documentElement.classList.remove('overlay-open');
-        document.body.style.top = '';
-        document.body.style.left = '';
-        document.body.style.right = '';
-        document.body.style.width = '';
+        document.body.style.removeProperty('top');
+        document.body.style.removeProperty('left');
+        document.body.style.removeProperty('right');
+        document.body.style.removeProperty('width');
+        document.body.style.removeProperty('position');
+        document.body.style.removeProperty('overflow');
         window.scrollTo(0, __overlayScrollY || 0);
         // Return focus to the element that opened the overlay (§6 a11y).
         if (prev && document.contains(prev) && typeof prev.focus === 'function') {

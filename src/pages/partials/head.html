@@ -271,38 +271,6 @@
     <link rel="stylesheet" href="src/styles/i18n-layout.css">
     <link rel="stylesheet" href="src/styles/theme-toggle.css">
     <link rel="stylesheet" href="src/styles/mobile-search.css">
-    <link rel="stylesheet" href="src/styles/page-unlock.css">
-    <!-- Immediate unlock: closed overlays with touch-action:none were freezing the page -->
-    <script>
-      (function () {
-        function unlock() {
-          try {
-            var html = document.documentElement;
-            var body = document.body;
-            if (!body) return;
-            html.classList.remove('msearch-open', 'popup-open', 'kb-up', 'overlay-open');
-            body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
-            body.style.removeProperty('top');
-            body.style.removeProperty('left');
-            body.style.removeProperty('right');
-            body.style.removeProperty('width');
-            body.style.removeProperty('position');
-            body.style.removeProperty('overflow');
-            document.querySelectorAll('.modal-overlay.open, .cart-overlay.open, .drawer-overlay.open, .lb-overlay.open, #lb.open, .cart-drawer.open, .wishlist-drawer.open, .drawer.open').forEach(function (el) {
-              el.classList.remove('open');
-            });
-            var ms = document.getElementById('mobileSearchOverlay');
-            if (ms) ms.hidden = true;
-          } catch (e) {}
-        }
-        unlock();
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', unlock);
-        window.addEventListener('load', unlock);
-        setTimeout(unlock, 0);
-        setTimeout(unlock, 400);
-        setTimeout(unlock, 1200);
-      })();
-    </script>
     <!-- Phase 2 shell patches (bottom nav <768, one lang control, FAB) -->
     <link rel="stylesheet" href="src/styles/shell-phase2.css">
     <!-- Phase 3: catalog rail/drawer, count dedupe, card grid, section polish -->
@@ -316,4 +284,51 @@
     <!-- Batch 2: OTP autofill (lazy visual; module mounts on demand) -->
     <link rel="stylesheet" href="src/styles/otp-autofill.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="src/styles/otp-autofill.css"></noscript>
+    <!-- LAST: nuclear unlock — wins over every prior patch layer -->
+    <link rel="stylesheet" href="src/styles/page-unlock.css">
+    <!-- Boot unlock: clear stuck scroll locks once (do not keep closing UI after boot) -->
+    <script>
+      (function () {
+        var bootDone = false;
+        function unlock(closeOverlays) {
+          try {
+            var html = document.documentElement;
+            var body = document.body;
+            if (!body) return;
+            html.classList.remove('msearch-open', 'popup-open', 'kb-up', 'overlay-open');
+            body.classList.remove('overlay-open', 'account-popup-open', 'gb-chat-open');
+            ['top','left','right','width','position','overflow','height','max-height'].forEach(function (p) {
+              body.style.removeProperty(p);
+            });
+            if (closeOverlays) {
+              document.querySelectorAll('.modal-overlay.open, .cart-overlay.open, .drawer-overlay.open, .lb-overlay.open, #lb.open, .cart-drawer.open, .wishlist-drawer.open, .drawer.open, .chatbot-wrap.open').forEach(function (el) {
+                el.classList.remove('open');
+              });
+              var ms = document.getElementById('mobileSearchOverlay');
+              if (ms) ms.hidden = true;
+              var loader = document.getElementById('gbi-page-loader');
+              if (loader) {
+                loader.classList.add('is-out','is-gone');
+                loader.style.cssText = 'display:none!important;pointer-events:none!important';
+              }
+            }
+          } catch (e) {}
+        }
+        unlock(true);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function () {
+            unlock(true);
+            bootDone = true;
+          });
+        } else {
+          bootDone = true;
+        }
+        window.addEventListener('load', function () {
+          unlock(!bootDone);
+          bootDone = true;
+        });
+        setTimeout(function () { unlock(false); }, 0);
+        setTimeout(function () { unlock(false); }, 300);
+      })();
+    </script>
 </head>

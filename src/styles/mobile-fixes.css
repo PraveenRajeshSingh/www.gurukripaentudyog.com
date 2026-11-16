@@ -1897,8 +1897,8 @@
     background: radial-gradient(circle, #fff 20%, var(--brand-amber) 70%) !important;
 }
 
-/* -- B. iOS overscroll rubber-band suppression ----------------------- */
-body { overscroll-behavior-y: contain; }
+/* -- B. Keep native vertical scroll; only contain sideways overscroll --- */
+body { overscroll-behavior-x: none; overscroll-behavior-y: auto; }
 
 /* -- C. WhatsApp FAB � fully hidden on mobile (quick bar handles it) - */
 @media (max-width: 768px) { .wa-float { display: none !important; } }

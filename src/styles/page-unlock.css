@@ -1,5 +1,8 @@
-/* CHANGE: nuclear page-unlock — closed full-screen layers must never block the site.
-   Unlayered + !important so this wins over mobile-scroll-master / mobile-fixes. */
+/* CHANGE: nuclear page-unlock — must load LAST.
+   Closed full-screen layers must never block scroll/touch.
+   Unlayered + !important so this wins over patch layers. */
+
+/* Closed overlays / drawers / search — never hit-test */
 .modal-overlay:not(.open),
 .cart-overlay:not(.open),
 .wishlist-overlay:not(.open),
@@ -7,21 +10,86 @@
 .lb-overlay:not(.open),
 #lb:not(.open),
 .chatbot-wrap:not(.open),
+.cart-drawer:not(.open),
+.wishlist-drawer:not(.open),
+.drawer:not(.open),
+#mobileDrawer:not(.open),
+.filter-sheet-backdrop:not(.open),
 #mobileSearchOverlay[hidden],
-.msearch-overlay[hidden] {
+.msearch-overlay[hidden],
+#gbi-page-loader.is-out,
+#gbi-page-loader.is-gone,
+#gbi-page-loader:not(.is-on) {
   pointer-events: none !important;
   visibility: hidden !important;
   touch-action: auto !important;
 }
 
-html:not(.msearch-open):not(.overlay-open) body:not(.overlay-open):not(.account-popup-open) {
+/* Loader must never trap the page even while briefly visible */
+#gbi-page-loader,
+#gbi-page-loader.is-on {
+  pointer-events: none !important;
+}
+
+/* Default page scroll — only lock when an overlay class is present */
+html:not(.msearch-open):not(.overlay-open):not(.popup-open) {
   overflow: visible !important;
   overflow-x: clip !important;
+  height: auto !important;
+  min-height: 100% !important;
+  touch-action: pan-y !important;
+  overscroll-behavior-y: auto !important;
+}
+
+html:not(.msearch-open):not(.overlay-open):not(.popup-open)
+  body:not(.overlay-open):not(.account-popup-open):not(.gb-chat-open) {
+  overflow: visible !important;
+  overflow-x: clip !important;
+  overflow-y: auto !important;
   position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: auto !important;
+  height: auto !important;
+  max-height: none !important;
+  touch-action: pan-y !important;
+  overscroll-behavior-y: auto !important;
+}
+
+#main-content,
+main {
+  overflow: visible !important;
+  overflow-x: clip !important;
   touch-action: pan-y !important;
 }
 
-html:not(.overlay-open):not(.msearch-open) {
-  overflow: visible !important;
-  touch-action: pan-y !important;
+/* PTR indicator never blocks scroll */
+#gb-ptr-indicator:not(.gb-ptr--pulling):not(.gb-ptr--refreshing) {
+  pointer-events: none !important;
+}
+
+/* Mobile chatbot closed full-bleed layer must never cover the page */
+@media (max-width: 640px) {
+  .chatbot-wrap:not(.open) {
+    inset: auto !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+}
+
+/* Desktop/mobile: keep FABs from eating the full screen */
+.fab-stack,
+.fab-wrap,
+.wa-float {
+  pointer-events: none !important;
+}
+.fab-stack > *,
+.fab-wrap > *,
+.wa-float > * {
+  pointer-events: auto !important;
 }

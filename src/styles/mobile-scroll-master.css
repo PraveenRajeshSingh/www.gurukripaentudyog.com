@@ -21,21 +21,26 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 html {
-    /* Use dynamic viewport height where supported (avoids iOS toolbar gap) */
-    height: 100%;
+    /* min-height only — height:100% freezes vertical scroll on some mobile browsers */
+    min-height: 100%;
+    height: auto;
     max-width: 100%;
     overflow-x: clip;
+    overflow-y: visible;
     /* Smooth anchored scrolling — offset accounts for sticky navbar (~64px) */
     scroll-behavior: smooth;
     scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px));
     /* Accelerated scroll on WebKit */
-    -webkit-overflow-scrolling: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 body {
-    /* Prevent horizontal scroll at root */
+    /* Prevent horizontal scroll at root; keep vertical scroll native */
     max-width: 100%;
+    min-height: 100%;
+    height: auto;
     overflow-x: clip;
+    overflow-y: auto;
     /* Contain vertical overscroll but allow normal page scroll */
     overscroll-behavior-x: none;
     /* Allow native vertical scroll — do NOT set overscroll-behavior-y here
@@ -588,14 +593,15 @@ body.overlay-open {
     }
 }
 
-/* Prevent scroll-chaining at the topmost page level */
+/* Allow native page scroll / rubber-band; only contain X to stop sideways bounce */
 html {
-    overscroll-behavior: none;
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: auto;
 }
 
-/* Allow scroll-chaining on the page body for normal scroll */
 body {
-    overscroll-behavior: auto;
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: auto;
 }
 
 /* Prevent double-tap zoom on interactive elements (improves tap latency) */
